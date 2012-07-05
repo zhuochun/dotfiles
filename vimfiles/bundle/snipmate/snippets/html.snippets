@@ -117,11 +117,39 @@ snippet head
 snippet title
 	<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>${2}
 snippet script
-	<script type="text/javascript" charset="utf-8">
+	<script>
 		${1}
 	</script>${2}
+# Handlebars
+snippet bar
+	<script id="${1:template}" type="text/x-handlebars-template">
+		${2:template content}
+	</script>
+snippet h#
+	{{{${1:helper} ${2:params}}}}${3}
+snippet b#
+	{{#${1:helper} ${2:name}}}${3:content}{{/$1}}${4}
+snippet with#
+	{{#with ${1:name}}}${2:content}{{/with}}${3}
+snippet each#
+	{{#each ${1:name}}}${2:content}{{/each}}${3}
+snippet unless#
+	{{#unless ${1:name}}}${2:content}{{/unless}}${3}
+snippet if#
+	{{#if ${1:name}}}${2:content}{{/if}}${3}
+snippet ifelse#
+	{{#if ${1:name}}}
+		${2:content}
+	{{else}}
+		${3:content}
+	{{/if}}${4}
+# Underscore Microtemplate
+snippet _
+	<%= ${1:name} %>${2}
+snippet scriptreq
+	<script src="${1:js/}require.js" data-main="${2:js/main}"></script>
 snippet scriptsrc
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>${2}
+	<script src="${1}.js"></script>${2}
 snippet style
 	<style type="text/css" media="${1:screen}">
 		${2}
