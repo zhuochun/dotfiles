@@ -357,6 +357,11 @@
     nnoremap ;l :NumbersToggle<cr>
 " }}
 
+" EasyMotion {{
+    " Change back to pre-1.3 behavior, now use <leader><leader>
+    "let g:EasyMotion_leader_key = '<Leader>'
+" }}
+
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -547,6 +552,7 @@ endfunction
 " }}
 
 " Deal with list showing chars {{
+    set list!
     set listchars=eol:¶,tab:»»,trail:·,extends:§,nbsp:·
 
     noremap <silent> \l :call ToggleList()<cr>
