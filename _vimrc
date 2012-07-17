@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM (gVim/Win) Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 04/Jul/2012 10:15 AM
+" Last Edit: 17/Jul/2012 04:13 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -32,7 +32,7 @@
     let g:molokai_original = 1
 
     set guifont=Dina:h10:cDEFAULT
-    set lines=48 columns=108
+    set lines=48 columns=168
 " }}
 
     " , is much easier to reach than \ (\ is used in EasyMotion)
@@ -139,8 +139,8 @@
     inoremap <M-p> <C-x><C-p>
     inoremap <M-n> <C-x><C-n>
     inoremap <M-f> <C-x><C-f>
-    "inoremap <M-k> <C-x><C-k>
-    "inoremap <M-l> <C-x><C-l>
+    inoremap <M-l> <C-x><C-l>
+    inoremap <M-k> <C-x><C-k>
     "inoremap <M-]> <C-x><C-]>
 
     " use <Tab> and <Shift-Tab> to indent in Normal, Visual and Select Mode
@@ -289,15 +289,17 @@
     \}
 " }}
 
-" NERDTree {{
+" NERDTree && Vim NERDTree {{
     " Open Vim Explorer
     map <C-F10> :Explore<cr>
     " NERDTree Commands - o/go (open), s/gs (vsplit), x (close)
-    map <silent> <F10> :NERDTreeToggle<CR>
+    map <silent> <F10> :NERDTreeTabsToggle<CR>
+    " Window open position
+    let NERDTreeWinPos = "right"
+    " Size of the NERD tree
+    let NERDTreeWinSize = 42
     " Make it colourful and pretty
     let NERDChristmasTree = 1
-    " size of the NERD tree
-    let NERDTreeWinSize = 42
     " Disable 'bookmarks' and 'help'
     let NERDTreeMinimalUI = 0
     " Highlight the selected entry in the tree
