@@ -1,6 +1,6 @@
-# gVim (Windows) vimrc settings
+# dotfiles
 
-This is my vimrc settings.
+- ` vimrc`: for mac (newer version)
+- `_vimrc`: for windows (not updated)
 
-## Plugins Used
-
+zhuochun
