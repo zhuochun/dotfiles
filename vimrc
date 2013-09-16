@@ -108,6 +108,16 @@ NeoBundle 'majutsushi/tagbar'
 
 NeoBundle 'matchit.zip'
 
+NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mattn/gist-vim'
+    let g:gist_clip_command = 'pbcopy'
+    " if you want to detect filetype from the filename
+    let g:gist_detect_filetype = 1
+    " If you want to show your private gists with :Gist -l
+    let g:gist_show_privates = 1
+    " If you want your gist to be private by default
+    let g:gist_post_private = 1
+
 NeoBundle 'mattn/emmet-vim'
     " <c-y>, to expand input
     " enable emment functions in insert mode
@@ -317,6 +327,7 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-unimpaired'
 
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -332,6 +343,8 @@ NeoBundle 'ujihisa/neco-look'
 NeoBundle 'Valloric/MatchTagAlways'
 
 NeoBundle 'vim-ruby/vim-ruby'
+
+NeoBundle 'vim-jp/cpp-vim'
 
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-notes'
