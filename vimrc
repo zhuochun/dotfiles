@@ -148,7 +148,11 @@ NeoBundle 'scrooloose/syntastic'
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'passive',
                                \ 'active_filetypes': ['javascript', 'ruby'],
-                               \ 'passive_filetypes': ['html'] }
+                               \ 'passive_filetypes': ['html', 'css'] }
+    " syntax checking method for javascript
+    let g:syntastic_javascript_checker = ['jshint']
+    " syntax checking method for ruby
+    let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 NeoBundle 'scrooloose/nerdcommenter'
     " use / to toggle comments
@@ -263,7 +267,7 @@ NeoBundle 'Shougo/neocomplcache.vim'
     " <BS>: close popup and delete backword char.
     inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
     " <SPACE>: Close popup.
-    inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+    inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup()."\<Space>" : "\<Space>"
 
     " Enable omni completion.
     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -355,7 +359,7 @@ NeoBundle 'xolox/vim-notes'
 
 NeoBundle 'zhuochun/vim-snippets'
 
-" colorschemes {{{ 
+" colorschemes {{{
 NeoBundle 'tomasr/molokai'
     let g:molokai_original = 0
 NeoBundle 'altercation/vim-colors-solarized'
@@ -378,7 +382,7 @@ set background=dark
 " vim font
 set guifont=Anonymice\ Powerline:h16
 " vim window size
-set lines=45 columns=99
+set lines=49 columns=109
 
 " enable filetype plugin
 filetype plugin on
@@ -769,7 +773,10 @@ vmap <down> dp`[V`]
 " }}}
 
 " <M-*> key mappings {{{
-
+    " <M-[>
+    nnoremap <M-[> :lprevious<CR>
+    " <M-]>
+    nnoremap <M-]> :lNext<CR>
 " }}}
 
 " <D-*> key mappings {{{
