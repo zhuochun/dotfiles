@@ -1,10 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 05/Sep/2013 05:45 AM
-" Log:
-"  - 30-Aug: Change to Neobundle
-"  - 05-Sep: A Set of New Plugins
+" Last Edit: 16/Sep/2013 10:34 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -131,6 +128,8 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <C-S-p> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mileszs/ack.vim'
+    "Ack [options] {pattern} [{directory}]
+    nnoremap <M-/> <C-u>:Ack 
 
 NeoBundle 'othree/html5.vim'
 
@@ -181,30 +180,19 @@ NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " File searching like ctrlp.vim, start in insert mode
-    nnoremap <D-u>    :<C-u>Unite -start-insert file_rec/async:!<cr>
+    nnoremap <D-u>    :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
-    nnoremap <D-i>    :<C-u>Unite -quick-match buffer<cr>
+    nnoremap <D-i>    :<C-u>Unite -quick-match buffer<CR>
     " Most recently used files
     nnoremap <M-o>    :<C-u>Unite file_mru<CR>
     " Content searching like ack.vim
-    nnoremap <space>/ :<C-u>Unite grep:.<cr>
+    nnoremap <space>/ :<C-u>Unite grep:.<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     " Yank history like YankRing
-    nnoremap <space>y :<C-u>Unite history/yank<cr>
+    nnoremap <space>y :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
-
-    " Use ag or ack
-    if executable('ag')
-        let g:unite_source_grep_command='ag'
-        let g:unite_source_grep_default_opts='--nocolor --nogroup -S -C4'
-        let g:unite_source_grep_recursive_opt=''
-    elseif executable('ack')
-        let g:unite_source_grep_command='ack'
-        let g:unite_source_grep_default_opts='--no-heading --no-color -a -C4'
-        let g:unite_source_grep_recursive_opt=''
-    endif
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
@@ -424,7 +412,7 @@ set hidden                          " change buffer even if it is not saved
 set lbr                             " dont break line within a word
 set showcmd                         " display incomplete commands
 set showmode                        " show current mode
-set autochdir                       " automatically change to current file location
+"set autochdir                       " automatically change to current file location
 set cursorline                      " highlight the current line
 set magic                           " Set magic on, for regular expressions
 set winaltkeys=no                   " Set ALT not map to toolbar
@@ -434,8 +422,8 @@ set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc
 set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
 set wildignore+=*$py.class,*.class,*.gem,*.zip
 
-set scrolljump=5                    " lines to scroll when cursor leaves screen
-set scrolloff=6                     " minimum lines to keep above and below cursor
+set scrolljump=6                    " lines to scroll when cursor leaves screen
+set scrolloff=9                     " minimum lines to keep above and below cursor
 
 " related to <TAB> indents
 set shiftwidth=4
@@ -465,7 +453,7 @@ set mat=1                           " Blink How many times
 
 " folding settings {{{
 set foldmethod=indent               " fold based on indent
-set foldnestmax=19                  " deepest fold levels
+set foldnestmax=99                  " deepest fold levels
 set nofoldenable                    " dont fold by default
 " }}}
 
@@ -625,7 +613,9 @@ vmap <down> dp`[V`]
     " <leader>S clear trailing whitespace
     nnoremap <leader>S :%s/\s\+$//g<cr>:nohl<cr>
     " <leader>d close buffer
-    nnoremap <leader>d :bdelete<CR>
+    nnoremap <leader>d :BD<CR>
+    " <leader>D close buffer
+    nnoremap <leader>D :bdelete<CR>
     " <leader>f
     " <leader>F easier Code Formatting
     nnoremap <leader>F gg=G''
