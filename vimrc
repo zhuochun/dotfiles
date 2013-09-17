@@ -128,6 +128,8 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <C-S-p> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mileszs/ack.vim'
+    " Use ag instead
+    let g:ackprg = 'ag --nogroup --nocolor --column'
     "Ack [options] {pattern} [{directory}]
     nnoremap <M-/> <C-u>:Ack 
 
@@ -193,6 +195,16 @@ NeoBundle 'Shougo/unite.vim'
     nnoremap <space>y :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
+
+    " Use ag
+    if executable('ag')
+        " Use ag in unite grep source.
+        let g:unite_source_grep_command = 'ag'
+        let g:unite_source_grep_default_opts =
+            \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
+            \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+        let g:unite_source_grep_recursive_opt = ''
+    endif
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
