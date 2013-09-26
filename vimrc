@@ -88,16 +88,18 @@ NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
 
+NeoBundle "kchmck/vim-coffee-script"
+
 NeoBundle 'Lokaltog/vim-easymotion'
-    let g:EasyMotion_leader_key = '\' 
+    let g:EasyMotion_leader_key = '\'
     " Tweak the colors
     hi link EasyMotionTarget WarningMsg
     hi link EasyMotionShade Comment
 
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
-
-    let g:tagbar_left = 1                " dock to the left
+    " Modify tagbar settings
+    let g:tagbar_left = 0                " dock to the right (default)
     let g:tagbar_autofocus = 1           " auto focus on Tagbar when opened
     let g:tagbar_width = 32              " default is 40
     let g:tagbar_compact = 1             " omit vacant lines
@@ -116,7 +118,7 @@ NeoBundle 'mattn/gist-vim'
     let g:gist_post_private = 1
 
 NeoBundle 'mattn/emmet-vim'
-    " <c-y>, to expand input
+    " <C-y>, to expand input
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
 
@@ -128,10 +130,9 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <C-S-p> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mileszs/ack.vim'
+    " Ack [options] {pattern} [{directory}]
     " Use ag instead
     let g:ackprg = 'ag --nogroup --nocolor --column'
-    "Ack [options] {pattern} [{directory}]
-    nnoremap <M-/> <C-u>:Ack 
 
 NeoBundle 'othree/html5.vim'
 
@@ -152,7 +153,7 @@ NeoBundle 'scrooloose/syntastic'
                                \ 'passive_filetypes': ['html', 'css'] }
     " syntax checking method for javascript
     let g:syntastic_javascript_checker = ['jshint']
-    " syntax checking method for ruby
+    " syntax checking method for ruby, ['mri', 'rubocop']
     let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 NeoBundle 'scrooloose/nerdcommenter'
@@ -164,15 +165,16 @@ NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
     let NERDChristmasTree = 1
     " size of the NERD tree
-    let NERDTreeWinSize = 42
+    let NERDTreeWinSize = 32
     " Disable 'bookmarks' and 'help'
-    let NERDTreeMinimalUI = 0
+    let NERDTreeMinimalUI = 1
     " Highlight the selected entry in the tree
-    let NERDTreeHighlightCursorline=1
+    let NERDTreeHighlightCursorline = 1
     " Use a single click to fold/unfold directories
-    let NERDTreeMouseMode=2
+    let NERDTreeMouseMode = 2
     " Don't display these kinds of files in NERDTree
     let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
+
 NeoBundle 'jistr/vim-nerdtree-tabs'
     map <F10> <plug>NERDTreeTabsToggle<CR>
     " Do not open NERDTree on startup
@@ -350,6 +352,8 @@ NeoBundle 'vim-ruby/vim-ruby'
 
 NeoBundle 'vim-jp/cpp-vim'
 
+NeoBundle "wavded/vim-stylus"
+
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-notes'
     let g:notes_directories = ['~/Dropbox/Mac/Note']
@@ -357,6 +361,7 @@ NeoBundle 'xolox/vim-notes'
     let g:notes_tab_indents = 0
     let g:notes_markdown_program = 'kramdown'
 
+NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'zhuochun/vim-snippets'
 
 " colorschemes {{{
@@ -424,7 +429,7 @@ set hidden                          " change buffer even if it is not saved
 set lbr                             " dont break line within a word
 set showcmd                         " display incomplete commands
 set showmode                        " show current mode
-"set autochdir                       " automatically change to current file location
+"set autochdir                      " automatically change to current file location
 set cursorline                      " highlight the current line
 set magic                           " Set magic on, for regular expressions
 set winaltkeys=no                   " Set ALT not map to toolbar
@@ -713,7 +718,7 @@ vmap <down> dp`[V`]
     " <C-e>
     " <C-r>
     " <C-t>
-    " <C-y>
+    " <C-y> Emmet Expand
     " <C-u>
     " <C-i>
     " <C-o>
@@ -865,8 +870,12 @@ vnoremap <C-s> :s/\%V//g<left><left><left>
 " Source the vimrc file after saving it
 autocmd! bufwritepost .vimrc source $MYVIMRC
 " Quick edit _vimrc and code_complete template
-nmap <leader>0 :e $MYVIMRC<cr>
-nmap <leader>) :tabnew $MYVIMRC<cr>
+nmap <leader>0 :e $MYVIMRC<CR>
+nmap <leader>) :tabnew $MYVIMRC<CR>
+" Change local buffer directory to current file
+nmap <space>d  :lcd %:p:h<CR>
+" Change directory to current file
+nmap <space>D  :cd %:p:h<CR>
 
 " fix Vim’s horribly broken default regex
 nnoremap / /\v
@@ -915,7 +924,7 @@ vnoremap ? ?\v
 " }}}
 
 " Html/Xml Mappings {{{
-    au FileType xhtml,html,xml,yaml :call WebDef()
+    au FileType xhtml,html,xml,yaml,markdown :call WebDef()
     function! WebDef()
         setlocal shiftwidth=2
         setlocal tabstop=2

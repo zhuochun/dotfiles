@@ -12,15 +12,20 @@ alias cls="clear"
 alias ll="ls -l"
 alias la="ls -a"
 alias vi="vim"
-alias edit="mvim"
 alias e="mvim"
 alias rb="ruby"
 alias rmf="rm -rf"
+# Edit Zshrc and Vimrc
+alias zshrc="mvim ~/.zshrc"
+alias vimrc="mvim ~/.vimrc"
 # Folders
 alias cdProg="cd ~/Documents/Programming/"
 alias cdGithub="cd ~/Documents/Programming/Github/"
-alias cdSnip="cd ~/Documents/Programming/Github/vim-snippets/snippets/"
-alias cdBlog="cd ~/Dropbox/Mac/Blog/Bicrement/_posts/"
+alias cdSnippet="cd ~/Documents/Programming/Github/vim-snippets/snippets/"
+alias cdBlog="cd ~/Documents/Blogs/Bicrement/_posts/"
+alias cdNote="cd ~/Dropbox/Mac/Note/"
+alias cdBicrement="cd ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
+alias cd3002="cd ~/Documents/Programming/CG3002/"
 alias cd4001="cd ~/Documents/Programming/CG4001/remotely-observed-treatment/"
 alias cdDropbox="cd ~/Dropbox/Mac/"
 # open files in vim
@@ -75,3 +80,10 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 # Ruby environment
 eval "$(rbenv init -)"
+
+# Add the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# Add the Postgres database
+export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
