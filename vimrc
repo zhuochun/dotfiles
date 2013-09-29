@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 16/Sep/2013 10:34 PM
+" Last Edit: 26/Sep/2013 01:09 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -151,8 +151,6 @@ NeoBundle 'scrooloose/syntastic'
     let g:syntastic_mode_map = { 'mode': 'passive',
                                \ 'active_filetypes': ['javascript', 'ruby'],
                                \ 'passive_filetypes': ['html', 'css'] }
-    " syntax checking method for javascript
-    let g:syntastic_javascript_checker = ['jshint']
     " syntax checking method for ruby, ['mri', 'rubocop']
     let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
@@ -387,7 +385,7 @@ set background=dark
 " vim font
 set guifont=Anonymice\ Powerline:h16
 " vim window size
-set lines=49 columns=109
+set lines=49 columns=119
 
 " enable filetype plugin
 filetype plugin on
@@ -913,7 +911,7 @@ vnoremap ? ?\v
 " }}}
 
 " Ruby Mappings {{{
-    au FileType ruby,eruby :call RubyDef()
+    au FileType ruby,eruby,rdoc :call RubyDef()
     function! RubyDef()
         setlocal shiftwidth=2
         setlocal tabstop=2

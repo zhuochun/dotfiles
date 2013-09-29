@@ -86,4 +86,3 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Add the Postgres database
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-
