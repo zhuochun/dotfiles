@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 26/Sep/2013 01:09 PM
+" Last Edit: 30/Sep/2013 03:47 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -65,14 +65,7 @@ NeoBundle 'bkad/CamelCaseMotion'
     map <S-B> <Plug>CamelCaseMotion_b
     map <S-E> <Plug>CamelCaseMotion_e
 
-NeoBundle 'cakebaker/scss-syntax.vim'
-
-NeoBundle 'csexton/jekyll.vim'
-    let g:jekyll_path = "~/Documents/Programming/Web/zhuochun.github.io"
-
 NeoBundle 'derekwyatt/vim-fswitch'
-
-NeoBundle 'elzr/vim-json'
 
 NeoBundle 'godlygeek/tabular'
     vnoremap <leader>& :Tabularize /&<CR>
@@ -80,15 +73,9 @@ NeoBundle 'godlygeek/tabular'
     vnoremap <leader>: :Tabularize /:\zs<CR>
     vnoremap <leader>- :Tabularize /-\zs<CR>
 
-NeoBundle 'groenewege/vim-less'
-
-NeoBundle 'hail2u/vim-css3-syntax'
-
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
-
-NeoBundle "kchmck/vim-coffee-script"
 
 NeoBundle 'Lokaltog/vim-easymotion'
     let g:EasyMotion_leader_key = '\'
@@ -133,10 +120,6 @@ NeoBundle 'mileszs/ack.vim'
     " Ack [options] {pattern} [{directory}]
     " Use ag instead
     let g:ackprg = 'ag --nogroup --nocolor --column'
-
-NeoBundle 'othree/html5.vim'
-
-NeoBundle 'pangloss/vim-javascript'
 
 NeoBundle 'scrooloose/syntastic'
     " Do a manual syntastic check
@@ -295,13 +278,6 @@ NeoBundle 'Shougo/neosnippet.vim'
     smap <D-d> <Plug>(neosnippet_expand_or_jump)
     xmap <D-d> <Plug>(neosnippet_expand_target)
 
-    " SuperTab like snippets behavior.
-    imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-                        \ "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ?
-                        \ "\<C-n>" : "\<TAB>")
-    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-                        \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
     " Tell Neosnippet about the other snippets
@@ -321,15 +297,15 @@ NeoBundle 'Shougo/neosnippet.vim'
     " especially when splits are used.
     set completeopt-=preview
 
-NeoBundle 'skammer/vim-css-color'
-    let g:cssColorVimDoNotMessMyUpdatetime = 1
+" A neocomplcache plugin for /usr/bin/look
+" to complete words in Englis
+NeoBundle 'ujihisa/neco-look'
 
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-markdown'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-unimpaired'
 
@@ -342,15 +318,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_skip_key='<M-/>'
     let g:multi_cursor_quit_key='<Esc>'
 
-NeoBundle 'ujihisa/neco-look'
-
 NeoBundle 'Valloric/MatchTagAlways'
-
-NeoBundle 'vim-ruby/vim-ruby'
-
-NeoBundle 'vim-jp/cpp-vim'
-
-NeoBundle "wavded/vim-stylus"
 
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-notes'
@@ -362,10 +330,46 @@ NeoBundle 'xolox/vim-notes'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'zhuochun/vim-snippets'
 
+" text objects {{{
+NeoBundle 'kana/vim-textobj-user'
+" a,/i, for an argument to a function
+NeoBundle 'sgur/vim-textobj-parameter'
+" av/iv for a region between either _s or camelCaseVariables
+NeoBundle 'Julian/vim-textobj-variable-segment'
+" ar/ir for a ruby block
+NeoBundle 'nelstrom/vim-textobj-rubyblock'
+" }}}
+
+" language syntax {{{
+NeoBundle 'cakebaker/scss-syntax.vim'
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'elzr/vim-json'
+NeoBundle 'groenewege/vim-less'
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'Keithbsmiley/rspec.vim'
+NeoBundle 'nono/vim-handlebars'
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'othree/html5.vim'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'slim-template/vim-slim'
+NeoBundle 'skammer/vim-css-color'
+    let g:cssColorVimDoNotMessMyUpdatetime = 1
+NeoBundle 'tpope/vim-cucumber'
+NeoBundle 'tpope/vim-git'
+NeoBundle 'tpope/vim-haml'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'vim-jp/cpp-vim'
+NeoBundle "wavded/vim-stylus"
+" }}}
+
 " colorschemes {{{
 NeoBundle 'tomasr/molokai'
     let g:molokai_original = 0
 NeoBundle 'altercation/vim-colors-solarized'
+    let g:solarized_termcolors = 256
+    let g:solarized_visibility = 'low'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'w0ng/vim-hybrid'
 " }}}
@@ -870,10 +874,10 @@ autocmd! bufwritepost .vimrc source $MYVIMRC
 " Quick edit _vimrc and code_complete template
 nmap <leader>0 :e $MYVIMRC<CR>
 nmap <leader>) :tabnew $MYVIMRC<CR>
-" Change local buffer directory to current file
-nmap <space>d  :lcd %:p:h<CR>
 " Change directory to current file
-nmap <space>D  :cd %:p:h<CR>
+nmap <space>d  :cd %:p:h<CR>
+" Change local buffer directory to current file
+nmap <space>D  :lcd %:p:h<CR>
 
 " fix Vim’s horribly broken default regex
 nnoremap / /\v
@@ -893,6 +897,7 @@ vnoremap ? ?\v
         " Correct typos that only in C/Cpp
         iab uis        usi
         iab cuot       cout
+        iab itn        int
         iab Bool       bool
         iab boolean    bool
         iab Static     static
@@ -922,7 +927,7 @@ vnoremap ? ?\v
 " }}}
 
 " Html/Xml Mappings {{{
-    au FileType xhtml,html,xml,yaml,markdown :call WebDef()
+    au FileType xhtml,html,xml,yaml :call WebDef()
     function! WebDef()
         setlocal shiftwidth=2
         setlocal tabstop=2
@@ -932,6 +937,17 @@ vnoremap ? ?\v
 
         " Correct typos
         iab colour color
+    endfunction
+" }}}
+
+" Markdown Mappings {{{
+    au FileType markdown :call MarkdownDef()
+    function! MarkdownDef()
+        setlocal shiftwidth=2
+        setlocal tabstop=2
+
+        " F2  Insert date and time in Jekyll
+        inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
     endfunction
 " }}}
 
@@ -953,6 +969,8 @@ iab ture       true
 iab ?8         /*
 iab /8         /*
 iab /*         /*
+cab cwd        cd %:p:h
+cab cwdl       lcd %:p:h
 " }}}
 
 " list chars {{
