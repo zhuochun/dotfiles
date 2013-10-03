@@ -11,13 +11,19 @@ ZSH_THEME="ys"
 alias cls="clear"
 alias ll="ls -l"
 alias la="ls -a"
+alias rmf="rm -rf"
+# Vim Alias
 alias vi="vim"
 alias e="mvim"
+# Ruby Alias
 alias rb="ruby"
-alias rmf="rm -rf"
+# Node-Webkit Alias
+alias nw="~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit"
+
 # Edit Zshrc and Vimrc
 alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
+
 # Folders
 alias cdProg="cd ~/Documents/Programming/"
 alias cdGithub="cd ~/Documents/Programming/Github/"
@@ -28,6 +34,7 @@ alias cdBicrement="cd ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
 alias cd3002="cd ~/Documents/Programming/CG3002/"
 alias cd4001="cd ~/Documents/Programming/CG4001/remotely-observed-treatment/"
 alias cdDropbox="cd ~/Dropbox/Mac/"
+
 # open files in vim
 alias -s html=vim
 alias -s xml=vim
