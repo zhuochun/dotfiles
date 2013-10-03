@@ -57,6 +57,7 @@ NeoBundle 'AndrewRadev/switch.vim'
             \   ['else', 'elsif', 'else if'],
             \   ['&', '|', '^'],
             \   ['==', '!='],
+            \   [' + ', ' - '],
             \   ['-=', '+='],
             \   ['if', 'unless'],
             \   ['first', 'last'],
@@ -81,8 +82,8 @@ NeoBundle 'bufkill.vim'
 
 NeoBundle 'bkad/CamelCaseMotion'
     " use 'W', 'B' and 'E' to navigate
-    map <S-E> <Plug>CamelCaseMotion_e
     nmap <S-W> <Plug>CamelCaseMotion_w
+    nmap <S-B> <Plug>CamelCaseMotion_b
     nmap <S-E> <Plug>CamelCaseMotion_e
 
 NeoBundle 'derekwyatt/vim-fswitch'
@@ -189,15 +190,12 @@ NeoBundle 'Shougo/unite.vim'
     " Buffer switching like LustyJuggler
     nnoremap <D-i> :<C-u>Unite -quick-match buffer<CR>
     " Most recently used files
-    nnoremap <M-o>    :<C-u>Unite file_mru<CR>
     nnoremap <M-o> :<C-u>Unite file_mru<CR>
     " Content searching like ack.vim
-    nnoremap <space>/ :<C-u>Unite grep:.<CR>
     nnoremap <D-/> :<C-u>Unite grep:.<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     " Yank history like YankRing
-    nnoremap <space>y :<C-u>Unite history/yank<CR>
     nnoremap <D-y> :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
@@ -422,7 +420,7 @@ filetype plugin on
 filetype indent on
 filetype on
 
-" , is much easier 
+" , is much easier
 " \ is used in EasyMotion
 let mapleader = ","
 let g:mapleader = ","
@@ -608,11 +606,80 @@ vmap <down> dp`[V`]
     " Reselect visual block after indent/outdent
     vnoremap < <gv
     vnoremap > >gv
-    " <space> make space work in normal mode
+    " Make space work in normal mode
     nnoremap <space> i<space><ESC>
-    " make enter work in normal mode
+    " Make enter work in normal mode
     nnoremap <CR> i<CR><ESC>
 " }}}
+
+" normal char key mappings {{{
+    " <`> Move to mark (linewise)
+    " <~> Up/Downcase
+    " <0-9> 0-9
+    " <!>
+    " <@> Register
+    " <#> Search word under cursor backwards
+    " <$> To the end of the line
+    " <%> Move between open/close tags
+    " <^> To the first non-blank character of the line.
+    " <&>
+    " <*> Search word under cursor forwards
+    " <(> Sentences backward
+    " <)> Sentences forward
+    " <_> Horizonal split
+    " <->
+    " <==> Format current line
+    " <+> Switch
+    " <S-Delete> Insert Mode Delete word
+    " <q*> Record Macro
+    " <w> Word forwards
+    " <W> Word forwards (CamelCase)
+    " <e> Forwards to the end of word
+    " <E> Forwards to the end of word
+    " <r> Replace char
+    " <R> Continous replace
+    " <t> find to left (exclusive)
+    " <T> find to left (inclusive)
+    " <y> Yank into register
+    " <u> Undo
+    " <i> Insert
+    " <o> Open new line below
+    " <O> Open new line above
+    " <p> Paste Yank
+    " <{> Paragraphs backward
+    " <}> Paragraphs forward
+    " <\> Easymotion
+    " <|> Vertical split
+    " <a> Append insert
+    " <s> Substitue
+    " <d> Delete
+    " <f> find to right (exclusive)
+    " <F> find to right (inclusive)
+    " <g> Go
+    " <h>
+    " <j>
+    " <J> Join Sentences
+    " <k>
+    " <l>
+    " <;> Repeat last find f,t,F,T
+    " <:>
+    " <''> Move to previous context mark, alias to <m'>
+    " <'*> Move to {a-zA-Z} mark
+    " <">
+    " <CR> Open new line at cursor
+    " <z>
+    " <x> Delete char cursor
+    " <c> Change
+    " <v> Visual
+    " <b> Words Backwards
+    " <B> Words Backwards (CamelCase)
+    " <n> Next search
+    " <N> Previous search
+    " <m*> Set mark {a-zA-Z}
+    " <,> Repeat last find f,t,F,T in opposite direction
+    " <.> Repeat last command
+" }}}
+
 
 " <leader>* key mappings {{{
     " <leader>0
@@ -728,7 +795,6 @@ vmap <down> dp`[V`]
 " }}}
 
 " <Ctrl-*> key mappings {{{
-    " <C-0>
     " <C-1>
     " <C-2>
     " <C-3>
@@ -741,7 +807,8 @@ vmap <down> dp`[V`]
     " <C-0>
     " <C-->
     " <C-=>
-    " <C-q>
+    " <C-q> Multiple select
+    " <C-w>
     " <C-e>
     " <C-r>
     " <C-t>
@@ -783,13 +850,13 @@ vmap <down> dp`[V`]
     inoremap <C-a> <HOME>
     inoremap <C-e> <END>
     " <C-h> move word left
-    inoremap <C-h> <C-o>b
+    inoremap <C-h> <C-O>B
     " <C-j>: Move cursor down
     inoremap <expr> <C-j> pumvisible() ? "\<C-e>\<Down>" : "\<Down>"
     " <C-k>: Move cursor up
     inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
     " <C-l>: Move word right
-    inoremap <C-l> <c-o>w
+    inoremap <C-l> <C-O>W
     " <C-f>: Move move cursor left
     inoremap <C-f> <LEFT>
     " <C-b>: Move move cursor right
@@ -807,47 +874,81 @@ vmap <down> dp`[V`]
 " }}}
 
 " <M-*> key mappings {{{
+    " <M-q>
+    " <M-w>
+    " <M-e>
+    " <M-r>
+    " <M-t>
+    " <M-y>
+    " <M-u>
+    " <M-i>
+    " <M-o>
+    " <M-p> Yankstack old
+    " <M-P> Yankstack new
     " <M-[>
     nnoremap <M-[> :lprevious<CR>
     " <M-]>
     nnoremap <M-]> :lNext<CR>
+    " <M-a>
+    " <M-s>
+    " <M-d>
+    " <M-f>
+    " <M-g>
+    " <M-h>
+    " <M-j>
+    " <M-k>
+    " <M-l>
+    " <M-;>
+    " <M-'>
+    " <M-z>
+    " <M-x>
+    " <M-c>
+    " <M-v>
+    " <M-b>
+    " <M-n>
+    " <M-m>
+    " <M-m> vim-multiple-cursors: skip
+    " <M-,> vim-multiple-cursors: next
+    " <M-.> vim-multiple-cursors: prev
+    " <M-/> NERDComment
 " }}}
 
 " <D-*> key mappings {{{
-    " <D-->
-    " <D-=>
-    " <D-q>
+    " <D--> Mac Smaller font
+    " <D-=> Mac Larger font
+    " <D-q> Mac Quit
+    " <D-w> Mac Close
     " <D-e>
     " <D-r>
-    " <D-t>
-    " <D-y>
+    " <D-t> Mac New Tab
+    " <D-y> Yank History
     " <D-u> Unite files
     " <D-i> Unite buffers
-    " <D-o> Default file open
-    " <D-p> Yankstack cycle yanks
-    " <D-P> Yankstack cycle yanks backwards
-    " <D-a> Select all
-    " <D-s>
-    " <D-d> complete
+    " <D-o> Mac File Open
+    " <D-p> Mac Print
+    " <D-a> Mac Select all
+    " <D-s> Mac Save
+    " <D-d> Snippet autocomplete
     " <D-f>
     " <D-g>
     " <D-h>
-    " <D-j> Snippet autocomplete
+    " <D-j>
     " <D-k>
-    " <D-l>
-    " <D-;>
+    " <D-l> Mac List Errors
+    " <D-;> Mac Go to Next Error
+    " <D-:> Mac Suggest Correction to Next Error
     " <D-'>
-    " <D-z>
-    " <D-x> Cut
-    " <D-c> Copy
+    " <D-z> Mac Undo
+    " <D-x> Mac Cut
+    " <D-c> Mac Copy
     " <D-v>
     " <D-b>
-    " <D-n>
-    " <D-m>
-    " <D-,>
-    " <D-.>
+    " <D-n> Mac New Window
+    " <D-m> Mac Minimize windows
+    " <D-,> Mac Advance settings
+    " <D-.> Cannot map
+    " <D-/> Unite grep
 " }}}
-
 
 " }}}
 
@@ -882,7 +983,6 @@ endfunction
 
 " Ctrl-r: Easier search and replace
 vnoremap <C-r> "hy:%s/<c-r>h//gc<left><left><left>
-
 " Ctrl-s: Easier substitue
 vnoremap <C-s> :s/\%V//g<left><left><left>
 
@@ -990,8 +1090,10 @@ iab ture       true
 iab ?8         /*
 iab /8         /*
 iab /*         /*
+" change working directory
 cab cwd        cd %:p:h
-cab cwdl       lcd %:p:h
+" change local working directory
+cab clwd       lcd %:p:h
 " }}}
 
 " list chars {{
