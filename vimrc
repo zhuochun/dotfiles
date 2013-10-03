@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM Configurations
+" MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 30/Sep/2013 03:47 PM
+" Last Edit: 04/Oct/2013 12:13 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -50,10 +50,30 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'airblade/vim-gitgutter'
 
 NeoBundle 'AndrewRadev/switch.vim'
-    nnoremap + :Switch<cr>
+    nnoremap + :Switch<CR>
+    " Some customized definitions
+    let g:switch_custom_definitions =
+            \ [
+            \   ['else', 'elsif', 'else if'],
+            \   ['&', '|', '^'],
+            \   ['==', '!='],
+            \   ['-=', '+='],
+            \   ['if', 'unless'],
+            \   ['first', 'last'],
+            \ ]
 
 NeoBundle 'bling/vim-airline'
+    " enable/disable powerline symbols.
     let g:airline_powerline_fonts = 1
+    " control which sections get truncated and at what width. >
+    let g:airline#extensions#default#section_truncate_width = {
+            \ 'b': 79,
+            \ 'x': 60,
+            \ 'y': 88,
+            \ 'z': 45,
+            \ }
+    " enable/disable showing a summary of changed hunks under source control. >
+    let g:airline#extensions#hunks#enabled = 0
 
 NeoBundle 'bling/vim-bufferline'
 
@@ -61,9 +81,9 @@ NeoBundle 'bufkill.vim'
 
 NeoBundle 'bkad/CamelCaseMotion'
     " use 'W', 'B' and 'E' to navigate
-    map <S-W> <Plug>CamelCaseMotion_w
-    map <S-B> <Plug>CamelCaseMotion_b
     map <S-E> <Plug>CamelCaseMotion_e
+    nmap <S-W> <Plug>CamelCaseMotion_w
+    nmap <S-E> <Plug>CamelCaseMotion_e
 
 NeoBundle 'derekwyatt/vim-fswitch'
 
@@ -111,10 +131,10 @@ NeoBundle 'mattn/emmet-vim'
 
 NeoBundle 'maxbrunsfeld/vim-yankstack'
     let g:yankstack_map_keys = 0
-    " <C-p> - cycle backward through your history of yanks
-    nmap <C-p> <Plug>yankstack_substitute_older_paste
-    " <C-S-p> - cycle forwards through your history of yanks
-    nmap <C-S-p> <Plug>yankstack_substitute_newer_paste
+    " <M-p> - cycle backward through your history of yanks
+    nmap <M-p> <Plug>yankstack_substitute_older_paste
+    " <M-P> - cycle forwards through your history of yanks
+    nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mileszs/ack.vim'
     " Ack [options] {pattern} [{directory}]
@@ -139,8 +159,8 @@ NeoBundle 'scrooloose/syntastic'
 
 NeoBundle 'scrooloose/nerdcommenter'
     " use / to toggle comments
-    vnoremap <D-/> :call NERDComment('v', "toggle")<CR>
-    nnoremap <D-/> :call NERDComment('n', "toggle")<CR>
+    vnoremap <M-/> :call NERDComment('v', "toggle")<CR>
+    nnoremap <M-/> :call NERDComment('n', "toggle")<CR>
 
 NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
@@ -165,17 +185,20 @@ NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " File searching like ctrlp.vim, start in insert mode
-    nnoremap <D-u>    :<C-u>Unite -start-insert file_rec/async:!<CR>
+    nnoremap <D-u> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
-    nnoremap <D-i>    :<C-u>Unite -quick-match buffer<CR>
+    nnoremap <D-i> :<C-u>Unite -quick-match buffer<CR>
     " Most recently used files
     nnoremap <M-o>    :<C-u>Unite file_mru<CR>
+    nnoremap <M-o> :<C-u>Unite file_mru<CR>
     " Content searching like ack.vim
     nnoremap <space>/ :<C-u>Unite grep:.<CR>
+    nnoremap <D-/> :<C-u>Unite grep:.<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     " Yank history like YankRing
     nnoremap <space>y :<C-u>Unite history/yank<CR>
+    nnoremap <D-y> :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
 
@@ -315,7 +338,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
     " New mapping
     let g:multi_cursor_next_key='<M-,>'
     let g:multi_cursor_prev_key='<M-.>'
-    let g:multi_cursor_skip_key='<M-/>'
+    let g:multi_cursor_skip_key='<M-m>'
     let g:multi_cursor_quit_key='<Esc>'
 
 NeoBundle 'Valloric/MatchTagAlways'
@@ -351,6 +374,8 @@ NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'othree/html5.vim'
+NeoBundle 'othree/javascript-libraries-syntax.vim'
+    let g:used_javascript_libs = 'jquery,underscore,backbone,requirejs,angularjs'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'skammer/vim-css-color'
@@ -369,9 +394,8 @@ NeoBundle 'tomasr/molokai'
     let g:molokai_original = 0
 NeoBundle 'altercation/vim-colors-solarized'
     let g:solarized_termcolors = 256
-    let g:solarized_visibility = 'low'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
-NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'chriskempson/base16-vim'
 " }}}
 
 " }}}
@@ -382,14 +406,16 @@ NeoBundle 'w0ng/vim-hybrid'
 " VIM Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" colorscheme
-colorscheme molokai
+" colorschemes
+colorscheme base16-monokai
 " colorscheme background
 set background=dark
-" vim font
-set guifont=Anonymice\ Powerline:h16
+" vim fonts
+"set guifont=Anonymous\ Pro\ for\ Powerline:h16
+set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
+"set guifont=Inconsolata\ for\ Powerline:h18
 " vim window size
-set lines=49 columns=119
+set lines=42 columns=129
 
 " enable filetype plugin
 filetype plugin on
@@ -634,6 +660,7 @@ vmap <down> dp`[V`]
     " <leader>d close buffer
     nnoremap <leader>d :BD<CR>
     " <leader>D close buffer
+    nnoremap <\-d> :bdelete<CR>
     nnoremap <leader>D :bdelete<CR>
     " <leader>f
     " <leader>F easier Code Formatting
@@ -661,7 +688,6 @@ vmap <down> dp`[V`]
     nnoremap <silent> <leader><space> :noh<cr>
 " }}}
 
-
 " Tabs and Windows mappings {{{
     " Tab Mappings
     nmap <D-_> :tabprevious<cr>
@@ -676,8 +702,7 @@ vmap <down> dp`[V`]
     nmap <D-8> 8gt
     nmap <D-9> 9gt
     nmap <D-0> :tablast<CR>
-    nmap <D-t> :bufdo tab split<CR>
-    nmap <D-y> :tabnew<CR>
+    nmap <D-t> :tabnew<CR>
     nmap <D-w> :tabclose<CR>
 
     " Smart way to move btw. windows
@@ -874,10 +899,6 @@ autocmd! bufwritepost .vimrc source $MYVIMRC
 " Quick edit _vimrc and code_complete template
 nmap <leader>0 :e $MYVIMRC<CR>
 nmap <leader>) :tabnew $MYVIMRC<CR>
-" Change directory to current file
-nmap <space>d  :cd %:p:h<CR>
-" Change local buffer directory to current file
-nmap <space>D  :lcd %:p:h<CR>
 
 " fix Vim’s horribly broken default regex
 nnoremap / /\v
