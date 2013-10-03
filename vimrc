@@ -727,7 +727,7 @@ vmap <down> dp`[V`]
     " <leader>d close buffer
     nnoremap <leader>d :BD<CR>
     " <leader>D close buffer
-    nnoremap <\-d> :bdelete<CR>
+    nnoremap \d :bdelete<CR>
     nnoremap <leader>D :bdelete<CR>
     " <leader>f
     " <leader>F easier Code Formatting
