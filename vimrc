@@ -60,6 +60,7 @@ NeoBundle 'AndrewRadev/switch.vim'
             \   [' + ', ' - '],
             \   ['-=', '+='],
             \   ['if', 'unless'],
+            \   ['yes', 'no'],
             \   ['first', 'last'],
             \ ]
 
@@ -89,14 +90,16 @@ NeoBundle 'bkad/CamelCaseMotion'
 NeoBundle 'derekwyatt/vim-fswitch'
 
 NeoBundle 'godlygeek/tabular'
-    vnoremap <leader>& :Tabularize /&<CR>
-    vnoremap <leader>= :Tabularize /=<CR>
-    vnoremap <leader>: :Tabularize /:\zs<CR>
-    vnoremap <leader>- :Tabularize /-\zs<CR>
+    vnoremap <leader>a& :Tabularize /&<CR>
+    vnoremap <leader>a= :Tabularize /=<CR>
+    vnoremap <leader>a: :Tabularize /:\zs<CR>
+    vnoremap <leader>a- :Tabularize /-\zs<CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
+
+NeoBundle 'kshenoy/vim-signature'
 
 NeoBundle 'Lokaltog/vim-easymotion'
     let g:EasyMotion_leader_key = '\'
@@ -109,7 +112,7 @@ NeoBundle 'majutsushi/tagbar'
     " Modify tagbar settings
     let g:tagbar_left = 0                " dock to the right (default)
     let g:tagbar_autofocus = 1           " auto focus on Tagbar when opened
-    let g:tagbar_width = 32              " default is 40
+    let g:tagbar_width = 27              " default is 40
     let g:tagbar_compact = 1             " omit vacant lines
     let g:tagbar_sort = 0                " sort according to order
 
@@ -126,7 +129,9 @@ NeoBundle 'mattn/gist-vim'
     let g:gist_post_private = 1
 
 NeoBundle 'mattn/emmet-vim'
-    " <C-y>, to expand input
+    " <C-y> to enter emmet actions
+    " <D-y> to expand input in insert mode
+    let g:user_emmet_expandabbr_key = '<D-y>'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
 
@@ -152,7 +157,7 @@ NeoBundle 'scrooloose/syntastic'
     " error window will be automatically opened and closed
     let g:syntastic_auto_loc_list = 1
     " automatic syntax checking
-    let g:syntastic_mode_map = { 'mode': 'passive',
+    let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
                                \ 'passive_filetypes': ['html', 'css'] }
     " syntax checking method for ruby, ['mri', 'rubocop']
@@ -167,7 +172,7 @@ NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
     let NERDChristmasTree = 1
     " size of the NERD tree
-    let NERDTreeWinSize = 32
+    let NERDTreeWinSize = 27
     " Disable 'bookmarks' and 'help'
     let NERDTreeMinimalUI = 1
     " Highlight the selected entry in the tree
@@ -221,6 +226,23 @@ NeoBundle 'Shougo/unite.vim'
     endfunction "}}}
 
 NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimfiler.vim'
+    let g:vimfiler_as_default_explorer = 1
+    " open vimfiler
+    nnoremap <C-F10> :<C-U>:VimFilerExplorer -toggle<CR>
+    " ignore files with filename patterns
+    let g:vimfiler_ignore_pattern = '^\%(.git\|.DS_Store\|.pyc\|.vcxproj\)$'
+    " <C-l> <Plug>(vimfiler_redraw_screen)
+    " c     <Plug>(vimfiler_copy_file)
+    " m     <Plug>(vimfiler_move_file)
+    " d     <Plug>(vimfiler_delete_file)
+    " r     <Plug>(vimfiler_rename_file)
+    " K     <Plug>(vimfiler_make_directory)
+    " N     <Plug>(vimfiler_new_file)
+    " e     <Plug>(vimfiler_edit_file)
+    " E     <Plug>(vimfiler_split_edit_file)
+    " Q     <Plug>(vimfiler_exit)
+    " t     <Plug>(vimfiler_expand_tree)
 
 NeoBundle 'Shougo/neocomplcache.vim'
     " Enable AutoComplPop.
@@ -359,6 +381,8 @@ NeoBundle 'sgur/vim-textobj-parameter'
 NeoBundle 'Julian/vim-textobj-variable-segment'
 " ar/ir for a ruby block
 NeoBundle 'nelstrom/vim-textobj-rubyblock'
+" ac/ic for a column block
+NeoBundle 'coderifous/textobj-word-column.vim'
 " }}}
 
 " language syntax {{{
@@ -391,7 +415,6 @@ NeoBundle "wavded/vim-stylus"
 NeoBundle 'tomasr/molokai'
     let g:molokai_original = 0
 NeoBundle 'altercation/vim-colors-solarized'
-    let g:solarized_termcolors = 256
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
 " }}}
@@ -921,7 +944,8 @@ vmap <down> dp`[V`]
     " <D-e>
     " <D-r>
     " <D-t> Mac New Tab
-    " <D-y> Yank History
+    " <D-y> (Normal) Yank History
+    " <D-y> (Insert) Emmet expand, alias to <C-y>,
     " <D-u> Unite files
     " <D-i> Unite buffers
     " <D-o> Mac File Open
