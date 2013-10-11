@@ -119,6 +119,7 @@ NeoBundle 'majutsushi/tagbar'
 " JavaScript omni complete
 NeoBundle 'marijnh/tern_for_vim', {
     \ 'build': {
+    \   'mac': 'npm install',
     \   'unix': 'npm install',
     \   'cygwin': 'npm install',
     \   'windows': 'npm install',
@@ -487,7 +488,6 @@ set laststatus=2
 set shortmess=atI                   " No welcome screen in gVim
 set mouse=a                         " Enable Mouse
 set timeoutlen=30                   " Quick timeouts for command combinations
-
 set history=999                     " keep 999 lines of command line history
 set ruler                           " show the cursor position all the time
 set relativenumber                  " show line number relatively
@@ -530,7 +530,7 @@ set ignorecase                      " Ignore case when searching
 set smartcase
 set hlsearch                        " Highlight search things
 set incsearch                       " Make search act like search in modern browsers
-set gdefault                        " search/replace global by default
+"set gdefault                       " search/replace global by default
 set showmatch                       " Show matching bracets
 set mat=1                           " Blink How many times
 " }}}
@@ -610,11 +610,11 @@ set whichwrap+=<,>,b,s
             \set guioptions+=m <Bar>
         \endif<CR>
     " }}}
-    " F12 Mac dashboard
+    " F12
 " }}}
 
 " use <Tab> and <S-Tab> to indent
-" in Normal, Visual and Select Mode
+" in Normal, Visual, Select Mode
 nmap <tab> v>
 nmap <s-tab> v<
 vmap <tab> >gv
@@ -663,7 +663,7 @@ vmap <down> dp`[V`]
     " <$> To the end of the line
     " <%> Move between open/close tags
     " <^> To the first non-blank character of the line.
-    " <&>
+    " <&> Synonym for `:s` (repeat last substitute)
     " <*> Search word under cursor forwards
     " <(> Sentences backward
     " <)> Sentences forward
@@ -697,18 +697,18 @@ vmap <down> dp`[V`]
     " <f> find to right (exclusive)
     " <F> find to right (inclusive)
     " <g> Go
-    " <h>
-    " <j>
+    " <h> Left
+    " <j> Down
     " <J> Join Sentences
-    " <k>
-    " <l>
+    " <k> Up
+    " <l> Right
     " <;> Repeat last find f,t,F,T
-    " <:>
+    " <:> Comamnd Input
     " <''> Move to previous context mark, alias to <m'>
     " <'*> Move to {a-zA-Z} mark
-    " <">
+    " <"*> Register
     " <CR> Open new line at cursor
-    " <z>
+    " <z*> Folds
     " <x> Delete char cursor
     " <c> Change
     " <v> Visual
@@ -723,7 +723,6 @@ vmap <down> dp`[V`]
 
 
 " <leader>* key mappings {{{
-    " <leader>0
     " <leader>1
     " <leader>2
     " <leader>3
@@ -735,7 +734,7 @@ vmap <down> dp`[V`]
     " <leader>9
     " <leader>0
     " <leader>-
-    " <leader>=  align with =
+    " <leader>= align with =
     " <leader>q quick quit without save
     nnoremap <leader>q :q!<CR>
     " <leader>w
@@ -753,8 +752,6 @@ vmap <down> dp`[V`]
     " <leader>u
     " <leader>i
     " <leader>o
-    nnoremap <leader>o o<ESC>
-    nnoremap <leader>O O<ESC>
     " <leader>p
     " <leader>a
     " <leader>s spell checkings
@@ -764,15 +761,15 @@ vmap <down> dp`[V`]
         nnoremap <leader>sa zg
         nnoremap <leader>s? z=
     " <leader>S clear trailing whitespace
-    nnoremap <leader>S :%s/\s\+$//g<cr>:nohl<cr>
+    nnoremap <leader>S :%s/\s\+$//ge<cr>:nohl<cr>
+    nnoremap \s :%s/\s\+$//ge<cr>:nohl<cr>
     " <leader>d close buffer
     nnoremap <leader>d :BD<CR>
     " <leader>D close buffer
-    nnoremap \d :bdelete<CR>
     nnoremap <leader>D :bdelete<CR>
-    " <leader>f
-    " <leader>F easier Code Formatting
-    nnoremap <leader>F gg=G''
+    nnoremap \d :bdelete<CR>
+    " <leader>f easier code formatting
+    nnoremap <leader>f gg=G''
     " <leader>g
     " <leader>h
     " <leader>j
@@ -790,8 +787,7 @@ vmap <down> dp`[V`]
     " <leader>m
     " <leader>M remove the ^M - when the encodings gets messed up
     nnoremap <leader>M mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-    " <leader>,
-    " <leader>.
+    nnoremap \m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
     " <leader><space> close search highlight
     nnoremap <silent> <leader><space> :noh<cr>
 " }}}
@@ -812,6 +808,9 @@ vmap <down> dp`[V`]
     nmap <D-0> :tablast<CR>
     nmap <D-t> :tabnew<CR>
     nmap <D-w> :tabclose<CR>
+    " Opens a new tab with the current buffer's path
+    " Super useful when editing files in the same directory
+    nmap <D-e> :tabedit <c-r>=expand("%:p:h")<cr>/
 
     " Smart way to move btw. windows
     nmap <C-j> <C-W>j
@@ -836,11 +835,11 @@ vmap <down> dp`[V`]
 " }}}
 
 " <Ctrl-*> key mappings {{{
-    " <C-1>
-    " <C-2>
-    " <C-3>
-    " <C-4>
-    " <C-5>
+    " <C-1> Mac Desktop Switch
+    " <C-2> Mac Desktop Switch
+    " <C-3> Mac Desktop Switch
+    " <C-4> Mac Desktop Switch
+    " <C-5> Mac Desktop Switch
     " <C-6>
     " <C-7>
     " <C-8>
@@ -869,11 +868,11 @@ vmap <down> dp`[V`]
     " <C-l> (n) move right window
     " <C-;>
     " <C-'>
-    " <C-CR>
+    " <C-CR> Like in Visual Studio
     inoremap <C-CR> <ESC>o
-    " <C-S-CR>
+    " <C-S-CR> Like in Visual Studio
     inoremap <C-S-CR> <ESC>O
-    " <S-CR>
+    " <S-CR> Like in Visual Studio
     inoremap <S-CR> <ESC>O
     " <C-z>
     " <C-x>
@@ -936,8 +935,8 @@ vmap <down> dp`[V`]
     " <M-f>
     " <M-g>
     " <M-h>
-    " <M-j>
-    " <M-k>
+    " <M-j> Move selected line down
+    " <M-k> Move selected line up
     " <M-l>
     " <M-;>
     " <M-'>
@@ -1001,10 +1000,10 @@ vmap <down> dp`[V`]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " In visual mode, press * or # to search the current selection
-vnoremap <silent> * :call VisualSearch('f')<CR>
-vnoremap <silent> # :call VisualSearch('b')<CR>
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
 
-function! VisualSearch(direction) range
+function! VisualSelection(direction) range
     let l:saved_reg = @"
     execute "normal! vgvy"
 
@@ -1015,6 +1014,8 @@ function! VisualSearch(direction) range
         execute "normal ?" . l:pattern . "^M"
     elseif a:direction == 'gv'
         call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
     elseif a:direction == 'f'
         execute "normal /" . l:pattern . "^M"
     endif
@@ -1022,18 +1023,13 @@ function! VisualSearch(direction) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-
-" Ctrl-r: Easier search and replace
-vnoremap <C-r> "hy:%s/<c-r>h//gc<left><left><left>
-" Ctrl-s: Easier substitue
 vnoremap <C-s> :s/\%V//g<left><left><left>
-
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Personal Settings {{{
+" Additional Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Source the vimrc file after saving it
@@ -1079,7 +1075,7 @@ vnoremap ? ?\v
 " }}}
 
 " Ruby Mappings {{{
-    au FileType ruby,eruby,rdoc :call RubyDef()
+    au FileType ruby,eruby,rdoc,coffee :call RubyDef()
     function! RubyDef()
         setlocal shiftwidth=2
         setlocal tabstop=2
