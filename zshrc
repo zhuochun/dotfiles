@@ -1,39 +1,39 @@
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="ys"
+# Set name of the theme to load:
+# norm ys random
+ZSH_THEME="norm"
 
 # Aliases
-alias cls="clear"
-alias ll="ls -l"
-alias la="ls -a"
-alias rmf="rm -rf"
+alias cls=clear
+alias rmd=rm -rf
+# Copy to clipboard
+alias cc=pbcopy
 # Vim Alias
-alias vi="vim"
-alias e="mvim"
-# Ruby Alias
-alias rb="ruby"
+alias e=mvim
+alias ee=vim
+alias vi=vim
 # Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit"
+alias nw=~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit
 
-# Edit Zshrc and Vimrc
+# Edit zshrc and vimrc
 alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
 
 # Folders
-alias cdProg="cd ~/Documents/Programming/"
-alias cdGithub="cd ~/Documents/Programming/Github/"
-alias cdSnippet="cd ~/Documents/Programming/Github/vim-snippets/snippets/"
-alias cdBlog="cd ~/Documents/Blogs/Bicrement/_posts/"
-alias cdNote="cd ~/Dropbox/Mac/Note/"
-alias cdBicrement="cd ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
-alias cd3002="cd ~/Documents/Programming/CG3002/"
-alias cd4001="cd ~/Documents/Programming/CG4001/remotely-observed-treatment/"
-alias cdDropbox="cd ~/Dropbox/Mac/"
+hash -d dbox=~/Dropbox/Mac/
+hash -d note=~/Dropbox/Mac/Note/
+hash -d prog=~/Documents/Programming/
+hash -d hub=~/Documents/Programming/Github/
+hash -d snippet=~/Documents/Programming/Github/vim-snippets/snippets/
+hash -d web=~/Documents/Programming/Web/
+hash -d blog=~/Documents/Programming/Web/zhuochun.github.io/_posts/
+hash -d mobile=~/Documents/Programming/Mobile/
+hash -d node=~/Documents/Programming/NodeWebkit/
+hash -d hacker=~/Documents/Programming/Cpp/HackerRank/
+hash -d cg3002=~/Documents/Programming/CG3002/server-rails/
+hash -d cg4001=~/Documents/Programming/CG4001/remotely-observed-treatment/
 
 # open files in vim
 alias -s html=vim
@@ -78,7 +78,7 @@ alias -s txt=vim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bundler bower cap composer gem git git-extras mercurial node npm osx rails3 ruby rvm )
+plugins=(autojump brew bundler bower cap gem git git-extras mercurial node npm osx rails3 ruby rvm )
 
 source $ZSH/oh-my-zsh.sh
 
