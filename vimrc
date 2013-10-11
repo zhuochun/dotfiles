@@ -39,13 +39,13 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 NeoBundle 'Shougo/vimproc', {
-      \ 'build' : {
-      \     'windows' : 'make -f make_mingw32.mak',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
+    \ 'build' : {
+    \   'windows' : 'make -f make_mingw32.mak',
+    \   'cygwin' : 'make -f make_cygwin.mak',
+    \   'mac' : 'make -f make_mac.mak',
+    \   'unix' : 'make -f make_unix.mak',
+    \   },
+    \ }
 
 NeoBundle 'airblade/vim-gitgutter'
 
@@ -115,6 +115,15 @@ NeoBundle 'majutsushi/tagbar'
     let g:tagbar_width = 27              " default is 40
     let g:tagbar_compact = 1             " omit vacant lines
     let g:tagbar_sort = 0                " sort according to order
+
+" JavaScript omni complete
+NeoBundle 'marijnh/tern_for_vim', {
+    \ 'build': {
+    \   'unix': 'npm install',
+    \   'cygwin': 'npm install',
+    \   'windows': 'npm install',
+    \   },
+    \ }
 
 NeoBundle 'matchit.zip'
 
@@ -303,7 +312,8 @@ NeoBundle 'Shougo/neocomplcache.vim'
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+    autocmd FileType python set omnifunc=pythoncomplete#Complete
+    autocmd FileType c set omnifunc=ccomplete#Complete
 
     " Enable heavy omni completion.
     if !exists('g:neocomplcache_omni_patterns')
@@ -407,6 +417,10 @@ NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-ruby/vim-ruby'
+    let g:rubycomplete_buffer_loading = 1
+    let g:rubycomplete_classes_in_global = 1
+    let g:rubycomplete_rails = 1
+    let g:rubycomplete_use_bundler = 1
 NeoBundle 'vim-jp/cpp-vim'
 NeoBundle "wavded/vim-stylus"
 " }}}
@@ -428,7 +442,11 @@ NeoBundle 'chriskempson/base16-vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " colorschemes
-colorscheme base16-monokai
+if has("gui_running")
+    colorscheme base16-eighties
+else
+    colorscheme Tomorrow-Night-Eighties
+endif
 " colorscheme background
 set background=dark
 " vim fonts
