@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 04/Oct/2013 12:13 AM
+" Last Edit: 12/Oct/2013 05:10 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -621,19 +621,24 @@ vmap <tab> >gv
 vmap <s-tab> <gv
 
 " Move a line of text using <up><down>
-nmap <up> ddkP
-nmap <down> ddp
-vmap <up> dkP`[V`]
-vmap <down> dp`[V`]
+nmap <up> mz:m-2<cr>`z
+nmap <down> mz:m+<cr>`z
+vmap <up> :m'<-2<cr>`>my`<mzgv`yo`z
+vmap <down> :m'>+<cr>`<my`>mzgv`yo`z
+" Or Comamnd+[jk] on mac
+nmap <M-k> mz:m-2<cr>`z
+nmap <M-j> mz:m+<cr>`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 
 " normal char key mappings {{{
     " Q: to repeat last recorded macro
-    nnoremap Q @@
+    nmap Q @@
     " Y: Quick yanking to the end of the line
-    nnoremap Y y$
+    nmap Y y$
     " H: Go to beginning of line.
     "    Repeated invocation goes to previous line
-    nnoremap <expr> H getpos('.')[2] == 1 ? 'k' : '^'
+    nnoremap <expr> H getpos('.')[2] == 1 ? 'k' : '0'
     " L: Go to end of line.
     "    Repeated invocation goes to next line
     nnoremap <expr> L <SID>end_of_line()
@@ -644,6 +649,13 @@ vmap <down> dp`[V`]
       else
         return 'g_'
     endfunction
+    " Change folder mappings
+    " zo: Open all folds under the cursor recursively
+    nnoremap zo zO
+    " zO: Open all folds
+    nnoremap zO zR
+    " zC: Close all folds
+    nnoremap zC zM
     " Reselect visual block after indent/outdent
     vnoremap < <gv
     vnoremap > >gv
@@ -1023,7 +1035,6 @@ function! VisualSelection(direction) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-vnoremap <C-s> :s/\%V//g<left><left><left>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1034,15 +1045,27 @@ vnoremap <C-s> :s/\%V//g<left><left><left>
 
 " Source the vimrc file after saving it
 autocmd! bufwritepost .vimrc source $MYVIMRC
+
 " Quick edit _vimrc and code_complete template
 nmap <leader>0 :e $MYVIMRC<CR>
 nmap <leader>) :tabnew $MYVIMRC<CR>
+
+" Remap VIM 0 to first non-blank character
+map 0 ^
 
 " fix Vim’s horribly broken default regex
 nnoremap / /\v
 vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+" Remember info about open buffers on close
+set viminfo^=%
 
 " C/CPP Mappings {{{
     au FileType cpp,c,cc,h,hpp :call CppDef()
