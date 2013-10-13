@@ -87,6 +87,9 @@ NeoBundle 'bkad/CamelCaseMotion'
     nmap <S-B> <Plug>CamelCaseMotion_b
     nmap <S-E> <Plug>CamelCaseMotion_e
 
+" timing statistics by using :BufTimer or :BufTimerReport
+NeoBundle 'chrisbra/BufTimer'
+
 NeoBundle 'derekwyatt/vim-fswitch'
 
 NeoBundle 'godlygeek/tabular'
@@ -412,8 +415,9 @@ NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,requirejs,angularjs'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'slim-template/vim-slim'
-NeoBundle 'skammer/vim-css-color'
-    let g:cssColorVimDoNotMessMyUpdatetime = 1
+NeoBundle 'chrisbra/color_highlight'
+    let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
+    let g:colorizer_colornames = 0
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-haml'
