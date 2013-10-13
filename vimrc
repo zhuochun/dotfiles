@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 12/Oct/2013 05:10 AM
+" Last Edit: 13/Oct/2013 12:24 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -90,10 +90,11 @@ NeoBundle 'bkad/CamelCaseMotion'
 NeoBundle 'derekwyatt/vim-fswitch'
 
 NeoBundle 'godlygeek/tabular'
-    vnoremap <leader>a& :Tabularize /&<CR>
-    vnoremap <leader>a= :Tabularize /=<CR>
-    vnoremap <leader>a: :Tabularize /:\zs<CR>
-    vnoremap <leader>a- :Tabularize /-\zs<CR>
+    vnoremap <leader>a :Tabularize /
+    vnoremap <leader>& :Tabularize /&<CR>
+    vnoremap <leader>= :Tabularize /=<CR>
+    vnoremap <leader>: :Tabularize /:\zs<CR>
+    vnoremap <leader>- :Tabularize /-\zs<CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
@@ -443,11 +444,7 @@ NeoBundle 'chriskempson/base16-vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " colorschemes
-if has("gui_running")
-    colorscheme base16-eighties
-else
-    colorscheme Tomorrow-Night-Eighties
-endif
+colorscheme base16-eighties
 " colorscheme background
 set background=dark
 " vim fonts
@@ -462,18 +459,26 @@ filetype plugin on
 filetype indent on
 filetype on
 
-" , is much easier
+" , is much easier than \
 " \ is used in EasyMotion
 let mapleader = ","
 let g:mapleader = ","
+" ; is easier than : as well
+nnoremap ; :
+nnoremap : ;
 
 " Syntax highlighting on
 syntax on
 
-" t - autowrap text, c - autowrap comments, r - insert comment leader
+" formatoptions
+" o - insert command leader in o or O
+" t - autowrap text
+" c - autowrap comments
+" r - insert comment leader
 " mM - useful for Chinese characters, q - gq
-set formatoptions -=o
-set formatoptions +=tcrqmM
+" j - remove comment leader when joining lines
+set fo-=o
+set fo+=tcrqmMj
 
 " encoding
 set fileencoding=utf-8
@@ -487,7 +492,7 @@ set laststatus=2
 " basic settings
 set shortmess=atI                   " No welcome screen in gVim
 set mouse=a                         " Enable Mouse
-set timeoutlen=30                   " Quick timeouts for command combinations
+set timeoutlen=36                   " Quick timeouts for command combinations
 set history=999                     " keep 999 lines of command line history
 set ruler                           " show the cursor position all the time
 set relativenumber                  " show line number relatively
@@ -507,7 +512,7 @@ set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
 set wildignore+=*$py.class,*.class,*.gem,*.zip
 
 set scrolljump=6                    " lines to scroll when cursor leaves screen
-set scrolloff=9                     " minimum lines to keep above and below cursor
+set scrolloff=6                     " minimum lines to keep above and below cursor
 
 " related to <TAB> indents
 set shiftwidth=4
@@ -599,7 +604,10 @@ set whichwrap+=<,>,b,s
     " F7  Manual syntastic check
     " F8
     " F9  Toggle iTerm 2
+    " C-F9 Used in System
+    " M-F9 Used in System
     " F10 Toggle NERDTree
+    " C-F10 Toggle Vimfiler
     " F11 Toggle Menu and Toolbar {{{
     set go=
     map <silent> <F11> :if &guioptions =~# 'T' <Bar>
@@ -621,15 +629,11 @@ vmap <tab> >gv
 vmap <s-tab> <gv
 
 " Move a line of text using <up><down>
-nmap <up> mz:m-2<cr>`z
-nmap <down> mz:m+<cr>`z
-vmap <up> :m'<-2<cr>`>my`<mzgv`yo`z
-vmap <down> :m'>+<cr>`<my`>mzgv`yo`z
-" Or Comamnd+[jk] on mac
-nmap <M-k> mz:m-2<cr>`z
-nmap <M-j> mz:m+<cr>`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+" http://vim.wikia.com/wiki/Moving_lines_up_or_down
+nnoremap <up> :m .-2<CR>==
+nnoremap <down> :m .+1<CR>==
+vnoremap <up> :m '<-2<CR>gv=gv
+vnoremap <down> :m '>+1<CR>gv=gv
 
 " normal char key mappings {{{
     " Q: to repeat last recorded macro
@@ -750,12 +754,14 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
     " <leader>q quick quit without save
     nnoremap <leader>q :q!<CR>
     " <leader>w
-    nmap <silent> <leader>w :call ToggleWrap()<cr>
+    nnoremap <Leader>w :w<CR>
+    " <leader>W
+    nnoremap <leader>W :call ToggleWrap()<CR>
     function! ToggleWrap()
-        nnoremap <silent> j gj
-        nnoremap <silent> k gk
-        nnoremap <silent> 0 g0
-        nnoremap <silent> $ g$
+        nnoremap j gj
+        nnoremap k gk
+        nnoremap 0 g0
+        nnoremap $ g$
     endfunction
     " <leader>e
     " <leader>r
@@ -1047,25 +1053,17 @@ endfunction
 autocmd! bufwritepost .vimrc source $MYVIMRC
 
 " Quick edit _vimrc and code_complete template
-nmap <leader>0 :e $MYVIMRC<CR>
-nmap <leader>) :tabnew $MYVIMRC<CR>
+nnoremap <leader>0 :tabnew $MYVIMRC<CR>
+nnoremap <leader>) :e $MYVIMRC<CR>
 
-" Remap VIM 0 to first non-blank character
-map 0 ^
+" Remap 0 to first non-blank character
+nnoremap 0 ^
 
-" fix Vim’s horribly broken default regex
+" fix broken default regex
 nnoremap / /\v
 vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
-
-" Return to last edit position when opening files (You want this!)
-autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
-" Remember info about open buffers on close
-set viminfo^=%
 
 " C/CPP Mappings {{{
     au FileType cpp,c,cc,h,hpp :call CppDef()
