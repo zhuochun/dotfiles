@@ -379,6 +379,8 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'Valloric/MatchTagAlways'
 
 NeoBundle 'xolox/vim-misc'
+NeoBundle 'xolox/vim-easytags'
+    let g:easytags_file = '~/.vim/tags'
 NeoBundle 'xolox/vim-notes'
     let g:notes_directories = ['~/Dropbox/Mac/Note']
     let g:notes_suffix = '.md'
@@ -456,7 +458,7 @@ set background=dark
 set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
 "set guifont=Inconsolata\ for\ Powerline:h18
 " vim window size
-set lines=42 columns=129
+set lines=99 columns=999
 
 " enable filetype plugin
 filetype plugin on
@@ -467,9 +469,9 @@ filetype on
 " \ is used in EasyMotion
 let mapleader = ","
 let g:mapleader = ","
-" ; is easier than : as well
-nnoremap ; :
+" ; is easier than :
 nnoremap : ;
+nnoremap ; :
 
 " Syntax highlighting on
 syntax on
@@ -531,8 +533,8 @@ set cindent                         " indent for c/c++
 set autoread                        " autoread when a file is changed from the outside
 
 " word boundary to be a little bigger than the default
-set iskeyword+=_,$,@,%,#,`,!,?
-set iskeyword-=-
+set iskeyword+=$,@,%,#,`,!,?
+set iskeyword-=_,-
 
 " Related to Search {{{
 set ignorecase                      " Ignore case when searching
