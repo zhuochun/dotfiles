@@ -2,18 +2,24 @@
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load:
-# norm ys random
-ZSH_THEME="norm"
+# blinks norm ys jtriley rkj-repos random 
+ZSH_THEME="blinks"
 
-# Aliases
+# System Aliases
 alias cls=clear
 alias rmd=rm -rf
+alias h=history
+alias q=exit
 # Copy to clipboard
 alias cc=pbcopy
 # Vim Alias
 alias e=mvim
 alias ee=vim
 alias vi=vim
+# Rails Alias
+alias zi=zeus start
+alias zs=zeus server
+alias zc=zeus console
 # Node-Webkit Alias
 alias nw=~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit
 
@@ -78,7 +84,7 @@ alias -s txt=vim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bundler bower cap gem git git-extras mercurial node npm osx rails3 ruby rvm )
+plugins=(autojump brew bower cap gem git git-extras node npm osx rails3 ruby rvm)
 
 source $ZSH/oh-my-zsh.sh
 

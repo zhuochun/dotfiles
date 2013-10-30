@@ -197,13 +197,15 @@ NeoBundle 'scrooloose/nerdtree'
     let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
-    map <F10> <plug>NERDTreeTabsToggle<CR>
+    map <F10> <plug>NERDTreeMirrorToggle<CR>
     " Do not open NERDTree on startup
     let g:nerdtree_tabs_open_on_gui_startup=0
 
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    " Quick go to buffer or file
+    nnoremap <leader>t :<C-u>Unite buffer file_rec/async:!<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <D-u> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
@@ -366,6 +368,7 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-eunuch'
 
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -380,7 +383,10 @@ NeoBundle 'Valloric/MatchTagAlways'
 
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
+    set tags=./tags;
     let g:easytags_file = '~/.vim/tags'
+    let g:easytags_dynamic_files = 1
+    let g:easytags_updatetime_warn = 0
 NeoBundle 'xolox/vim-notes'
     let g:notes_directories = ['~/Dropbox/Mac/Note']
     let g:notes_suffix = '.md'
@@ -409,6 +415,9 @@ NeoBundle 'elzr/vim-json'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'kchmck/vim-coffee-script'
+    let coffee_compile_vert = 1
+    let coffee_watch_vert = 1
+    let coffee_run_vert = 1
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -470,8 +479,8 @@ filetype on
 let mapleader = ","
 let g:mapleader = ","
 " ; is easier than :
-nnoremap : ;
-nnoremap ; :
+noremap : ;
+noremap ; :
 
 " Syntax highlighting on
 syntax on
@@ -792,6 +801,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <leader>D close buffer
     nnoremap <leader>D :bdelete<CR>
     nnoremap \d :bdelete<CR>
+    nnoremap \q :bdelete<CR>
     " <leader>f easier code formatting
     nnoremap <leader>f gg=G''
     " <leader>g
