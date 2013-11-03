@@ -204,14 +204,12 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Quick go to buffer or file
-    nnoremap <leader>t :<C-u>Unite buffer file_rec/async:!<CR>
+    " Most recently used files
+    nnoremap <M-o> :<C-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <D-u> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
     nnoremap <D-i> :<C-u>Unite -quick-match buffer<CR>
-    " Most recently used files
-    nnoremap <M-o> :<C-u>Unite file_mru<CR>
     " Content searching like ack.vim
     nnoremap <D-/> :<C-u>Unite grep:.<CR>
     " Enabled to track yank history
@@ -237,6 +235,8 @@ NeoBundle 'Shougo/unite.vim'
         " Overwrite settings.
         nmap <buffer> <ESC> <Plug>(unite_exit)
         nmap <buffer> <leader>d <Plug>(unite_exit)
+
+        imap <buffer> <CR> <Plug>(unite_insert_leave)
         imap <buffer> <TAB> <Plug>(unite_select_next_line)
         imap <buffer> <S-TAB> <Plug>(unite_select_previous_line)
     endfunction "}}}
@@ -294,8 +294,8 @@ NeoBundle 'Shougo/neocomplcache.vim'
     let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
     " Plugin key-mappings.
-    inoremap <expr><C-g>     neocomplcache#undo_completion()
-    inoremap <expr><C-l>     neocomplcache#complete_common_string()
+    inoremap <expr><C-g> neocomplcache#undo_completion()
+    inoremap <expr><C-l> neocomplcache#complete_common_string()
 
     " Recommended key-mappings.
     " <CR>: close popup and save indent.
@@ -419,6 +419,7 @@ NeoBundle 'kchmck/vim-coffee-script'
     let coffee_watch_vert = 1
     let coffee_run_vert = 1
 NeoBundle 'Keithbsmiley/rspec.vim'
+NeoBundle 'moll/vim-node'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'othree/html5.vim'
@@ -439,7 +440,7 @@ NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_rails = 1
     let g:rubycomplete_use_bundler = 1
 NeoBundle 'vim-jp/cpp-vim'
-NeoBundle "wavded/vim-stylus"
+NeoBundle 'wavded/vim-stylus'
 " }}}
 
 " colorschemes {{{
