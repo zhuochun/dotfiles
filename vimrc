@@ -460,7 +460,7 @@ NeoBundle 'chriskempson/base16-vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " colorschemes
-colorscheme base16-eighties
+colorscheme molokai
 " colorscheme background
 set background=dark
 " vim fonts
