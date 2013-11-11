@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 13/Oct/2013 12:24 PM
+" Last Edit: 12/Nov/2013 02:10 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -449,6 +449,8 @@ NeoBundle 'tomasr/molokai'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'endel/vim-github-colorscheme'
 " }}}
 
 " }}}
@@ -459,14 +461,12 @@ NeoBundle 'chriskempson/base16-vim'
 " VIM Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" colorschemes
-colorscheme molokai
 " colorscheme background
 set background=dark
+" colorschemes
+colorscheme Tomorrow-Night-Bright
 " vim fonts
-"set guifont=Anonymous\ Pro\ for\ Powerline:h16
 set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
-"set guifont=Inconsolata\ for\ Powerline:h18
 " vim window size
 set lines=99 columns=999
 
@@ -523,9 +523,10 @@ set magic                           " Set magic on, for regular expressions
 set winaltkeys=no                   " Set ALT not map to toolbar
 
 set wildmenu                        " Show autocomplete menus
-set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc
+set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.min.js
 set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
 set wildignore+=*$py.class,*.class,*.gem,*.zip
+set wildignore+=*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*,*/log/*,*/tmp/*,*/build/*
 
 set scrolljump=6                    " lines to scroll when cursor leaves screen
 set scrolloff=6                     " minimum lines to keep above and below cursor
@@ -770,14 +771,15 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <leader>q quick quit without save
     nnoremap <leader>q :q!<CR>
     " <leader>w
-    nnoremap <Leader>w :w<CR>
+    nnoremap <Leader>W :w<CR>
     " <leader>W
-    nnoremap <leader>W :call ToggleWrap()<CR>
+    nnoremap <leader>w :call ToggleWrap()<CR>
     function! ToggleWrap()
         nnoremap j gj
         nnoremap k gk
         nnoremap 0 g0
         nnoremap $ g$
+        nnoremap ^ g^
     endfunction
     " <leader>e
     " <leader>r
@@ -1068,6 +1070,7 @@ endfunction
 
 " Source the vimrc file after saving it
 autocmd! bufwritepost .vimrc source $MYVIMRC
+autocmd! bufwritepost .vimrc source $MYGVIMRC
 
 " Quick edit _vimrc and code_complete template
 nnoremap <leader>0 :tabnew $MYVIMRC<CR>
@@ -1134,6 +1137,11 @@ vnoremap ? ?\v
 
         " Correct typos
         iab colour color
+        iab ->> →
+        iab <<- ←
+        iab ^^  ↑
+        iab VV  ↓
+        iab aa  λ
     endfunction
 " }}}
 

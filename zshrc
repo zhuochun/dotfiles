@@ -6,6 +6,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="suvash"
 
 # System Aliases
+alias plz=sudo
 alias cls=clear
 alias rmd="rm -rf"
 alias h=history
@@ -16,26 +17,14 @@ alias cc=pbcopy
 alias e=mvim
 alias ee=vim
 alias vi=vim
+# Git
+alias g=git
 # Node-Webkit Alias
 alias nw=~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit
 
 # Edit zshrc and vimrc
 alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
-
-# Folders
-hash -d dbox=~/Dropbox/Mac/
-hash -d note=~/Dropbox/Mac/Note/
-hash -d prog=~/Documents/Programming/
-hash -d hub=~/Documents/Programming/Github/
-hash -d snippet=~/Documents/Programming/Github/vim-snippets/snippets/
-hash -d web=~/Documents/Programming/Web/
-hash -d blog=~/Documents/Programming/Web/zhuochun.github.io/_posts/
-hash -d mobile=~/Documents/Programming/Mobile/
-hash -d node=~/Documents/Programming/NodeWebkit/
-hash -d hacker=~/Documents/Programming/Cpp/HackerRank/
-hash -d cg3002=~/Documents/Programming/CG3002/server-rails/
-hash -d cg4001=~/Documents/Programming/CG4001/remotely-observed-treatment/
 
 # open files in vim
 alias -s html=vim
@@ -50,6 +39,13 @@ alias -s c=vim
 alias -s h=vim
 alias -s cpp=vim
 alias -s txt=vim
+
+# IP addresses
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+
+# Enhanced WHOIS lookups
+alias whois="whois -h whois-servers.net"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
