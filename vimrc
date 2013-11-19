@@ -92,16 +92,24 @@ NeoBundle 'derekwyatt/vim-fswitch'
 NeoBundle 'godlygeek/tabular'
     vnoremap <leader>& :Tabularize /&<CR>
     vnoremap <leader>= :Tabularize /=<CR>
-    vnoremap <leader>: :Tabularize /:\zs<CR>
+    vnoremap <leader>; :Tabularize /:\zs<CR>
     vnoremap <leader>- :Tabularize /-\zs<CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
 
+NeoBundle 'justinmk/vim-sneak'
+    " replace f with Sneak
+    nmap f <Plug>SneakForward
+    nmap F <Plug>SneakBackward
+    " handle my ; -> : remaps
+    nmap : <Plug>SneakNext
+    xmap : <Plug>VSneakNext
+
 NeoBundle 'kshenoy/vim-signature'
 
-NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'supasorn/vim-easymotion'
     let g:EasyMotion_leader_key = '\'
     " Tweak the colors
     hi link EasyMotionTarget WarningMsg
@@ -156,6 +164,11 @@ NeoBundle 'rking/ag.vim'
     " Ack [options] {pattern} [{directory}]
 
 NeoBundle 'scrooloose/syntastic'
+    " Fancy symbols
+    let g:syntastic_error_symbol = '✗'
+    let g:syntastic_style_error_symbol = '✠'
+    let g:syntastic_warning_symbol = '∆'
+    let g:syntastic_style_warning_symbol = '≈'
     " Do a manual syntastic check
     nnoremap <silent> <F7>   :SyntasticCheck<CR>
     " Toggle syntastic between active and passive mode
@@ -253,63 +266,59 @@ NeoBundle 'Shougo/vimfiler.vim'
     " Q     <Plug>(vimfiler_exit)
     " t     <Plug>(vimfiler_expand_tree)
 
-NeoBundle 'Shougo/neocomplcache.vim'
-    " Enable AutoComplPop.
-    let g:acp_enableAtStartup = 0
-    " Use neocomplcache.
-    let g:neocomplcache_enable_at_startup = 1
+NeoBundle 'Shougo/neocomplete.vim'
+    " Use neocomplete.
+    let g:neocomplete#enable_at_startup = 1
     " Use smartcase.
-    let g:neocomplcache_enable_smart_case = 1
-    " Use camel case completion.
-    let g:neocomplcache_enable_camel_case_completion = 1
-    " Use underbar completion.
-    let g:neocomplcache_enable_underbar_completion = 1
-    " overwrite complete func!
-    let g:neocomplcache_force_overwrite_completefunc = 1
-
-    " Define dictionary.
-    let g:neocomplcache_dictionary_filetype_lists = {
-        \ 'default' : '',
-        \ 'vimshell' : $HOME.'/.vimshell_hist',
-        \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+    let g:neocomplete#enable_smart_case = 1
 
     " Plugin key-mappings.
-    inoremap <expr><C-g> neocomplcache#undo_completion()
-    inoremap <expr><C-l> neocomplcache#complete_common_string()
-
-    " Recommended key-mappings.
+    inoremap <expr><C-g> neocomplete#undo_completion()
+    inoremap <expr><C-l> neocomplete#complete_common_string()
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-    function! s:my_cr_function()
-      return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-    endfunction
+        function! s:my_cr_function()
+          return pumvisible() ? neocomplete#close_popup() : "\<cr>"
+        endfunction
     " <TAB>: completion.
     inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
     " <BS>: close popup and delete backword char.
-    inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-    " <SPACE>: Close popup.
-    inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup()."\<Space>" : "\<Space>"
+    inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
+    " <Space>: Close popup.
+    inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
     " Enable omni completion.
     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
+    autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-    autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+
+    " Define dictionary.
+    let g:neocomplete#sources#dictionary#dictionaries = {
+        \ 'default'  :  '',
+        \ 'vimshell' :  $HOME.'/.vimshell_hist',
+        \ 'scheme'   :  $HOME.'/.gosh_completions'
+        \ }
+
+    " Define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
 
     " Enable heavy omni completion.
-    if !exists('g:neocomplcache_omni_patterns')
-        let g:neocomplcache_omni_patterns = {}
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+      let g:neocomplete#sources#omni#input_patterns = {}
     endif
-    let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-    let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-    let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-    let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+
+    " Force neocomplete omni func
+    let g:neocomplete#force_overwrite_completefunc = 1
+    if !exists('g:neocomplete#force_omni_input_patterns')
+      let g:neocomplete#force_omni_input_patterns = {}
+    endif
 
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
@@ -322,6 +331,7 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Tell Neosnippet about the other snippets
     let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 
+    " Snippet variables
     let g:snips_author='Wang Zhuochun'
     let g:snips_email='stone1551@gmail.com'
     let g:snips_github='https://github.com/zhuochun'
@@ -362,7 +372,7 @@ NeoBundle 'Valloric/MatchTagAlways'
 
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
-    set tags=./tags;
+    set tags=./tags
     let g:easytags_file = '~/.vim/tags'
     let g:easytags_dynamic_files = 1
     let g:easytags_updatetime_warn = 0
@@ -373,8 +383,14 @@ NeoBundle 'xolox/vim-notes'
     let g:notes_markdown_program = 'kramdown'
 
 NeoBundle 'Yggdroot/indentLine'
+    let g:indentLine_char = '┆'
 
 NeoBundle 'zhuochun/vim-snippets'
+
+" dash.app {{{
+NeoBundle 'rizzatti/funcoo.vim'
+NeoBundle 'rizzatti/dash.vim'
+" }}}
 
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
@@ -414,6 +430,7 @@ NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
+NeoBundle 'vim-pandoc/vim-pandoc'
 NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
@@ -461,7 +478,6 @@ filetype on
 let mapleader = ","
 let g:mapleader = ","
 " ; is easier than :
-noremap : ;
 noremap ; :
 
 " Syntax highlighting on
@@ -498,7 +514,6 @@ set hidden                          " change buffer even if it is not saved
 set lbr                             " dont break line within a word
 set showcmd                         " display incomplete commands
 set showmode                        " show current mode
-"set autochdir                      " automatically change to current file location
 set cursorline                      " highlight the current line
 set magic                           " Set magic on, for regular expressions
 set winaltkeys=no                   " Set ALT not map to toolbar
@@ -526,8 +541,8 @@ set cindent                         " indent for c/c++
 set autoread                        " autoread when a file is changed from the outside
 
 " word boundary to be a little bigger than the default
-set iskeyword+=$,@,%,#,`,!,?
 set iskeyword-=_,-
+set iskeyword+=$,@,%,#,`,!,?
 
 " Related to Search {{{
 set ignorecase                      " Ignore case when searching
@@ -1134,8 +1149,6 @@ vnoremap ? ?\v
 
         " F2  Insert date and time in Jekyll
         inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
-        " mark Jekyll YAML frontmatter as comment
-        match Comment /\%^---\_.\{-}---$/
     endfunction
 " }}}
 
@@ -1161,6 +1174,8 @@ iab /*         /*
 cab cwd        cd %:p:h
 " change local working directory
 cab clwd       lcd %:p:h
+" edit in tab, split, vsplit
+cab te         tabe
 " }}}
 
 " list chars {{
