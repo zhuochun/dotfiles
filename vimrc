@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 12/Nov/2013 02:10 AM
+" Last Edit: 20/Nov/2013 12:52 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -83,17 +83,13 @@ NeoBundle 'bufkill.vim'
 
 NeoBundle 'bkad/CamelCaseMotion'
     " use 'W', 'B' and 'E' to navigate
-    nmap <S-W> <Plug>CamelCaseMotion_w
-    nmap <S-B> <Plug>CamelCaseMotion_b
-    nmap <S-E> <Plug>CamelCaseMotion_e
-
-" timing statistics by using :BufTimer or :BufTimerReport
-NeoBundle 'chrisbra/BufTimer'
+    nmap <S-w> <Plug>CamelCaseMotion_w
+    nmap <S-b> <Plug>CamelCaseMotion_b
+    nmap <S-e> <Plug>CamelCaseMotion_e
 
 NeoBundle 'derekwyatt/vim-fswitch'
 
 NeoBundle 'godlygeek/tabular'
-    vnoremap <leader>a :Tabularize /
     vnoremap <leader>& :Tabularize /&<CR>
     vnoremap <leader>= :Tabularize /=<CR>
     vnoremap <leader>: :Tabularize /:\zs<CR>
@@ -156,10 +152,8 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     " <M-P> - cycle forwards through your history of yanks
     nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
-NeoBundle 'mileszs/ack.vim'
+NeoBundle 'rking/ag.vim'
     " Ack [options] {pattern} [{directory}]
-    " Use ag instead
-    let g:ackprg = 'ag --nogroup --nocolor --column'
 
 NeoBundle 'scrooloose/syntastic'
     " Do a manual syntastic check
@@ -174,8 +168,6 @@ NeoBundle 'scrooloose/syntastic'
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
                                \ 'passive_filetypes': ['html', 'css'] }
-    " syntax checking method for ruby, ['mri', 'rubocop']
-    let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 NeoBundle 'scrooloose/nerdcommenter'
     " use / to toggle comments
@@ -242,6 +234,7 @@ NeoBundle 'Shougo/unite.vim'
     endfunction "}}}
 
 NeoBundle 'Shougo/unite-outline'
+
 NeoBundle 'Shougo/vimfiler.vim'
     let g:vimfiler_as_default_explorer = 1
     " open vimfiler
@@ -265,18 +258,12 @@ NeoBundle 'Shougo/neocomplcache.vim'
     let g:acp_enableAtStartup = 0
     " Use neocomplcache.
     let g:neocomplcache_enable_at_startup = 1
-    " Set minimum syntax keyword length.
-    let g:neocomplcache_min_syntax_length = 2
     " Use smartcase.
     let g:neocomplcache_enable_smart_case = 1
     " Use camel case completion.
     let g:neocomplcache_enable_camel_case_completion = 1
     " Use underbar completion.
     let g:neocomplcache_enable_underbar_completion = 1
-    " Use auto delimiter
-    let g:neocomplcache_enable_auto_delimiter = 1
-    " Max list length
-    let g:neocomplcache_max_list = 10
     " overwrite complete func!
     let g:neocomplcache_force_overwrite_completefunc = 1
 
@@ -286,12 +273,6 @@ NeoBundle 'Shougo/neocomplcache.vim'
         \ 'vimshell' : $HOME.'/.vimshell_hist',
         \ 'scheme' : $HOME.'/.gosh_completions'
         \ }
-
-    " Define keyword.
-    if !exists('g:neocomplcache_keyword_patterns')
-        let g:neocomplcache_keyword_patterns = {}
-    endif
-    let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
     " Plugin key-mappings.
     inoremap <expr><C-g> neocomplcache#undo_completion()
@@ -319,8 +300,6 @@ NeoBundle 'Shougo/neocomplcache.vim'
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-    autocmd FileType python set omnifunc=pythoncomplete#Complete
-    autocmd FileType c set omnifunc=ccomplete#Complete
 
     " Enable heavy omni completion.
     if !exists('g:neocomplcache_omni_patterns')
@@ -357,11 +336,11 @@ NeoBundle 'Shougo/neosnippet.vim'
     " especially when splits are used.
     set completeopt-=preview
 
-" A neocomplcache plugin for /usr/bin/look
-" to complete words in Englis
+" A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
 NeoBundle 'tpope/vim-rails'
+NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
@@ -394,6 +373,7 @@ NeoBundle 'xolox/vim-notes'
     let g:notes_markdown_program = 'kramdown'
 
 NeoBundle 'Yggdroot/indentLine'
+
 NeoBundle 'zhuochun/vim-snippets'
 
 " text objects {{{
@@ -438,6 +418,7 @@ NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
     let g:rubycomplete_rails = 1
+    let g:rubycomplete_load_gemfile = 1
     let g:rubycomplete_use_bundler = 1
 NeoBundle 'vim-jp/cpp-vim'
 NeoBundle 'wavded/vim-stylus'
@@ -526,7 +507,8 @@ set wildmenu                        " Show autocomplete menus
 set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.min.js
 set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
 set wildignore+=*$py.class,*.class,*.gem,*.zip
-set wildignore+=*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*,*/log/*,*/tmp/*,*/build/*
+set wildignore+=*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*
+set wildignore+=*/log/*,*/tmp/*,*/build/*,*/vendor/bundle/*,*/vendor/cache/*,*/vendor/gems/*
 
 set scrolljump=6                    " lines to scroll when cursor leaves screen
 set scrolloff=6                     " minimum lines to keep above and below cursor
@@ -1070,7 +1052,6 @@ endfunction
 
 " Source the vimrc file after saving it
 autocmd! bufwritepost .vimrc source $MYVIMRC
-autocmd! bufwritepost .vimrc source $MYGVIMRC
 
 " Quick edit _vimrc and code_complete template
 nnoremap <leader>0 :tabnew $MYVIMRC<CR>
@@ -1153,6 +1134,8 @@ vnoremap ? ?\v
 
         " F2  Insert date and time in Jekyll
         inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+        " mark Jekyll YAML frontmatter as comment
+        match Comment /\%^---\_.\{-}---$/
     endfunction
 " }}}
 
