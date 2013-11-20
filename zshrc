@@ -17,8 +17,10 @@ alias cc=pbcopy
 alias e=mvim
 alias ee=vim
 alias vi=vim
-# Git
+# Others
 alias g=git
+alias ra=rake
+alias js="jekyll server --watch"
 # Node-Webkit Alias
 alias nw=~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit
 
@@ -46,6 +48,10 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
+
+# Locale
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -79,9 +85,6 @@ alias whois="whois -h whois-servers.net"
 plugins=(autojump brew bower cap gem git git-extras heroku node npm osx rails3 rbenv ruby tmux zeus)
 
 source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
-export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 # Ruby environment
 eval "$(rbenv init -)"

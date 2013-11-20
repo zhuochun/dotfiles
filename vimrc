@@ -109,14 +109,6 @@ NeoBundle 'justinmk/vim-sneak'
 
 NeoBundle 'kshenoy/vim-signature'
 
-NeoBundle 'supasorn/vim-easymotion'
-    let g:EasyMotion_leader_key = '\'
-    let g:EasyMotion_do_mapping = 0
-    let g:EasyMotion_keys = "abcdefghijklmnopqrstuvwxyz"
-    " Tweak the colors
-    hi link EasyMotionTarget WarningMsg
-    hi link EasyMotionShade Comment
-
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
     " Modify tagbar settings
@@ -326,6 +318,10 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
     imap <D-d> <Plug>(neosnippet_expand_or_jump)
     smap <D-d> <Plug>(neosnippet_expand_or_jump)
+    " Alternative
+    imap <M-d> <Plug>(neosnippet_jump_or_expand)
+    smap <M-d> <Plug>(neosnippet_jump_or_expand)
+    " Visual
     xmap <D-d> <Plug>(neosnippet_expand_target)
 
     " Enable snipMate compatibility feature.
@@ -354,6 +350,17 @@ NeoBundle 'ujihisa/neco-look'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-surround'
+    " Surround % to %
+    let b:surround_37 = "<% \r %>"
+    " Surround = to %=
+    let b:surround_61 = "<%= \r %>"
+    " Shortcuts
+    vmap ( S)
+    vmap { S{
+    vmap [ S]
+    vmap " S"
+    vmap ' S'
+    vmap ` S`
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
@@ -718,13 +725,16 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <i> Insert
     " <o> Open new line below
     " <O> Open new line above
-    " <p> Paste Yank
+    " <p> Paste Yank, keep cursor position when pasting
+    nnoremap p p`[
+    nnoremap P P`[
     " <{> Paragraphs backward
     " <}> Paragraphs forward
     " <\> Easymotion
     " <|> Vertical split
     " <a> Append insert
-    " <s> Substitue
+    " <s> Substitue, dont update default register
+    vnoremap s "_s
     " <d> Delete
     " <f> find to right (exclusive)
     " <F> find to right (inclusive)
@@ -742,7 +752,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <CR> Open new line at cursor
     " <z*> Folds
     " <x> Delete char cursor
-    " <c> Change
+    " <c> Change, dont update default register
+    nnoremap c "_c
     " <v> Visual
     " <b> Words Backwards
     " <B> Words Backwards (CamelCase)
