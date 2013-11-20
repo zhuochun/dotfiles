@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 20/Nov/2013 12:52 AM
+" Last Edit: 20/Nov/2013 07:56 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -111,6 +111,8 @@ NeoBundle 'kshenoy/vim-signature'
 
 NeoBundle 'supasorn/vim-easymotion'
     let g:EasyMotion_leader_key = '\'
+    let g:EasyMotion_do_mapping = 0
+    let g:EasyMotion_keys = "abcdefghijklmnopqrstuvwxyz"
     " Tweak the colors
     hi link EasyMotionTarget WarningMsg
     hi link EasyMotionShade Comment
@@ -429,8 +431,8 @@ NeoBundle 'chrisbra/color_highlight'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-haml'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'vim-pandoc/vim-pandoc'
+NeoBundle 'plasticboy/vim-markdown'
+    let g:vim_markdown_folding_disabled = 1
 NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
@@ -960,9 +962,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <M-p> Yankstack old
     " <M-P> Yankstack new
     " <M-[>
-    nnoremap <M-[> :lprevious<CR>
     " <M-]>
-    nnoremap <M-]> :lNext<CR>
     " <M-a>
     " <M-s>
     " <M-d>
@@ -1069,8 +1069,8 @@ endfunction
 autocmd! bufwritepost .vimrc source $MYVIMRC
 
 " Quick edit _vimrc and code_complete template
-nnoremap <leader>0 :tabnew $MYVIMRC<CR>
-nnoremap <leader>) :e $MYVIMRC<CR>
+nmap <leader>0 :tabnew $MYVIMRC<CR>
+nmap <leader>) :e $MYVIMRC<CR>
 
 " Remap 0 to first non-blank character
 nnoremap 0 ^
@@ -1147,6 +1147,10 @@ vnoremap ? ?\v
         setlocal shiftwidth=2
         setlocal tabstop=2
 
+        " Correct typos
+        iab ->> →
+        iab <<- ←
+
         " F2  Insert date and time in Jekyll
         inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
     endfunction
@@ -1173,7 +1177,7 @@ iab /*         /*
 " change working directory
 cab cwd        cd %:p:h
 " change local working directory
-cab clwd       lcd %:p:h
+cab lwd        lcd %:p:h
 " edit in tab, split, vsplit
 cab te         tabe
 " }}}
