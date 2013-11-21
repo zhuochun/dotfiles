@@ -47,7 +47,7 @@ NeoBundle 'Shougo/vimproc', {
     \   },
     \ }
 
-NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'mhinz/vim-signify'
 
 NeoBundle 'AndrewRadev/switch.vim'
     nnoremap + :Switch<CR>
@@ -393,6 +393,7 @@ NeoBundle 'xolox/vim-notes'
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
+    let g:indentLine_showFirstIndentLevel = 1
 
 NeoBundle 'zhuochun/vim-snippets'
 
@@ -451,13 +452,14 @@ NeoBundle 'wavded/vim-stylus'
 " }}}
 
 " colorschemes {{{
-NeoBundle 'tomasr/molokai'
-    let g:molokai_original = 0
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'endel/vim-github-colorscheme'
+NeoBundle 'jacekd/vim-iawriter'
+NeoBundle 'tomasr/molokai'
+    let g:molokai_original = 0
+NeoBundle 'w0ng/vim-hybrid'
 " }}}
 
 " }}}
@@ -616,31 +618,22 @@ set whichwrap+=<,>,b,s
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Function keys {{{
-    " F1  Help
-    " F2  Insert date and time
+    " F1 Help
+    " F2 Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
-    " F3  Toggle Tagbar
+    " F3 Toggle Tagbar
     " F4
     " F5
-    " F6  Paste mode
+    " F6 Paste mode
     set pastetoggle=<F6>
-    " F7  Manual syntastic check
+    " F7 Tigger Syntastic check
     " F8
-    " F9  Toggle iTerm 2
+    " F9   Toggle iTerm 2
     " C-F9 Used in System
     " M-F9 Used in System
-    " F10 Toggle NERDTree
+    " F10   Toggle NERDTree
     " C-F10 Toggle Vimfiler
-    " F11 Toggle Menu and Toolbar {{{
-    set go=
-    map <silent> <F11> :if &guioptions =~# 'T' <Bar>
-            \set guioptions-=T <Bar>
-            \set guioptions-=m <bar>
-        \else <Bar>
-            \set guioptions+=T <Bar>
-            \set guioptions+=m <Bar>
-        \endif<CR>
-    " }}}
+    " F11
     " F12
 " }}}
 
@@ -1153,7 +1146,7 @@ vnoremap ? ?\v
 " }}}
 
 " Markdown Mappings {{{
-    au FileType markdown :call MarkdownDef()
+    au FileType markdown,mkd,text :call MarkdownDef()
     function! MarkdownDef()
         setlocal shiftwidth=2
         setlocal tabstop=2
@@ -1185,13 +1178,14 @@ iab ture       true
 iab ?8         /*
 iab /8         /*
 iab /*         /*
+" }}}
+
 " change working directory
 cab cwd        cd %:p:h
 " change local working directory
 cab lwd        lcd %:p:h
 " edit in tab, split, vsplit
 cab te         tabe
-" }}}
 
 " list chars {{
 set list
