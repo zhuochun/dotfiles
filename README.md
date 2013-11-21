@@ -1,10 +1,16 @@
 # dotfiles
 
-- ` vimrc`: for Mac (newer version)
-- `_vimrc`: for Windows (not updated)
+- ` vimrc`: for Mac
+- `_vimrc`: for Windows
 
-# Screenshot in MacVim
+To maintian key press consistency, mappings on Windows (Alt - M) are remapped to Mac (Command - D).
 
-![MacVim Screenshot](https://www.evernote.com/shard/s50/sh/f05d204f-79e2-4f19-9b9c-3f116360fee5/5b3545da85a9a5b4b4d0b2fed4a9ab13/res/eef9538a-418a-4587-b91c-f1a9e13ba857/)
+# Screenshot on Windows
+
+![Windows gVim Screenshot](http://i.imgur.com/Qs205Th.png)
+
+# Screenshot on Mac
+
+![MacVim Screenshot](http://imgur.com/kMowUrZ)
 
 ### From [zhuochun](http://www.bicrement.com)
