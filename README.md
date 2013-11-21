@@ -3,7 +3,7 @@
 - ` vimrc`: for Mac
 - `_vimrc`: for Windows
 
-To maintian key press consistency, mappings on Windows (Alt - M) are remapped to Mac (Command - D).
+To maintain key consistency, mappings on Windows (Alt - M) are remapped to Mac (Command - D).
 
 # Screenshot on Windows
 
@@ -11,6 +11,6 @@ To maintian key press consistency, mappings on Windows (Alt - M) are remapped to
 
 # Screenshot on Mac
 
-![MacVim Screenshot](http://imgur.com/kMowUrZ)
+![MacVim Screenshot](http://i.imgur.com/kMowUrZ.jpg)
 
 ### From [zhuochun](http://www.bicrement.com)
