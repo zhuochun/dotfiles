@@ -100,12 +100,18 @@ NeoBundle 'jiangmiao/auto-pairs'
     let g:AutoPairsShortcutToggle = '<M-a>'
 
 NeoBundle 'justinmk/vim-sneak'
+    " not case censitive
+    let g:sneak#use_ic_scs = 0
     " replace f with Sneak
     nmap f <Plug>SneakForward
+    xmap f <Plug>VSneakForward
     nmap F <Plug>SneakBackward
+    xmap F <Plug>VSneakBackward
     " handle my ; -> : remaps
     nmap : <Plug>SneakNext
     xmap : <Plug>VSneakNext
+    nmap ? <Plug>SneakPrevious
+    xmap ? <Plug>VSneakPrevious
 
 NeoBundle 'kshenoy/vim-signature'
 
@@ -265,6 +271,12 @@ NeoBundle 'Shougo/vimfiler.vim'
     " Q     <Plug>(vimfiler_exit)
     " t     <Plug>(vimfiler_expand_tree)
 
+NeoBundle 'Shougo/vimshell.vim'
+    " default prompt string
+    let g:vimshell_prompt = $USER." $ "
+    " display current dir
+    let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+
 NeoBundle 'Shougo/neocomplete.vim'
     " Use neocomplete.
     let g:neocomplete#enable_at_startup = 1
@@ -354,8 +366,6 @@ NeoBundle 'Shougo/neosnippet.vim'
     " When enabled, there can be too much visual noise
     " especially when splits are used.
     set completeopt-=preview
-
-NeoBundle 'Shougo/vimshell.vim'
 
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
@@ -495,10 +505,9 @@ filetype plugin on
 filetype indent on
 filetype on
 
-" , is much easier than \
-" \ is used in EasyMotion
-let mapleader = ","
+" , is easier than \
 let g:mapleader = ","
+let mapleader = ","
 " ; is easier than :
 noremap ; :
 
@@ -1142,8 +1151,16 @@ function! RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
+    " Vimshell
+    nmap <leader>i :VimShellInteractive --split=split pry<CR>
+    vmap <leader>e :VimShellSendString<CR>
+    " Also in shorter command
+    cab pry        VimShellInteractive --split=split pry
+    cab irb        VimShellInteractive --split=split irb
+    cab eval       VimShellSendString
+
     " Correct typos
-    iab elseif     elsif
+    iab elseif      elsif
 endfunction
 " }}}
 
