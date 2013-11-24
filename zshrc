@@ -5,47 +5,48 @@ ZSH=$HOME/.oh-my-zsh
 # dst blinks bira josh norm ys jtriley rkj-repos random
 ZSH_THEME="suvash"
 
-# System Aliases
-alias plz=sudo
-alias cls=clear
-alias rmd="rm -rf"
-alias h=history
-alias q=exit
+# 1 Char Alias
+# ==============================
+alias a="ag"
+alias c="cd"
+alias e="mvim"
+alias g="git"
+alias h="history"
+alias q="exit"
+alias z="zeus"
+
+# 2 Chars Alias
+# ==============================
+
 # Copy to clipboard
-alias cc=pbcopy
-# Vim Alias
-alias e=mvim
-alias ee=vim
-alias vi=vim
-# Others
-alias g=git
-alias ra=rake
+alias cb="pbcopy"
+# Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
-alias nw=~/Documents/Programming/NodeWebkit/v0.7.5/node-webkit.app/Contents/MacOS/node-webkit
+alias nw="~/Documents/Programming/NodeWebkit/v0.8.0/node-webkit.app/Contents/MacOS/node-webkit"
+# Heroku
+alias he="heroku"
+# Rails
+alias rk="rake"
+# Vim Alias
+alias ee="vim"
+alias vi="vim"
+# IP address
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
+# 3 Chars Alias
+# ==============================
+alias plz="sudo"
+alias cls="clear"
+alias rmd="rm -rf"
+# IP address
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+
+# Other Alias
+# ==============================
 # Edit zshrc and vimrc
 alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
-
-# open files in vim
-alias -s html=vim
-alias -s xml=vim
-alias -s css=vim
-alias -s less=vim
-alias -s js=vim
-alias -s json=vim
-alias -s rb=vim
-alias -s asm=vim
-alias -s c=vim
-alias -s h=vim
-alias -s cpp=vim
-alias -s txt=vim
-
-# IP addresses
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
-
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 
