@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 20/Nov/2013 07:56 AM
+" Last Edit: 24/Nov/2013 11:06 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -155,7 +155,12 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'rking/ag.vim'
-    " Ack [options] {pattern} [{directory}]
+    " Ag [options] {pattern} [{directory}]
+
+NeoBundle 'sjl/gundo.vim'
+    nnoremap <F11> :GundoToggle<CR>
+    " Display on right
+    let g:gundo_right = 1
 
 NeoBundle 'scrooloose/syntastic'
     " Fancy symbols
@@ -275,7 +280,13 @@ NeoBundle 'Shougo/neocomplete.vim'
           return pumvisible() ? neocomplete#close_popup() : "\<cr>"
         endfunction
     " <TAB>: completion.
-    inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
+                \ <SID>check_back_space() ? "\<TAB>" :
+                \ neocomplete#start_manual_complete()
+    function! s:check_back_space() "{{{
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1] =~ '\s'
+    endfunction"}}}
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
     " <BS>: close popup and delete backword char.
     inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
@@ -283,9 +294,9 @@ NeoBundle 'Shougo/neocomplete.vim'
     inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
     " Enable omni completion.
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType css,less,sass setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown,mkd setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript,coffee setlocal omnifunc=javascriptcomplete#CompleteJS
     autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -344,11 +355,14 @@ NeoBundle 'Shougo/neosnippet.vim'
     " especially when splits are used.
     set completeopt-=preview
 
+NeoBundle 'Shougo/vimshell.vim'
+
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
+NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-surround'
     " Surround % to %
     let b:surround_37 = "<% \r %>"
@@ -393,7 +407,6 @@ NeoBundle 'xolox/vim-notes'
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
-    let g:indentLine_showFirstIndentLevel = 1
 
 NeoBundle 'zhuochun/vim-snippets'
 
@@ -452,14 +465,12 @@ NeoBundle 'wavded/vim-stylus'
 " }}}
 
 " colorschemes {{{
-NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'endel/vim-github-colorscheme'
-NeoBundle 'jacekd/vim-iawriter'
+NeoBundle 'sjl/badwolf'
+    let g:badwolf_tabline = 2
 NeoBundle 'tomasr/molokai'
     let g:molokai_original = 0
-NeoBundle 'w0ng/vim-hybrid'
 " }}}
 
 " }}}
@@ -514,20 +525,20 @@ set fileencodings=utf-8,ucs-bom,chinese,gbk
 set laststatus=2
 
 " basic settings
-set shortmess=atI                   " No welcome screen in gVim
-set mouse=a                         " Enable Mouse
-set timeoutlen=36                   " Quick timeouts for command combinations
+set shortmess=atI                   " no welcome screen in gVim
+set mouse=a                         " enable mouse
+set timeoutlen=36                   " quick timeouts for command combinations
 set history=999                     " keep 999 lines of command line history
 set ruler                           " show the cursor position all the time
 set relativenumber                  " show line number relatively
-set lazyredraw
+set lazyredraw                      " stops Vim from redrawing during complex operations
 set hidden                          " change buffer even if it is not saved
 set lbr                             " dont break line within a word
 set showcmd                         " display incomplete commands
 set showmode                        " show current mode
 set cursorline                      " highlight the current line
-set magic                           " Set magic on, for regular expressions
-set winaltkeys=no                   " Set ALT not map to toolbar
+set magic                           " set magic on, for regular expressions
+set winaltkeys=no                   " set ALT not map to toolbar
 
 set wildmenu                        " Show autocomplete menus
 set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.min.js
@@ -591,17 +602,17 @@ set swapfile
 set directory=/tmp/,~/tmp,~/Temp
 
 " Persistent undo
-set undofile
-if has("unix")
-    set undodir=/tmp/,~/tmp,~/Temp
-else
-    set undodir=$HOME/temp/
-endif
-
 if has('persistent_undo')
     set undofile         " So is persistent undo ...
+
+    if has("unix")
+        set undodir=/tmp/,~/tmp,~/Temp
+    else
+        set undodir=$HOME/temp/
+    endif
+
     set undolevels=1000  " Maximum number of changes that can be undone
-    set undoreload=10000 " Maximum number lines to save for undo on a buffer reload
+    set undoreload=1000 " Maximum number lines to save for undo on a buffer reload
 endif
 " }}}
 
@@ -628,13 +639,24 @@ set whichwrap+=<,>,b,s
     set pastetoggle=<F6>
     " F7 Tigger Syntastic check
     " F8
-    " F9   Toggle iTerm 2
-    " C-F9 Used in System
-    " M-F9 Used in System
+    " F9    Toggle iTerm 2
+    " C-F9  Used in System
+    " M-F9  Used in System
     " F10   Toggle NERDTree
     " C-F10 Toggle Vimfiler
-    " F11
-    " F12
+    " F11   Toggle Gundo
+    " F12   Toggle MenuBar
+    set go=
+    nnoremap <expr> <F12> <SID>toggle_menubar()
+    function! s:toggle_menubar()
+        if &guioptions =~# 'T'
+            set guioptions-=T
+            set guioptions-=m
+        else
+            set guioptions+=T
+            set guioptions+=m
+        endif
+    endfunction
 " }}}
 
 " use <Tab> and <S-Tab> to indent
@@ -741,7 +763,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <:> Comamnd Input
     " <''> Move to previous context mark, alias to <m'>
     " <'*> Move to {a-zA-Z} mark
-    " <"*> Register
     " <CR> Open new line at cursor
     " <z*> Folds
     " <x> Delete char cursor
@@ -1073,8 +1094,8 @@ endfunction
 autocmd! bufwritepost .vimrc source $MYVIMRC
 
 " Quick edit _vimrc and code_complete template
-nmap <leader>0 :tabnew $MYVIMRC<CR>
-nmap <leader>) :e $MYVIMRC<CR>
+noremap <leader>0 :tabe $MYVIMRC<CR>
+noremap <leader>) :e $MYVIMRC<CR>
 
 " Remap 0 to first non-blank character
 nnoremap 0 ^
@@ -1086,78 +1107,78 @@ nnoremap ? ?\v
 vnoremap ? ?\v
 
 " C/CPP Mappings {{{
-    au FileType cpp,c,cc,h,hpp :call CppDef()
-    function! CppDef()
-        " FSwitch (support cpp better than a.vim) {{{
-        map <F4>   :FSHere<CR>
-        map <F5>   :FSSplitRight<CR>
-        map <C-F5> :FSSplitLeft<CR>
-        " }}}
+au FileType cpp,c,cc,h,hpp :call CppDef()
+function! CppDef()
+    " FSwitch (support cpp better than a.vim) {{{
+    map <F4>   :FSHere<CR>
+    map <F5>   :FSSplitRight<CR>
+    map <C-F5> :FSSplitLeft<CR>
+    " }}}
 
-        " Correct typos that only in C/Cpp
-        iab uis        usi
-        iab cuot       cout
-        iab itn        int
-        iab Bool       bool
-        iab boolean    bool
-        iab Static     static
-        iab Virtual    virtual
-        iab True       true
-        iab False      false
-        iab String     string
-        iab prinft     printf
-        iab pritnt     printf
-        iab pirntf     printf
-        iab boll       bool
-        iab end;       endl;
-        iab color      colour
-        iab null       NULL
-    endfunction
+    " Correct typos that only in C/Cpp
+    iab uis        usi
+    iab cuot       cout
+    iab itn        int
+    iab Bool       bool
+    iab boolean    bool
+    iab Static     static
+    iab Virtual    virtual
+    iab True       true
+    iab False      false
+    iab String     string
+    iab prinft     printf
+    iab pritnt     printf
+    iab pirntf     printf
+    iab boll       bool
+    iab end;       endl;
+    iab color      colour
+    iab null       NULL
+endfunction
 " }}}
 
 " Ruby Mappings {{{
-    au FileType ruby,eruby,rdoc,coffee :call RubyDef()
-    function! RubyDef()
-        setlocal shiftwidth=2
-        setlocal tabstop=2
+au FileType ruby,eruby,rdoc,coffee :call RubyDef()
+function! RubyDef()
+    setlocal shiftwidth=2
+    setlocal tabstop=2
 
-        " Correct typos
-        iab elseif     elsif
-    endfunction
+    " Correct typos
+    iab elseif     elsif
+endfunction
 " }}}
 
 " Html/Xml Mappings {{{
-    au FileType xhtml,html,xml,yaml :call WebDef()
-    function! WebDef()
-        setlocal shiftwidth=2
-        setlocal tabstop=2
+au FileType xhtml,html,xml,yaml :call WebDef()
+function! WebDef()
+    setlocal shiftwidth=2
+    setlocal tabstop=2
 
-        nnoremap <del> F<df>
-        nnoremap <BS> F<df>
+    nnoremap <del> F<df>
+    nnoremap <BS> F<df>
 
-        " Correct typos
-        iab colour color
-        iab ->> →
-        iab <<- ←
-        iab ^^  ↑
-        iab VV  ↓
-        iab aa  λ
-    endfunction
+    " Correct typos
+    iab colour color
+    iab ->> →
+    iab <<- ←
+    iab ^^  ↑
+    iab VV  ↓
+    iab aa  λ
+endfunction
 " }}}
 
 " Markdown Mappings {{{
-    au FileType markdown,mkd,text :call MarkdownDef()
-    function! MarkdownDef()
-        setlocal shiftwidth=2
-        setlocal tabstop=2
+au FileType markdown,mkd,text :call MarkdownDef()
+function! MarkdownDef()
+    setlocal shiftwidth=2
+    setlocal tabstop=2
 
-        " Correct typos
-        iab ->> →
-        iab <<- ←
+    " Correct typos
+    iab ->> →
+    iab <<- ←
 
-        " F2  Insert date and time in Jekyll
-        inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
-    endfunction
+    " F2  Insert date and time in Jekyll
+    inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+endfunction
 " }}}
 
 " Global Correct typos {{{
