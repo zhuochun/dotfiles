@@ -684,9 +684,9 @@ vnoremap <down> :m '>+1<CR>gv=gv
 
 " normal char key mappings {{{
     " Q: to repeat last recorded macro
-    nmap Q @@
+    nnoremap Q @@
     " Y: Quick yanking to the end of the line
-    nmap Y y$
+    nnoremap Y y$
     " H: Go to beginning of line.
     "    Repeated invocation goes to previous line
     nnoremap <expr> H getpos('.')[2] == 1 ? 'k' : '0'

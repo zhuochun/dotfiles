@@ -1,6 +1,8 @@
 " colorschemes
-colorscheme base16-eighties
+colorscheme badwolf
 " colorscheme background
 set background=dark
+" use console dialogs
+set guioptions+=c
 " transpacy
 set transparency=9

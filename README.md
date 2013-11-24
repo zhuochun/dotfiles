@@ -13,4 +13,7 @@ To maintain key consistency, mappings on Windows (Alt - M) are remapped to Mac (
 
 ![MacVim Screenshot](http://i.imgur.com/kMowUrZ.jpg)
 
+- Use `ln -s dotfiles/vimrc ~/.vimrc`
+- Use `ln -s dotfiles/gvimrc ~/.gvimrc`
+
 ### From [zhuochun](http://www.bicrement.com)

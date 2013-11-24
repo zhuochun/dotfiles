@@ -12,6 +12,7 @@ alias c="cd"
 alias e="mvim"
 alias g="git"
 alias h="history"
+alias l="ls -AlFhG"
 alias q="exit"
 alias z="zeus"
 
@@ -53,6 +54,9 @@ alias whois="whois -h whois-servers.net"
 # Locale
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+# Editor
+export EDITOR=mvim
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
