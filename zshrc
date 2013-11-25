@@ -37,7 +37,7 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
-alias plz="sudo"
+alias plz="sudo !!"
 alias cls="clear"
 alias rmd="rm -rf"
 # IP address
@@ -87,7 +87,7 @@ export EDITOR=mvim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bower cap gem git git-extras heroku node npm osx rails3 rbenv ruby tmux zeus)
+plugins=(autojump brew bower cap colored-man gem git git-extras gitignore git-flow heroku node npm osx rails3 rbenv ruby tmux zeus)
 
 source $ZSH/oh-my-zsh.sh
 
