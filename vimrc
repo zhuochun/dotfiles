@@ -90,10 +90,11 @@ NeoBundle 'bkad/CamelCaseMotion'
 NeoBundle 'derekwyatt/vim-fswitch'
 
 NeoBundle 'godlygeek/tabular'
-    vnoremap <leader>& :Tabularize /&<CR>
-    vnoremap <leader>= :Tabularize /=<CR>
-    vnoremap <leader>; :Tabularize /:\zs<CR>
-    vnoremap <leader>- :Tabularize /-\zs<CR>
+    vnoremap <leader>&     :Tabularize /&<CR>
+    vnoremap <leader>=     :Tabularize /=<CR>
+    vnoremap <leader>:     :Tabularize /:<CR>
+    vnoremap <leader>-     :Tabularize /-<CR>
+    vnoremap <leader><bar> :Tabularize /<bar><CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
@@ -162,6 +163,7 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
 
 NeoBundle 'rking/ag.vim'
     " Ag [options] {pattern} [{directory}]
+    nnoremap <D-f> :Ag<Space>
 
 NeoBundle 'sjl/gundo.vim'
     nnoremap <F11> :GundoToggle<CR>
@@ -214,8 +216,7 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Most recently used files
-    nnoremap <M-o> :<C-u>Unite file_mru<CR>
+    nnoremap <D-o> :<C-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <D-u> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
@@ -280,8 +281,12 @@ NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'Shougo/neocomplete.vim'
     " Use neocomplete.
     let g:neocomplete#enable_at_startup = 1
-    " Use smartcase.
     let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#enable_auto_delimiter = 1
+    let g:neocomplete#max_list = 23
+    " Completion length.
+    let g:neocomplete#auto_completion_start_length = 2
+    let g:neocomplete#manual_completion_start_length = 1
 
     " Plugin key-mappings.
     inoremap <expr><C-g> neocomplete#undo_completion()
@@ -325,17 +330,24 @@ NeoBundle 'Shougo/neocomplete.vim'
     if !exists('g:neocomplete#keyword_patterns')
         let g:neocomplete#keyword_patterns = {}
     endif
+    let g:neocomplete#keyword_patterns._ = '\h\w*'
 
     " Enable heavy omni completion.
     if !exists('g:neocomplete#sources#omni#input_patterns')
       let g:neocomplete#sources#omni#input_patterns = {}
     endif
+    let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+    let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+    let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+    let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
 
     " Force neocomplete omni func
     let g:neocomplete#force_overwrite_completefunc = 1
     if !exists('g:neocomplete#force_omni_input_patterns')
       let g:neocomplete#force_omni_input_patterns = {}
     endif
+    let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
 
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
@@ -405,7 +417,6 @@ NeoBundle 'Valloric/MatchTagAlways'
 
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
-    set tags=./tags
     let g:easytags_file = '~/.vim/tags'
     let g:easytags_dynamic_files = 1
     let g:easytags_updatetime_warn = 0
@@ -455,6 +466,7 @@ NeoBundle 'othree/html5.vim'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,requirejs,angularjs'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'chrisbra/color_highlight'
     let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
@@ -521,8 +533,7 @@ syntax on
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-set fo-=o
-set fo+=tcrqmMj
+set formatoptions=tcrqmMj
 
 " encoding
 set fileencoding=utf-8
@@ -549,7 +560,11 @@ set cursorline                      " highlight the current line
 set magic                           " set magic on, for regular expressions
 set winaltkeys=no                   " set ALT not map to toolbar
 
-set wildmenu                        " Show autocomplete menus
+set shortmess+=filmnrxoOtT          " abbrev. of messages (avoids 'hit enter')
+set viewoptions=folds,options,cursor,unix,slash " better Unix / Windows compatibility
+set virtualedit=onemore             " allow for cursor beyond last character
+
+set wildmenu                        " show autocomplete menus
 set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.min.js
 set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
 set wildignore+=*$py.class,*.class,*.gem,*.zip
@@ -591,11 +606,14 @@ set foldnestmax=99                  " deepest fold levels
 set nofoldenable                    " dont fold by default
 " }}}
 
-" No sound on errors
+" no sound on errors
 set noerrorbells
 set visualbell
 set t_vb=
 set tm=500
+
+" set tag generated locations
+set tags=./.tags,~/.vim/tags
 
 " backups and undos {{{
 "set nobackup
@@ -638,15 +656,15 @@ set whichwrap+=<,>,b,s
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Function keys {{{
-    " F1 Help
-    " F2 Insert date and time
+    " F1    Help
+    " F2    Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
-    " F3 Toggle Tagbar
+    " F3    Toggle Tagbar
     " F4
     " F5
-    " F6 Paste mode
+    " F6    Paste mode
     set pastetoggle=<F6>
-    " F7 Tigger Syntastic check
+    " F7    Tigger Syntastic check
     " F8
     " F9    Toggle iTerm 2
     " C-F9  Used in System
@@ -864,8 +882,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
 
 " Tabs and Windows mappings {{{
     " Tab Mappings
-    nmap <D-_> :tabprevious<cr>
-    nmap <D-+> :tabnext<cr>
     nmap <D-1> 1gt
     nmap <D-2> 2gt
     nmap <D-3> 3gt
@@ -875,12 +891,13 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nmap <D-7> 7gt
     nmap <D-8> 8gt
     nmap <D-9> 9gt
-    nmap <D-0> :tablast<CR>
-    nmap <D-t> :tabnew<CR>
-    nmap <D-w> :tabclose<CR>
+    nnoremap <D-_> :tabprevious<cr>
+    nnoremap <D-+> :tabnext<cr>
+    nnoremap <D-t> :tabnew<CR>
+    nnoremap <D-w> :tabclose<CR>
     " Opens a new tab with the current buffer's path
     " Super useful when editing files in the same directory
-    nmap <D-e> :tabedit <c-r>=expand("%:p:h")<cr>/
+    nnoremap <D-e> :tabedit <c-r>=expand("%:p:h")<cr>/
 
     " Smart way to move btw. windows
     nmap <C-j> <C-W>j
@@ -1028,13 +1045,15 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <D-w> Mac Close
     " <D-e>
     " <D-r>
-    " <D-t> Mac New Tab
+    " <D-t> New Tab
     " <D-y> (Normal) Yank History
     " <D-y> (Insert) Emmet expand, alias to <C-y>,
     " <D-u> Unite files
     " <D-i> Unite buffers
-    " <D-o> Mac File Open
-    " <D-p> Mac Print
+    " <D-o> Unite MRO
+    " <D-p>
+    " <D-{> Previous Tabs
+    " <D-}> Next Tabs
     " <D-a> Mac Select all
     " <D-s> Mac Save
     " <D-d> Snippet autocomplete
@@ -1152,8 +1171,8 @@ function! RubyDef()
     setlocal tabstop=2
 
     " Vimshell
-    nmap <leader>i :VimShellInteractive --split=split pry<CR>
-    vmap <leader>e :VimShellSendString<CR>
+    nnoremap <leader>i :VimShellInteractive --split=split pry<CR>
+    vnoremap <leader>e :VimShellSendString<CR>
     " Also in shorter command
     cab pry        VimShellInteractive --split=split pry
     cab irb        VimShellInteractive --split=split irb
@@ -1223,7 +1242,7 @@ cab cwd        cd %:p:h
 " change local working directory
 cab lwd        lcd %:p:h
 " edit in tab, split, vsplit
-cab te         tabe
+cab t          tabe
 
 " list chars {{
 set list
