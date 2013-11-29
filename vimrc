@@ -83,11 +83,18 @@ NeoBundle 'bufkill.vim'
 
 NeoBundle 'bkad/CamelCaseMotion'
     " use 'W', 'B' and 'E' to navigate
-    nmap <S-w> <Plug>CamelCaseMotion_w
-    nmap <S-b> <Plug>CamelCaseMotion_b
-    nmap <S-e> <Plug>CamelCaseMotion_e
+    nmap <silent> <S-w> <Plug>CamelCaseMotion_w
+    nmap <silent> <S-b> <Plug>CamelCaseMotion_b
+    nmap <silent> <S-e> <Plug>CamelCaseMotion_e
+    xmap <silent> <S-w> <Plug>CamelCaseMotion_w
+    xmap <silent> <S-b> <Plug>CamelCaseMotion_b
+    xmap <silent> <S-e> <Plug>CamelCaseMotion_e
 
-NeoBundle 'derekwyatt/vim-fswitch'
+NeoBundleLazy 'derekwyatt/vim-fswitch', {
+            \ 'autoload' : {
+            \     'filetypes' : ['c', 'cpp'],
+            \    },
+            \ }
 
 NeoBundle 'godlygeek/tabular'
     vnoremap <leader>&     :Tabularize /&<CR>
@@ -137,8 +144,13 @@ NeoBundle 'marijnh/tern_for_vim', {
 
 NeoBundle 'matchit.zip'
 
-NeoBundle 'mattn/webapi-vim'
-NeoBundle 'mattn/gist-vim'
+NeoBundleLazy 'mattn/webapi-vim'
+NeoBundleLazy 'mattn/gist-vim', {
+            \ 'depends' : 'mattn/webapi-vim',
+            \ 'autoload' : {
+            \      'commands' : ['Gist']
+            \    },
+            \ }
     let g:gist_clip_command = 'pbcopy'
     " if you want to detect filetype from the filename
     let g:gist_detect_filetype = 1
@@ -163,14 +175,20 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     " <M-P> - cycle forwards through your history of yanks
     nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
-NeoBundle 'rking/ag.vim'
+NeoBundleLazy 'rking/ag.vim', {
+            \ 'autoload' : {
+            \      'commands' : ['Ag']
+            \    },
+            \ }
     " Ag [options] {pattern} [{directory}]
     nnoremap <D-f> :Ag<Space>
 
-NeoBundle 'sjl/gundo.vim'
+NeoBundleLazy 'sjl/gundo.vim', {
+            \ 'autoload' : {
+            \      'commands' : ['GundoToggle']
+            \    },
+            \ }
     nnoremap <F11> :GundoToggle<CR>
-    " Display on right
-    let g:gundo_right = 1
 
 NeoBundle 'scrooloose/syntastic'
     " Fancy symbols
@@ -256,8 +274,17 @@ NeoBundle 'Shougo/unite.vim'
 
 NeoBundle 'Shougo/unite-outline'
 
-NeoBundle 'Shougo/vimfiler.vim'
-    let g:vimfiler_as_default_explorer = 1
+NeoBundleLazy 'Shougo/vimfiler.vim', {
+            \ 'depends' : 'Shougo/unite.vim',
+            \ 'autoload' : {
+            \    'commands' : [{ 'name' : 'VimFiler',
+            \                    'complete' : 'customlist,vimfiler#complete' },
+            \                  'VimFilerExplorer',
+            \                  'Edit', 'Read', 'Source', 'Write'],
+            \    'mappings' : ['<Plug>(vimfiler_'],
+            \    'explorer' : 1,
+            \ }
+            \ }
     " open vimfiler
     nnoremap <C-F10> :<C-U>:VimFilerExplorer -toggle<CR>
     " ignore files with filename patterns
@@ -274,7 +301,16 @@ NeoBundle 'Shougo/vimfiler.vim'
     " Q     <Plug>(vimfiler_exit)
     " t     <Plug>(vimfiler_expand_tree)
 
-NeoBundle 'Shougo/vimshell.vim'
+NeoBundleLazy 'Shougo/vimshell.vim', {
+            \ 'depends' : 'Shougo/vimproc',
+            \ 'autoload' : {
+            \   'commands' : [{ 'name' : 'VimShell',
+            \                   'complete' : 'customlist,vimshell#complete'},
+            \                 'VimShellExecute', 'VimShellInteractive',
+            \                 'VimShellTerminal', 'VimShellPop'],
+            \   'mappings' : ['<Plug>(vimshell_']
+            \ }
+            \ }
     " default prompt string
     let g:vimshell_prompt = $USER." $ "
     " display current dir
@@ -426,7 +462,12 @@ NeoBundle 'xolox/vim-easytags'
     let g:easytags_file = '~/.vim/tags'
     let g:easytags_dynamic_files = 1
     let g:easytags_updatetime_warn = 0
-NeoBundle 'xolox/vim-notes'
+NeoBundleLazy 'xolox/vim-notes', {
+            \ 'depends' : 'xolox/vim-misc',
+            \ 'autoload' : {
+            \      'commands' : ['Note']
+            \    },
+            \ }
     let g:notes_directories = ['~/Dropbox/Mac/Note']
     let g:notes_suffix = '.md'
     let g:notes_tab_indents = 0
@@ -438,8 +479,13 @@ NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'zhuochun/vim-snippets'
 
 " dash.app {{{
-NeoBundle 'rizzatti/funcoo.vim'
-NeoBundle 'rizzatti/dash.vim'
+NeoBundleLazy 'rizzatti/funcoo.vim'
+NeoBundleLazy 'rizzatti/dash.vim', {
+            \ 'depends' : 'rizzatti/funcoo.vim',
+            \ 'autoload' : {
+            \      'commands' : ['Dash']
+            \    },
+            \ }
 " }}}
 
 " text objects {{{
@@ -666,8 +712,8 @@ set whichwrap+=<,>,b,s
     " F2    Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
     " F3    Toggle Tagbar
-    " F4
-    " F5
+    " F4    Open Alternative File (c, cpp, rails)
+    " F5    Open Alternative File Split (c, cpp, rails)
     " F6    Paste mode
     set pastetoggle=<F6>
     " F7    Tigger Syntastic check
@@ -1142,9 +1188,9 @@ vnoremap ? ?\v
 au FileType cpp,c,cc,h,hpp :call CppDef()
 function! CppDef()
     " FSwitch (support cpp better than a.vim) {{{
-    map <F4>   :FSHere<CR>
-    map <F5>   :FSSplitRight<CR>
-    map <C-F5> :FSSplitLeft<CR>
+    nnoremap <F4>   :FSHere<CR>
+    nnoremap <F5>   :FSSplitRight<CR>
+    nnoremap <C-F5> :FSSplitLeft<CR>
     " }}}
 
     " Correct typos that only in C/Cpp
@@ -1174,7 +1220,15 @@ function! RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
-    " Also in shorter command
+    " vim-rails
+    " alternative files (usually tests) in split
+    nnoremap <F4>   :AS<CR>
+    " related files (Split, Tab)
+    nnoremap <F5>   :R<CR>
+    nnoremap <C-F5> :RS<CR>
+    nnoremap <M-F5> :RT<CR>
+
+    " Vimshell shorter command
     cab pry        VimShellInteractive --split='split <bar> resize 19' pry
     cab irb        VimShellInteractive --split='split <bar> resize 19' irb
     cab coffee     VimShellInteractive --split='split <bar> resize 19' coffee
