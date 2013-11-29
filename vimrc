@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 24/Nov/2013 11:06 PM
+" Last Edit: 29/Nov/2013 09:52 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -183,6 +183,11 @@ NeoBundleLazy 'rking/ag.vim', {
     " Ag [options] {pattern} [{directory}]
     nnoremap <D-f> :Ag<Space>
 
+    " Use ag over grep
+    if executable('ag')
+      set grepprg=ag\ --nogroup\ --nocolor
+    endif
+
 NeoBundleLazy 'sjl/gundo.vim', {
             \ 'autoload' : {
             \      'commands' : ['GundoToggle']
@@ -255,8 +260,8 @@ NeoBundle 'Shougo/unite.vim'
         " Use ag in unite grep source.
         let g:unite_source_grep_command = 'ag'
         let g:unite_source_grep_default_opts =
-            \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-            \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+            \ '--line-numbers --nocolor --nogroup --hidden ' .
+            \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
         let g:unite_source_grep_recursive_opt = ''
     endif
 
@@ -539,6 +544,7 @@ NeoBundle 'wavded/vim-stylus'
 " }}}
 
 " colorschemes {{{
+NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'sjl/badwolf'
@@ -1215,7 +1221,7 @@ endfunction
 " }}}
 
 " Ruby Mappings {{{
-au FileType ruby,eruby,rdoc,coffee :call RubyDef()
+au FileType ruby,eruby,rdoc :call RubyDef()
 function! RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
@@ -1229,13 +1235,24 @@ function! RubyDef()
     nnoremap <M-F5> :RT<CR>
 
     " Vimshell shorter command
-    cab pry        VimShellInteractive --split='split <bar> resize 19' pry
-    cab irb        VimShellInteractive --split='split <bar> resize 19' irb
-    cab coffee     VimShellInteractive --split='split <bar> resize 19' coffee
-    cab eval       VimShellSendString
+    cab <buffer> pry   VimShellInteractive --split='split <bar> resize 19' pry
+    cab <buffer> irb   VimShellInteractive --split='split <bar> resize 19' irb
+    cab <buffer> eval  VimShellSendString
 
     " Correct typos
     iab elseif      elsif
+endfunction
+" }}}
+
+" CoffeeScript Mappings {{{
+au FileType coffee :call CoffeeDef()
+function! CoffeeDef()
+    setlocal shiftwidth=2
+    setlocal tabstop=2
+
+    " Vimshell shorter command
+    cab <buffer> coffee VimShellInteractive --split='split <bar> resize 19' coffee
+    cab <buffer> eval   VimShellSendString
 endfunction
 " }}}
 
@@ -1245,8 +1262,8 @@ function! WebDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
-    nnoremap <del> F<df>
-    nnoremap <BS> F<df>
+    " Delete surround tag
+    nmap <Del> dst
 
     " Correct typos
     iab colour color
@@ -1259,17 +1276,20 @@ endfunction
 " }}}
 
 " Markdown Mappings {{{
-au FileType markdown,mkd,text :call MarkdownDef()
+au FileType markdown,mkd,md,text :call MarkdownDef()
 function! MarkdownDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
+    " Insert date and time in Jekyll
+    inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+
+    " Check spell
+    setlocal spell
+
     " Correct typos
     iab ->> →
     iab <<- ←
-
-    " F2  Insert date and time in Jekyll
-    inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
 endfunction
 " }}}
 
