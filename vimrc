@@ -151,6 +151,8 @@ NeoBundle 'mattn/emmet-vim'
     " <C-y> to enter emmet actions
     " <D-y> to expand input in insert mode
     let g:user_emmet_expandabbr_key = '<D-y>'
+    " <D-Y> to goto next point
+    let g:user_emmet_next_key = '<D-Y>'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
 
@@ -218,9 +220,9 @@ NeoBundle 'Shougo/unite.vim'
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     nnoremap <D-o> :<C-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
-    nnoremap <D-u> :<C-u>Unite -start-insert file_rec/async:!<CR>
+    nnoremap <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
-    nnoremap <D-i> :<C-u>Unite -quick-match buffer<CR>
+    nnoremap <D-u> :<C-u>Unite -quick-match buffer<CR>
     " Content searching like ack.vim
     nnoremap <D-/> :<C-u>Unite grep:.<CR>
     " Enabled to track yank history
@@ -277,6 +279,9 @@ NeoBundle 'Shougo/vimshell.vim'
     let g:vimshell_prompt = $USER." $ "
     " display current dir
     let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+    " send to interpreter
+    nnoremap <D-e> V:VimShellSendString<CR>
+    vnoremap <D-e> :VimShellSendString<CR>
 
 NeoBundle 'Shougo/neocomplete.vim'
     " Use neocomplete.
@@ -391,12 +396,13 @@ NeoBundle 'tpope/vim-surround'
     " Surround = to %=
     let b:surround_61 = "<%= \r %>"
     " Shortcuts
-    vmap ( S)
-    vmap { S{
-    vmap [ S]
-    vmap " S"
-    vmap ' S'
-    vmap ` S`
+    xmap ( S)
+    xmap { S{
+    xmap [ S]
+    xmap " S"
+    xmap ' S'
+    xmap ` S`
+    xmap T St
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
@@ -895,9 +901,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nnoremap <D-+> :tabnext<cr>
     nnoremap <D-t> :tabnew<CR>
     nnoremap <D-w> :tabclose<CR>
-    " Opens a new tab with the current buffer's path
-    " Super useful when editing files in the same directory
-    nnoremap <D-e> :tabedit <c-r>=expand("%:p:h")<cr>/
 
     " Smart way to move btw. windows
     nmap <C-j> <C-W>j
@@ -1043,11 +1046,12 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <D-=> Mac Larger font
     " <D-q> Mac Quit
     " <D-w> Mac Close
-    " <D-e>
+    " <D-e> Send to Vimshell Interpreter
     " <D-r>
     " <D-t> New Tab
     " <D-y> (Normal) Yank History
     " <D-y> (Insert) Emmet expand, alias to <C-y>,
+    " <D-Y> (Insert) Emmet next, alias to <C-y>,
     " <D-u> Unite files
     " <D-i> Unite buffers
     " <D-o> Unite MRO
@@ -1170,12 +1174,10 @@ function! RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
-    " Vimshell
-    nnoremap <leader>i :VimShellInteractive --split=split pry<CR>
-    vnoremap <leader>e :VimShellSendString<CR>
     " Also in shorter command
-    cab pry        VimShellInteractive --split=split pry
-    cab irb        VimShellInteractive --split=split irb
+    cab pry        VimShellInteractive --split='split <bar> resize 19' pry
+    cab irb        VimShellInteractive --split='split <bar> resize 19' irb
+    cab coffee     VimShellInteractive --split='split <bar> resize 19' coffee
     cab eval       VimShellSendString
 
     " Correct typos
