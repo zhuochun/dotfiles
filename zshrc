@@ -24,7 +24,7 @@ alias cb="pbcopy"
 # Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.8.0/node-webkit.app/Contents/MacOS/node-webkit"
+alias nw="~/Documents/Programming/NodeWebkit/v0.8.1/node-webkit.app/Contents/MacOS/node-webkit"
 # Heroku
 alias he="heroku"
 # Rails
@@ -37,7 +37,7 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
-alias plz="sudo !!"
+alias plz="sudo"
 alias cls="clear"
 alias rmd="rm -rf"
 # IP address

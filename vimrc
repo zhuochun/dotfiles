@@ -164,7 +164,7 @@ NeoBundle 'mattn/emmet-vim'
     " <D-y> to expand input in insert mode
     let g:user_emmet_expandabbr_key = '<D-y>'
     " <D-Y> to goto next point
-    let g:user_emmet_next_key = '<D-Y>'
+    let g:user_emmet_next_key = '<M-y>'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
 
@@ -1235,9 +1235,9 @@ function! RubyDef()
     nnoremap <M-F5> :RT<CR>
 
     " Vimshell shorter command
-    cab <buffer> pry   VimShellInteractive --split='split <bar> resize 19' pry
-    cab <buffer> irb   VimShellInteractive --split='split <bar> resize 19' irb
-    cab <buffer> eval  VimShellSendString
+    cab <buffer> Pry   VimShellInteractive --split='split <bar> resize 19' pry
+    cab <buffer> Irb   VimShellInteractive --split='split <bar> resize 19' irb
+    cab <buffer> Eval  VimShellSendString
 
     " Correct typos
     iab elseif      elsif
@@ -1251,8 +1251,8 @@ function! CoffeeDef()
     setlocal tabstop=2
 
     " Vimshell shorter command
-    cab <buffer> coffee VimShellInteractive --split='split <bar> resize 19' coffee
-    cab <buffer> eval   VimShellSendString
+    cab <buffer> Coffee VimShellInteractive --split='split <bar> resize 19' coffee
+    cab <buffer> Eval   VimShellSendString
 endfunction
 " }}}
 
