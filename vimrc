@@ -47,7 +47,7 @@ NeoBundle 'Shougo/vimproc', {
     \   },
     \ }
 
-NeoBundle 'mhinz/vim-signify'
+NeoBundle 'airblade/vim-gitgutter'
 
 NeoBundle 'AndrewRadev/switch.vim'
     nnoremap + :Switch<CR>
@@ -77,18 +77,7 @@ NeoBundle 'bling/vim-airline'
     " enable/disable showing a summary of changed hunks under source control. >
     let g:airline#extensions#hunks#enabled = 0
 
-NeoBundle 'bling/vim-bufferline'
-
 NeoBundle 'bufkill.vim'
-
-NeoBundle 'bkad/CamelCaseMotion'
-    " use 'W', 'B' and 'E' to navigate
-    nmap <silent> <S-w> <Plug>CamelCaseMotion_w
-    nmap <silent> <S-b> <Plug>CamelCaseMotion_b
-    nmap <silent> <S-e> <Plug>CamelCaseMotion_e
-    xmap <silent> <S-w> <Plug>CamelCaseMotion_w
-    xmap <silent> <S-b> <Plug>CamelCaseMotion_b
-    xmap <silent> <S-e> <Plug>CamelCaseMotion_e
 
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
             \ 'autoload' : {
@@ -121,8 +110,6 @@ NeoBundle 'justinmk/vim-sneak'
     nmap ? <Plug>SneakPrevious
     xmap ? <Plug>VSneakPrevious
 
-NeoBundle 'kshenoy/vim-signature'
-
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
     " Modify tagbar settings
@@ -131,16 +118,6 @@ NeoBundle 'majutsushi/tagbar'
     let g:tagbar_width = 27              " default is 40
     let g:tagbar_compact = 1             " omit vacant lines
     let g:tagbar_sort = 0                " sort according to order
-
-" JavaScript omni complete
-NeoBundle 'marijnh/tern_for_vim', {
-    \ 'build': {
-    \   'mac': 'npm install',
-    \   'unix': 'npm install',
-    \   'cygwin': 'npm install',
-    \   'windows': 'npm install',
-    \   },
-    \ }
 
 NeoBundle 'matchit.zip'
 
@@ -234,13 +211,14 @@ NeoBundle 'scrooloose/nerdtree'
     let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
-    map <F10> <plug>NERDTreeMirrorToggle<CR>
+    map <F10> <plug>NERDTreeTabsToggle<CR>
     " Do not open NERDTree on startup
-    let g:nerdtree_tabs_open_on_gui_startup=0
+    let g:nerdtree_tabs_open_on_gui_startup = 0
 
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    " Most recent files
     nnoremap <D-o> :<C-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
@@ -278,33 +256,6 @@ NeoBundle 'Shougo/unite.vim'
     endfunction "}}}
 
 NeoBundle 'Shougo/unite-outline'
-
-NeoBundleLazy 'Shougo/vimfiler.vim', {
-            \ 'depends' : 'Shougo/unite.vim',
-            \ 'autoload' : {
-            \    'commands' : [{ 'name' : 'VimFiler',
-            \                    'complete' : 'customlist,vimfiler#complete' },
-            \                  'VimFilerExplorer',
-            \                  'Edit', 'Read', 'Source', 'Write'],
-            \    'mappings' : ['<Plug>(vimfiler_'],
-            \    'explorer' : 1,
-            \ }
-            \ }
-    " open vimfiler
-    nnoremap <C-F10> :<C-U>:VimFilerExplorer -toggle<CR>
-    " ignore files with filename patterns
-    let g:vimfiler_ignore_pattern = '^\%(.git\|.DS_Store\|.pyc\|.vcxproj\)$'
-    " <C-l> <Plug>(vimfiler_redraw_screen)
-    " c     <Plug>(vimfiler_copy_file)
-    " m     <Plug>(vimfiler_move_file)
-    " d     <Plug>(vimfiler_delete_file)
-    " r     <Plug>(vimfiler_rename_file)
-    " K     <Plug>(vimfiler_make_directory)
-    " N     <Plug>(vimfiler_new_file)
-    " e     <Plug>(vimfiler_edit_file)
-    " E     <Plug>(vimfiler_split_edit_file)
-    " Q     <Plug>(vimfiler_exit)
-    " t     <Plug>(vimfiler_expand_tree)
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \ 'depends' : 'Shougo/vimproc',
@@ -430,7 +381,6 @@ NeoBundle 'ujihisa/neco-look'
 
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
-NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-surround'
     " Surround % to %
     let b:surround_37 = "<% \r %>"
@@ -444,7 +394,6 @@ NeoBundle 'tpope/vim-surround'
     xmap ' S'
     xmap ` S`
     xmap T St
-NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-endwise'
@@ -465,7 +414,6 @@ NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
     let g:easytags_file = '~/.vim/tags'
-    let g:easytags_dynamic_files = 1
     let g:easytags_updatetime_warn = 0
 NeoBundleLazy 'xolox/vim-notes', {
             \ 'depends' : 'xolox/vim-misc',
@@ -495,8 +443,6 @@ NeoBundleLazy 'rizzatti/dash.vim', {
 
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
-" a,/i, for an argument to a function
-NeoBundle 'sgur/vim-textobj-parameter'
 " av/iv for a region between either _s or camelCaseVariables
 NeoBundle 'Julian/vim-textobj-variable-segment'
 " ar/ir for a ruby block
@@ -671,7 +617,7 @@ set t_vb=
 set tm=500
 
 " set tag generated locations
-set tags=./.tags,~/.vim/tags
+set tags=./tags,~/.vim/tags
 
 " backups and undos {{{
 "set nobackup

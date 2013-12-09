@@ -87,7 +87,7 @@ export EDITOR=mvim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bower cap colored-man gem git git-extras gitignore git-flow heroku node npm osx rails3 rbenv ruby tmux zeus)
+plugins=(autojump brew bower cap colored-man gem git git-extras gitignore git-flow heroku node npm osx rails rbenv ruby tmux zeus)
 
 source $ZSH/oh-my-zsh.sh
 
