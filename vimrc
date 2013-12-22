@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 29/Nov/2013 09:52 AM
+" Last Edit: 19/Dec/2013 07:19 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -47,8 +47,6 @@ NeoBundle 'Shougo/vimproc', {
     \   },
     \ }
 
-NeoBundle 'airblade/vim-gitgutter'
-
 NeoBundle 'AndrewRadev/switch.vim'
     nnoremap + :Switch<CR>
     " Some customized definitions
@@ -86,11 +84,11 @@ NeoBundleLazy 'derekwyatt/vim-fswitch', {
             \ }
 
 NeoBundle 'godlygeek/tabular'
-    vnoremap <leader>&     :Tabularize /&<CR>
-    vnoremap <leader>=     :Tabularize /=<CR>
-    vnoremap <leader>:     :Tabularize /:<CR>
-    vnoremap <leader>-     :Tabularize /-<CR>
-    vnoremap <leader><bar> :Tabularize /<bar><CR>
+    xnoremap <leader>&     :Tabularize /&<CR>
+    xnoremap <leader>=     :Tabularize /=<CR>
+    xnoremap <leader>:     :Tabularize /:<CR>
+    xnoremap <leader>-     :Tabularize /-<CR>
+    xnoremap <leader><bar> :Tabularize /<bar><CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
@@ -121,21 +119,6 @@ NeoBundle 'majutsushi/tagbar'
 
 NeoBundle 'matchit.zip'
 
-NeoBundleLazy 'mattn/webapi-vim'
-NeoBundleLazy 'mattn/gist-vim', {
-            \ 'depends' : 'mattn/webapi-vim',
-            \ 'autoload' : {
-            \      'commands' : ['Gist']
-            \    },
-            \ }
-    let g:gist_clip_command = 'pbcopy'
-    " if you want to detect filetype from the filename
-    let g:gist_detect_filetype = 1
-    " If you want to show your private gists with :Gist -l
-    let g:gist_show_privates = 1
-    " If you want your gist to be private by default
-    let g:gist_post_private = 1
-
 NeoBundle 'mattn/emmet-vim'
     " <C-y> to enter emmet actions
     " <D-y> to expand input in insert mode
@@ -151,6 +134,8 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <M-p> <Plug>yankstack_substitute_older_paste
     " <M-P> - cycle forwards through your history of yanks
     nmap <M-P> <Plug>yankstack_substitute_newer_paste
+
+NeoBundle 'mhinz/vim-signify'
 
 NeoBundleLazy 'rking/ag.vim', {
             \ 'autoload' : {
@@ -409,23 +394,6 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_skip_key='<M-m>'
     let g:multi_cursor_quit_key='<Esc>'
 
-NeoBundle 'Valloric/MatchTagAlways'
-
-NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-easytags'
-    let g:easytags_file = '~/.vim/tags'
-    let g:easytags_updatetime_warn = 0
-NeoBundleLazy 'xolox/vim-notes', {
-            \ 'depends' : 'xolox/vim-misc',
-            \ 'autoload' : {
-            \      'commands' : ['Note']
-            \    },
-            \ }
-    let g:notes_directories = ['~/Dropbox/Mac/Note']
-    let g:notes_suffix = '.md'
-    let g:notes_tab_indents = 0
-    let g:notes_markdown_program = 'kramdown'
-
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
 
@@ -490,7 +458,6 @@ NeoBundle 'wavded/vim-stylus'
 " }}}
 
 " colorschemes {{{
-NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'sjl/badwolf'
@@ -563,7 +530,8 @@ set showmode                        " show current mode
 set cursorline                      " highlight the current line
 set magic                           " set magic on, for regular expressions
 set winaltkeys=no                   " set ALT not map to toolbar
-
+set autoread                        " autoread when a file is changed from the outside
+set shiftround                      " Round indent to multiple of 'shiftwidth'
 set shortmess+=filmnrxoOtT          " abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash " better Unix / Windows compatibility
 set virtualedit=onemore             " allow for cursor beyond last character
@@ -588,7 +556,6 @@ set smarttab
 set autoindent                      " always set autoindenting on
 set smartindent
 set cindent                         " indent for c/c++
-set autoread                        " autoread when a file is changed from the outside
 
 " word boundary to be a little bigger than the default
 set iskeyword-=_,-
@@ -895,8 +862,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nmap <D-7> 7gt
     nmap <D-8> 8gt
     nmap <D-9> 9gt
-    nnoremap <D-_> :tabprevious<cr>
-    nnoremap <D-+> :tabnext<cr>
+    nnoremap <D-0> :tabnext<cr>
+    nnoremap <D-)> :tabprevious<cr>
     nnoremap <D-t> :tabnew<CR>
     nnoremap <D-w> :tabclose<CR>
 
@@ -920,6 +887,9 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " Always splits to the right and below
     set splitright
     set splitbelow
+
+    " Resize splits when the window is resized
+    autocmd VimResized * :wincmd =
 " }}}
 
 " <Ctrl-*> key mappings {{{
@@ -941,7 +911,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-r>
     " <C-t>
     " <C-y> Emmet Expand
-    " <C-u>
+    " <C-u> Switch word case
+    inoremap <C-u> <esc>mzg~iw`za
     " <C-i>
     " <C-o>
     " <C-p>
@@ -1268,7 +1239,8 @@ cab t          tabe
 
 " list chars {{
 set list
-set listchars=tab:»»,trail:⌴,extends:§,nbsp:_
+set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_,
+set showbreak=↪
 " }}
 
 " }}}

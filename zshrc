@@ -87,15 +87,17 @@ export EDITOR=mvim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bower cap colored-man gem git git-extras gitignore git-flow heroku node npm osx rails rbenv ruby tmux zeus)
+plugins=(autojump brew bower colored-man gem git git-extras gitignore heroku node npm rails rbenv ruby zeus)
 
+# Make sure local/bin first
+export PATH="/usr/local/bin:$PATH"
+# Add the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+# Add the Postgres database
+export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+# Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 # Ruby environment
 eval "$(rbenv init -)"
-
-# Add the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-# Add the Postgres database
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
