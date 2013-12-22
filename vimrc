@@ -77,6 +77,12 @@ NeoBundle 'bling/vim-airline'
 
 NeoBundle 'bufkill.vim'
 
+NeoBundleLazy 'chrisbra/NrrwRgn', {
+            \ 'autoload' : {
+            \      'commands' : ['NarrowRegion', 'NR']
+            \    },
+            \ }
+
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
             \ 'autoload' : {
             \     'filetypes' : ['c', 'cpp'],
@@ -96,7 +102,7 @@ NeoBundle 'jiangmiao/auto-pairs'
 
 NeoBundle 'justinmk/vim-sneak'
     " not case censitive
-    let g:sneak#use_ic_scs = 0
+    let g:sneak#use_ic_scs = 1
     " replace f with Sneak
     nmap f <Plug>SneakForward
     xmap f <Plug>VSneakForward
@@ -107,6 +113,8 @@ NeoBundle 'justinmk/vim-sneak'
     xmap : <Plug>VSneakNext
     nmap ? <Plug>SneakPrevious
     xmap ? <Plug>VSneakPrevious
+
+NeoBundle 'kshenoy/vim-signature'
 
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
@@ -144,11 +152,6 @@ NeoBundleLazy 'rking/ag.vim', {
             \ }
     " Ag [options] {pattern} [{directory}]
     nnoremap <D-f> :Ag<Space>
-
-    " Use ag over grep
-    if executable('ag')
-      set grepprg=ag\ --nogroup\ --nocolor
-    endif
 
 NeoBundleLazy 'sjl/gundo.vim', {
             \ 'autoload' : {
@@ -367,10 +370,6 @@ NeoBundle 'ujihisa/neco-look'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-surround'
-    " Surround % to %
-    let b:surround_37 = "<% \r %>"
-    " Surround = to %=
-    let b:surround_61 = "<%= \r %>"
     " Shortcuts
     xmap ( S)
     xmap { S{
@@ -482,6 +481,8 @@ colorscheme Tomorrow-Night-Bright
 set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
 " vim window size
 set lines=99 columns=999
+" highlight 80 column
+set colorcolumn=80
 
 " enable filetype plugin
 filetype plugin on
@@ -565,8 +566,7 @@ set iskeyword+=$,@,%,#,`,!,?
 set ignorecase                      " Ignore case when searching
 set smartcase
 set hlsearch                        " Highlight search things
-set incsearch                       " Make search act like search in modern browsers
-"set gdefault                       " search/replace global by default
+set incsearch                       " Highlight next match on searching
 set showmatch                       " Show matching bracets
 set mat=1                           " Blink How many times
 " }}}
@@ -1156,6 +1156,13 @@ function! RubyDef()
     cab <buffer> Irb   VimShellInteractive --split='split <bar> resize 19' irb
     cab <buffer> Eval  VimShellSendString
 
+    " Surround % to %
+    let b:surround_37 = "<% \r %>"
+    xmap % S%
+    " Surround = to %=
+    let b:surround_61 = "<%= \r %>"
+    xmap _ S=
+
     " Correct typos
     iab elseif      elsif
 endfunction
@@ -1200,6 +1207,16 @@ function! MarkdownDef()
 
     " Insert date and time in Jekyll
     inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+
+    " Surround _ to _
+    let b:surround_95 = "_\r_"
+    xmap _ S_
+    " Surround * to **
+    let b:surround_42 = "**\r**"
+    xmap 8 S*
+    " Surround ~ to ```
+    let b:surround_126 = "```\r```"
+    xmap 1 S~
 
     " Check spell
     setlocal spell
