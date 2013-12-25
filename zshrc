@@ -24,7 +24,7 @@ alias cb="pbcopy"
 # Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.8.1/node-webkit.app/Contents/MacOS/node-webkit"
+alias nw="~/Documents/Programming/NodeWebkit/v0.8.3/node-webkit.app/Contents/MacOS/node-webkit"
 # Heroku
 alias he="heroku"
 # Rails

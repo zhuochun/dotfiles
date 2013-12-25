@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 19/Dec/2013 07:19 PM
+" Last Edit: 25/Dec/2013 10:28 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -75,6 +75,8 @@ NeoBundle 'bling/vim-airline'
     " enable/disable showing a summary of changed hunks under source control. >
     let g:airline#extensions#hunks#enabled = 0
 
+NeoBundle 'bling/vim-bufferline'
+
 NeoBundle 'bufkill.vim'
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
@@ -144,14 +146,6 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
     nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mhinz/vim-signify'
-
-NeoBundleLazy 'rking/ag.vim', {
-            \ 'autoload' : {
-            \      'commands' : ['Ag']
-            \    },
-            \ }
-    " Ag [options] {pattern} [{directory}]
-    nnoremap <D-f> :Ag<Space>
 
 NeoBundleLazy 'sjl/gundo.vim', {
             \ 'autoload' : {
@@ -584,7 +578,7 @@ set t_vb=
 set tm=500
 
 " set tag generated locations
-set tags=./tags,~/.vim/tags
+set tags=./.tags,~/.vim/tags
 
 " backups and undos {{{
 "set nobackup
@@ -638,10 +632,7 @@ set whichwrap+=<,>,b,s
     " F7    Tigger Syntastic check
     " F8
     " F9    Toggle iTerm 2
-    " C-F9  Used in System
-    " M-F9  Used in System
     " F10   Toggle NERDTree
-    " C-F10 Toggle Vimfiler
     " F11   Toggle Gundo
     " F12   Toggle MenuBar
     set go=
@@ -861,10 +852,10 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nmap <D-6> 6gt
     nmap <D-7> 7gt
     nmap <D-8> 8gt
-    nmap <D-9> 9gt
+    nnoremap <D-9> :tabprevious<cr>
     nnoremap <D-0> :tabnext<cr>
-    nnoremap <D-)> :tabprevious<cr>
-    nnoremap <D-t> :tabnew<CR>
+    nnoremap <D-t> :tab split<CR>
+    nnoremap <D-T> :tabnew<CR>
     nnoremap <D-w> :tabclose<CR>
 
     " Smart way to move btw. windows
@@ -1186,6 +1177,13 @@ function! WebDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
+    " Surround % to {{
+    let b:surround_37 = "{{ \r }}"
+    xmap % S%
+    " Surround = to {{=
+    let b:surround_61 = "{{= \r }}"
+    xmap _ S=
+
     " Delete surround tag
     nmap <Del> dst
 
@@ -1225,6 +1223,10 @@ function! MarkdownDef()
     iab ->> →
     iab <<- ←
 endfunction
+" }}}
+
+" Snippet {{{
+au FileType snippet set noexpandtab
 " }}}
 
 " Global Correct typos {{{
