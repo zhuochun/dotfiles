@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " WinVIM Configurations
 " Author: Wang Zhuochun
-" Last Edit: 21/Nov/2013 06:50 AM
+" Last Edit: 27/Dec/2013 09:13 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -45,9 +45,7 @@ NeoBundle 'AndrewRadev/switch.vim'
     let g:switch_custom_definitions =
         \ [
             \ ['else', 'elsif', 'else if'],
-            \ [' & ', ' | ', ' ^ '],
             \ ['==', '!='],
-            \ [' + ', ' - '],
             \ ['-=', '+='],
             \ ['if', 'unless'],
             \ ['yes', 'no'],
@@ -315,7 +313,6 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_quit_key='<Esc>'
 
 NeoBundle 'Yggdroot/indentLine'
-    let g:indentLine_char = '┆'
 
 NeoBundle 'zhuochun/vim-snippets'
 
@@ -374,7 +371,7 @@ NeoBundle 'tomasr/molokai'
 " colorscheme background
 set background=dark
 " colorschemes
-colorscheme base16-monokai
+colorscheme badwolf
 " vim fonts
 "set guifont=Bitstream\ Vera\ Sans\ Mono:h11:cDEFAULT
 set guifont=Inconsolata-dz\ for\ Powerline:h11:cDEFAULT
