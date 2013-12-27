@@ -499,7 +499,8 @@ syntax on
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-set formatoptions=tcrqmMj
+set fo-=o
+set fo+=tcrqmMj
 
 " encoding
 set fileencoding=utf-8
@@ -784,8 +785,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <leader>q quick quit without save
     nnoremap <leader>q :q!<CR>
     " <leader>w
-    nnoremap <Leader>W :w<CR>
-    " <leader>W
     nnoremap <leader>w :call ToggleWrap()<CR>
     function! ToggleWrap()
         nnoremap j gj
@@ -794,6 +793,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
         nnoremap $ g$
         nnoremap ^ g^
     endfunction
+    " <leader>W
+    nnoremap <Leader>W :w<CR>
     " <leader>e
     " <leader>r
     " <leader>t
@@ -844,16 +845,17 @@ vnoremap <down> :m '>+1<CR>gv=gv
 
 " Tabs and Windows mappings {{{
     " Tab Mappings
-    nmap <D-1> 1gt
-    nmap <D-2> 2gt
-    nmap <D-3> 3gt
-    nmap <D-4> 4gt
-    nmap <D-5> 5gt
-    nmap <D-6> 6gt
-    nmap <D-7> 7gt
-    nmap <D-8> 8gt
-    nnoremap <D-9> :tabprevious<cr>
-    nnoremap <D-0> :tabnext<cr>
+    nnoremap <D-1> 1gt
+    nnoremap <D-2> 2gt
+    nnoremap <D-3> 3gt
+    nnoremap <D-4> 4gt
+    nnoremap <D-5> 5gt
+    nnoremap <D-6> 6gt
+    nnoremap <D-7> 7gt
+    nnoremap <D-8> 8gt
+    nnoremap <D-9> 9gt
+    nnoremap <D-(> :tabprevious<cr>
+    nnoremap <D-)> :tabnext<cr>
     nnoremap <D-t> :tab split<CR>
     nnoremap <D-T> :tabnew<CR>
     nnoremap <D-w> :tabclose<CR>
@@ -936,31 +938,29 @@ vnoremap <down> :m '>+1<CR>gv=gv
 " }}}
 
 " Insert mode Emacs key mappings {{{
-    " some Emacs key bindings in insert mode
-    inoremap <C-a> <HOME>
-    inoremap <C-e> <END>
-    " <C-h> move word left
-    inoremap <C-h> <C-O>B
     " <C-j>: Move cursor down
     inoremap <expr> <C-j> pumvisible() ? "\<C-e>\<Down>" : "\<Down>"
     " <C-k>: Move cursor up
     inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
+    " <C-h> move word left
+    inoremap <C-h> <C-o>b
     " <C-l>: Move word right
-    inoremap <C-l> <C-O>W
+    inoremap <C-l> <C-O>w
     " <C-f>: Move move cursor left
     inoremap <C-f> <LEFT>
     " <C-b>: Move move cursor right
     inoremap <C-b> <RIGHT>
+
     " <C-a>: command mode HOME
-    cnoremap <C-a> <home>
+    cnoremap <C-a> <HOME>
     " <C-e>: command mode END
-    cnoremap <C-e> <end>
+    cnoremap <C-e> <END>
     " <C-h>: command mode cursor left
-    cnoremap <C-h> <s-left>
+    cnoremap <C-h> <S-LEFT>
     " <C-l>: command mode cursor right
-    cnoremap <C-l> <s-right>
+    cnoremap <C-l> <S-RIGHT>
     " <C-@>: command mode show command history
-    cnoremap <C-@> <c-f>
+    cnoremap <C-@> <C-f>
 " }}}
 
 " <M-*> key mappings {{{
@@ -1141,6 +1141,9 @@ function! RubyDef()
     nnoremap <F5>   :R<CR>
     nnoremap <C-F5> :RS<CR>
     nnoremap <M-F5> :RT<CR>
+
+    " edit routes
+    command! Rroutes :e config/routes.rb
 
     " Vimshell shorter command
     cab <buffer> Pry   VimShellInteractive --split='split <bar> resize 19' pry
