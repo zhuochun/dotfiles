@@ -541,20 +541,23 @@ set wildignore+=*/log/*,*/tmp/*,*/build/*,*/vendor/bundle/*,*/vendor/cache/*,*/v
 set scrolljump=6                    " lines to scroll when cursor leaves screen
 set scrolloff=6                     " minimum lines to keep above and below cursor
 
-" related to <TAB> indents
+" related to <TAB> indents {{{
 set shiftwidth=4
 set tabstop=4
 set expandtab
 set smarttab
+" }}}
 
-" related to indents
+" related to indents {{{
 set autoindent                      " always set autoindenting on
 set smartindent
 set cindent                         " indent for c/c++
+" }}}
 
-" word boundary to be a little bigger than the default
+" word boundary to be a little bigger than the default {{{
 set iskeyword-=_,-
 set iskeyword+=$,@,%,#,`,!,?
+" }}}
 
 " Related to Search {{{
 set ignorecase                      " Ignore case when searching
@@ -571,11 +574,18 @@ set foldnestmax=99                  " deepest fold levels
 set nofoldenable                    " dont fold by default
 " }}}
 
-" no sound on errors
+" list chars {{
+set list
+set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_,
+set showbreak=↪
+" }}
+
+" no sound on errors {{{
 set noerrorbells
 set visualbell
 set t_vb=
 set tm=500
+" }}}
 
 " set tag generated locations
 set tags=./.tags,~/.vim/tags
@@ -1255,12 +1265,8 @@ cab cwd        cd %:p:h
 cab lwd        lcd %:p:h
 " edit in tab, split, vsplit
 cab t          tabe
-
-" list chars {{
-set list
-set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_,
-set showbreak=↪
-" }}
+" jekyll post/note
+cab note       e ~/Documents/Programming/Web/zhuochun.github.io/_posts/
 
 " }}}
 
