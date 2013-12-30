@@ -1,0 +1,21 @@
+[user]
+	name = Wang Zhuochun
+	email = stone1551@gmail.com
+[github]
+	user = zhuochun
+[credential]
+	helper = osxkeychain
+[push]
+	default = simple
+[alias]
+	# commits
+	amend = commit --amend
+	unstage = reset HEAD
+	uncommit = reset --soft HEAD^
+	# rebase
+	rc = rebase --continue
+	rs = rebase --skip
+	ra = rebase --abort
+	# log
+	today = log --since=midnight --author='Wang Zhuochun' --oneline
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit

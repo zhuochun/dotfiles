@@ -52,10 +52,8 @@ NeoBundle 'AndrewRadev/switch.vim'
     " Some customized definitions
     let g:switch_custom_definitions =
             \ [
-            \   ['else', 'elsif', 'else if'],
-            \   ['&', '|', '^'],
+            \   ['else', 'else if', 'elsif'],
             \   ['==', '!='],
-            \   [' + ', ' - '],
             \   ['-=', '+='],
             \   ['if', 'unless'],
             \   ['yes', 'no'],
@@ -87,7 +85,7 @@ NeoBundleLazy 'chrisbra/NrrwRgn', {
 
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
             \ 'autoload' : {
-            \     'filetypes' : ['c', 'cpp'],
+            \     'filetypes' : ['c', 'cpp', 'h', 'hpp'],
             \    },
             \ }
 
@@ -204,6 +202,7 @@ NeoBundle 'Shougo/unite.vim'
     nnoremap <D-o> :<C-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
+    nnoremap <C-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
     nnoremap <D-u> :<C-u>Unite -quick-match buffer<CR>
     " Content searching like ack.vim
