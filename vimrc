@@ -119,11 +119,11 @@ NeoBundle 'kshenoy/vim-signature'
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
     " Modify tagbar settings
-    let g:tagbar_left = 0                " dock to the right (default)
-    let g:tagbar_autofocus = 1           " auto focus on Tagbar when opened
-    let g:tagbar_width = 27              " default is 40
-    let g:tagbar_compact = 1             " omit vacant lines
-    let g:tagbar_sort = 0                " sort according to order
+    let g:tagbar_left = 0      " dock to the right (default)
+    let g:tagbar_sort = 0      " sort according to order
+    let g:tagbar_width = 29    " default is 40
+    let g:tagbar_compact = 1   " omit vacant lines
+    let g:tagbar_autofocus = 1 " auto focus on Tagbar when opened
 
 NeoBundle 'matchit.zip'
 
@@ -135,13 +135,6 @@ NeoBundle 'mattn/emmet-vim'
     let g:user_emmet_next_key = '<M-y>'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
-
-NeoBundle 'maxbrunsfeld/vim-yankstack'
-    let g:yankstack_map_keys = 0
-    " <M-p> - cycle backward through your history of yanks
-    nmap <M-p> <Plug>yankstack_substitute_older_paste
-    " <M-P> - cycle forwards through your history of yanks
-    nmap <M-P> <Plug>yankstack_substitute_newer_paste
 
 NeoBundle 'mhinz/vim-signify'
 
@@ -155,8 +148,8 @@ NeoBundleLazy 'sjl/gundo.vim', {
 NeoBundle 'scrooloose/syntastic'
     " Fancy symbols
     let g:syntastic_error_symbol = '✗'
-    let g:syntastic_style_error_symbol = '✠'
     let g:syntastic_warning_symbol = '∆'
+    let g:syntastic_style_error_symbol = '✠'
     let g:syntastic_style_warning_symbol = '≈'
     " Do a manual syntastic check
     nnoremap <silent> <F7>   :SyntasticCheck<CR>
@@ -180,7 +173,7 @@ NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
     let NERDChristmasTree = 1
     " size of the NERD tree
-    let NERDTreeWinSize = 27
+    let NERDTreeWinSize = 29
     " Disable 'bookmarks' and 'help'
     let NERDTreeMinimalUI = 1
     " Highlight the selected entry in the tree
@@ -199,18 +192,23 @@ NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " Most recent files
-    nnoremap <D-o> :<C-u>Unite file_mru<CR>
+    nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
+    nnoremap <silent> <C-o> :<C-u>Unite outline<CR>
     " File searching like ctrlp.vim, start in insert mode
-    nnoremap <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
-    nnoremap <C-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
+    nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
+    nnoremap <silent> <C-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
-    nnoremap <D-u> :<C-u>Unite -quick-match buffer<CR>
+    nnoremap <silent> <D-u> :<C-u>Unite -quick-match buffer<CR>
+    nnoremap <silent> <M-u> :<C-u>Unite -quick-match tab<CR>
     " Content searching like ack.vim
-    nnoremap <D-/> :<C-u>Unite grep:.<CR>
+    nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
+    nnoremap <silent> <D-f> :<C-u>Unite -no-quit -vertical -resume grep:.<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
+    let g:unite_source_history_yank_save_clipboard = 1
     " Yank history like YankRing
-    nnoremap <D-y> :<C-u>Unite history/yank<CR>
+    nnoremap <silent> <D-y> :<C-u>Unite history/yank<CR>
+    nnoremap <silent> <D-p> :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
 
@@ -227,13 +225,37 @@ NeoBundle 'Shougo/unite.vim'
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
     function! s:unite_my_settings() "{{{
-        " Overwrite settings.
-        nmap <buffer> <ESC> <Plug>(unite_exit)
+        " normal mode settings
+        nmap <buffer> o         <Plug>(unite_do_default_action)
+        nmap <buffer> <ESC>     <Plug>(unite_exit)
         nmap <buffer> <leader>d <Plug>(unite_exit)
 
-        imap <buffer> <CR> <Plug>(unite_insert_leave)
-        imap <buffer> <TAB> <Plug>(unite_select_next_line)
-        imap <buffer> <S-TAB> <Plug>(unite_select_previous_line)
+        " insert mode settings
+        imap <buffer> <CR>      <Plug>(unite_insert_leave)
+        imap <buffer> <TAB>     <Plug>(unite_select_next_line)
+        imap <buffer> <S-TAB>   <Plug>(unite_select_previous_line)
+
+        " path settings
+        imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
+        nmap <buffer> <C-y>     <Plug>(unite_narrowing_path)
+        nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
+
+        " change directory
+        nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
+
+        " replace/rename
+        let unite = unite#get_current_unite()
+        if unite.profile_name ==# 'search'
+            nnoremap <silent><buffer><expr> r  unite#do_action('replace')
+        else
+            nnoremap <silent><buffer><expr> r  unite#do_action('rename')
+        endif
+
+        " toggle preview window
+        nnoremap <silent><buffer><expr> p
+                    \ empty(filter(range(1, winnr('$')),
+                    \ 'getwinvar(v:val, "&previewwindow") != 0')) ?
+                    \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
     endfunction "}}}
 
 NeoBundle 'Shougo/unite-outline'
@@ -261,30 +283,33 @@ NeoBundle 'Shougo/neocomplete.vim'
     let g:neocomplete#enable_at_startup = 1
     let g:neocomplete#enable_smart_case = 1
     let g:neocomplete#enable_auto_delimiter = 1
-    let g:neocomplete#max_list = 23
+    let g:neocomplete#max_list = 29
     " Completion length.
-    let g:neocomplete#auto_completion_start_length = 2
+    let g:neocomplete#auto_completion_start_length   = 2
     let g:neocomplete#manual_completion_start_length = 1
 
     " Plugin key-mappings.
     inoremap <expr><C-g> neocomplete#undo_completion()
     inoremap <expr><C-l> neocomplete#complete_common_string()
+
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
         function! s:my_cr_function()
           return pumvisible() ? neocomplete#close_popup() : "\<cr>"
         endfunction
+
     " <TAB>: completion.
     inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
                 \ <SID>check_back_space() ? "\<TAB>" :
                 \ neocomplete#start_manual_complete()
-    function! s:check_back_space() "{{{
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1] =~ '\s'
-    endfunction"}}}
+        function! s:check_back_space()
+            let col = col('.') - 1
+            return !col || getline('.')[col - 1] =~ '\s'
+        endfunction
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+
     " <BS>: close popup and delete backword char.
-    inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS>    neocomplete#smart_close_popup()."\<C-h>"
     " <Space>: Close popup.
     inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
@@ -340,12 +365,12 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
     " Tell Neosnippet about the other snippets
-    let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+    let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
     " Snippet variables
-    let g:snips_author='Wang Zhuochun'
-    let g:snips_email='stone1551@gmail.com'
-    let g:snips_github='https://github.com/zhuochun'
+    let g:snips_author = 'Wang Zhuochun'
+    let g:snips_email  = 'stone1551@gmail.com'
+    let g:snips_github = 'https://github.com/zhuochun'
 
     " For snippet_complete marker.
     if has('conceal')
@@ -360,10 +385,8 @@ NeoBundle 'Shougo/neosnippet.vim'
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-surround'
-    " Shortcuts
+    " Shortcuts in visual mode
     xmap ( S)
     xmap { S{
     xmap [ S]
@@ -379,12 +402,12 @@ NeoBundle 'tpope/vim-eunuch'
 
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
-    let g:multi_cursor_use_default_mapping=0
+    let g:multi_cursor_use_default_mapping = 0
     " New mapping
-    let g:multi_cursor_next_key='<M-,>'
-    let g:multi_cursor_prev_key='<M-.>'
-    let g:multi_cursor_skip_key='<M-m>'
-    let g:multi_cursor_quit_key='<Esc>'
+    let g:multi_cursor_next_key = '<M-,>'
+    let g:multi_cursor_prev_key = '<M-.>'
+    let g:multi_cursor_skip_key = '<M-m>'
+    let g:multi_cursor_quit_key = '<Esc>'
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
@@ -412,41 +435,50 @@ NeoBundle 'coderifous/textobj-word-column.vim'
 " }}}
 
 " language syntax {{{
-NeoBundle 'cakebaker/scss-syntax.vim'
+" HTML
+NeoBundle 'othree/html5.vim'
+NeoBundle 'nono/vim-handlebars'
 NeoBundle 'digitaltoad/vim-jade'
-NeoBundle 'elzr/vim-json'
-NeoBundle 'groenewege/vim-less'
+NeoBundle 'slim-template/vim-slim'
+NeoBundle 'tpope/vim-haml'
+" CSS
 NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'wavded/vim-stylus'
+NeoBundle 'groenewege/vim-less'
+NeoBundle 'cakebaker/scss-syntax.vim'
+NeoBundle 'chrisbra/color_highlight'
+    let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
+    let g:colorizer_colornames = 0
+" JS
+NeoBundle 'elzr/vim-json'
 NeoBundle 'kchmck/vim-coffee-script'
     let coffee_compile_vert = 1
     let coffee_watch_vert = 1
     let coffee_run_vert = 1
-NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'moll/vim-node'
-NeoBundle 'nono/vim-handlebars'
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
-NeoBundle 'othree/html5.vim'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,requirejs,angularjs'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'slim-template/vim-slim'
-NeoBundle 'chrisbra/color_highlight'
-    let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
-    let g:colorizer_colornames = 0
-NeoBundle 'tpope/vim-cucumber'
-NeoBundle 'tpope/vim-git'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'plasticboy/vim-markdown'
-    let g:vim_markdown_folding_disabled = 1
+" Ruby/Rails
 NeoBundle 'vim-ruby/vim-ruby'
+    let g:rubycomplete_rails = 1
+    let g:rubycomplete_use_bundler = 1
+    let g:rubycomplete_load_gemfile = 1
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
-    let g:rubycomplete_rails = 1
-    let g:rubycomplete_load_gemfile = 1
-    let g:rubycomplete_use_bundler = 1
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'tpope/vim-rake'
+NeoBundle 'Keithbsmiley/rspec.vim'
+NeoBundle 'tpope/vim-cucumber'
+" C/Cpp
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'vim-jp/cpp-vim'
-NeoBundle 'wavded/vim-stylus'
+" Markdown
+NeoBundle 'plasticboy/vim-markdown'
+    let g:vim_markdown_folding_disabled = 1
+" Others
+NeoBundle 'tpope/vim-git'
 " }}}
 
 " colorschemes {{{
@@ -454,8 +486,7 @@ NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
-NeoBundle 'tomasr/molokai'
-    let g:molokai_original = 0
+NeoBundle 'w0ng/vim-hybrid'
 " }}}
 
 " }}}
@@ -982,8 +1013,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <M-u>
     " <M-i>
     " <M-o>
-    " <M-p> Yankstack old
-    " <M-P> Yankstack new
+    " <M-p>
+    " <M-P>
     " <M-[>
     " <M-]>
     " <M-a>
@@ -1023,14 +1054,15 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <D-Y> (Insert) Emmet next, alias to <C-y>,
     " <D-u> Unite files
     " <D-i> Unite buffers
-    " <D-o> Unite MRO
-    " <D-p>
+    " <D-o> Unite recent files
+    " <D-O> Unite outline
+    " <D-p> Unite yank
     " <D-{> Previous Tabs
     " <D-}> Next Tabs
     " <D-a> Mac Select all
     " <D-s> Mac Save
     " <D-d> Snippet autocomplete
-    " <D-f>
+    " <D-f> Unite grep
     " <D-g>
     " <D-h>
     " <D-j>
