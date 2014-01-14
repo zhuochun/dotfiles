@@ -1152,12 +1152,15 @@ function! RubyDef()
     nnoremap <M-F5> :RT<CR>
 
     " edit routes
-    command! Rroutes :e config/routes.rb
+    command! -buffer EGemfile :e Gemfile
+    command! -buffer TGemfile :tabe Gemfile
+    command! -buffer ERoutes  :e config/routes.rb
+    command! -buffer TRoutes  :tabe config/routes.rb
 
     " Vimshell shorter command
-    cab <buffer> Pry   VimShellInteractive --split='split <bar> resize 19' pry
-    cab <buffer> Irb   VimShellInteractive --split='split <bar> resize 19' irb
-    cab <buffer> Eval  VimShellSendString
+    command! -buffer Pry  :execute "VimShellInteractive --split='split <bar> resize 19' pry"
+    command! -buffer Irb  :execute "VimShellInteractive --split='split <bar> resize 19' irb"
+    command! -buffer Eval :execute "VimShellSendString"
 
     " Surround % to %
     let b:surround_37 = "<% \r %>"
@@ -1178,8 +1181,9 @@ function! CoffeeDef()
     setlocal tabstop=2
 
     " Vimshell shorter command
-    cab <buffer> Coffee VimShellInteractive --split='split <bar> resize 19' coffee
-    cab <buffer> Eval   VimShellSendString
+    command! -buffer Node   :execute "VimShellInteractive --split='split <bar> resize 19' node"
+    command! -buffer Coffee :execute "VimShellInteractive --split='split <bar> resize 19' coffee"
+    command! -buffer Eval   :execute "VimShellSendString"
 endfunction
 " }}}
 
@@ -1238,7 +1242,7 @@ endfunction
 " }}}
 
 " Snippet {{{
-au FileType snippet set noexpandtab
+au FileType neosnippet,snippet set noexpandtab
 " }}}
 
 " Global Correct typos {{{
@@ -1268,7 +1272,8 @@ cab lwd        lcd %:p:h
 " edit in tab, split, vsplit
 cab t          tabe
 " jekyll post/note
-cab note       e ~/Documents/Programming/Web/zhuochun.github.io/_posts/
+command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/"
+command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new_draft.markdown"
 
 " }}}
 
