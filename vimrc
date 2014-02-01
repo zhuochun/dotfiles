@@ -39,13 +39,13 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-    \   'windows' : 'make -f make_mingw32.mak',
-    \   'cygwin' : 'make -f make_cygwin.mak',
-    \   'mac' : 'make -f make_mac.mak',
-    \   'unix' : 'make -f make_unix.mak',
-    \   },
-    \ }
+        \   'build' : {
+        \     'windows' : 'make -f make_mingw32.mak',
+        \     'cygwin' : 'make -f make_cygwin.mak',
+        \     'mac' : 'make -f make_mac.mak',
+        \     'unix' : 'make -f make_unix.mak',
+        \   },
+        \ }
 
 NeoBundle 'AndrewRadev/switch.vim'
     nnoremap + :Switch<CR>
@@ -65,10 +65,10 @@ NeoBundle 'bling/vim-airline'
     let g:airline_powerline_fonts = 1
     " control which sections get truncated and at what width. >
     let g:airline#extensions#default#section_truncate_width = {
-            \ 'b': 79,
-            \ 'x': 60,
-            \ 'y': 88,
-            \ 'z': 45,
+            \   'b': 79,
+            \   'x': 60,
+            \   'y': 88,
+            \   'z': 45,
             \ }
     " enable/disable showing a summary of changed hunks under source control. >
     let g:airline#extensions#hunks#enabled = 0
@@ -78,15 +78,15 @@ NeoBundle 'bling/vim-bufferline'
 NeoBundle 'bufkill.vim'
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
-            \ 'autoload' : {
-            \      'commands' : ['NarrowRegion', 'NR']
-            \    },
+            \   'autoload' : {
+            \     'commands' : ['NarrowRegion', 'NR']
+            \   },
             \ }
 
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
-            \ 'autoload' : {
-            \     'filetypes' : ['c', 'cpp', 'h', 'hpp'],
-            \    },
+            \   'autoload' : {
+            \     'filetypes' : ['c', 'cpp', 'h', 'hpp']
+            \   },
             \ }
 
 NeoBundle 'godlygeek/tabular'
@@ -95,6 +95,10 @@ NeoBundle 'godlygeek/tabular'
     xnoremap <leader>:     :Tabularize /:<CR>
     xnoremap <leader>-     :Tabularize /-<CR>
     xnoremap <leader><bar> :Tabularize /<bar><CR>
+
+NeoBundle 'itchyny/calendar.vim'
+    let g:calendar_google_calendar = 1
+    nnoremap <F1> :Calendar -view=week<CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
@@ -139,9 +143,9 @@ NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mhinz/vim-signify'
 
 NeoBundleLazy 'sjl/gundo.vim', {
-            \ 'autoload' : {
-            \      'commands' : ['GundoToggle']
-            \    },
+            \   'autoload' : {
+            \     'commands' : ['GundoToggle']
+            \   },
             \ }
     nnoremap <F11> :GundoToggle<CR>
 
@@ -181,7 +185,7 @@ NeoBundle 'scrooloose/nerdtree'
     " Use a single click to fold/unfold directories
     let NERDTreeMouseMode = 2
     " Don't display these kinds of files in NERDTree
-    let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
+    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
     map <F10> <plug>NERDTreeTabsToggle<CR>
@@ -261,14 +265,14 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
-            \ 'depends' : 'Shougo/vimproc',
-            \ 'autoload' : {
-            \   'commands' : [{ 'name' : 'VimShell',
-            \                   'complete' : 'customlist,vimshell#complete'},
-            \                 'VimShellExecute', 'VimShellInteractive',
-            \                 'VimShellTerminal', 'VimShellPop'],
-            \   'mappings' : ['<Plug>(vimshell_']
-            \ }
+            \   'depends' : 'Shougo/vimproc',
+            \   'autoload' : {
+            \     'commands' : [{ 'name' : 'VimShell',
+            \                     'complete' : 'customlist,vimshell#complete'},
+            \                   'VimShellExecute', 'VimShellInteractive',
+            \                   'VimShellTerminal', 'VimShellPop'],
+            \     'mappings' : ['<Plug>(vimshell_'],
+            \   },
             \ }
     " default prompt string
     let g:vimshell_prompt = $USER." $ "
@@ -324,9 +328,9 @@ NeoBundle 'Shougo/neocomplete.vim'
 
     " Define dictionary.
     let g:neocomplete#sources#dictionary#dictionaries = {
-        \ 'default'  :  '',
-        \ 'vimshell' :  $HOME.'/.vimshell_hist',
-        \ 'scheme'   :  $HOME.'/.gosh_completions'
+        \   'default'  : '',
+        \   'vimshell' : $HOME.'/.vimshell_hist',
+        \   'scheme'   : $HOME.'/.gosh_completions',
         \ }
 
     " Define keyword.
@@ -385,6 +389,12 @@ NeoBundle 'Shougo/neosnippet.vim'
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
+NeoBundleLazy 'skalnik/vim-vroom', {
+            \   'autoload' : {
+            \     'commands' : ['VroomRunTestFile', 'VroomRunNearestTest']
+            \   },
+            \ }
+
 NeoBundle 'tpope/vim-surround'
     " Shortcuts in visual mode
     xmap ( S)
@@ -397,8 +407,9 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-vinegar'
 
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -409,6 +420,8 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_skip_key = '<M-m>'
     let g:multi_cursor_quit_key = '<Esc>'
 
+NeoBundle 'vim-scripts/DrawIt'
+
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
 
@@ -417,10 +430,10 @@ NeoBundle 'zhuochun/vim-snippets'
 " dash.app {{{
 NeoBundleLazy 'rizzatti/funcoo.vim'
 NeoBundleLazy 'rizzatti/dash.vim', {
-            \ 'depends' : 'rizzatti/funcoo.vim',
-            \ 'autoload' : {
-            \      'commands' : ['Dash']
-            \    },
+            \   'depends' : 'rizzatti/funcoo.vim',
+            \   'autoload' : {
+            \     'commands' : ['Dash']
+            \   },
             \ }
 " }}}
 
@@ -432,6 +445,27 @@ NeoBundle 'Julian/vim-textobj-variable-segment'
 NeoBundle 'nelstrom/vim-textobj-rubyblock'
 " ac/ic for a column block
 NeoBundle 'coderifous/textobj-word-column.vim'
+" }}}
+
+" writings {{{
+NeoBundleLazy 'reedes/vim-wordy', {
+            \   'autoload' : {
+            \     'commands' : ['WeakWordy', 'WordyWordy', 'JargonWordy',
+            \                   'WeaselWordy', 'PassiveWordy', 'TriteWordy'],
+            \     'filetypes' : ['mkd', 'markdown', 'text']
+            \   },
+            \ }
+NeoBundleLazy 'reedes/vim-lexical', {
+            \   'autoload' : {
+            \     'filetypes' : ['mkd', 'markdown', 'text']
+            \   },
+            \ }
+NeoBundleLazy 'junegunn/goyo.vim', {
+            \   'autoload' : {
+            \     'commands' : ['Goyo']
+            \   },
+            \ }
+    nnoremap <silent> <F8> :Goyo<cr>
 " }}}
 
 " language syntax {{{
@@ -448,8 +482,7 @@ NeoBundle 'groenewege/vim-less'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'chrisbra/color_highlight'
     let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
-    let g:colorizer_colornames = 0
-" JS
+" JavaScript
 NeoBundle 'elzr/vim-json'
 NeoBundle 'kchmck/vim-coffee-script'
     let coffee_compile_vert = 1
@@ -469,6 +502,7 @@ NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_classes_in_global = 1
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
+NeoBundle 'tpope/vim-bundler'
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'tpope/vim-cucumber'
 " C/Cpp
@@ -484,9 +518,9 @@ NeoBundle 'tpope/vim-git'
 " colorschemes {{{
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'reedes/vim-colors-pencil'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
-NeoBundle 'w0ng/vim-hybrid'
 " }}}
 
 " }}}
@@ -497,15 +531,13 @@ NeoBundle 'w0ng/vim-hybrid'
 " VIM Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" colorscheme background
 set background=dark
-" colorschemes
-colorscheme Tomorrow-Night-Bright
-" vim fonts
-set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
-" vim window size
+set linespace=0
+
+set guifont=Inconsolata-dz\ for\ Powerline:h16
+colorscheme Tomorrow-Night-Eighties
+
 set lines=99 columns=999
-" highlight 80 column
 set colorcolumn=80
 
 " enable filetype plugin
@@ -519,7 +551,7 @@ let mapleader = ","
 " ; is easier than :
 noremap ; :
 
-" Syntax highlighting on
+" syntax highlighting on
 syntax on
 
 " formatoptions
@@ -529,8 +561,7 @@ syntax on
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-set fo-=o
-set fo+=tcrqmMj
+autocmd FileType * setlocal formatoptions-=o
 
 " encoding
 set fileencoding=utf-8
@@ -662,7 +693,7 @@ set whichwrap+=<,>,b,s
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Function keys {{{
-    " F1    Help
+    " F1    Calendar
     " F2    Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
     " F3    Toggle Tagbar
@@ -671,7 +702,7 @@ set whichwrap+=<,>,b,s
     " F6    Paste mode
     set pastetoggle=<F6>
     " F7    Tigger Syntastic check
-    " F8
+    " F8    Open Goyo Zen Writing
     " F9    Toggle iTerm 2
     " F10   Toggle NERDTree
     " F11   Toggle Gundo
@@ -920,9 +951,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " Always splits to the right and below
     set splitright
     set splitbelow
-
-    " Resize splits when the window is resized
-    autocmd VimResized * :wincmd =
 " }}}
 
 " <Ctrl-*> key mappings {{{
@@ -1140,8 +1168,8 @@ nnoremap ? ?\v
 vnoremap ? ?\v
 
 " C/CPP Mappings {{{
-au FileType cpp,c,cc,h,hpp :call CppDef()
-function! CppDef()
+au FileType cpp,c,cc,h,hpp :call s:CppDef()
+function! s:CppDef()
     " FSwitch (support cpp better than a.vim) {{{
     nnoremap <F4>   :FSHere<CR>
     nnoremap <F5>   :FSSplitRight<CR>
@@ -1170,8 +1198,8 @@ endfunction
 " }}}
 
 " Ruby Mappings {{{
-au FileType ruby,eruby,rdoc :call RubyDef()
-function! RubyDef()
+au FileType ruby,eruby,rdoc :call s:RubyDef()
+function! s:RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
@@ -1200,6 +1228,9 @@ function! RubyDef()
     " Surround = to %=
     let b:surround_61 = "<%= \r %>"
     xmap _ S=
+    " Surround # to #{}
+    let b:surround_35 = "#{\r}"
+    xmap # S#
 
     " Correct typos
     iab elseif      elsif
@@ -1207,8 +1238,8 @@ endfunction
 " }}}
 
 " CoffeeScript Mappings {{{
-au FileType coffee :call CoffeeDef()
-function! CoffeeDef()
+au FileType coffee :call s:CoffeeDef()
+function! s:CoffeeDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
@@ -1220,8 +1251,8 @@ endfunction
 " }}}
 
 " Html/Xml Mappings {{{
-au FileType xhtml,html,xml,yaml :call WebDef()
-function! WebDef()
+au FileType xhtml,html,xml,yaml :call s:WebDef()
+function! s:WebDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
@@ -1246,13 +1277,21 @@ endfunction
 " }}}
 
 " Markdown Mappings {{{
-au FileType markdown,mkd,md,text :call MarkdownDef()
-function! MarkdownDef()
+au FileType markdown,mkd,md,text :call s:MarkdownDef()
+function! s:MarkdownDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
 
     " Insert date and time in Jekyll
     inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+    " Hard wrap current paragraph
+    nnoremap <silent><buffer> <D-w>   gwip
+    " Unwrap current paragraph
+    nnoremap <silent><buffer> <D-S-w> vipJ
+    " Format all paragraphs in buffer
+    nnoremap <silent><buffer> <D-e>   ggVGgq
+    " Unformat all paragraphs in buffer
+    nnoremap <silent><buffer> <D-S-e> :%norm vipJ<cr>
 
     " Surround _ to _
     let b:surround_95 = "_\r_"
@@ -1260,6 +1299,9 @@ function! MarkdownDef()
     " Surround * to **
     let b:surround_42 = "**\r**"
     xmap 8 S*
+    " Surround - to ~~
+    let b:surround_45 = "~~\r~~"
+    xmap - S-
     " Surround ~ to ```
     let b:surround_126 = "```\r```"
     xmap 1 S~
@@ -1291,6 +1333,7 @@ iab breaka;    break;
 iab labeled    labelled
 iab seperate   separate
 iab regester   register
+iab execuse    excuse
 iab ture       true
 iab ?8         /*
 iab /8         /*
@@ -1305,7 +1348,8 @@ cab lwd        lcd %:p:h
 cab t          tabe
 " jekyll post/note
 command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/"
-command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new_draft.markdown"
+command! Note  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
+command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
 
 " }}}
 
