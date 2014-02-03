@@ -11,6 +11,17 @@ set nocompatible
 source $VIMRUNTIME/mswin.vim
 behave mswin
 
+" encoding
+set fileencoding=utf-8
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=utf-8,ucs-bom,chinese,gbk
+
+" enable filetype plugin
+filetype plugin on
+filetype indent on
+filetype on
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NeoBundle Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -25,6 +36,8 @@ call neobundle#rc(expand('~/vimfiles/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins {{{
@@ -66,8 +79,6 @@ NeoBundle 'bling/vim-airline'
     " enable/disable showing a summary of changed hunks under source control. >
     let g:airline#extensions#hunks#enabled = 0
 
-NeoBundle 'bling/vim-bufferline'
-
 NeoBundle 'bufkill.vim'
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
@@ -91,21 +102,33 @@ NeoBundle 'justinmk/vim-sneak'
     let g:sneak#use_ic_scs = 1
     " replace f with Sneak
     nmap f <Plug>SneakForward
-    xmap f <Plug>VSneakForward
     nmap F <Plug>SneakBackward
-    xmap F <Plug>VSneakBackward
-    " handle my ; -> : remaps
+    xmap f <Plug>SneakForward
+    xmap F <Plug>SneakBackward
+    " 1-character enhanced 't'
+    nmap t <Plug>Sneak_t
+    nmap T <Plug>Sneak_T
+    xmap t <Plug>Sneak_t
+    xmap T <Plug>Sneak_T
+    omap t <Plug>Sneak_t
+    omap T <Plug>Sneak_T
+    " handle ; -> : remaps
     nmap : <Plug>SneakNext
     xmap : <Plug>VSneakNext
-    nmap ? <Plug>SneakPrevious
-    xmap ? <Plug>VSneakPrevious
+    nmap ' <Plug>SneakPrevious
+    xmap ' <Plug>VSneakPrevious
 
 NeoBundle 'Keithbsmiley/investigate.vim'
-    nnoremap <leader>K :call investigate#Investigate()<CR>
+    nnoremap <leader>i :call investigate#Investigate()<CR>
+
+NeoBundle 'Lokaltog/vim-easymotion'
+    map \ <Plug>(easymotion-prefix)
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
 
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
-" Modify tagbar settings
+    " modify tagbar settings
     let g:tagbar_left = 0 " dock to the right (default)
     let g:tagbar_autofocus = 1 " auto focus on Tagbar when opened
     let g:tagbar_width = 27 " default is 40
@@ -121,24 +144,17 @@ NeoBundle 'mattn/emmet-vim'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
 
-NeoBundle 'maxbrunsfeld/vim-yankstack'
-    let g:yankstack_map_keys = 0
-    " <M-p> - cycle backward through your history of yanks
-    nmap <M-p> <Plug>yankstack_substitute_older_paste
-    " <M-P> - cycle forwards through your history of yanks
-    nmap <M-P> <Plug>yankstack_substitute_newer_paste
-
-NeoBundle 'mhinz/vim-signify'
-
 NeoBundle 'scrooloose/syntastic'
-    " Do a manual syntastic check
+    " manual syntastic check
     nnoremap <silent> <F7> :SyntasticCheck<CR>
-    " Toggle syntastic between active and passive mode
+    " toggle syntastic between active and passive mode
     nnoremap <silent> <C-F7> :SyntasticToggleMode<CR>
-    " Output info about what checkers are available and in use
+    " output info about what checkers are available and in use
     nnoremap <silent> <S-F7> :SyntasticInfo<CR>
     " error window will be automatically opened and closed
     let g:syntastic_auto_loc_list = 1
+    " height of the location lists that syntastic opens
+    let g:syntastic_loc_list_height = 9
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
@@ -172,17 +188,18 @@ NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " Most recently used files
-    nnoremap <M-o> :Unite file_mru<CR>
+    nnoremap <M-o> :<c-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
-    nnoremap <M-i> :Unite -start-insert file_rec/async:!<CR>
+    nnoremap <M-i> :<c-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
-    nnoremap <M-u> :Unite -quick-match buffer<CR>
+    nnoremap <M-u> :<c-u>Unite -quick-match buffer<CR>
     " Content searching like ack.vim
-    nnoremap <M-f> :Unite grep:.<CR>
+    nnoremap <M-f> :<c-u>Unite grep:.<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     " Yank history like YankRing
-    nnoremap <M-h> :Unite history/yank<CR>
+    nnoremap <M-h> :<c-u>Unite history/yank<CR>
+    nnoremap <M-p> :<c-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
 
@@ -263,10 +280,8 @@ NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
     imap <M-d> <Plug>(neosnippet_expand_or_jump)
-    smap <M-d> <Plug>(neosnippet_expand_or_jump)
     " Alternative
     imap <M-D> <Plug>(neosnippet_jump_or_expand)
-    smap <M-D> <Plug>(neosnippet_jump_or_expand)
     " Visual
     xmap <M-d> <Plug>(neosnippet_expand_target)
 
@@ -302,6 +317,7 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-vinegar'
 
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping
@@ -351,21 +367,25 @@ NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_use_bundler = 1
 " }}}
 
+" writing {{{
+NeoBundle 'reedes/vim-wordy'
+NeoBundle 'reedes/vim-pencil'
+NeoBundle 'junegunn/goyo.vim'
+" }}}
+
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM Settings {{{
+" VIM Styles {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'reedes/vim-colors-pencil'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
-NeoBundle 'tomasr/molokai'
-    let g:molokai_original = 0
 " }}}
 
 " colorscheme background
@@ -373,23 +393,17 @@ set background=dark
 " colorschemes
 colorscheme badwolf
 " vim fonts
-"set guifont=Bitstream\ Vera\ Sans\ Mono:h11:cDEFAULT
-set guifont=Inconsolata-dz\ for\ Powerline:h11:cDEFAULT
+set guifont=Inconsolata-dz\ for\ Powerline:h12:cDEFAULT
 " vim window size
-set lines=99 columns=999
+set lines=42 columns=99
 " highlight 80 column
 set colorcolumn=80
 
-" encoding
-set fileencoding=utf-8
-set encoding=utf-8
-set termencoding=utf-8
-set fileencodings=utf-8,ucs-bom,chinese,gbk
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" enable filetype plugin
-filetype plugin on
-filetype indent on
-filetype on
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM Settings {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " , is much easier than \
 " \ is used in EasyMotion
@@ -408,8 +422,8 @@ syntax on
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-set fo-=o
-set fo+=tcrqmMj
+autocmd FileType * setlocal formatoptions-=o
+autocmd FileType * setlocal formatoptions+=tcrqmMj
 
 " status line
 set laststatus=2
@@ -758,6 +772,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nmap <left> <C-W>H
     nmap <C-up> <C-W>K
     nmap <C-down> <C-W>J
+    nmap <M-up> <C-W>K
+    nmap <M-down> <C-W>J
 
     " _ : Quick horizontal splits
     nnoremap _ :sp<cr>
@@ -767,9 +783,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " Always splits to the right and below
     set splitright
     set splitbelow
-
-    " Resize splits when the window is resized
-    autocmd VimResized * :wincmd =
 " }}}
 
 " <Ctrl-*> key mappings {{{
@@ -1000,6 +1013,7 @@ function! RubyDef()
 
     " Correct typos
     iab elseif     elsif
+    iab ~=         =~
 endfunction
 " }}}
 

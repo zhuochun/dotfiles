@@ -109,20 +109,32 @@ NeoBundle 'justinmk/vim-sneak'
     let g:sneak#use_ic_scs = 1
     " replace f with Sneak
     nmap f <Plug>SneakForward
-    xmap f <Plug>VSneakForward
     nmap F <Plug>SneakBackward
-    xmap F <Plug>VSneakBackward
-    " handle my ; -> : remaps
+    xmap f <Plug>SneakForward
+    xmap F <Plug>SneakBackward
+    " 1-character enhanced 't'
+    nmap t <Plug>Sneakt
+    nmap T <Plug>SneakT
+    xmap t <Plug>Sneakt
+    xmap T <Plug>SneakT
+    omap t <Plug>Sneakt
+    omap T <Plug>SneakT
+    " handle ; -> : remaps
     nmap : <Plug>SneakNext
     xmap : <Plug>VSneakNext
-    nmap ? <Plug>SneakPrevious
-    xmap ? <Plug>VSneakPrevious
+    nmap ' <Plug>SneakPrevious
+    xmap ' <Plug>VSneakPrevious
+
+NeoBundle 'Lokaltog/vim-easymotion'
+    map \ <Plug>(easymotion-prefix)
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
 
 NeoBundle 'kshenoy/vim-signature'
 
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F3> :TagbarToggle<CR>
-    " Modify tagbar settings
+    " modify tagbar settings
     let g:tagbar_left = 0      " dock to the right (default)
     let g:tagbar_sort = 0      " sort according to order
     let g:tagbar_width = 29    " default is 40
@@ -150,19 +162,21 @@ NeoBundleLazy 'sjl/gundo.vim', {
     nnoremap <F11> :GundoToggle<CR>
 
 NeoBundle 'scrooloose/syntastic'
-    " Fancy symbols
+    " fancy symbols
     let g:syntastic_error_symbol = '✗'
     let g:syntastic_warning_symbol = '∆'
     let g:syntastic_style_error_symbol = '✠'
     let g:syntastic_style_warning_symbol = '≈'
-    " Do a manual syntastic check
+    " manual syntastic check
     nnoremap <silent> <F7>   :SyntasticCheck<CR>
-    " Toggle syntastic between active and passive mode
+    " toggle syntastic between active and passive mode
     nnoremap <silent> <C-F7> :SyntasticToggleMode<CR>
-    " Output info about what checkers are available and in use
+    " output info about what checkers are available and in use
     nnoremap <silent> <S-F7> :SyntasticInfo<CR>
     " error window will be automatically opened and closed
     let g:syntastic_auto_loc_list = 1
+    " height of the location lists that syntastic opens
+    let g:syntastic_loc_list_height = 9
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
@@ -940,8 +954,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " Use arrows to change the splited windows
     nmap <right> <C-W>L
     nmap <left> <C-W>H
-    nmap <C-up> <C-W>K
-    nmap <C-down> <C-W>J
+    nmap <D-up> <C-W>K
+    nmap <D-down> <C-W>J
 
     " _ : Quick horizontal splits
     nnoremap _ :sp<cr>
@@ -1234,6 +1248,7 @@ function! s:RubyDef()
 
     " Correct typos
     iab elseif      elsif
+    iab ~=         =~
 endfunction
 " }}}
 
