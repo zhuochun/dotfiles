@@ -83,12 +83,6 @@ NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   },
             \ }
 
-NeoBundleLazy 'derekwyatt/vim-fswitch', {
-            \   'autoload' : {
-            \     'filetypes' : ['c', 'cpp', 'h', 'hpp']
-            \   },
-            \ }
-
 NeoBundle 'godlygeek/tabular'
     xnoremap <leader>&     :Tabularize /&<CR>
     xnoremap <leader>=     :Tabularize /=<CR>
@@ -107,22 +101,24 @@ NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'justinmk/vim-sneak'
     " not case censitive
     let g:sneak#use_ic_scs = 1
-    " replace f with Sneak
-    nmap f <Plug>SneakForward
-    nmap F <Plug>SneakBackward
-    xmap f <Plug>SneakForward
-    xmap F <Plug>SneakBackward
+    " 1-character enhanced 'f'
+    nmap f <Plug>Sneak_f
+    nmap F <Plug>Sneak_F
+    xmap f <Plug>Sneak_f
+    xmap F <Plug>Sneak_F
+    omap f <Plug>Sneak_f
+    omap F <Plug>Sneak_F
     " 1-character enhanced 't'
-    nmap t <Plug>Sneakt
-    nmap T <Plug>SneakT
-    xmap t <Plug>Sneakt
-    xmap T <Plug>SneakT
-    omap t <Plug>Sneakt
-    omap T <Plug>SneakT
+    nmap t <Plug>Sneak_t
+    nmap T <Plug>Sneak_T
+    xmap t <Plug>Sneak_t
+    xmap T <Plug>Sneak_T
+    omap t <Plug>Sneak_t
+    omap T <Plug>Sneak_T
     " handle ; -> : remaps
     nmap : <Plug>SneakNext
-    xmap : <Plug>VSneakNext
     nmap ' <Plug>SneakPrevious
+    xmap : <Plug>VSneakNext
     xmap ' <Plug>VSneakPrevious
 
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -132,8 +128,15 @@ NeoBundle 'Lokaltog/vim-easymotion'
 
 NeoBundle 'kshenoy/vim-signature'
 
+NeoBundleLazy 'kien/tabman.vim', {
+            \   'autoload' : {
+            \     'commands' : ['TMToggle']
+            \   },
+            \ }
+    nnoremap <F4> :TMToggle<CR>
+
 NeoBundle 'majutsushi/tagbar'
-    nnoremap <F3> :TagbarToggle<CR>
+    nnoremap <F10> :TagbarToggle<CR>
     " modify tagbar settings
     let g:tagbar_left = 0      " dock to the right (default)
     let g:tagbar_sort = 0      " sort according to order
@@ -159,7 +162,7 @@ NeoBundleLazy 'sjl/gundo.vim', {
             \     'commands' : ['GundoToggle']
             \   },
             \ }
-    nnoremap <F11> :GundoToggle<CR>
+    nnoremap <F5> :GundoToggle<CR>
 
 NeoBundle 'scrooloose/syntastic'
     " fancy symbols
@@ -176,7 +179,7 @@ NeoBundle 'scrooloose/syntastic'
     " error window will be automatically opened and closed
     let g:syntastic_auto_loc_list = 1
     " height of the location lists that syntastic opens
-    let g:syntastic_loc_list_height = 9
+    let g:syntastic_loc_list_height = 3
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
@@ -202,16 +205,13 @@ NeoBundle 'scrooloose/nerdtree'
     let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
-    map <F10> <plug>NERDTreeTabsToggle<CR>
+    map <F3> <plug>NERDTreeTabsToggle<CR>
     " Do not open NERDTree on startup
     let g:nerdtree_tabs_open_on_gui_startup = 0
 
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Most recent files
-    nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
-    nnoremap <silent> <C-o> :<C-u>Unite outline<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
     nnoremap <silent> <C-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
@@ -276,7 +276,10 @@ NeoBundle 'Shougo/unite.vim'
                     \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
     endfunction "}}}
 
+NeoBundle 'Shougo/neomru.vim'
+    nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
 NeoBundle 'Shougo/unite-outline'
+    nnoremap <silent> <C-o> :<C-u>Unite outline<CR>
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
@@ -425,6 +428,10 @@ NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-vinegar'
 
+NeoBundle 'terryma/vim-expand-region'
+    map <M-=> <Plug>(expand_region_expand)
+    map <M--> <Plug>(expand_region_shrink)
+
 NeoBundle 'terryma/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
     let g:multi_cursor_use_default_mapping = 0
@@ -435,6 +442,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_quit_key = '<Esc>'
 
 NeoBundle 'vim-scripts/DrawIt'
+    " \di start, \ds stop
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
@@ -469,17 +477,13 @@ NeoBundleLazy 'reedes/vim-wordy', {
             \     'filetypes' : ['mkd', 'markdown', 'text']
             \   },
             \ }
-NeoBundleLazy 'reedes/vim-lexical', {
-            \   'autoload' : {
-            \     'filetypes' : ['mkd', 'markdown', 'text']
-            \   },
-            \ }
+
 NeoBundleLazy 'junegunn/goyo.vim', {
             \   'autoload' : {
             \     'commands' : ['Goyo']
             \   },
             \ }
-    nnoremap <silent> <F8> :Goyo<cr>
+    nnoremap <silent> <F11> :Goyo<cr>
 " }}}
 
 " language syntax {{{
@@ -490,21 +494,21 @@ NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'tpope/vim-haml'
 " CSS
+NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'wavded/vim-stylus'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'chrisbra/color_highlight'
-    let g:colorizer_auto_filetype = 'css,less,scss,scss.css,stylus'
 " JavaScript
 NeoBundle 'elzr/vim-json'
+    let g:vim_json_syntax_conceal = 0
 NeoBundle 'kchmck/vim-coffee-script'
     let coffee_compile_vert = 1
     let coffee_watch_vert = 1
     let coffee_run_vert = 1
 NeoBundle 'moll/vim-node'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
-    let g:used_javascript_libs = 'jquery,underscore,backbone,requirejs,angularjs'
+    let g:used_javascript_libs = 'jquery,underscore,backbone,jasmine,angularjs,angularui'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 " Ruby/Rails
@@ -519,12 +523,14 @@ NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-bundler'
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'tpope/vim-cucumber'
+NeoBundle 'duwanis/tomdoc.vim'
 " C/Cpp
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'vim-jp/cpp-vim'
 " Markdown
 NeoBundle 'plasticboy/vim-markdown'
     let g:vim_markdown_folding_disabled = 1
+NeoBundle 'itspriddle/vim-marked'
 " Others
 NeoBundle 'tpope/vim-git'
 " }}}
@@ -710,16 +716,16 @@ set whichwrap+=<,>,b,s
     " F1    Calendar
     " F2    Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
-    " F3    Toggle Tagbar
-    " F4    Open Alternative File (c, cpp, rails)
-    " F5    Open Alternative File Split (c, cpp, rails)
+    " F3    Toggle NERDTree
+    " F4    Toggle TabMan
+    " F5    Toggle Gundo
     " F6    Paste mode
     set pastetoggle=<F6>
     " F7    Tigger Syntastic check
-    " F8    Open Goyo Zen Writing
+    " F8
     " F9    Toggle iTerm 2
-    " F10   Toggle NERDTree
-    " F11   Toggle Gundo
+    " F10   Toggle Tagbar
+    " F11   Open Goyo Zen Writing
     " F12   Toggle MenuBar
     set go=
     nnoremap <expr> <F12> <SID>toggle_menubar()
@@ -1184,13 +1190,7 @@ vnoremap ? ?\v
 " C/CPP Mappings {{{
 au FileType cpp,c,cc,h,hpp :call s:CppDef()
 function! s:CppDef()
-    " FSwitch (support cpp better than a.vim) {{{
-    nnoremap <F4>   :FSHere<CR>
-    nnoremap <F5>   :FSSplitRight<CR>
-    nnoremap <C-F5> :FSSplitLeft<CR>
-    " }}}
-
-    " Correct typos that only in C/Cpp
+    " Correct typos
     iab uis        usi
     iab cuot       cout
     iab itn        int
@@ -1216,14 +1216,6 @@ au FileType ruby,eruby,rdoc :call s:RubyDef()
 function! s:RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
-
-    " vim-rails
-    " alternative files (usually tests) in split
-    nnoremap <F4>   :AS<CR>
-    " related files (Split, Tab)
-    nnoremap <F5>   :R<CR>
-    nnoremap <C-F5> :RS<CR>
-    nnoremap <M-F5> :RT<CR>
 
     " edit routes
     command! -buffer EGemfile :e Gemfile

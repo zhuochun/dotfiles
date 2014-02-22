@@ -20,7 +20,7 @@ alias z="zeus"
 # ==============================
 
 # Copy to clipboard
-alias cb="pbcopy"
+alias cc="pbcopy"
 # Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
