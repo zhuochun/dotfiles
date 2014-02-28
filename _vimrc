@@ -100,11 +100,13 @@ NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'justinmk/vim-sneak'
     " not case censitive
     let g:sneak#use_ic_scs = 1
-    " replace f with Sneak
-    nmap f <Plug>SneakForward
-    nmap F <Plug>SneakBackward
-    xmap f <Plug>SneakForward
-    xmap F <Plug>SneakBackward
+    " 1-character enhanced 'f'
+    nmap f <Plug>Sneak_f
+    nmap F <Plug>Sneak_F
+    xmap f <Plug>Sneak_f
+    xmap F <Plug>Sneak_F
+    omap f <Plug>Sneak_f
+    omap F <Plug>Sneak_F
     " 1-character enhanced 't'
     nmap t <Plug>Sneak_t
     nmap T <Plug>Sneak_T
@@ -114,12 +116,14 @@ NeoBundle 'justinmk/vim-sneak'
     omap T <Plug>Sneak_T
     " handle ; -> : remaps
     nmap : <Plug>SneakNext
-    xmap : <Plug>VSneakNext
     nmap ' <Plug>SneakPrevious
+    xmap : <Plug>VSneakNext
     xmap ' <Plug>VSneakPrevious
 
 NeoBundle 'Keithbsmiley/investigate.vim'
     nnoremap <leader>i :call investigate#Investigate()<CR>
+
+NeoBundle 'LaTeX-Box-Team/LaTeX-Box'
 
 NeoBundle 'Lokaltog/vim-easymotion'
     map \ <Plug>(easymotion-prefix)
@@ -187,8 +191,6 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Most recently used files
-    nnoremap <M-o> :<c-u>Unite file_mru<CR>
     " File searching like ctrlp.vim, start in insert mode
     nnoremap <M-i> :<c-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching like LustyJuggler
@@ -216,6 +218,9 @@ NeoBundle 'Shougo/unite.vim'
     endfunction "}}}
 
 NeoBundle 'Shougo/unite-outline'
+
+NeoBundle 'Shougo/neomru.vim'
+    nnoremap <M-o> :<c-u>Unite file_mru<CR>
 
 NeoBundle 'Shougo/neocomplcache.vim'
     " Use neocomplcache.
@@ -285,10 +290,13 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Visual
     xmap <M-d> <Plug>(neosnippet_expand_target)
 
+    " Disable default snippets
+    let g:neosnippet#disable_runtime_snippets = { '_' : 1, }
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
     " Tell Neosnippet about the other snippets
-    let g:neosnippet#snippets_directory='~/vimfiles/bundle/vim-snippets/snippets'
+    "let g:neosnippet#snippets_directory='~/vimfiles/bundle/vim-snippets/snippets'
+    let g:neosnippet#snippets_directory='D:\Programming\CG4001\vim-snippets\snippets'
 
     let g:snips_author='Wang Zhuochun'
     let g:snips_email='stone1551@gmail.com'
@@ -328,6 +336,8 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_skip_key='<M-m>'
     let g:multi_cursor_quit_key='<Esc>'
 
+NeoBundle 'vim-scripts/ZoomWin'
+
 NeoBundle 'Yggdroot/indentLine'
 
 NeoBundle 'zhuochun/vim-snippets'
@@ -340,6 +350,10 @@ NeoBundle 'Julian/vim-textobj-variable-segment'
 NeoBundle 'nelstrom/vim-textobj-rubyblock'
 " ac/ic for a column block
 NeoBundle 'coderifous/textobj-word-column.vim'
+" }}}
+
+" live edit {{{
+NeoBundle 'jaxbot/brolink.vim'
 " }}}
 
 " language syntax {{{
@@ -386,14 +400,15 @@ NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'reedes/vim-colors-pencil'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
+NeoBundle 'morhetz/gruvbox'
 " }}}
 
 " colorscheme background
 set background=dark
 " colorschemes
-colorscheme badwolf
+colorscheme gruvbox
 " vim fonts
-set guifont=Inconsolata-dz\ for\ Powerline:h12:cDEFAULT
+set guifont=Inconsolata-dz\ for\ Powerline:h13:cDEFAULT
 " vim window size
 set lines=42 columns=99
 " highlight 80 column
