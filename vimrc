@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 25/Dec/2013 10:28 AM
+" Last Edit: 27/Feb/2014 11:12 AM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -121,11 +121,6 @@ NeoBundle 'justinmk/vim-sneak'
     xmap : <Plug>VSneakNext
     xmap ' <Plug>VSneakPrevious
 
-NeoBundle 'Lokaltog/vim-easymotion'
-    map \ <Plug>(easymotion-prefix)
-    " not case censitive
-    let g:EasyMotion_smartcase = 1
-
 NeoBundle 'kshenoy/vim-signature'
 
 NeoBundleLazy 'kien/tabman.vim', {
@@ -135,14 +130,31 @@ NeoBundleLazy 'kien/tabman.vim', {
             \ }
     nnoremap <F4> :TMToggle<CR>
 
+NeoBundleLazy 'kien/rainbow_parentheses.vim', {
+            \   'autoload' : {
+            \     'commands' : ['RainbowParenthesesToggle']
+            \   },
+            \ }
+
+NeoBundle 'Lokaltog/vim-easymotion'
+    map \ <Plug>(easymotion-prefix)
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
+
 NeoBundle 'majutsushi/tagbar'
     nnoremap <F10> :TagbarToggle<CR>
-    " modify tagbar settings
-    let g:tagbar_left = 0      " dock to the right (default)
-    let g:tagbar_sort = 0      " sort according to order
-    let g:tagbar_width = 29    " default is 40
-    let g:tagbar_compact = 1   " omit vacant lines
-    let g:tagbar_autofocus = 1 " auto focus on Tagbar when opened
+    " sort according to order
+    let g:tagbar_sort = 0
+    " default is 40
+    let g:tagbar_width = 29
+    " omit vacant lines
+    let g:tagbar_compact = 1
+    " auto focus on Tagbar when opened
+    let g:tagbar_autofocus = 1
+    " default iconchars are too wide (Mac)
+    let g:tagbar_iconchars = ['▸', '▾']
+    " expand tag folds
+    let g:tagbar_autoshowtag = 1
 
 NeoBundle 'matchit.zip'
 
@@ -183,7 +195,7 @@ NeoBundle 'scrooloose/syntastic'
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
-                               \ 'passive_filetypes': ['html', 'css'] }
+                               \ 'passive_filetypes': ['html', 'css', 'c', 'cpp'] }
 
 NeoBundle 'scrooloose/nerdcommenter'
     " use / to toggle comments
@@ -193,7 +205,7 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
     let NERDChristmasTree = 1
-    " size of the NERD tree
+    " Size of the NERD tree
     let NERDTreeWinSize = 29
     " Disable 'bookmarks' and 'help'
     let NERDTreeMinimalUI = 1
@@ -383,6 +395,8 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Visual
     xmap <D-d> <Plug>(neosnippet_expand_target)
 
+    " Disables standart snippets, use vim-snippets bundle instead
+    let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
     " Tell Neosnippet about the other snippets
@@ -406,6 +420,7 @@ NeoBundle 'Shougo/neosnippet.vim'
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
+" Plugin for running your tests
 NeoBundleLazy 'skalnik/vim-vroom', {
             \   'autoload' : {
             \     'commands' : ['VroomRunTestFile', 'VroomRunNearestTest']
@@ -425,8 +440,10 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-vinegar'
+NeoBundle 'tpope/vim-sleuth'
 
 NeoBundle 'terryma/vim-expand-region'
     map <M-=> <Plug>(expand_region_expand)
@@ -443,6 +460,8 @@ NeoBundle 'terryma/vim-multiple-cursors'
 
 NeoBundle 'vim-scripts/DrawIt'
     " \di start, \ds stop
+NeoBundle 'vim-scripts/ZoomWin'
+    " <c-w>o : toggle window zooms
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
@@ -521,12 +540,12 @@ NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-bundler'
-NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'tpope/vim-cucumber'
+NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'duwanis/tomdoc.vim'
 " C/Cpp
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'vim-jp/cpp-vim'
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
 " Markdown
 NeoBundle 'plasticboy/vim-markdown'
     let g:vim_markdown_folding_disabled = 1
@@ -541,6 +560,8 @@ NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'reedes/vim-colors-pencil'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
+NeoBundle 'noahfrederick/vim-hemisu'
+NeoBundle 'morhetz/gruvbox'
 " }}}
 
 " }}}
@@ -551,14 +572,12 @@ NeoBundle 'sjl/badwolf'
 " VIM Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set background=dark
-set linespace=0
-
-set guifont=Inconsolata-dz\ for\ Powerline:h16
-colorscheme Tomorrow-Night-Eighties
-
-set lines=99 columns=999
 set colorcolumn=80
+set linespace=0
+set guifont=Inconsolata-dz\ for\ Powerline:h16
+
+set background=dark
+colorscheme Tomorrow-Night-Eighties
 
 " enable filetype plugin
 filetype plugin on
@@ -1141,7 +1160,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
 
 " In visual mode, press * or # to search the current selection
 vnoremap <silent> * :call VisualSelection('f')<CR>
-vnoremap <silent> # :call VisualSelection('b')<CR>
+vnoremap <silent> ? :call VisualSelection('b')<CR>
 
 function! VisualSelection(direction) range
     let l:saved_reg = @"
@@ -1190,6 +1209,10 @@ vnoremap ? ?\v
 " C/CPP Mappings {{{
 au FileType cpp,c,cc,h,hpp :call s:CppDef()
 function! s:CppDef()
+    " Surround * to /*
+    let b:surround_42 = "/* \r */"
+    xmap 8 S*
+
     " Correct typos
     iab uis        usi
     iab cuot       cout
@@ -1226,7 +1249,6 @@ function! s:RubyDef()
     " Vimshell shorter command
     command! -buffer Pry  :execute "VimShellInteractive --split='split <bar> resize 19' pry"
     command! -buffer Irb  :execute "VimShellInteractive --split='split <bar> resize 19' irb"
-    command! -buffer Eval :execute "VimShellSendString"
 
     " Surround % to %
     let b:surround_37 = "<% \r %>"
@@ -1253,12 +1275,11 @@ function! s:CoffeeDef()
     " Vimshell shorter command
     command! -buffer Node   :execute "VimShellInteractive --split='split <bar> resize 19' node"
     command! -buffer Coffee :execute "VimShellInteractive --split='split <bar> resize 19' coffee"
-    command! -buffer Eval   :execute "VimShellSendString"
 endfunction
 " }}}
 
 " Html/Xml Mappings {{{
-au FileType xhtml,html,xml,yaml :call s:WebDef()
+au FileType xhtml,html,xml,yaml,haml :call s:WebDef()
 function! s:WebDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
@@ -1269,6 +1290,9 @@ function! s:WebDef()
     " Surround = to {{=
     let b:surround_61 = "{{= \r }}"
     xmap _ S=
+    " Surround * to <!--
+    let b:surround_42 = "<!-- \r -->"
+    xmap 8 S*
 
     " Delete surround tag
     nmap <Del> dst
@@ -1322,10 +1346,6 @@ function! s:MarkdownDef()
 endfunction
 " }}}
 
-" Snippet {{{
-au FileType neosnippet,snippet set noexpandtab
-" }}}
-
 " Global Correct typos {{{
 iab teh        the
 iab fro        for
@@ -1355,7 +1375,7 @@ cab lwd        lcd %:p:h
 cab t          tabe
 " jekyll post/note
 command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/"
-command! Note  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
+command! Post  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
 command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
 
 " }}}
