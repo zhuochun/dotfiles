@@ -4,25 +4,23 @@ set guioptions+=c
 " colorschemes
 colorscheme gruvbox
 " transpacy
-set transparency=6
+set transparency=3
 
 " special modes
 command! WritingMode call s:WritingMode()
 function! s:WritingMode()
+    set colorcolumn=
     set transparency=0
-    set linespace=6
-    set guifont=Fantasque\ Sans\ Mono:h24
-    set background=light
-    colorscheme hemisu
+    set background=dark
+    colorscheme base16-atelierforest
 endfunction
 
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
+    set colorcolumn=80
     set transparency=3
-    set linespace=3
-    set guifont=Inconsolata-dz\ for\ Powerline:h16
     set background=dark
-    colorscheme base16-eighties
+    colorscheme gruvbox
 endfunction
 
 " OSX: Specific keybindings

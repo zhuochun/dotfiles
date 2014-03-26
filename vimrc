@@ -60,6 +60,9 @@ NeoBundle 'AndrewRadev/switch.vim'
             \   ['first', 'last'],
             \ ]
 
+NeoBundle 'AndrewRadev/splitjoin.vim'
+    " gS: split, gJ: join
+
 NeoBundle 'bling/vim-airline'
     " enable/disable powerline symbols.
     let g:airline_powerline_fonts = 1
@@ -101,25 +104,11 @@ NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'justinmk/vim-sneak'
     " not case censitive
     let g:sneak#use_ic_scs = 1
-    " 1-character enhanced 'f'
-    nmap f <Plug>Sneak_f
-    nmap F <Plug>Sneak_F
-    xmap f <Plug>Sneak_f
-    xmap F <Plug>Sneak_F
-    omap f <Plug>Sneak_f
-    omap F <Plug>Sneak_F
-    " 1-character enhanced 't'
-    nmap t <Plug>Sneak_t
-    nmap T <Plug>Sneak_T
-    xmap t <Plug>Sneak_t
-    xmap T <Plug>Sneak_T
-    omap t <Plug>Sneak_t
-    omap T <Plug>Sneak_T
     " handle ; -> : remaps
     nmap : <Plug>SneakNext
-    nmap ' <Plug>SneakPrevious
+    nmap " <Plug>SneakPrevious
     xmap : <Plug>VSneakNext
-    xmap ' <Plug>VSneakPrevious
+    xmap " <Plug>VSneakPrevious
 
 NeoBundle 'kshenoy/vim-signature'
 
@@ -137,7 +126,8 @@ NeoBundleLazy 'kien/rainbow_parentheses.vim', {
             \ }
 
 NeoBundle 'Lokaltog/vim-easymotion'
-    map \ <Plug>(easymotion-prefix)
+    map \     <Plug>(easymotion-prefix)
+    map <D-f> <Plug>(easymotion-sn)
     " not case censitive
     let g:EasyMotion_smartcase = 1
 
@@ -159,13 +149,14 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'matchit.zip'
 
 NeoBundle 'mattn/emmet-vim'
-    " <C-y> to enter emmet actions
+    " enable emment functions in insert mode
+    let g:user_emmet_mode='i'
     " <D-y> to expand input in insert mode
     let g:user_emmet_expandabbr_key = '<D-y>'
     " <D-Y> to goto next point
     let g:user_emmet_next_key = '<M-y>'
-    " enable emment functions in insert mode
-    let g:user_emmet_mode='i'
+    " <M-y> to goto prev point
+    let g:user_emmet_prev_key = '<D-Y>'
 
 NeoBundle 'mhinz/vim-signify'
 
@@ -198,7 +189,10 @@ NeoBundle 'scrooloose/syntastic'
                                \ 'passive_filetypes': ['html', 'css', 'c', 'cpp'] }
 
 NeoBundle 'scrooloose/nerdcommenter'
-    " use / to toggle comments
+    " Add space around delimiter
+    let NERDSpaceDelims = 1
+    let NERDRemoveExtraSpaces = 1
+    " Use <M-/> to toggle comments
     vnoremap <M-/> :call NERDComment('v', "toggle")<CR>
     nnoremap <M-/> :call NERDComment('n', "toggle")<CR>
 
@@ -224,21 +218,19 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " File searching like ctrlp.vim, start in insert mode
+    " File searching, start in insert mode
+    nnoremap <silent> <D-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
-    nnoremap <silent> <C-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
-    " Buffer switching like LustyJuggler
+    " Buffer switching
     nnoremap <silent> <D-u> :<C-u>Unite -quick-match buffer<CR>
-    nnoremap <silent> <M-u> :<C-u>Unite -quick-match tab<CR>
-    " Content searching like ack.vim
-    nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
-    nnoremap <silent> <D-f> :<C-u>Unite -no-quit -vertical -resume grep:.<CR>
+    nnoremap <silent> <C-b> :<C-u>Unite -quick-match buffer<CR>
+    " Tab switching
+    nnoremap <silent> <C-t> :<C-u>Unite -quick-match tab<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_history_yank_save_clipboard = 1
     " Yank history like YankRing
     nnoremap <silent> <D-y> :<C-u>Unite history/yank<CR>
-    nnoremap <silent> <D-p> :<C-u>Unite history/yank<CR>
     " Unite spilt position
     let g:unite_split_rule = 'botright'
 
@@ -251,6 +243,9 @@ NeoBundle 'Shougo/unite.vim'
             \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
         let g:unite_source_grep_recursive_opt = ''
     endif
+    " Mapping on Ag
+    nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
+    nnoremap <silent> <C-f> :<C-u>Unite -no-quit grep:.<CR>
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
@@ -459,7 +454,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_quit_key = '<Esc>'
 
 NeoBundle 'vim-scripts/DrawIt'
-    " \di start, \ds stop
+    " <leader>di start, <leader>ds stop
 NeoBundle 'vim-scripts/ZoomWin'
     " <c-w>o : toggle window zooms
 
@@ -575,7 +570,6 @@ NeoBundle 'morhetz/gruvbox'
 set colorcolumn=80
 set linespace=0
 set guifont=Inconsolata-dz\ for\ Powerline:h16
-
 set background=dark
 colorscheme Tomorrow-Night-Eighties
 
@@ -922,7 +916,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
         nnoremap <leader>s? z=
     " <leader>S clear trailing whitespace
     nnoremap <leader>S :%s/\s\+$//ge<cr>:nohl<cr>
-    nnoremap \s :%s/\s\+$//ge<cr>:nohl<cr>
     " <leader>d close buffer
     nnoremap <leader>d :BD<CR>
     " <leader>D close buffer
@@ -968,6 +961,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nnoremap <D-)> :tabnext<cr>
     nnoremap <D-t> :tab split<CR>
     nnoremap <D-T> :tabnew<CR>
+    nnoremap <M-t> :tabnew<CR>
     nnoremap <D-w> :tabclose<CR>
 
     " Smart way to move btw. windows
@@ -1057,6 +1051,10 @@ vnoremap <down> :m '>+1<CR>gv=gv
     inoremap <C-f> <LEFT>
     " <C-b>: Move move cursor right
     inoremap <C-b> <RIGHT>
+    " <C-a>: HOME
+    inoremap <C-a> <HOME>
+    " <C-e>: END
+    inoremap <C-e> <END>
 
     " <C-a>: command mode HOME
     cnoremap <C-a> <HOME>
@@ -1075,7 +1073,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <M-w>
     " <M-e>
     " <M-r>
-    " <M-t>
+    " <M-t> Open new tab
     " <M-y>
     " <M-u>
     " <M-i>
@@ -1263,6 +1261,20 @@ function! s:RubyDef()
     " Correct typos
     iab elseif      elsif
     iab ~=         =~
+endfunction
+" }}}
+
+" Python Mappings {{{
+au FileType python :call s:PythonDef()
+function! s:PythonDef()
+    " Vimshell shorter command
+    command! -buffer Python :execute "VimShellInteractive --split='split <bar> resize 19' python"
+
+    " Correct typos
+    iab true       True
+    iab false      False
+    iab &&         and
+    iab ||         or
 endfunction
 " }}}
 

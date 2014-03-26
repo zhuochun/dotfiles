@@ -9,6 +9,7 @@
 	default = simple
 [alias]
 	# commits
+	aa = add -A .
 	amend = commit --amend
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
@@ -18,6 +19,7 @@
 	ra = rebase --abort
 	# log
 	today = log --since=midnight --author='Wang Zhuochun' --oneline
+	tree = log --graph --oneline --decorate --color --all
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 [filter "media"]
 	clean = git-media-clean %f

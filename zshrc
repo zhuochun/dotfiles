@@ -2,8 +2,8 @@
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load:
-# dst blinks bira josh norm ys jtriley rkj-repos random
-ZSH_THEME="suvash"
+# suvash blinks fino josh re5et random
+ZSH_THEME="pure"
 
 # 1 Char Alias
 # ==============================
@@ -24,7 +24,7 @@ alias cc="pbcopy"
 # Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.8.3/node-webkit.app/Contents/MacOS/node-webkit"
+alias nw="~/Documents/Programming/NodeWebkit/v0.8.5/node-webkit.app/Contents/MacOS/node-webkit"
 # Heroku
 alias he="heroku"
 # Rails
@@ -87,7 +87,7 @@ export EDITOR=mvim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bower colored-man gem git git-extras gitignore heroku node npm rails rbenv ruby zeus)
+plugins=(autojump brew bower bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby zeus)
 
 # Make sure local/bin first
 export PATH="/usr/local/bin:$PATH"
