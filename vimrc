@@ -102,6 +102,8 @@ NeoBundle 'jiangmiao/auto-pairs'
     let g:AutoPairsShortcutToggle = '<M-a>'
 
 NeoBundle 'justinmk/vim-sneak'
+    " sneak-streak-mode
+    let g:sneak#streak = 1
     " not case censitive
     let g:sneak#use_ic_scs = 1
     " handle ; -> : remaps
@@ -187,14 +189,6 @@ NeoBundle 'scrooloose/syntastic'
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
                                \ 'passive_filetypes': ['html', 'css', 'c', 'cpp'] }
-
-NeoBundle 'scrooloose/nerdcommenter'
-    " Add space around delimiter
-    let NERDSpaceDelims = 1
-    let NERDRemoveExtraSpaces = 1
-    " Use <M-/> to toggle comments
-    vnoremap <M-/> :call NERDComment('v', "toggle")<CR>
-    nnoremap <M-/> :call NERDComment('n', "toggle")<CR>
 
 NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
@@ -286,7 +280,7 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
 NeoBundle 'Shougo/unite-outline'
-    nnoremap <silent> <C-o> :<C-u>Unite outline<CR>
+    nnoremap <silent> <C-e> :<C-u>Unite outline<CR>
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
@@ -422,6 +416,13 @@ NeoBundleLazy 'skalnik/vim-vroom', {
             \   },
             \ }
 
+NeoBundle 'tommcdo/vim-exchange'
+  " cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
+
+NeoBundle 'tpope/vim-abolish'
+    " MixedCase (crm), camelCase (crc), snake_case (crs), and UPPER_CASE (cru)
+NeoBundle 'tpope/vim-commentary'
+    " Use gcc (comment), gcu (uncomment) gc (visual toggle)
 NeoBundle 'tpope/vim-surround'
     " Shortcuts in visual mode
     xmap ( S)
@@ -441,10 +442,10 @@ NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'tpope/vim-sleuth'
 
 NeoBundle 'terryma/vim-expand-region'
-    map <M-=> <Plug>(expand_region_expand)
-    map <M--> <Plug>(expand_region_shrink)
+    vmap v <Plug>(expand_region_expand)
+    vmap <C-v> <Plug>(expand_region_shrink)
 
-NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'kris89/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
     let g:multi_cursor_use_default_mapping = 0
     " New mapping
@@ -452,6 +453,15 @@ NeoBundle 'terryma/vim-multiple-cursors'
     let g:multi_cursor_prev_key = '<M-.>'
     let g:multi_cursor_skip_key = '<M-m>'
     let g:multi_cursor_quit_key = '<Esc>'
+    " To work with neocomplete
+    function! Multiple_cursors_before()
+        exe 'NeoCompleteLock'
+        echo 'Disabled autocomplete'
+    endfunction
+    function! Multiple_cursors_after()
+        exe 'NeoCompleteUnlock'
+        echo 'Enabled autocomplete'
+    endfunction
 
 NeoBundle 'vim-scripts/DrawIt'
     " <leader>di start, <leader>ds stop
@@ -550,6 +560,7 @@ NeoBundle 'tpope/vim-git'
 " }}}
 
 " colorschemes {{{
+NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'reedes/vim-colors-pencil'
@@ -567,7 +578,7 @@ NeoBundle 'morhetz/gruvbox'
 " VIM Settings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set colorcolumn=80
+set colorcolumn=79
 set linespace=0
 set guifont=Inconsolata-dz\ for\ Powerline:h16
 set background=dark
@@ -608,9 +619,10 @@ set laststatus=2
 " basic settings
 set shortmess=atI                   " no welcome screen in gVim
 set mouse=a                         " enable mouse
-set timeoutlen=36                   " quick timeouts for command combinations
+set timeoutlen=42                   " quick timeouts for command combinations
 set history=999                     " keep 999 lines of command line history
 set ruler                           " show the cursor position all the time
+set number                          " display current line number
 set relativenumber                  " show line number relatively
 set lazyredraw                      " stops Vim from redrawing during complex operations
 set hidden                          " change buffer even if it is not saved
@@ -660,7 +672,7 @@ set smartcase
 set hlsearch                        " Highlight search things
 set incsearch                       " Highlight next match on searching
 set showmatch                       " Show matching bracets
-set mat=1                           " Blink How many times
+set matchtime=1                     " Time to show the matching paren
 " }}}
 
 " folding settings {{{
@@ -677,8 +689,7 @@ set showbreak=↪
 
 " no sound on errors {{{
 set noerrorbells
-set visualbell
-set t_vb=
+set visualbell t_vb=
 set tm=500
 " }}}
 
@@ -714,7 +725,7 @@ endif
 " }}}
 
 " Set backspace config
-set backspace=start,indent,eol
+set backspace=indent,eol,start
 set whichwrap+=<,>,b,s
 
 " }}}
@@ -897,8 +908,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
         nnoremap $ g$
         nnoremap ^ g^
     endfunction
-    " <leader>W
-    nnoremap <Leader>W :w<CR>
     " <leader>e
     " <leader>r
     " <leader>t
@@ -924,6 +933,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     nnoremap \q :bdelete<CR>
     " <leader>f easier code formatting
     nnoremap <leader>f gg=G''
+    " <leader>F easier code formatting
+    nnoremap <leader>F gg=G''
     " <leader>g
     " <leader>h
     " <leader>j
@@ -996,7 +1007,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-7>
     " <C-8>
     " <C-9>
-    " <C-0>
+    " <C-0> Jump back tap
     " <C-->
     " <C-=>
     " <C-q> Multiple select
@@ -1005,15 +1016,17 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-r>
     " <C-t>
     " <C-y> Emmet Expand
+    " <C-u> Page up
     " <C-u> Switch word case
     inoremap <C-u> <esc>mzg~iw`za
     " <C-i>
     " <C-o>
     " <C-p>
+    " <C-]> Jump tag
     " <C-a>
     " <C-s>
-    " <C-d>
-    " <C-f>
+    " <C-d> Page Down
+    " <C-f> Find (ag) in directory
     " <C-g>
     " <C-h> (n) move to left window
     " <C-j> (n) move to down window
@@ -1031,7 +1044,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-x>
     " <C-c>
     " <C-v>
-    " <C-b>
+    " <C-b> Switch Buffers
     " <C-n>
     " <C-m>
     " <C-,>
@@ -1044,7 +1057,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-k>: Move cursor up
     inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
     " <C-h> move word left
-    inoremap <C-h> <C-o>b
+    inoremap <C-h> <C-O>b
     " <C-l>: Move word right
     inoremap <C-l> <C-O>w
     " <C-f>: Move move cursor left
@@ -1273,8 +1286,6 @@ function! s:PythonDef()
     " Correct typos
     iab true       True
     iab false      False
-    iab &&         and
-    iab ||         or
 endfunction
 " }}}
 
