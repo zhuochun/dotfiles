@@ -19,8 +19,6 @@ alias z="zeus"
 # 2 Chars Alias
 # ==============================
 
-# Copy to clipboard
-alias cc="pbcopy"
 # Jekyll Server
 alias js="jekyll server --watch"
 # Node-Webkit Alias
@@ -37,6 +35,9 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
+# Copy to clipboard
+alias ccp="pbcopy"
+# System
 alias plz="sudo"
 alias cls="clear"
 alias rmd="rm -rf"

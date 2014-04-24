@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 27/Feb/2014 11:12 AM
+" Last Edit: 21/Apr/2014 10:23 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -82,7 +82,7 @@ NeoBundle 'bufkill.vim'
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   'autoload' : {
-            \     'commands' : ['NarrowRegion', 'NR']
+            \     'commands' : ['NarrowRegion', 'NRMulti']
             \   },
             \ }
 
@@ -93,10 +93,6 @@ NeoBundle 'godlygeek/tabular'
     xnoremap <leader>-     :Tabularize /-<CR>
     xnoremap <leader><bar> :Tabularize /<bar><CR>
 
-NeoBundle 'itchyny/calendar.vim'
-    let g:calendar_google_calendar = 1
-    nnoremap <F1> :Calendar -view=week<CR>
-
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
@@ -106,6 +102,20 @@ NeoBundle 'justinmk/vim-sneak'
     let g:sneak#streak = 1
     " not case censitive
     let g:sneak#use_ic_scs = 1
+    " 1-character enhanced 'f'
+    nmap f <Plug>Sneak_f
+    nmap F <Plug>Sneak_F
+    xmap f <Plug>Sneak_f
+    xmap F <Plug>Sneak_F
+    omap f <Plug>Sneak_f
+    omap F <Plug>Sneak_F
+    " 1-character enhanced 't'
+    nmap t <Plug>Sneak_t
+    nmap T <Plug>Sneak_T
+    xmap t <Plug>Sneak_t
+    xmap T <Plug>Sneak_T
+    omap t <Plug>Sneak_t
+    omap T <Plug>Sneak_T
     " handle ; -> : remaps
     nmap : <Plug>SneakNext
     nmap " <Plug>SneakPrevious
@@ -121,7 +131,7 @@ NeoBundleLazy 'kien/tabman.vim', {
             \ }
     nnoremap <F4> :TMToggle<CR>
 
-NeoBundleLazy 'kien/rainbow_parentheses.vim', {
+NeoBundleLazy 'jbnicolai/rainbow_parentheses.vim', {
             \   'autoload' : {
             \     'commands' : ['RainbowParenthesesToggle']
             \   },
@@ -162,6 +172,8 @@ NeoBundle 'mattn/emmet-vim'
 
 NeoBundle 'mhinz/vim-signify'
 
+NeoBundle 'osyo-manga/vim-over'
+
 NeoBundleLazy 'sjl/gundo.vim', {
             \   'autoload' : {
             \     'commands' : ['GundoToggle']
@@ -197,12 +209,14 @@ NeoBundle 'scrooloose/nerdtree'
     let NERDTreeWinSize = 29
     " Disable 'bookmarks' and 'help'
     let NERDTreeMinimalUI = 1
+    " Show hidden files
+    let NERDTreeShowHidden = 1
     " Highlight the selected entry in the tree
     let NERDTreeHighlightCursorline = 1
     " Use a single click to fold/unfold directories
     let NERDTreeMouseMode = 2
     " Don't display these kinds of files in NERDTree
-    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj']
+    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj', '\.bundle', '\.DS_Store$', '\.git', '\tags$']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
     map <F3> <plug>NERDTreeTabsToggle<CR>
@@ -212,6 +226,8 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Shougo/unite.vim'
     " Use recursive file search
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    " Use ranker in buffer/file candidates
+    call unite#custom#source('buffer,file,file_rec', 'sorters', 'sorter_rank')
     " File searching, start in insert mode
     nnoremap <silent> <D-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
@@ -219,7 +235,7 @@ NeoBundle 'Shougo/unite.vim'
     nnoremap <silent> <D-u> :<C-u>Unite -quick-match buffer<CR>
     nnoremap <silent> <C-b> :<C-u>Unite -quick-match buffer<CR>
     " Tab switching
-    nnoremap <silent> <C-t> :<C-u>Unite -quick-match tab<CR>
+    nnoremap <silent> <C-t> :<C-u>Unite -quick-match buffer tab<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_history_yank_save_clipboard = 1
@@ -281,6 +297,7 @@ NeoBundle 'Shougo/neomru.vim'
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
 NeoBundle 'Shougo/unite-outline'
     nnoremap <silent> <C-e> :<C-u>Unite outline<CR>
+NeoBundle 'ujihisa/unite-colorscheme'
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
@@ -433,17 +450,34 @@ NeoBundle 'tpope/vim-surround'
     xmap ` S`
     xmap T St
 NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'tpope/vim-sleuth'
+NeoBundle 'tpope/vim-speeddating'
+
+" git in vim {{{
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'gregsexton/gitv'
+" }}}
 
 NeoBundle 'terryma/vim-expand-region'
     vmap v <Plug>(expand_region_expand)
     vmap <C-v> <Plug>(expand_region_shrink)
+    " Extend the global default (NOTE: Remove comments in dictionary before sourcing)
+    call expand_region#custom_text_objects({
+          \ 'iv' :0,
+          \ 'av' :0,
+          \ 'ii' :0,
+          \ 'ai' :0,
+          \ 'i>' :1,
+          \ 'a>' :1,
+          \ 'a]' :1,
+          \ 'ab' :1,
+          \ 'aB' :1,
+          \ })
 
 NeoBundle 'kris89/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -456,11 +490,9 @@ NeoBundle 'kris89/vim-multiple-cursors'
     " To work with neocomplete
     function! Multiple_cursors_before()
         exe 'NeoCompleteLock'
-        echo 'Disabled autocomplete'
     endfunction
     function! Multiple_cursors_after()
         exe 'NeoCompleteUnlock'
-        echo 'Enabled autocomplete'
     endfunction
 
 NeoBundle 'vim-scripts/DrawIt'
@@ -470,27 +502,26 @@ NeoBundle 'vim-scripts/ZoomWin'
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
+    let g:indentLine_fileTypeExclude = ['text', 'mkd', 'markdown']
 
 NeoBundle 'zhuochun/vim-snippets'
 
-" dash.app {{{
-NeoBundleLazy 'rizzatti/funcoo.vim'
-NeoBundleLazy 'rizzatti/dash.vim', {
-            \   'depends' : 'rizzatti/funcoo.vim',
-            \   'autoload' : {
-            \     'commands' : ['Dash']
-            \   },
-            \ }
-" }}}
-
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
+" ae/ie for entire buffer
+NeoBundle 'kana/vim-textobj-entire'
+" al/il for current line
+NeoBundle 'kana/vim-textobj-line'
+" ai/ii for indent level
+NeoBundle 'kana/vim-textobj-indent'
 " av/iv for a region between either _s or camelCaseVariables
 NeoBundle 'Julian/vim-textobj-variable-segment'
 " ar/ir for a ruby block
 NeoBundle 'nelstrom/vim-textobj-rubyblock'
 " ac/ic for a column block
 NeoBundle 'coderifous/textobj-word-column.vim'
+" advanced
+NeoBundle 'wellle/targets.vim'
 " }}}
 
 " writings {{{
@@ -548,6 +579,8 @@ NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'duwanis/tomdoc.vim'
+" Clojure
+NeoBundle 'guns/vim-clojure-static'
 " C/Cpp
 NeoBundle 'vim-jp/cpp-vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -563,11 +596,10 @@ NeoBundle 'tpope/vim-git'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'reedes/vim-colors-pencil'
+NeoBundle 'endel/vim-github-colorscheme'
+NeoBundle 'morhetz/gruvbox'
 NeoBundle 'sjl/badwolf'
     let g:badwolf_tabline = 2
-NeoBundle 'noahfrederick/vim-hemisu'
-NeoBundle 'morhetz/gruvbox'
 " }}}
 
 " }}}
@@ -582,7 +614,7 @@ set colorcolumn=79
 set linespace=0
 set guifont=Inconsolata-dz\ for\ Powerline:h16
 set background=dark
-colorscheme Tomorrow-Night-Eighties
+colorscheme Tomorrow-Night
 
 " enable filetype plugin
 filetype plugin on
@@ -619,6 +651,7 @@ set laststatus=2
 " basic settings
 set shortmess=atI                   " no welcome screen in gVim
 set mouse=a                         " enable mouse
+set ttimeout
 set timeoutlen=42                   " quick timeouts for command combinations
 set history=999                     " keep 999 lines of command line history
 set ruler                           " show the cursor position all the time
@@ -633,7 +666,6 @@ set cursorline                      " highlight the current line
 set magic                           " set magic on, for regular expressions
 set winaltkeys=no                   " set ALT not map to toolbar
 set autoread                        " autoread when a file is changed from the outside
-set shiftround                      " Round indent to multiple of 'shiftwidth'
 set shortmess+=filmnrxoOtT          " abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash " better Unix / Windows compatibility
 set virtualedit=onemore             " allow for cursor beyond last character
@@ -645,12 +677,17 @@ set wildignore+=*$py.class,*.class,*.gem,*.zip
 set wildignore+=*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*
 set wildignore+=*/log/*,*/tmp/*,*/build/*,*/vendor/bundle/*,*/vendor/cache/*,*/vendor/gems/*
 
+set complete-=i
+set backspace=indent,eol,start
+set whichwrap+=<,>,b,s
+
 set scrolljump=6                    " lines to scroll when cursor leaves screen
 set scrolloff=6                     " minimum lines to keep above and below cursor
 
 " related to <TAB> indents {{{
 set shiftwidth=4
 set tabstop=4
+set shiftround                      " Round indent to multiple of 'shiftwidth'
 set expandtab
 set smarttab
 " }}}
@@ -694,13 +731,9 @@ set tm=500
 " }}}
 
 " set tag generated locations
-set tags=./.tags,~/.vim/tags
+set tags=./tags;
 
 " backups and undos {{{
-"set nobackup
-"set nowb
-"set noswapfile
-
 " Turn backup on
 set backup
 set backupdir=/tmp/,~/tmp,~/Temp
@@ -723,10 +756,6 @@ if has('persistent_undo')
     set undoreload=1000 " Maximum number lines to save for undo on a buffer reload
 endif
 " }}}
-
-" Set backspace config
-set backspace=indent,eol,start
-set whichwrap+=<,>,b,s
 
 " }}}
 
@@ -902,11 +931,11 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <leader>w
     nnoremap <leader>w :call ToggleWrap()<CR>
     function! ToggleWrap()
-        nnoremap j gj
-        nnoremap k gk
-        nnoremap 0 g0
-        nnoremap $ g$
-        nnoremap ^ g^
+        nnoremap <buffer> j gj
+        nnoremap <buffer> k gk
+        nnoremap <buffer> 0 g0
+        nnoremap <buffer> $ g$
+        nnoremap <buffer> ^ g^
     endfunction
     " <leader>e
     " <leader>r
@@ -1363,6 +1392,13 @@ function! s:MarkdownDef()
     " Check spell
     setlocal spell
 
+    " Wrap text
+    nnoremap <buffer> j gj
+    nnoremap <buffer> k gk
+    nnoremap <buffer> 0 g0
+    nnoremap <buffer> $ g$
+    nnoremap <buffer> ^ g^
+
     " Correct typos
     iab ->> →
     iab <<- ←
@@ -1393,12 +1429,10 @@ iab /*         /*
 " change working directory
 cab cwd        cd %:p:h
 " change local working directory
-cab lwd        lcd %:p:h
-" edit in tab, split, vsplit
-cab t          tabe
+cab clwd       lcd %:p:h
 " jekyll post/note
-command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/"
-command! Post  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts/"
+command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io"
+command! Post  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts"
 command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
 
 " }}}

@@ -9,17 +9,30 @@ set transparency=3
 " special modes
 command! WritingMode call s:WritingMode()
 function! s:WritingMode()
-    set colorcolumn=
+    set colorcolumn=79
     set transparency=0
+    set linespace=5
     set background=dark
+    set guifont=Anonymous\ Pro\ for\ Powerline:h19
     colorscheme base16-atelierforest
+endfunction
+
+command! LightMode call s:LightMode()
+function! s:LightMode()
+    set colorcolumn=79
+    set transparency=0
+    set linespace=3
+    set background=light
+    set guifont=Liberation\ Mono\ for\ Powerline:h16
+    colorscheme solarized
 endfunction
 
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
-    set colorcolumn=80
+    set colorcolumn=79
     set transparency=3
     set background=dark
+    set guifont=Inconsolata-dz\ for\ Powerline:h16
     colorscheme gruvbox
 endfunction
 
