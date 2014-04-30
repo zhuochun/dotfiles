@@ -13,8 +13,8 @@ function! s:WritingMode()
     set transparency=0
     set linespace=5
     set background=dark
-    set guifont=Anonymous\ Pro\ for\ Powerline:h19
-    colorscheme base16-atelierforest
+    set guifont=Liberation\ Mono\ for\ Powerline:h16
+    colorscheme base16-railscasts
 endfunction
 
 command! LightMode call s:LightMode()
@@ -24,7 +24,7 @@ function! s:LightMode()
     set linespace=3
     set background=light
     set guifont=Liberation\ Mono\ for\ Powerline:h16
-    colorscheme solarized
+    colorscheme base16-solarized
 endfunction
 
 command! CodingMode call s:CodingMode()

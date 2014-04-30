@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MacVIM Configurations
 " Author:    Wang Zhuochun
-" Last Edit: 21/Apr/2014 10:23 PM
+" Last Edit: 30/Apr/2014 07:04 PM
 " vim:fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -58,6 +58,8 @@ NeoBundle 'AndrewRadev/switch.vim'
             \   ['if', 'unless'],
             \   ['yes', 'no'],
             \   ['first', 'last'],
+            \   ['* [ ]', '* [x]'],
+            \   ['get', 'post', 'put', 'patch', 'delete'],
             \ ]
 
 NeoBundle 'AndrewRadev/splitjoin.vim'
@@ -133,7 +135,9 @@ NeoBundleLazy 'kien/tabman.vim', {
 
 NeoBundleLazy 'jbnicolai/rainbow_parentheses.vim', {
             \   'autoload' : {
-            \     'commands' : ['RainbowParenthesesToggle']
+            \     'commands' : ['RainbowParenthesesToggle',
+            \                   'RainbowParenthesesToggleAll'],
+            \     'filetypes' : ['clojure']
             \   },
             \ }
 
@@ -160,26 +164,14 @@ NeoBundle 'majutsushi/tagbar'
 
 NeoBundle 'matchit.zip'
 
-NeoBundle 'mattn/emmet-vim'
-    " enable emment functions in insert mode
-    let g:user_emmet_mode='i'
-    " <D-y> to expand input in insert mode
-    let g:user_emmet_expandabbr_key = '<D-y>'
-    " <D-Y> to goto next point
-    let g:user_emmet_next_key = '<M-y>'
-    " <M-y> to goto prev point
-    let g:user_emmet_prev_key = '<D-Y>'
-
 NeoBundle 'mhinz/vim-signify'
 
 NeoBundle 'osyo-manga/vim-over'
 
-NeoBundleLazy 'sjl/gundo.vim', {
-            \   'autoload' : {
-            \     'commands' : ['GundoToggle']
-            \   },
+NeoBundleLazy 'mbbill/undotree', {
+            \   'autoload' : {'commands': ['UndotreeToggle']},
             \ }
-    nnoremap <F5> :GundoToggle<CR>
+    nnoremap <F5> :UndotreeToggle<CR>
 
 NeoBundle 'scrooloose/syntastic'
     " fancy symbols
@@ -293,11 +285,20 @@ NeoBundle 'Shougo/unite.vim'
                     \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
     endfunction "}}}
 
-NeoBundle 'Shougo/neomru.vim'
+NeoBundleLazy 'Shougo/neomru.vim', {
+            \   'autoload':{'unite_sources': ['file_mru', 'directory_mru']}
+            \ }
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
-NeoBundle 'Shougo/unite-outline'
+NeoBundleLazy 'Shougo/unite-outline', {
+            \   'autoload':{'unite_sources': 'outline'}
+            \ }
     nnoremap <silent> <C-e> :<C-u>Unite outline<CR>
-NeoBundle 'ujihisa/unite-colorscheme'
+NeoBundleLazy 'ujihisa/unite-colorscheme', {
+            \   'autoload':{'unite_sources': 'colorscheme'}
+            \ }
+NeoBundleLazy 'kopischke/unite-spell-suggest', {
+            \   'autoload':{'unite_sources': 'spell_suggest'}
+            \ }
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
@@ -426,13 +427,6 @@ NeoBundle 'Shougo/neosnippet.vim'
 " A neocomplcache plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
 
-" Plugin for running your tests
-NeoBundleLazy 'skalnik/vim-vroom', {
-            \   'autoload' : {
-            \     'commands' : ['VroomRunTestFile', 'VroomRunNearestTest']
-            \   },
-            \ }
-
 NeoBundle 'tommcdo/vim-exchange'
   " cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
 
@@ -458,25 +452,23 @@ NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-speeddating'
 
-" git in vim {{{
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'gregsexton/gitv'
-" }}}
-
 NeoBundle 'terryma/vim-expand-region'
     vmap v <Plug>(expand_region_expand)
     vmap <C-v> <Plug>(expand_region_shrink)
-    " Extend the global default (NOTE: Remove comments in dictionary before sourcing)
+    " Extend the global default
     call expand_region#custom_text_objects({
           \ 'iv' :0,
           \ 'av' :0,
           \ 'ii' :0,
           \ 'ai' :0,
-          \ 'i>' :1,
-          \ 'a>' :1,
           \ 'a]' :1,
           \ 'ab' :1,
           \ 'aB' :1,
+          \ })
+    " Use the global default + the following for ruby
+    call expand_region#custom_text_objects('ruby', {
+          \ 'im' :0,
+          \ 'am' :0,
           \ })
 
 NeoBundle 'kris89/vim-multiple-cursors'
@@ -508,27 +500,21 @@ NeoBundle 'zhuochun/vim-snippets'
 
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
-" ae/ie for entire buffer
-NeoBundle 'kana/vim-textobj-entire'
-" al/il for current line
-NeoBundle 'kana/vim-textobj-line'
-" ai/ii for indent level
-NeoBundle 'kana/vim-textobj-indent'
-" av/iv for a region between either _s or camelCaseVariables
-NeoBundle 'Julian/vim-textobj-variable-segment'
-" ar/ir for a ruby block
-NeoBundle 'nelstrom/vim-textobj-rubyblock'
-" ac/ic for a column block
-NeoBundle 'coderifous/textobj-word-column.vim'
-" advanced
-NeoBundle 'wellle/targets.vim'
+NeoBundle 'kana/vim-textobj-entire'             " ae/ie
+NeoBundle 'kana/vim-textobj-line'               " al/il
+NeoBundle 'kana/vim-textobj-indent'             " ai/ii
+NeoBundle 'coderifous/textobj-word-column.vim'  " ac/ic
+NeoBundle 'Julian/vim-textobj-variable-segment' " av/iv
 " }}}
 
 " writings {{{
 NeoBundleLazy 'reedes/vim-wordy', {
             \   'autoload' : {
-            \     'commands' : ['WeakWordy', 'WordyWordy', 'JargonWordy',
-            \                   'WeaselWordy', 'PassiveWordy', 'TriteWordy'],
+            \     'commands' : ['NoWordy', 'WeakWordy',
+            \                   'WordyWordy', 'ProblemWordy',
+            \                   'PuffWordy', 'JargonWordy', 'ArtJargonWordy',
+            \                   'WeaselWordy', 'PassiveWordy', 'TriteWordy',
+            \                   'SaidWordy', 'OpineWordy', 'AintWordy'],
             \     'filetypes' : ['mkd', 'markdown', 'text']
             \   },
             \ }
@@ -544,6 +530,15 @@ NeoBundleLazy 'junegunn/goyo.vim', {
 " language syntax {{{
 " HTML
 NeoBundle 'othree/html5.vim'
+NeoBundle 'mattn/emmet-vim'
+    " enable emment functions in insert mode
+    let g:user_emmet_mode='i'
+    " <D-y> to expand input in insert mode
+    let g:user_emmet_expandabbr_key = '<D-y>'
+    " <D-Y> to goto next point
+    let g:user_emmet_next_key = '<M-y>'
+    " <M-y> to goto prev point
+    let g:user_emmet_prev_key = '<D-Y>'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'slim-template/vim-slim'
@@ -577,10 +572,14 @@ NeoBundle 'tpope/vim-rails'
 NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-cucumber'
+NeoBundle 'skalnik/vim-vroom'
+    let g:vroom_use_dispatch = 1
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'duwanis/tomdoc.vim'
 " Clojure
 NeoBundle 'guns/vim-clojure-static'
+NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'guns/vim-clojure-highlight'
 " C/Cpp
 NeoBundle 'vim-jp/cpp-vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -588,18 +587,23 @@ NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'plasticboy/vim-markdown'
     let g:vim_markdown_folding_disabled = 1
 NeoBundle 'itspriddle/vim-marked'
-" Others
+" Git
 NeoBundle 'tpope/vim-git'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundleLazy 'gregsexton/gitv', {
+            \   'depends':['tpope/vim-fugitive'],
+            \   'autoload':{'commands': 'Gitv'}
+            \ }
+" }}}
+
 " }}}
 
 " colorschemes {{{
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'endel/vim-github-colorscheme'
+NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'morhetz/gruvbox'
+NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'sjl/badwolf'
-    let g:badwolf_tabline = 2
 " }}}
 
 " }}}
@@ -771,7 +775,7 @@ endif
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
     " F3    Toggle NERDTree
     " F4    Toggle TabMan
-    " F5    Toggle Gundo
+    " F5    Toggle Undotree
     " F6    Paste mode
     set pastetoggle=<F6>
     " F7    Tigger Syntastic check
@@ -1367,14 +1371,16 @@ function! s:MarkdownDef()
 
     " Insert date and time in Jekyll
     inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+    " look the word under cursor up in Dictionary.app
+    nnoremap <buffer> <D-f> :!open dict://<cword><CR><CR>
     " Hard wrap current paragraph
-    nnoremap <silent><buffer> <D-w>   gwip
+    nnoremap <buffer> <D-w> gwip
     " Unwrap current paragraph
-    nnoremap <silent><buffer> <D-S-w> vipJ
+    nnoremap <buffer> <D-S-w> vipJ
     " Format all paragraphs in buffer
-    nnoremap <silent><buffer> <D-e>   ggVGgq
+    nnoremap <buffer> <D-e> ggVGgq
     " Unformat all paragraphs in buffer
-    nnoremap <silent><buffer> <D-S-e> :%norm vipJ<cr>
+    nnoremap <buffer> <D-S-e> :%norm vipJ<cr>
 
     " Surround _ to _
     let b:surround_95 = "_\r_"
@@ -1407,6 +1413,8 @@ endfunction
 
 " Global Correct typos {{{
 iab teh        the
+iab nwe        new
+iab taht       that
 iab fro        for
 iab agian      again
 iab tyr        try
