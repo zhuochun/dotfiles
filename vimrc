@@ -126,6 +126,10 @@ NeoBundle 'justinmk/vim-sneak'
 
 NeoBundle 'kshenoy/vim-signature'
 
+" use gK to investigate documentation on the word under the cursor
+NeoBundle 'Keithbsmiley/investigate.vim'
+  let g:investigate_use_dash=1
+
 NeoBundleLazy 'kien/tabman.vim', {
             \   'autoload' : {
             \     'commands' : ['TMToggle']
@@ -577,6 +581,7 @@ NeoBundle 'skalnik/vim-vroom'
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'duwanis/tomdoc.vim'
 " Clojure
+NeoBundle 'tpope/vim-classpath'
 NeoBundle 'guns/vim-clojure-static'
 NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'guns/vim-clojure-highlight'
