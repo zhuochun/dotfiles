@@ -51,6 +51,8 @@ alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
+# Rails
+alias migrate="rake db:migrate db:rollback && rake db:migrate db:test:prepare"
 
 # Locale
 export LC_ALL=en_US.UTF-8

@@ -9,31 +9,32 @@ set transparency=3
 " special modes
 command! WritingMode call s:WritingMode()
 function! s:WritingMode()
+    colorscheme base16-railscasts
     set colorcolumn=79
     set transparency=0
-    set linespace=5
+    set linespace=6
     set background=dark
     set guifont=Liberation\ Mono\ for\ Powerline:h16
-    colorscheme base16-railscasts
 endfunction
 
 command! LightMode call s:LightMode()
 function! s:LightMode()
+    colorscheme base16-solarized
     set colorcolumn=79
     set transparency=0
-    set linespace=3
+    set linespace=1
     set background=light
     set guifont=Liberation\ Mono\ for\ Powerline:h16
-    colorscheme base16-solarized
 endfunction
 
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
+    colorscheme jellybeans
     set colorcolumn=79
     set transparency=3
+    set linespace=0
     set background=dark
     set guifont=Inconsolata-dz\ for\ Powerline:h16
-    colorscheme gruvbox
 endfunction
 
 " OSX: Specific keybindings

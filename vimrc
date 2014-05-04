@@ -566,6 +566,9 @@ NeoBundle 'othree/javascript-libraries-syntax.vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 " Ruby/Rails
+NeoBundle 'tpope/vim-rbenv'
+NeoBundle 'tpope/vim-rake'
+NeoBundle 'tpope/vim-bundler'
 NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_rails = 1
     let g:rubycomplete_use_bundler = 1
@@ -573,13 +576,11 @@ NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
 NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-rake'
-NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-cucumber'
-NeoBundle 'skalnik/vim-vroom'
-    let g:vroom_use_dispatch = 1
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'duwanis/tomdoc.vim'
+NeoBundle 'skalnik/vim-vroom'
+    let g:vroom_use_dispatch = 1
 " Clojure
 NeoBundle 'tpope/vim-classpath'
 NeoBundle 'guns/vim-clojure-static'
@@ -1288,12 +1289,6 @@ au FileType ruby,eruby,rdoc :call s:RubyDef()
 function! s:RubyDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
-
-    " edit routes
-    command! -buffer EGemfile :e Gemfile
-    command! -buffer TGemfile :tabe Gemfile
-    command! -buffer ERoutes  :e config/routes.rb
-    command! -buffer TRoutes  :tabe config/routes.rb
 
     " Vimshell shorter command
     command! -buffer Pry  :execute "VimShellInteractive --split='split <bar> resize 19' pry"
