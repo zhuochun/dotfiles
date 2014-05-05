@@ -12,7 +12,7 @@ function! s:WritingMode()
     colorscheme base16-railscasts
     set colorcolumn=79
     set transparency=0
-    set linespace=6
+    set linespace=1
     set background=dark
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction

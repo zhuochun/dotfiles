@@ -4,6 +4,7 @@
 --exclude=.git
 --exclude=log
 --exclude=tmp
+--exclude=vendor/bundle
 
 # Regex for Rails
 --regex-ruby=/(^|[:;])[ \t]*([A-Z][[:alnum:]_]+) *=/\2/c,class,constant/
