@@ -18,7 +18,7 @@ if has("gui_macvim")
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NeoBundle Settings {{{
+" NeoBundle Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 if has('vim_starting')
@@ -30,12 +30,10 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 " Let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-" }}}
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugins {{{
+" Plugins
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 NeoBundle 'Shougo/vimproc', {
@@ -47,7 +45,9 @@ NeoBundle 'Shougo/vimproc', {
         \   },
         \ }
 
-NeoBundle 'AndrewRadev/switch.vim'
+NeoBundleLazy 'AndrewRadev/switch.vim', {
+            \   'autoload' : {'commands': ['Switch']},
+            \ }
     nnoremap + :Switch<CR>
     " Some customized definitions
     let g:switch_custom_definitions =
@@ -60,10 +60,16 @@ NeoBundle 'AndrewRadev/switch.vim'
             \   ['first', 'last'],
             \   ['* [ ]', '* [x]'],
             \   ['get', 'post', 'put', 'patch', 'delete'],
+            \   ['\.to_not', '\.to'],
             \ ]
 
-NeoBundle 'AndrewRadev/splitjoin.vim'
-    " gS: split, gJ: join
+" powerful split and join
+" gS: split, gJ: join
+NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
+            \ 'autoload' : {
+            \     'mappings' : ['gS', 'gJ'],
+            \   }
+            \ }
 
 NeoBundle 'bling/vim-airline'
     " enable/disable powerline symbols.
@@ -87,13 +93,6 @@ NeoBundleLazy 'chrisbra/NrrwRgn', {
             \     'commands' : ['NarrowRegion', 'NRMulti']
             \   },
             \ }
-
-NeoBundle 'godlygeek/tabular'
-    xnoremap <leader>&     :Tabularize /&<CR>
-    xnoremap <leader>=     :Tabularize /=<CR>
-    xnoremap <leader>:     :Tabularize /:<CR>
-    xnoremap <leader>-     :Tabularize /-<CR>
-    xnoremap <leader><bar> :Tabularize /<bar><CR>
 
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
@@ -127,7 +126,11 @@ NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'kshenoy/vim-signature'
 
 " use gK to investigate documentation on the word under the cursor
-NeoBundle 'Keithbsmiley/investigate.vim'
+NeoBundleLazy 'Keithbsmiley/investigate.vim', {
+            \ 'autoload' : {
+            \     'mappings' : ['gK'],
+            \   }
+            \ }
   let g:investigate_use_dash=1
 
 NeoBundleLazy 'kien/tabman.vim', {
@@ -137,17 +140,13 @@ NeoBundleLazy 'kien/tabman.vim', {
             \ }
     nnoremap <F4> :TMToggle<CR>
 
-NeoBundleLazy 'jbnicolai/rainbow_parentheses.vim', {
-            \   'autoload' : {
-            \     'commands' : ['RainbowParenthesesToggle',
-            \                   'RainbowParenthesesToggleAll'],
-            \     'filetypes' : ['clojure']
-            \   },
+NeoBundleLazy 'Lokaltog/vim-easymotion', {
+            \ 'autoload' : {
+            \     'mappings' : '<Plug>(easymotion-',
+            \   }
             \ }
-
-NeoBundle 'Lokaltog/vim-easymotion'
     map \     <Plug>(easymotion-prefix)
-    map <D-f> <Plug>(easymotion-sn)
+    map <C-f> <Plug>(easymotion-sn)
     " not case censitive
     let g:EasyMotion_smartcase = 1
 
@@ -170,7 +169,10 @@ NeoBundle 'matchit.zip'
 
 NeoBundle 'mhinz/vim-signify'
 
-NeoBundle 'osyo-manga/vim-over'
+NeoBundleLazy 'osyo-manga/vim-over', {
+            \   'autoload' : {'commands': ['OverCommandLine']},
+            \ }
+    nnoremap <C-g> :OverCommandLine<cr>%s/
 
 NeoBundleLazy 'mbbill/undotree', {
             \   'autoload' : {'commands': ['UndotreeToggle']},
@@ -212,10 +214,11 @@ NeoBundle 'scrooloose/nerdtree'
     " Use a single click to fold/unfold directories
     let NERDTreeMouseMode = 2
     " Don't display these kinds of files in NERDTree
-    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.vcxproj', '\.bundle', '\.DS_Store$', '\.git', '\tags$']
+    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.git',
+                        \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
-    map <F3> <plug>NERDTreeTabsToggle<CR>
+    map <F3> <Plug>NERDTreeTabsToggle<CR>
     " Do not open NERDTree on startup
     let g:nerdtree_tabs_open_on_gui_startup = 0
 
@@ -251,7 +254,7 @@ NeoBundle 'Shougo/unite.vim'
     endif
     " Mapping on Ag
     nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
-    nnoremap <silent> <C-f> :<C-u>Unite -no-quit grep:.<CR>
+    nnoremap <silent> <D-f> :<C-u>Unite -no-quit grep:.<CR>
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
@@ -290,25 +293,29 @@ NeoBundle 'Shougo/unite.vim'
     endfunction "}}}
 
 NeoBundleLazy 'Shougo/neomru.vim', {
-            \   'autoload':{'unite_sources': ['file_mru', 'directory_mru']}
+            \   'autoload': {'unite_sources': ['file_mru', 'directory_mru']}
             \ }
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
 NeoBundleLazy 'Shougo/unite-outline', {
-            \   'autoload':{'unite_sources': 'outline'}
+            \   'autoload': {'unite_sources': 'outline'}
             \ }
     nnoremap <silent> <C-e> :<C-u>Unite outline<CR>
-NeoBundleLazy 'ujihisa/unite-colorscheme', {
-            \   'autoload':{'unite_sources': 'colorscheme'}
-            \ }
 NeoBundleLazy 'kopischke/unite-spell-suggest', {
-            \   'autoload':{'unite_sources': 'spell_suggest'}
+            \   'autoload': {
+            \     'unite_sources': 'spell_suggest',
+            \     'filetypes' : ['mkd', 'markdown', 'text'],
+            \   }
+            \ }
+    nnoremap <leader>sl :<C-u>Unite spell_suggest<CR>
+NeoBundleLazy 'ujihisa/unite-colorscheme', {
+            \   'autoload': {'unite_sources': 'colorscheme'}
             \ }
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
             \   'autoload' : {
-            \     'commands' : [{ 'name' : 'VimShell',
-            \                     'complete' : 'customlist,vimshell#complete'},
+            \     'commands' : [{'name' : 'VimShell',
+            \                    'complete' : 'customlist,vimshell#complete'},
             \                   'VimShellExecute', 'VimShellInteractive',
             \                   'VimShellTerminal', 'VimShellPop'],
             \     'mappings' : ['<Plug>(vimshell_'],
@@ -327,10 +334,14 @@ NeoBundle 'Shougo/neocomplete.vim'
     let g:neocomplete#enable_at_startup = 1
     let g:neocomplete#enable_smart_case = 1
     let g:neocomplete#enable_auto_delimiter = 1
-    let g:neocomplete#max_list = 29
+
     " Completion length.
     let g:neocomplete#auto_completion_start_length   = 2
     let g:neocomplete#manual_completion_start_length = 1
+
+    " Ignore file patterns
+    let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
+    let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax'
 
     " Plugin key-mappings.
     inoremap <expr><C-g> neocomplete#undo_completion()
@@ -353,18 +364,9 @@ NeoBundle 'Shougo/neocomplete.vim'
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
 
     " <BS>: close popup and delete backword char.
-    inoremap <expr><BS>    neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
     " <Space>: Close popup.
     inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-
-    " Enable omni completion.
-    autocmd FileType css,less,sass setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown,mkd setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript,coffee setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
-    autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
     " Define dictionary.
     let g:neocomplete#sources#dictionary#dictionaries = {
@@ -383,18 +385,29 @@ NeoBundle 'Shougo/neocomplete.vim'
     if !exists('g:neocomplete#sources#omni#input_patterns')
       let g:neocomplete#sources#omni#input_patterns = {}
     endif
-    let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-    let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-    let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
 
-    " Force neocomplete omni func
-    let g:neocomplete#force_overwrite_completefunc = 1
     if !exists('g:neocomplete#force_omni_input_patterns')
-      let g:neocomplete#force_omni_input_patterns = {}
+        let g:neocomplete#force_omni_input_patterns = {}
     endif
-    let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+    let g:neocomplete#force_overwrite_completefunc = 1
+
+" A neocomplete plugin to complete words in English
+NeoBundle 'ujihisa/neco-look'
+
+" A neocomplete plugin to complete ruby
+NeoBundleLazy 'alpaca-tc/vim-rsense', {
+            \   'autoload' : {
+            \     'filetypes' : ['ruby', 'eruby']
+            \   },
+            \ }
+    let g:rsenseUseOmniFunc = 1
+    let g:rsenseHome = '/usr/local/Cellar/rsense/0.3/libexec/'
+NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
+            \   'autoload' : {
+            \     'filetypes' : ['ruby', 'eruby']
+            \   },
+            \ }
+    let g:neocomplete#sources#rsense#home_directory = g:rsenseHome
 
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
@@ -428,16 +441,42 @@ NeoBundle 'Shougo/neosnippet.vim'
     " especially when splits are used.
     set completeopt-=preview
 
-" A neocomplcache plugin to complete words in English
-NeoBundle 'ujihisa/neco-look'
+" neosnippet snippets
+NeoBundle 'zhuochun/vim-snippets'
 
-NeoBundle 'tommcdo/vim-exchange'
-  " cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
+" exchange words
+" cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
+NeoBundleLazy 'tommcdo/vim-exchange', {
+            \   'autoload' : {
+            \     'mappings' : ['cx', 'cxx', 'X', '<Plug>(Exchange'],
+            \   }
+            \ }
 
-NeoBundle 'tpope/vim-abolish'
-    " MixedCase (crm), camelCase (crc), snake_case (crs), and UPPER_CASE (cru)
-NeoBundle 'tpope/vim-commentary'
-    " Use gcc (comment), gcu (uncomment) gc (visual toggle)
+" better alignment
+" align using gl (left), gL (right)
+NeoBundleLazy 'tommcdo/vim-lion', {
+            \   'autoload' : {
+            \     'mappings' : ['gl', 'gL'],
+            \   }
+            \ }
+
+" toggle comments
+" Use gcc (comment), gcu (uncomment) gc (visual toggle)
+NeoBundleLazy 'tpope/vim-commentary', {
+            \   'autoload' : {
+            \     'mappings' : ['gc', 'gcc', 'gcu'],
+            \   }
+            \ }
+
+" unix commands in vim
+NeoBundleLazy 'tpope/vim-eunuch', {
+            \   'autoload' : {
+            \     'commands' : ['Unlink', 'Remove', 'Move', 'Rename',
+            \                   'Chmod', 'Mkdir', 'SudoEdit', 'SudoWrite'],
+            \   }
+            \ }
+
+NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
     " Shortcuts in visual mode
     xmap ( S)
@@ -447,14 +486,16 @@ NeoBundle 'tpope/vim-surround'
     xmap ' S'
     xmap ` S`
     xmap T St
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-eunuch'
+
+NeoBundle 'tpope/vim-abolish'
+    " MixedCase (crm), camelCase (crc), snake_case (crs), and UPPER_CASE (cru)
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-speeddating'
+
+NeoBundle 'thinca/vim-visualstar'
 
 NeoBundle 'terryma/vim-expand-region'
     vmap v <Plug>(expand_region_expand)
@@ -471,9 +512,19 @@ NeoBundle 'terryma/vim-expand-region'
           \ })
     " Use the global default + the following for ruby
     call expand_region#custom_text_objects('ruby', {
-          \ 'im' :0,
-          \ 'am' :0,
+          \ 'ir' :0,
+          \ 'ar' :0,
           \ })
+
+NeoBundleLazy 'tyru/open-browser.vim', {
+            \   'autoload' : {
+            \     'commands' : ['OpenBrowser', 'OpenBrowserSearch',
+            \                   'OpenBrowserSmartSearch'],
+            \     'mappings' : '<Plug>(openbrowser-',
+            \   }
+            \ }
+    nmap gx <Plug>(openbrowser-smart-search)
+    vmap gx <Plug>(openbrowser-smart-search)
 
 NeoBundle 'kris89/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -491,16 +542,21 @@ NeoBundle 'kris89/vim-multiple-cursors'
         exe 'NeoCompleteUnlock'
     endfunction
 
-NeoBundle 'vim-scripts/DrawIt'
-    " <leader>di start, <leader>ds stop
-NeoBundle 'vim-scripts/ZoomWin'
-    " <c-w>o : toggle window zooms
+NeoBundleLazy 'vim-scripts/DrawIt', {
+            \   'autoload' : {
+            \     'commands' : ['DIstart', 'DIstop', 'DrawIt'],
+            \   }
+            \ }
+
+NeoBundleLazy 'vim-scripts/ZoomWin', {
+            \   'autoload' : {
+            \     'commands' : ['ZoomWin'],
+            \   }
+            \ }
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'
     let g:indentLine_fileTypeExclude = ['text', 'mkd', 'markdown']
-
-NeoBundle 'zhuochun/vim-snippets'
 
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
@@ -509,6 +565,7 @@ NeoBundle 'kana/vim-textobj-line'               " al/il
 NeoBundle 'kana/vim-textobj-indent'             " ai/ii
 NeoBundle 'coderifous/textobj-word-column.vim'  " ac/ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av/iv
+NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar/ir
 " }}}
 
 " writings {{{
@@ -531,9 +588,13 @@ NeoBundleLazy 'junegunn/goyo.vim', {
     nnoremap <silent> <F11> :Goyo<cr>
 " }}}
 
-" language syntax {{{
+" languages {{{
 " HTML
 NeoBundle 'othree/html5.vim'
+NeoBundle 'nono/vim-handlebars'
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'slim-template/vim-slim'
+NeoBundle 'tpope/vim-haml'
 NeoBundle 'mattn/emmet-vim'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
@@ -543,16 +604,14 @@ NeoBundle 'mattn/emmet-vim'
     let g:user_emmet_next_key = '<M-y>'
     " <M-y> to goto prev point
     let g:user_emmet_prev_key = '<D-Y>'
-NeoBundle 'nono/vim-handlebars'
-NeoBundle 'digitaltoad/vim-jade'
-NeoBundle 'slim-template/vim-slim'
-NeoBundle 'tpope/vim-haml'
+
 " CSS
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'wavded/vim-stylus'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'cakebaker/scss-syntax.vim'
+NeoBundle 'wavded/vim-stylus'
+
 " JavaScript
 NeoBundle 'elzr/vim-json'
     let g:vim_json_syntax_conceal = 0
@@ -561,70 +620,70 @@ NeoBundle 'kchmck/vim-coffee-script'
     let coffee_watch_vert = 1
     let coffee_run_vert = 1
 NeoBundle 'moll/vim-node'
-NeoBundle 'othree/javascript-libraries-syntax.vim'
-    let g:used_javascript_libs = 'jquery,underscore,backbone,jasmine,angularjs,angularui'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'othree/javascript-libraries-syntax.vim'
+    let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs'
+NeoBundle 'marijnh/tern_for_vim', {
+            \   'build': {
+            \     'others': 'npm install'
+            \   },
+            \ }
+
 " Ruby/Rails
+NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-rbenv'
 NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-bundler'
-NeoBundle 'vim-ruby/vim-ruby'
-    let g:rubycomplete_rails = 1
-    let g:rubycomplete_use_bundler = 1
-    let g:rubycomplete_load_gemfile = 1
-    let g:rubycomplete_buffer_loading = 1
-    let g:rubycomplete_classes_in_global = 1
 NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-cucumber'
-NeoBundle 'Keithbsmiley/rspec.vim'
+NeoBundle 'tpope/vim-endwise'
 NeoBundle 'duwanis/tomdoc.vim'
+NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'skalnik/vim-vroom'
     let g:vroom_use_dispatch = 1
+
 " Clojure
-NeoBundle 'tpope/vim-classpath'
+NeoBundle 'amdt/vim-niji'
 NeoBundle 'guns/vim-clojure-static'
-NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'guns/vim-clojure-highlight'
+NeoBundle 'tpope/vim-classpath'
+NeoBundle 'tpope/vim-fireplace'
+
 " C/Cpp
 NeoBundle 'vim-jp/cpp-vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
+
 " Markdown
-NeoBundle 'plasticboy/vim-markdown'
-    let g:vim_markdown_folding_disabled = 1
+NeoBundle 'gabrielelana/vim-markdown'
+NeoBundle 'joker1007/vim-markdown-quote-syntax'
 NeoBundle 'itspriddle/vim-marked'
+
 " Git
-NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundleLazy 'gregsexton/gitv', {
-            \   'depends':['tpope/vim-fugitive'],
-            \   'autoload':{'commands': 'Gitv'}
+            \   'depends': ['tpope/vim-fugitive'],
+            \   'autoload': {'commands': 'Gitv'}
             \ }
-" }}}
-
 " }}}
 
 " colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'sjl/badwolf'
 " }}}
 
-" }}}
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM Settings {{{
+" VIM Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set colorcolumn=79
 set linespace=0
 set guifont=Inconsolata-dz\ for\ Powerline:h16
 set background=dark
-colorscheme Tomorrow-Night
+colorscheme jellybeans
 
 " enable filetype plugin
 filetype plugin on
@@ -767,12 +826,10 @@ if has('persistent_undo')
 endif
 " }}}
 
-" }}}
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Key Mappings and Settings {{{
+" Key Mappings and Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Function keys {{{
@@ -957,7 +1014,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <leader>p
     " <leader>a
     " <leader>s spell checkings
-        nnoremap <leader>ss :setlocal spell!<cr>
+        nnoremap <leader>ss :setlocal spell!<CR>
         nnoremap <leader>sn ]s
         nnoremap <leader>sp [s
         nnoremap <leader>sa zg
@@ -1065,7 +1122,8 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <C-a>
     " <C-s>
     " <C-d> Page Down
-    " <C-f> Find (ag) in directory
+    " <C-f> (n) Search in window (Easymotion)
+    " <C-f> (i) Move left
     " <C-g>
     " <C-h> (n) move to left window
     " <C-j> (n) move to down window
@@ -1200,40 +1258,6 @@ vnoremap <down> :m '>+1<CR>gv=gv
     " <D-/> Unite grep
 " }}}
 
-" }}}
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Visual mode related {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" In visual mode, press * or # to search the current selection
-vnoremap <silent> * :call VisualSelection('f')<CR>
-vnoremap <silent> ? :call VisualSelection('b')<CR>
-
-function! VisualSelection(direction) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "^M"
-    elseif a:direction == 'gv'
-        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    elseif a:direction == 'f'
-        execute "normal /" . l:pattern . "^M"
-    endif
-
-    let @/ = l:pattern
-    let @" = l:saved_reg
-endfunction
-" }}}
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1335,7 +1359,7 @@ endfunction
 " }}}
 
 " Html/Xml Mappings {{{
-au FileType xhtml,html,xml,yaml,haml :call s:WebDef()
+au FileType xhtml,html,xml,yaml :call s:WebDef()
 function! s:WebDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
@@ -1371,8 +1395,6 @@ function! s:MarkdownDef()
 
     " Insert date and time in Jekyll
     inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
-    " look the word under cursor up in Dictionary.app
-    nnoremap <buffer> <D-f> :!open dict://<cword><CR><CR>
     " Hard wrap current paragraph
     nnoremap <buffer> <D-w> gwip
     " Unwrap current paragraph
