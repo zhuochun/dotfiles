@@ -12,7 +12,7 @@ function! s:WritingMode()
     colorscheme base16-railscasts
     set colorcolumn=79
     set transparency=0
-    set linespace=1
+    set linespace=2
     set background=dark
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction
@@ -22,7 +22,7 @@ function! s:LightMode()
     colorscheme base16-solarized
     set colorcolumn=79
     set transparency=0
-    set linespace=1
+    set linespace=2
     set background=light
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction

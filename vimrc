@@ -71,6 +71,13 @@ NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
             \   }
             \ }
 
+" math calculation in vim
+NeoBundleLazy 'arecarn/crunch', {
+            \   'autoload' : {
+            \     'commands' : ['Crunch', 'CrunchLine', 'CrunchBlock']
+            \   },
+            \ }
+
 NeoBundle 'bling/vim-airline'
     " enable/disable powerline symbols.
     let g:airline_powerline_fonts = 1
@@ -172,6 +179,9 @@ NeoBundle 'mhinz/vim-signify'
 NeoBundleLazy 'osyo-manga/vim-over', {
             \   'autoload' : {'commands': ['OverCommandLine']},
             \ }
+    " modify prompt design
+    let g:over_command_line_prompt = "❯ "
+    " C-g to shortcut over
     nnoremap <C-g> :OverCommandLine<cr>%s/
 
 NeoBundleLazy 'mbbill/undotree', {
@@ -249,7 +259,7 @@ NeoBundle 'Shougo/unite.vim'
         let g:unite_source_grep_command = 'ag'
         let g:unite_source_grep_default_opts =
             \ '--line-numbers --nocolor --nogroup --hidden ' .
-            \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+            \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'''
         let g:unite_source_grep_recursive_opt = ''
     endif
     " Mapping on Ag
@@ -296,6 +306,7 @@ NeoBundleLazy 'Shougo/neomru.vim', {
             \   'autoload': {'unite_sources': ['file_mru', 'directory_mru']}
             \ }
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
+    nnoremap <silent> <D-S-o> :<C-u>Unite directory_mru<CR>
 NeoBundleLazy 'Shougo/unite-outline', {
             \   'autoload': {'unite_sources': 'outline'}
             \ }
@@ -309,6 +320,12 @@ NeoBundleLazy 'kopischke/unite-spell-suggest', {
     nnoremap <leader>sl :<C-u>Unite spell_suggest<CR>
 NeoBundleLazy 'ujihisa/unite-colorscheme', {
             \   'autoload': {'unite_sources': 'colorscheme'}
+            \ }
+NeoBundleLazy 'osyo-manga/unite-quickfix', {
+            \   'autoload': {'unite_sources': ['quickfix', 'location_list']}
+            \ }
+NeoBundleLazy 'tsukkee/unite-tag', {
+            \   'autoload': {'unite_sources': 'tag'}
             \ }
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
@@ -332,41 +349,17 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 NeoBundle 'Shougo/neocomplete.vim'
     " Use neocomplete.
     let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#enable_ignore_case = 1
+    let g:neocomplete#enable_fuzzy_completion = 1
     let g:neocomplete#enable_auto_delimiter = 1
 
     " Completion length.
-    let g:neocomplete#auto_completion_start_length   = 2
+    let g:neocomplete#auto_completion_start_length   = 1
     let g:neocomplete#manual_completion_start_length = 1
 
     " Ignore file patterns
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
     let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax'
-
-    " Plugin key-mappings.
-    inoremap <expr><C-g> neocomplete#undo_completion()
-    inoremap <expr><C-l> neocomplete#complete_common_string()
-
-    " <CR>: close popup and save indent.
-    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-        function! s:my_cr_function()
-          return pumvisible() ? neocomplete#close_popup() : "\<cr>"
-        endfunction
-
-    " <TAB>: completion.
-    inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
-                \ <SID>check_back_space() ? "\<TAB>" :
-                \ neocomplete#start_manual_complete()
-        function! s:check_back_space()
-            let col = col('.') - 1
-            return !col || getline('.')[col - 1] =~ '\s'
-        endfunction
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
-
-    " <BS>: close popup and delete backword char.
-    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-    " <Space>: Close popup.
-    inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
     " Define dictionary.
     let g:neocomplete#sources#dictionary#dictionaries = {
@@ -383,7 +376,7 @@ NeoBundle 'Shougo/neocomplete.vim'
 
     " Enable heavy omni completion.
     if !exists('g:neocomplete#sources#omni#input_patterns')
-      let g:neocomplete#sources#omni#input_patterns = {}
+        let g:neocomplete#sources#omni#input_patterns = {}
     endif
 
     if !exists('g:neocomplete#force_omni_input_patterns')
@@ -391,23 +384,33 @@ NeoBundle 'Shougo/neocomplete.vim'
     endif
     let g:neocomplete#force_overwrite_completefunc = 1
 
+    " Plugin key-mappings.
+    inoremap <expr><C-g> neocomplete#undo_completion()
+    inoremap <expr><C-l> neocomplete#complete_common_string()
+
+    " <CR>: close popup and save indent.
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+        function! s:my_cr_function()
+            return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+        endfunction
+
+    " <TAB>: completion.
+    inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
+                        \ <SID>check_back_space() ? "\<TAB>" :
+                        \ neocomplete#start_manual_complete()
+        function! s:check_back_space()
+            let col = col('.') - 1
+            return !col || getline('.')[col - 1] =~ '\s'
+        endfunction
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+
+    " <BS>: close popup and delete backword char.
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    " <Space>: Close popup.
+    inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+
 " A neocomplete plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
-
-" A neocomplete plugin to complete ruby
-NeoBundleLazy 'alpaca-tc/vim-rsense', {
-            \   'autoload' : {
-            \     'filetypes' : ['ruby', 'eruby']
-            \   },
-            \ }
-    let g:rsenseUseOmniFunc = 1
-    let g:rsenseHome = '/usr/local/Cellar/rsense/0.3/libexec/'
-NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
-            \   'autoload' : {
-            \     'filetypes' : ['ruby', 'eruby']
-            \   },
-            \ }
-    let g:neocomplete#sources#rsense#home_directory = g:rsenseHome
 
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
@@ -463,17 +466,13 @@ NeoBundleLazy 'tommcdo/vim-lion', {
 " toggle comments
 " Use gcc (comment), gcu (uncomment) gc (visual toggle)
 NeoBundleLazy 'tpope/vim-commentary', {
-            \   'autoload' : {
-            \     'mappings' : ['gc', 'gcc', 'gcu'],
-            \   }
+            \   'autoload' : {'mappings' : ['gc', 'gcc', 'gcu']}
             \ }
 
-" unix commands in vim
-NeoBundleLazy 'tpope/vim-eunuch', {
-            \   'autoload' : {
-            \     'commands' : ['Unlink', 'Remove', 'Move', 'Rename',
-            \                   'Chmod', 'Mkdir', 'SudoEdit', 'SudoWrite'],
-            \   }
+" reveals a character's representation in decimal, octal, and hex
+" Use ga to reveal
+NeoBundleLazy 'tpope/vim-characterize', {
+            \   'autoload' : {'mappings' : ['ga']}
             \ }
 
 NeoBundle 'tpope/vim-repeat'
@@ -489,11 +488,12 @@ NeoBundle 'tpope/vim-surround'
 
 NeoBundle 'tpope/vim-abolish'
     " MixedCase (crm), camelCase (crc), snake_case (crs), and UPPER_CASE (cru)
+NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-vinegar'
-NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-speeddating'
+NeoBundle 'tpope/vim-projectionist'
 
 NeoBundle 'thinca/vim-visualstar'
 
@@ -525,6 +525,9 @@ NeoBundleLazy 'tyru/open-browser.vim', {
             \ }
     nmap gx <Plug>(openbrowser-smart-search)
     vmap gx <Plug>(openbrowser-smart-search)
+
+" Disable plugins for LargeFile
+NeoBundle 'LargeFile'
 
 NeoBundle 'kris89/vim-multiple-cursors'
     " Disable default mapping: ctrl + n/p/x
@@ -594,7 +597,6 @@ NeoBundle 'othree/html5.vim'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'slim-template/vim-slim'
-NeoBundle 'tpope/vim-haml'
 NeoBundle 'mattn/emmet-vim'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
@@ -616,19 +618,11 @@ NeoBundle 'wavded/vim-stylus'
 NeoBundle 'elzr/vim-json'
     let g:vim_json_syntax_conceal = 0
 NeoBundle 'kchmck/vim-coffee-script'
-    let coffee_compile_vert = 1
-    let coffee_watch_vert = 1
-    let coffee_run_vert = 1
 NeoBundle 'moll/vim-node'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs'
-NeoBundle 'marijnh/tern_for_vim', {
-            \   'build': {
-            \     'others': 'npm install'
-            \   },
-            \ }
 
 " Ruby/Rails
 NeoBundle 'vim-ruby/vim-ruby'
@@ -648,6 +642,7 @@ NeoBundle 'guns/vim-clojure-static'
 NeoBundle 'guns/vim-clojure-highlight'
 NeoBundle 'tpope/vim-classpath'
 NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'vim-scripts/paredit.vim'
 
 " C/Cpp
 NeoBundle 'vim-jp/cpp-vim'
@@ -655,6 +650,7 @@ NeoBundle 'octol/vim-cpp-enhanced-highlight'
 
 " Markdown
 NeoBundle 'gabrielelana/vim-markdown'
+    let g:markdown_enable_mappings = 0
 NeoBundle 'joker1007/vim-markdown-quote-syntax'
 NeoBundle 'itspriddle/vim-marked'
 
@@ -1274,11 +1270,15 @@ noremap <leader>) :e $MYVIMRC<CR>
 " Remap 0 to first non-blank character
 nnoremap 0 ^
 
-" fix broken default regex
+" Fix broken default regex
 nnoremap / /\v
 vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
+
+" Snippets {{{
+au FileType neosnippet,snippet set noexpandtab
+" }}}
 
 " C/CPP Mappings {{{
 au FileType cpp,c,cc,h,hpp :call s:CppDef()
@@ -1315,8 +1315,9 @@ function! s:RubyDef()
     setlocal tabstop=2
 
     " Vimshell shorter command
-    command! -buffer Pry  :execute "VimShellInteractive --split='split <bar> resize 19' pry"
-    command! -buffer Irb  :execute "VimShellInteractive --split='split <bar> resize 19' irb"
+    command! -buffer Pry :execute "VimShellInteractive --split='split <bar> resize 19' pry"
+    command! -buffer Irb :execute "VimShellInteractive --split='split <bar> resize 19' irb"
+    command! -buffer Run :execute "VimShellSendString"
 
     " Surround % to %
     let b:surround_37 = "<% \r %>"
@@ -1339,6 +1340,7 @@ au FileType python :call s:PythonDef()
 function! s:PythonDef()
     " Vimshell shorter command
     command! -buffer Python :execute "VimShellInteractive --split='split <bar> resize 19' python"
+    command! -buffer Run    :execute "VimShellSendString"
 
     " Correct typos
     iab true       True
@@ -1355,6 +1357,7 @@ function! s:CoffeeDef()
     " Vimshell shorter command
     command! -buffer Node   :execute "VimShellInteractive --split='split <bar> resize 19' node"
     command! -buffer Coffee :execute "VimShellInteractive --split='split <bar> resize 19' coffee"
+    command! -buffer Run    :execute "VimShellSendString"
 endfunction
 " }}}
 
@@ -1373,17 +1376,8 @@ function! s:WebDef()
     " Surround * to <!--
     let b:surround_42 = "<!-- \r -->"
     xmap 8 S*
-
     " Delete surround tag
     nmap <Del> dst
-
-    " Correct typos
-    iab colour color
-    iab ->> →
-    iab <<- ←
-    iab ^^  ↑
-    iab VV  ↓
-    iab aa  λ
 endfunction
 " }}}
 
@@ -1426,10 +1420,6 @@ function! s:MarkdownDef()
     nnoremap <buffer> 0 g0
     nnoremap <buffer> $ g$
     nnoremap <buffer> ^ g^
-
-    " Correct typos
-    iab ->> →
-    iab <<- ←
 endfunction
 " }}}
 
