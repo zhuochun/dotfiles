@@ -101,6 +101,12 @@ NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   },
             \ }
 
+NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
+            \   'autoload' : {
+            \     'commands' : ['SemanticHighlight']
+            \   },
+            \ }
+
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'

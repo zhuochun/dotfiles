@@ -35,6 +35,8 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
+# Jekyll Server DevMode
+alias jsd="jekyll server --watch --config _config.dev.yml"
 # Copy to clipboard
 alias ccp="pbcopy"
 # System
@@ -49,6 +51,8 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 # Edit zshrc and vimrc
 alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
+# Atom-Shell Alias
+alias atom="~/Documents/Programming/NodeWebkit/atom-v0.13.3/Atom.app/Contents/MacOS/Atom"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Rails
