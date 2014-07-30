@@ -1,41 +1,58 @@
 " use console dialogs
 set guioptions+=c
 
-" colorschemes
-colorscheme gruvbox
-" transpacy
-set transparency=3
+" special style modes
+command! LightMode call s:LightMode()
+function! s:LightMode()
+    set background=light
+    colorscheme base16-atelierforest
+    set colorcolumn=79
+    set transparency=0
+    set linespace=2
+    set guifont=Liberation\ Mono\ for\ Powerline:h16
+endfunction
 
-" special modes
-command! WritingMode call s:WritingMode()
-function! s:WritingMode()
+command! DarkMode call s:DarkMode()
+function! s:DarkMode()
+    set background=dark
     colorscheme base16-railscasts
     set colorcolumn=79
     set transparency=0
     set linespace=2
-    set background=dark
-    set guifont=Liberation\ Mono\ for\ Powerline:h16
-endfunction
-
-command! LightMode call s:LightMode()
-function! s:LightMode()
-    colorscheme base16-solarized
-    set colorcolumn=79
-    set transparency=0
-    set linespace=2
-    set background=light
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction
 
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
-    colorscheme jellybeans
-    set colorcolumn=79
-    set transparency=3
-    set linespace=0
     set background=dark
+    colorscheme gruvbox
+    set colorcolumn=79
+    set transparency=0
+    set linespace=0
     set guifont=Inconsolata-dz\ for\ Powerline:h16
 endfunction
+
+command! WritingMode call s:WritingMode()
+function! s:WritingMode()
+    set background=dark
+    colorscheme base16-tomorrow
+    set colorcolumn=79
+    set transparency=0
+    set linespace=2
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h16
+endfunction
+
+command! PresentingMode call s:PresentingMode()
+function! s:PresentingMode()
+    set background=light
+    colorscheme base16-atelierlakeside
+    set colorcolumn=79
+    set transparency=0
+    set linespace=2
+    set guifont=Fantasque\ Sans\ Mono:h24
+endfunction
+
+call s:DarkMode() " use dark mode for a while
 
 " OSX: Specific keybindings
 if has("mac")

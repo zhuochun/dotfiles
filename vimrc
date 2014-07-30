@@ -159,7 +159,7 @@ NeoBundleLazy 'Lokaltog/vim-easymotion', {
             \   }
             \ }
     map \     <Plug>(easymotion-prefix)
-    map <C-f> <Plug>(easymotion-sn)
+    map <D-f> <Plug>(easymotion-sn)
     " not case censitive
     let g:EasyMotion_smartcase = 1
 
@@ -187,8 +187,8 @@ NeoBundleLazy 'osyo-manga/vim-over', {
             \ }
     " modify prompt design
     let g:over_command_line_prompt = "❯ "
-    " C-g to shortcut over
-    nnoremap <C-g> :OverCommandLine<cr>%s/
+    " C-S-f to shortcut over
+    nnoremap <D-S-f> :OverCommandLine<cr>%s/
 
 NeoBundleLazy 'mbbill/undotree', {
             \   'autoload' : {'commands': ['UndotreeToggle']},
@@ -243,7 +243,7 @@ NeoBundle 'Shougo/unite.vim'
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " Use ranker in buffer/file candidates
     call unite#custom#source('buffer,file,file_rec', 'sorters', 'sorter_rank')
-    " File searching, start in insert mode
+    " File switch, start in insert mode
     nnoremap <silent> <D-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
     " Buffer switching
@@ -270,7 +270,7 @@ NeoBundle 'Shougo/unite.vim'
     endif
     " Mapping on Ag
     nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
-    nnoremap <silent> <D-f> :<C-u>Unite -no-quit grep:.<CR>
+    nnoremap <silent> <C-f> :<C-u>Unite -no-quit grep:.<CR>
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
@@ -469,14 +469,13 @@ NeoBundleLazy 'tommcdo/vim-lion', {
             \   }
             \ }
 
-" toggle comments
-" Use gcc (comment), gcu (uncomment) gc (visual toggle)
+" toggle comments:
+" gcc (comment), gcu (uncomment) gc (visual toggle)
 NeoBundleLazy 'tpope/vim-commentary', {
             \   'autoload' : {'mappings' : ['gc', 'gcc', 'gcu']}
             \ }
 
 " reveals a character's representation in decimal, octal, and hex
-" Use ga to reveal
 NeoBundleLazy 'tpope/vim-characterize', {
             \   'autoload' : {'mappings' : ['ga']}
             \ }
@@ -501,7 +500,12 @@ NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-projectionist'
 
+" * and # to search selection
 NeoBundle 'thinca/vim-visualstar'
+" perform text replacement in quickfix
+NeoBundleLazy 'thinca/vim-qfreplace', {
+            \   'autoload' : { 'commands' : ['Qfreplace'] }
+            \ }
 
 NeoBundle 'terryma/vim-expand-region'
     vmap v <Plug>(expand_region_expand)
@@ -569,12 +573,13 @@ NeoBundle 'Yggdroot/indentLine'
 
 " text objects {{{
 NeoBundle 'kana/vim-textobj-user'
-NeoBundle 'kana/vim-textobj-entire'             " ae/ie
-NeoBundle 'kana/vim-textobj-line'               " al/il
-NeoBundle 'kana/vim-textobj-indent'             " ai/ii
-NeoBundle 'coderifous/textobj-word-column.vim'  " ac/ic
-NeoBundle 'Julian/vim-textobj-variable-segment' " av/iv
-NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar/ir
+NeoBundle 'kana/vim-textobj-entire'             " ae | ie
+NeoBundle 'kana/vim-textobj-line'               " al | il
+NeoBundle 'kana/vim-textobj-indent'             " ai | ii
+NeoBundle 'kana/vim-textobj-lastpat'            " a/ | i/
+NeoBundle 'coderifous/textobj-word-column.vim'  " ac | ic
+NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
+NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
 " }}}
 
 " writings {{{
@@ -589,6 +594,11 @@ NeoBundleLazy 'reedes/vim-wordy', {
             \   },
             \ }
 
+NeoBundleLazy 'junegunn/limelight.vim', {
+            \   'autoload' : {
+            \     'commands' : ['Limelight', 'Limelight!', 'Limelight!!']
+            \   },
+            \ }
 NeoBundleLazy 'junegunn/goyo.vim', {
             \   'autoload' : {
             \     'commands' : ['Goyo']
@@ -657,8 +667,13 @@ NeoBundle 'octol/vim-cpp-enhanced-highlight'
 " Markdown
 NeoBundle 'gabrielelana/vim-markdown'
     let g:markdown_enable_mappings = 0
-NeoBundle 'joker1007/vim-markdown-quote-syntax'
-NeoBundle 'itspriddle/vim-marked'
+NeoBundleLazy 'joker1007/vim-markdown-quote-syntax', {
+            \   'autoload' : { 'filetypes' : ['mkd', 'markdown', 'text'] }
+            \ }
+NeoBundleLazy 'kannokanno/previm', {
+            \   'depends': ['tyru/open-browser.vim'],
+            \   'autoload': {'commands': 'PrevimOpen'}
+            \ }
 
 " Git
 NeoBundle 'tpope/vim-fugitive'
@@ -1403,6 +1418,10 @@ function! s:MarkdownDef()
     nnoremap <buffer> <D-e> ggVGgq
     " Unformat all paragraphs in buffer
     nnoremap <buffer> <D-S-e> :%norm vipJ<cr>
+    " Insert inline link
+    vmap <buffer> <D-k> [f]a(
+    " Insert inline image
+    vmap <buffer> <D-i> [i!<ESC>f]a(
 
     " Surround _ to _
     let b:surround_95 = "_\r_"
