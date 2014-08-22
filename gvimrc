@@ -5,7 +5,7 @@ set guioptions+=c
 command! LightMode call s:LightMode()
 function! s:LightMode()
     set background=light
-    colorscheme base16-atelierforest
+    colorscheme base16-atelierdune
     set colorcolumn=79
     set transparency=0
     set linespace=2
@@ -46,7 +46,7 @@ command! PresentingMode call s:PresentingMode()
 function! s:PresentingMode()
     set background=light
     colorscheme base16-atelierlakeside
-    set colorcolumn=79
+    set colorcolumn=
     set transparency=0
     set linespace=2
     set guifont=Fantasque\ Sans\ Mono:h24

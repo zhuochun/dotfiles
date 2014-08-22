@@ -64,10 +64,10 @@ NeoBundleLazy 'AndrewRadev/switch.vim', {
             \ ]
 
 " powerful split and join
-" gS: split, gJ: join
 NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
             \ 'autoload' : {
             \     'mappings' : ['gS', 'gJ'],
+            \     'commands' : ['SplitjoinJoin', 'SplitjoinSplit']
             \   }
             \ }
 
@@ -79,8 +79,12 @@ NeoBundleLazy 'arecarn/crunch', {
             \ }
 
 NeoBundle 'bling/vim-airline'
-    " enable/disable powerline symbols.
+    " enable powerline symbols.
     let g:airline_powerline_fonts = 1
+    " the separator used on the left side
+    let g:airline_left_sep=''
+    " the separator used on the right side
+    let g:airline_right_sep=''
     " control which sections get truncated and at what width. >
     let g:airline#extensions#default#section_truncate_width = {
             \   'b': 79,
@@ -110,31 +114,6 @@ NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
 NeoBundle 'jiangmiao/auto-pairs'
     " toggle auto pairs
     let g:AutoPairsShortcutToggle = '<M-a>'
-
-NeoBundle 'justinmk/vim-sneak'
-    " sneak-streak-mode
-    let g:sneak#streak = 1
-    " not case censitive
-    let g:sneak#use_ic_scs = 1
-    " 1-character enhanced 'f'
-    nmap f <Plug>Sneak_f
-    nmap F <Plug>Sneak_F
-    xmap f <Plug>Sneak_f
-    xmap F <Plug>Sneak_F
-    omap f <Plug>Sneak_f
-    omap F <Plug>Sneak_F
-    " 1-character enhanced 't'
-    nmap t <Plug>Sneak_t
-    nmap T <Plug>Sneak_T
-    xmap t <Plug>Sneak_t
-    xmap T <Plug>Sneak_T
-    omap t <Plug>Sneak_t
-    omap T <Plug>Sneak_T
-    " handle ; -> : remaps
-    nmap : <Plug>SneakNext
-    nmap " <Plug>SneakPrevious
-    xmap : <Plug>VSneakNext
-    xmap " <Plug>VSneakPrevious
 
 NeoBundle 'kshenoy/vim-signature'
 
@@ -195,6 +174,18 @@ NeoBundleLazy 'mbbill/undotree', {
             \ }
     nnoremap <F5> :UndotreeToggle<CR>
 
+NeoBundle 'saihoooooooo/glowshi-ft.vim'
+    let g:glowshi_ft_no_default_key_mappings = 1
+    " custom mappings
+    map f <plug>(glowshi-ft-f)
+    map F <plug>(glowshi-ft-F)
+    map t <plug>(glowshi-ft-t)
+    map T <plug>(glowshi-ft-T)
+    map : <plug>(glowshi-ft-repeat)
+    map " <plug>(glowshi-ft-opposite)
+    " timeout
+    let g:glowshi_ft_timeoutlen = 3000
+
 NeoBundle 'scrooloose/syntastic'
     " fancy symbols
     let g:syntastic_error_symbol = '✗'
@@ -214,7 +205,7 @@ NeoBundle 'scrooloose/syntastic'
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
-                               \ 'passive_filetypes': ['html', 'css', 'c', 'cpp'] }
+                               \ 'passive_filetypes': ['html', 'c', 'cpp'] }
 
 NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
@@ -239,10 +230,23 @@ NeoBundle 'jistr/vim-nerdtree-tabs'
     let g:nerdtree_tabs_open_on_gui_startup = 0
 
 NeoBundle 'Shougo/unite.vim'
-    " Use recursive file search
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Use ranker in buffer/file candidates
-    call unite#custom#source('buffer,file,file_rec', 'sorters', 'sorter_rank')
+    " Default profile
+    call unite#custom#profile('default', 'context', {
+    \   'direction': 'topleft',
+    \   'winheight': 10,
+    \   'prompt': '» ',
+    \   'marked_icon': '✗',
+    \ })
+
+    " Custom filters
+    call unite#custom#source(
+    \ 'buffer,file_rec,file_rec/async,file_rec/git', 'matchers',
+    \ ['converter_relative_word', 'matcher_fuzzy'])
+    call unite#custom#source(
+    \ 'file_mru', 'matchers',
+    \ ['matcher_project_files', 'matcher_fuzzy', 'matcher_hide_hidden_files'])
+    call unite#filters#sorter_default#use(['sorter_rank'])
+
     " File switch, start in insert mode
     nnoremap <silent> <D-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
     nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
@@ -256,8 +260,6 @@ NeoBundle 'Shougo/unite.vim'
     let g:unite_source_history_yank_save_clipboard = 1
     " Yank history like YankRing
     nnoremap <silent> <D-y> :<C-u>Unite history/yank<CR>
-    " Unite spilt position
-    let g:unite_split_rule = 'botright'
 
     " Use ag
     if executable('ag')
@@ -282,6 +284,9 @@ NeoBundle 'Shougo/unite.vim'
 
         " insert mode settings
         imap <buffer> <CR>      <Plug>(unite_insert_leave)
+        imap <buffer> ,         <Plug>(unite_do_default_action)
+        imap <buffer> >         <Plug>(unite_quick_match_default_action)
+        imap <buffer> <D-d>     <Plug>(unite_complete)
         imap <buffer> <TAB>     <Plug>(unite_select_next_line)
         imap <buffer> <S-TAB>   <Plug>(unite_select_previous_line)
 
@@ -291,11 +296,12 @@ NeoBundle 'Shougo/unite.vim'
         nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
 
         " change directory
-        nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
+        nnoremap <silent><buffer><expr> cd   unite#do_action('lcd')
+        nnoremap <silent><buffer><expr> !    unite#do_action('start')
 
         " replace/rename
         let unite = unite#get_current_unite()
-        if unite.profile_name ==# 'search'
+        if unite.profile_name ==# '^search'
             nnoremap <silent><buffer><expr> r  unite#do_action('replace')
         else
             nnoremap <silent><buffer><expr> r  unite#do_action('rename')
@@ -312,7 +318,7 @@ NeoBundleLazy 'Shougo/neomru.vim', {
             \   'autoload': {'unite_sources': ['file_mru', 'directory_mru']}
             \ }
     nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
-    nnoremap <silent> <D-S-o> :<C-u>Unite directory_mru<CR>
+    nnoremap <silent> <C-o> :<C-u>Unite directory_mru<CR>
 NeoBundleLazy 'Shougo/unite-outline', {
             \   'autoload': {'unite_sources': 'outline'}
             \ }
@@ -417,6 +423,10 @@ NeoBundle 'Shougo/neocomplete.vim'
 
 " A neocomplete plugin to complete words in English
 NeoBundle 'ujihisa/neco-look'
+" A neocomplete plugin to complete ruby keyword args
+NeoBundleLazy 'rhysd/neco-ruby-keyword-args', {
+            \   'autoload' : {'filetypes' : 'ruby'}
+            \ }
 
 NeoBundle 'Shougo/neosnippet.vim'
     " Plugin key-mappings.
@@ -583,28 +593,18 @@ NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
 " }}}
 
 " writings {{{
-NeoBundleLazy 'reedes/vim-wordy', {
-            \   'autoload' : {
-            \     'commands' : ['NoWordy', 'WeakWordy',
-            \                   'WordyWordy', 'ProblemWordy',
-            \                   'PuffWordy', 'JargonWordy', 'ArtJargonWordy',
-            \                   'WeaselWordy', 'PassiveWordy', 'TriteWordy',
-            \                   'SaidWordy', 'OpineWordy', 'AintWordy'],
-            \     'filetypes' : ['mkd', 'markdown', 'text']
-            \   },
-            \ }
-
-NeoBundleLazy 'junegunn/limelight.vim', {
-            \   'autoload' : {
-            \     'commands' : ['Limelight', 'Limelight!', 'Limelight!!']
-            \   },
-            \ }
 NeoBundleLazy 'junegunn/goyo.vim', {
             \   'autoload' : {
             \     'commands' : ['Goyo']
             \   },
             \ }
     nnoremap <silent> <F11> :Goyo<cr>
+
+NeoBundleLazy 'junegunn/limelight.vim', {
+            \   'autoload' : {
+            \     'commands' : ['Limelight', 'Limelight!', 'Limelight!!']
+            \   },
+            \ }
 " }}}
 
 " languages {{{
@@ -638,7 +638,7 @@ NeoBundle 'moll/vim-node'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
-    let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs'
+    let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs,jasmine'
 
 " Ruby/Rails
 NeoBundle 'vim-ruby/vim-ruby'
@@ -737,6 +737,7 @@ set laststatus=2
 " basic settings
 set shortmess=atI                   " no welcome screen in gVim
 set mouse=a                         " enable mouse
+set gcr=a:blinkon0                  " disable the blinking cursor
 set ttimeout
 set timeoutlen=42                   " quick timeouts for command combinations
 set history=999                     " keep 999 lines of command line history
@@ -806,7 +807,7 @@ set nofoldenable                    " dont fold by default
 
 " list chars {{
 set list
-set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_,
+set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_
 set showbreak=↪
 " }}
 
@@ -1399,6 +1400,13 @@ function! s:WebDef()
     xmap 8 S*
     " Delete surround tag
     nmap <Del> dst
+
+    " Special characters
+    iab ->> →
+    iab <<- ←
+    iab >>  »
+    iab ^^  ↑
+    iab VV  ↓
 endfunction
 " }}}
 
@@ -1407,6 +1415,20 @@ au FileType markdown,mkd,md,text :call s:MarkdownDef()
 function! s:MarkdownDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
+    setlocal spell
+
+    " Surround _ to _
+    let b:surround_95 = "_\r_"
+    xmap _ S_
+    " Surround * to **
+    let b:surround_42 = "**\r**"
+    xmap 8 S*
+    " Surround - to ~~
+    let b:surround_45 = "~~\r~~"
+    xmap - S-
+    " Surround ~ to ```
+    let b:surround_126 = "```\r```"
+    xmap 1 S~
 
     " Insert date and time in Jekyll
     inoremap <F2> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
@@ -1423,21 +1445,10 @@ function! s:MarkdownDef()
     " Insert inline image
     vmap <buffer> <D-i> [i!<ESC>f]a(
 
-    " Surround _ to _
-    let b:surround_95 = "_\r_"
-    xmap _ S_
-    " Surround * to **
-    let b:surround_42 = "**\r**"
-    xmap 8 S*
-    " Surround - to ~~
-    let b:surround_45 = "~~\r~~"
-    xmap - S-
-    " Surround ~ to ```
-    let b:surround_126 = "```\r```"
-    xmap 1 S~
-
-    " Check spell
-    setlocal spell
+    " Mac Dictionary App
+    command! -nargs=0 MacDictCWord call system('open '.shellescape('dict://'.shellescape(expand('<cword>'))))
+    command! -nargs=0 MacDictClose call system("osascript -e 'tell application \"Dictionary\" to quit'")
+    command! -nargs=0 MacDictFocus call system("osascript -e 'tell application \"Dictionary\" to activate'")
 
     " Wrap text
     nnoremap <buffer> j gj
