@@ -8,11 +8,13 @@ ZSH_THEME="pure"
 # 1 Char Alias
 # ==============================
 alias a="ag"
+alias b="brew"
 alias c="cd"
 alias e="mvim"
 alias g="git"
 alias h="history"
 alias l="ls -AlFhG"
+alias p="ps -f"
 alias q="exit"
 alias z="zeus"
 
@@ -28,7 +30,8 @@ alias as="~/Documents/Programming/NodeWebkit/atom-v0.13.3/Atom.app/Contents/MacO
 # Heroku
 alias he="heroku"
 # Rails
-alias rk="rake"
+alias ra="rake"
+alias br="bin/rake"
 # Vim Alias
 alias ee="vim"
 alias vi="vim"
@@ -47,6 +50,8 @@ alias cls="clear"
 alias rmd="rm -rf"
 # IP address
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+# Top 10 history
+alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 
 # Other Alias
 # ==============================
@@ -64,6 +69,12 @@ export LANG=en_US.UTF-8
 
 # Editor
 export EDITOR=mvim
+
+# Highlight section titles in manual pages
+export LESS_TERMCAP_md="${yellow}";
+
+# Always enable colored `grep` output
+export GREP_OPTIONS="--color=auto";
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -94,7 +105,7 @@ export EDITOR=mvim
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump brew bower bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby zeus)
+plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby vagrant zeus)
 
 # Make sure local/bin first
 export PATH="/usr/local/bin:$PATH"
@@ -107,4 +118,4 @@ export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 source $ZSH/oh-my-zsh.sh
 
 # Ruby environment
-eval "$(rbenv init -)"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi

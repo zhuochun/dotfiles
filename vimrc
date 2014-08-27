@@ -132,6 +132,9 @@ NeoBundleLazy 'kien/tabman.vim', {
             \ }
     nnoremap <F4> :TMToggle<CR>
 
+" Disable plugins for LargeFile
+NeoBundle 'LargeFile'
+
 NeoBundleLazy 'Lokaltog/vim-easymotion', {
             \ 'autoload' : {
             \     'mappings' : '<Plug>(easymotion-',
@@ -156,6 +159,17 @@ NeoBundle 'majutsushi/tagbar'
     let g:tagbar_iconchars = ['▸', '▾']
     " expand tag folds
     let g:tagbar_autoshowtag = 1
+    " tagbar for coffeescript
+    let g:tagbar_type_coffee = {
+    \ 'ctagstype' : 'coffee',
+    \ 'kinds'     : [
+        \ 'c:classes',
+        \ 'm:methods',
+        \ 'f:functions',
+        \ 'v:variables',
+        \ 'f:fields',
+    \ ]
+    \ }
 
 NeoBundle 'matchit.zip'
 
@@ -184,7 +198,12 @@ NeoBundle 'saihoooooooo/glowshi-ft.vim'
     map : <plug>(glowshi-ft-repeat)
     map " <plug>(glowshi-ft-opposite)
     " timeout
-    let g:glowshi_ft_timeoutlen = 3000
+    let g:glowshi_ft_timeoutlen = 2000
+    " color highlights
+    let g:glowshi_ft_selected_hl_guifg = '#ffffff'
+    let g:glowshi_ft_selected_hl_guibg = '#c0392b'
+    let g:glowshi_ft_candidates_hl_guifg = '#ffffff'
+    let g:glowshi_ft_candidates_hl_guibg = '#f1c40f'
 
 NeoBundle 'scrooloose/syntastic'
     " fancy symbols
@@ -221,8 +240,10 @@ NeoBundle 'scrooloose/nerdtree'
     " Use a single click to fold/unfold directories
     let NERDTreeMouseMode = 2
     " Don't display these kinds of files in NERDTree
-    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps', '\.git',
-                        \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
+    let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
+        \ '\.git', '\.hg', '\.svn', '\.sass-cache',
+        \ '\.coverage$', '\.tmp$', '\.gitkeep$',
+        \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
 
 NeoBundle 'jistr/vim-nerdtree-tabs'
     map <F3> <Plug>NERDTreeTabsToggle<CR>
@@ -240,26 +261,31 @@ NeoBundle 'Shougo/unite.vim'
 
     " Custom filters
     call unite#custom#source(
-    \ 'buffer,file_rec,file_rec/async,file_rec/git', 'matchers',
+    \ 'buffer,file,file_rec,file_rec/async,file_rec/git,file_mru', 'matchers',
     \ ['converter_relative_word', 'matcher_fuzzy'])
+    call unite#custom#source(
+    \ 'buffer,file,file_rec,file_rec/async,file_mru,grep', 'ignore_pattern',
+    \ join(['\.git/', '\.gitkeep', '\.hg/', '\.o', '\.DS_Store', '\.tmp/',
+    \   '_build', '_site', 'dist',  'tmp', 'log', '*.tar.gz', '*.zip',
+    \   'node_modules', 'bower_components', '\.sass-cache/', ], '\|'))
     call unite#custom#source(
     \ 'file_mru', 'matchers',
     \ ['matcher_project_files', 'matcher_fuzzy', 'matcher_hide_hidden_files'])
     call unite#filters#sorter_default#use(['sorter_rank'])
 
-    " File switch, start in insert mode
-    nnoremap <silent> <D-p> :<C-u>Unite -start-insert file_rec/async:!<CR>
-    nnoremap <silent> <D-i> :<C-u>Unite -start-insert file_rec/async:!<CR>
+    " File switching, start in insert mode
+    nnoremap <silent> <D-p> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<CR>
+    nnoremap <silent> <D-i> :<C-u>Unite -buffer-name=files -start-insert -no-split file_rec/git:--cached:--others:--exclude-standard<CR>
     " Buffer switching
-    nnoremap <silent> <D-u> :<C-u>Unite -quick-match buffer<CR>
-    nnoremap <silent> <C-b> :<C-u>Unite -quick-match buffer<CR>
+    nnoremap <silent> <D-u> :<C-u>Unite -buffer-name=buffer -quick-match -no-split buffer<CR>
+    nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffer -quick-match buffer<CR>
     " Tab switching
-    nnoremap <silent> <C-t> :<C-u>Unite -quick-match buffer tab<CR>
+    nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tab -quick-match tab<CR>
     " Enabled to track yank history
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_history_yank_save_clipboard = 1
     " Yank history like YankRing
-    nnoremap <silent> <D-y> :<C-u>Unite history/yank<CR>
+    nnoremap <silent> <D-y> :<C-u>Unite -buffer-name=yank -quick-match -no-split history/yank<CR>
 
     " Use ag
     if executable('ag')
@@ -271,8 +297,8 @@ NeoBundle 'Shougo/unite.vim'
         let g:unite_source_grep_recursive_opt = ''
     endif
     " Mapping on Ag
-    nnoremap <silent> <D-/> :<C-u>Unite -no-quit grep:.<CR>
-    nnoremap <silent> <C-f> :<C-u>Unite -no-quit grep:.<CR>
+    nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep -no-quit grep:.<CR>
+    nnoremap <silent> <C-f> :<C-u>Unite -buffer-name=grep -no-quit grep:.<CR>
 
     " Key Mappings in Unite
     autocmd FileType unite call s:unite_my_settings()
@@ -317,28 +343,31 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundleLazy 'Shougo/neomru.vim', {
             \   'autoload': {'unite_sources': ['file_mru', 'directory_mru']}
             \ }
-    nnoremap <silent> <D-o> :<C-u>Unite file_mru<CR>
-    nnoremap <silent> <C-o> :<C-u>Unite directory_mru<CR>
+    nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=mru -start-insert file_mru<CR>
+    nnoremap <silent> <D-O> :<C-u>Unite -buffer-name=mru -start-insert directory_mru<CR>
 NeoBundleLazy 'Shougo/unite-outline', {
             \   'autoload': {'unite_sources': 'outline'}
             \ }
-    nnoremap <silent> <C-e> :<C-u>Unite outline<CR>
+    nnoremap <silent> <leader>uo :<C-u>Unite -buffer-name=outline outline<CR>
 NeoBundleLazy 'kopischke/unite-spell-suggest', {
             \   'autoload': {
             \     'unite_sources': 'spell_suggest',
             \     'filetypes' : ['mkd', 'markdown', 'text'],
             \   }
             \ }
-    nnoremap <leader>sl :<C-u>Unite spell_suggest<CR>
+    nnoremap <silent> <leader>us :<C-u>Unite -buffer-name=spell spell_suggest<CR>
 NeoBundleLazy 'ujihisa/unite-colorscheme', {
             \   'autoload': {'unite_sources': 'colorscheme'}
             \ }
+    nnoremap <silent> <leader>uc :<C-u>Unite -buffer-name=colorscheme -auto-preview colorscheme<CR>
 NeoBundleLazy 'osyo-manga/unite-quickfix', {
             \   'autoload': {'unite_sources': ['quickfix', 'location_list']}
             \ }
+    nnoremap <silent> <leader>uq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
 NeoBundleLazy 'tsukkee/unite-tag', {
             \   'autoload': {'unite_sources': 'tag'}
             \ }
+    nnoremap <silent> <leader>ut :<C-u>Unite -buffer-name=tags -start-insert tag<CR>
 
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
@@ -517,6 +546,15 @@ NeoBundleLazy 'thinca/vim-qfreplace', {
             \   'autoload' : { 'commands' : ['Qfreplace'] }
             \ }
 
+NeoBundle 'terryma/vim-multiple-cursors'
+    " Disable default mapping: ctrl + n/p/x
+    let g:multi_cursor_use_default_mapping = 0
+    " New mapping
+    let g:multi_cursor_next_key = '<M-,>'
+    let g:multi_cursor_prev_key = '<M-.>'
+    let g:multi_cursor_skip_key = '<M-m>'
+    let g:multi_cursor_quit_key = '<Esc>'
+
 NeoBundle 'terryma/vim-expand-region'
     vmap v <Plug>(expand_region_expand)
     vmap <C-v> <Plug>(expand_region_shrink)
@@ -545,25 +583,6 @@ NeoBundleLazy 'tyru/open-browser.vim', {
             \ }
     nmap gx <Plug>(openbrowser-smart-search)
     vmap gx <Plug>(openbrowser-smart-search)
-
-" Disable plugins for LargeFile
-NeoBundle 'LargeFile'
-
-NeoBundle 'kris89/vim-multiple-cursors'
-    " Disable default mapping: ctrl + n/p/x
-    let g:multi_cursor_use_default_mapping = 0
-    " New mapping
-    let g:multi_cursor_next_key = '<M-,>'
-    let g:multi_cursor_prev_key = '<M-.>'
-    let g:multi_cursor_skip_key = '<M-m>'
-    let g:multi_cursor_quit_key = '<Esc>'
-    " To work with neocomplete
-    function! Multiple_cursors_before()
-        exe 'NeoCompleteLock'
-    endfunction
-    function! Multiple_cursors_after()
-        exe 'NeoCompleteUnlock'
-    endfunction
 
 NeoBundleLazy 'vim-scripts/DrawIt', {
             \   'autoload' : {
@@ -639,6 +658,12 @@ NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs,jasmine'
+NeoBundle 'marijnh/tern_for_vim', {
+        \   'build': {
+        \     'others': 'npm install'
+        \   },
+        \ }
+    let g:tern_show_signature_in_pum = 1
 
 " Ruby/Rails
 NeoBundle 'vim-ruby/vim-ruby'
@@ -687,6 +712,7 @@ NeoBundleLazy 'gregsexton/gitv', {
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'noahfrederick/vim-hemisu'
 NeoBundle 'sjl/badwolf'
 " }}}
 
@@ -749,7 +775,7 @@ set hidden                          " change buffer even if it is not saved
 set lbr                             " dont break line within a word
 set showcmd                         " display incomplete commands
 set showmode                        " show current mode
-set cursorline                      " highlight the current line
+set nocursorline                    " highlight the current line (disabled)
 set magic                           " set magic on, for regular expressions
 set winaltkeys=no                   " set ALT not map to toolbar
 set autoread                        " autoread when a file is changed from the outside
@@ -758,11 +784,13 @@ set viewoptions=folds,options,cursor,unix,slash " better Unix / Windows compatib
 set virtualedit=onemore             " allow for cursor beyond last character
 
 set wildmenu                        " show autocomplete menus
-set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.min.js
-set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.aps,*.vcxproj.*
-set wildignore+=*$py.class,*.class,*.gem,*.zip
-set wildignore+=*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*
-set wildignore+=*/log/*,*/tmp/*,*/build/*,*/vendor/bundle/*,*/vendor/cache/*,*/vendor/gems/*
+set wildignore+=*.dll,*.o,*.obj,*.bak,*.exe,*.zip
+set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.bmp
+set wildignore+=*~,*.sw?,*.DS_Store
+set wildignore+=*$py.class,*.class,*.gem,*.pyc,*.aps,*.vcxproj.*
+set wildignore+=.git,.gitkeep,.hg,.svn,.tmp,.coverage,.sass-cache
+set wildignore+=log/**,tmp/**,node_modules/**,build/**,_site/**,dist/**
+set wildignore+=vendor/bundle/**,vendor/cache/**,vendor/gems/**
 
 set complete-=i
 set backspace=indent,eol,start
