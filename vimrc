@@ -61,6 +61,7 @@ NeoBundleLazy 'AndrewRadev/switch.vim', {
             \   ['* [ ]', '* [x]'],
             \   ['get', 'post', 'put', 'patch', 'delete'],
             \   ['\.to_not', '\.to'],
+            \   ['public', 'protected', 'private'],
             \ ]
 
 " powerful split and join
@@ -94,6 +95,14 @@ NeoBundle 'bling/vim-airline'
             \ }
     " enable/disable showing a summary of changed hunks under source control. >
     let g:airline#extensions#hunks#enabled = 0
+    " shorter mode names
+    let g:airline_mode_map = {
+            \ 'n' : 'N',
+            \ 'i' : 'I',
+            \ 'R' : 'R',
+            \ 'v' : 'V',
+            \ 'V' : 'V',
+            \ }
 
 NeoBundle 'bling/vim-bufferline'
 
@@ -224,7 +233,7 @@ NeoBundle 'scrooloose/syntastic'
     " automatic syntax checking
     let g:syntastic_mode_map = { 'mode': 'active',
                                \ 'active_filetypes': ['javascript', 'ruby'],
-                               \ 'passive_filetypes': ['html', 'c', 'cpp'] }
+                               \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
 
 NeoBundle 'scrooloose/nerdtree'
     " Make it colourful and pretty
@@ -257,6 +266,7 @@ NeoBundle 'Shougo/unite.vim'
     \   'winheight': 10,
     \   'prompt': '» ',
     \   'marked_icon': '✗',
+    \   'smartcase': 1,
     \ })
 
     " Custom filters
@@ -309,7 +319,7 @@ NeoBundle 'Shougo/unite.vim'
         nmap <buffer> <leader>d <Plug>(unite_exit)
 
         " insert mode settings
-        imap <buffer> <CR>      <Plug>(unite_insert_leave)
+        imap <buffer> <CR>      <Plug>(unite_do_default_action)
         imap <buffer> ,         <Plug>(unite_do_default_action)
         imap <buffer> >         <Plug>(unite_quick_match_default_action)
         imap <buffer> <D-d>     <Plug>(unite_complete)
@@ -340,9 +350,7 @@ NeoBundle 'Shougo/unite.vim'
                     \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
     endfunction "}}}
 
-NeoBundleLazy 'Shougo/neomru.vim', {
-            \   'autoload': {'unite_sources': ['file_mru', 'directory_mru']}
-            \ }
+NeoBundle 'Shougo/neomru.vim'
     nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=mru -start-insert file_mru<CR>
     nnoremap <silent> <D-O> :<C-u>Unite -buffer-name=mru -start-insert directory_mru<CR>
 NeoBundleLazy 'Shougo/unite-outline', {
@@ -471,6 +479,8 @@ NeoBundle 'Shougo/neosnippet.vim'
     let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
+    " Default expand with word boundary
+    let g:neosnippet#enable_word_expand = 1
     " Tell Neosnippet about the other snippets
     let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
@@ -629,9 +639,6 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 " languages {{{
 " HTML
 NeoBundle 'othree/html5.vim'
-NeoBundle 'nono/vim-handlebars'
-NeoBundle 'digitaltoad/vim-jade'
-NeoBundle 'slim-template/vim-slim'
 NeoBundle 'mattn/emmet-vim'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
@@ -647,7 +654,6 @@ NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'wavded/vim-stylus'
 
 " JavaScript
 NeoBundle 'elzr/vim-json'
@@ -658,11 +664,7 @@ NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone,angularjs,jasmine'
-NeoBundle 'marijnh/tern_for_vim', {
-        \   'build': {
-        \     'others': 'npm install'
-        \   },
-        \ }
+NeoBundle 'marijnh/tern_for_vim'
     let g:tern_show_signature_in_pum = 1
 
 " Ruby/Rails
@@ -676,6 +678,9 @@ NeoBundle 'duwanis/tomdoc.vim'
 NeoBundle 'Keithbsmiley/rspec.vim'
 NeoBundle 'skalnik/vim-vroom'
     let g:vroom_use_dispatch = 1
+NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
+            \   'autoload' : {'filetypes' : 'ruby'}
+            \ }
 
 " Clojure
 NeoBundle 'amdt/vim-niji'
@@ -1516,7 +1521,6 @@ cab cwd        cd %:p:h
 cab clwd       lcd %:p:h
 " jekyll post/note
 command! Blog  :execute "e ~/Documents/Programming/Web/zhuochun.github.io"
-command! Post  :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_posts"
 command! Draft :execute "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
 
 " }}}
