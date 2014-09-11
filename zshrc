@@ -14,9 +14,9 @@ alias e="mvim"
 alias g="git"
 alias h="history"
 alias l="ls -AlFhG"
+alias o="open"
 alias p="ps -f"
 alias q="exit"
-alias z="zeus"
 
 # 2 Chars Alias
 # ==============================
@@ -25,8 +25,6 @@ alias z="zeus"
 alias js="jekyll server --watch --future"
 # Node-Webkit Alias
 alias nw="~/Documents/Programming/NodeWebkit/v0.9.2/node-webkit.app/Contents/MacOS/node-webkit"
-# Atom-Shell Alias
-alias as="~/Documents/Programming/NodeWebkit/atom-v0.13.3/Atom.app/Contents/MacOS/Atom"
 # Heroku
 alias he="heroku"
 # Rails
@@ -35,20 +33,21 @@ alias br="bin/rake"
 # Vim Alias
 alias ee="vim"
 alias vi="vim"
-# IP address
+# System
+alias cl="clear"
+# Network IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
 # Jekyll Server DevMode
 alias jsd="jekyll server --watch --future --config _config.dev.yml"
-# Copy to clipboard
-alias ccp="pbcopy"
 # System
 alias plz="sudo"
-alias cls="clear"
 alias rmd="rm -rf"
-# IP address
+# Copy to clipboard
+alias ccp="pbcopy"
+# Local IP address
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 # Top 10 history
 alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
@@ -60,8 +59,6 @@ alias zshrc="mvim ~/.zshrc"
 alias vimrc="mvim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
-# Rails
-alias migrate="rake db:migrate db:rollback && rake db:migrate db:test:prepare"
 
 # Locale
 export LC_ALL=en_US.UTF-8
@@ -104,8 +101,7 @@ export GREP_OPTIONS="--color=auto";
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby vagrant zeus)
+plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby vagrant zsh-syntax-highlighting z)
 
 # Make sure local/bin first
 export PATH="/usr/local/bin:$PATH"
@@ -113,9 +109,13 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/heroku/bin:$PATH"
 # Add the Postgres database
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+# Add android tools
+export JAVA_HOME=$(/usr/libexec/java_home)
+export ADT_HOME="/Users/zhuochun/Documents/Programming/Android/adt-bundle-mac-x86_64-20140702/sdk"
+export PATH="$ADT_HOME/platform-tools:$ADT_HOME/tools:$PATH"
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
-# Ruby environment
+# Ruby environment using rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi

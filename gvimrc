@@ -15,7 +15,7 @@ endfunction
 command! DarkMode call s:DarkMode()
 function! s:DarkMode()
     set background=dark
-    colorscheme base16-railscasts
+    colorscheme gruvbox
     set colorcolumn=79
     set transparency=0
     set linespace=2
@@ -25,7 +25,7 @@ endfunction
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
     set background=dark
-    colorscheme gruvbox
+    colorscheme hybrid
     set colorcolumn=79
     set transparency=0
     set linespace=0
