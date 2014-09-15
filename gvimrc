@@ -39,7 +39,7 @@ function! s:WritingMode()
     set colorcolumn=79
     set transparency=0
     set linespace=2
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h16
+    set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction
 
 command! PresentingMode call s:PresentingMode()

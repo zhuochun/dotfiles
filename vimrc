@@ -265,8 +265,8 @@ NeoBundleLazy 'osyo-manga/vim-over', {
             \ }
     " modify prompt design
     let g:over_command_line_prompt = "❯ "
-    " <D-M-f> to shortcut over
-    noremap <C-r> :OverCommandLine<cr>%s///g<Left><Left><Left>
+    " <D-r> shortcut over command line
+    noremap <D-r> :OverCommandLine<cr>%s///g<Left><Left><Left>
 
 NeoBundleLazy 'saihoooooooo/glowshi-ft.vim', {
             \   'autoload' : {
@@ -342,7 +342,7 @@ NeoBundle 'Shougo/unite.vim'
         \   'winheight': 15,
         \   'prompt': '» ',
         \   'marked_icon': '⚲',
-        \   'smart_case': 1,
+        \   'smartcase': 1,
         \ })
 
     " Custom filters
@@ -453,7 +453,10 @@ NeoBundleLazy 'Shougo/unite-outline', {
     nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline<CR>
 NeoBundleLazy 'Shougo/junkfile.vim', {
             \   'depends': ['Shougo/unite.vim'],
-            \   'autoload': {'unite_sources': 'junkfile'}
+            \   'autoload': {
+            \     'commands' : 'JunkfileOpen',
+            \     'unite_sources' : ['junkfile', 'junkfile/new'],
+            \   }
             \ }
     let g:junkfile#directory = '/Users/zhuochun/Dropbox/Mac/Note'
     nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
@@ -772,6 +775,7 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 " languages {{{
 " HTML
 NeoBundle 'othree/html5.vim'
+NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'mattn/emmet-vim'
     " enable emment functions in insert mode
     let g:user_emmet_mode='i'
@@ -781,7 +785,11 @@ NeoBundle 'mattn/emmet-vim'
     let g:user_emmet_next_key = '<M-y>'
     " <M-y> to goto prev point
     let g:user_emmet_prev_key = '<D-Y>'
-NeoBundle 'gregsexton/MatchTag'
+
+" Template Engines
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'nono/vim-handlebars'
+NeoBundle 'slim-template/vim-slim'
 
 " CSS
 NeoBundle 'ap/vim-css-color'
@@ -1343,8 +1351,6 @@ let @n='n.'
     " <C-'>
     " <C-CR> Like in Visual Studio
     inoremap <C-CR> <ESC>o
-    " <C-S-CR> Like in Visual Studio
-    inoremap <C-S-CR> <ESC>O
     " <S-CR> Like in Visual Studio
     inoremap <S-CR> <ESC>O
     " <C-z>
@@ -1364,31 +1370,32 @@ let @n='n.'
     " <C-k>: Move cursor up
     inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
     " <C-h>: Move word left
-    inoremap <C-h> <C-O>b
+    inoremap <C-h> <S-Left>
     " <C-l>: Move word right
-    inoremap <C-l> <C-O>w
-    " <C-f>: Move move cursor left
-    inoremap <C-f> <LEFT>
-    " <C-b>: Move move cursor right
-    inoremap <C-b> <RIGHT>
-    " <C-a>: HOME
-    inoremap <C-a> <HOME>
-    " <C-e>: END
-    inoremap <C-e> <END>
+    inoremap <C-l> <S-Right>
+    " <C-b>: Move move cursor left
+    inoremap <C-b> <Left>
+    " <C-f>: Move move cursor right
+    inoremap <C-f> <Right>
+    " <C-a>: Move to head
+    inoremap <C-a> <C-O>^
+    " <C-e>: Move to eND
+    inoremap <C-e> <End>
     " <C-d>: Delete to end of line
+    inoremap <C-d> <C-O>D
     " <C-BS>: Delete to word backward
-    inoremap <C-BS> <C-O>db
+    inoremap <C-BS> <C-W>
     " <D-BS>: Delete word under cursor
-    inoremap <D-BS> <C-O>diw
+    inoremap <D-BS> <S-Right><C-W>
 
-    " <C-a>: command mode HOME
-    cnoremap <C-a> <HOME>
-    " <C-e>: command mode END
-    cnoremap <C-e> <END>
+    " <C-a>: command mode home
+    cnoremap <C-a> <Home>
+    " <C-e>: command mode end
+    cnoremap <C-e> <End>
     " <C-b>: command mode cursor left
-    cnoremap <C-b> <LEFT>
+    cnoremap <C-b> <Left>
     " <C-f>: command mode cursor right
-    cnoremap <C-f> <RIGHT>
+    cnoremap <C-f> <Right>
     " <C-n>: next history
     cnoremap <C-n> <Down>
     " <C-p>: previous history
