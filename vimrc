@@ -78,8 +78,8 @@ NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
 " math calculation in vim
 NeoBundleLazy 'arecarn/crunch', {
             \   'autoload' : {
-            \     'commands' : ['Crunch', 'CrunchLine', 'CrunchBlock'],
-            \     'mappings' : '<Plug>Crunch'
+            \     'commands' : ['Crunch'],
+            \     'mappings' : ['g='],
             \   },
             \ }
 
@@ -88,12 +88,28 @@ NeoBundle 'bling/vim-airline'
     let g:airline_powerline_fonts = 1
     " clear default separator symbols
     let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
     let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
     " modify airline symbols
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
     let g:airline_symbols.whitespace = '☯'
+    " shorter mode names
+    let g:airline_mode_map = {
+            \ '__' : '-',
+            \ 'n'  : 'N',
+            \ 'i'  : 'I',
+            \ 'R'  : 'R',
+            \ 'c'  : 'C',
+            \ 'v'  : 'V',
+            \ 'V'  : 'V',
+            \ '' : 'V',
+            \ 's'  : 'S',
+            \ 'S'  : 'S',
+            \ '' : 'S',
+            \ }
     " control which sections get truncated and at what width. >
     let g:airline#extensions#default#section_truncate_width = {
             \   'b': 79,
@@ -101,30 +117,41 @@ NeoBundle 'bling/vim-airline'
             \   'y': 88,
             \   'z': 45,
             \ }
-    " enable/disable showing a summary of changed hunks under source control. >
+    " disable summary of changed hunks under source control.
     let g:airline#extensions#hunks#enabled = 0
-    " shorter mode names
-    let g:airline_mode_map = {
-            \ 'n' : 'N',
-            \ 'i' : 'I',
-            \ 'R' : 'R',
-            \ 'v' : 'V',
-            \ 'V' : 'V',
-            \ }
+    " enable enhanced tabline.
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#show_buffers = 0
+    " display tab number instead of # of splits (default)
+    let g:airline#extensions#tabline#tab_nr_type = 1
+    " define how buffer names are displayed
+    let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+    " no default separators for the tabline
+    let g:airline#extensions#tabline#left_sep = ''
+    let g:airline#extensions#tabline#left_alt_sep = ''
+    let g:airline#extensions#tabline#right_sep = ''
+    let g:airline#extensions#tabline#right_alt_sep = ''
 
 NeoBundle 'bling/vim-bufferline'
 
-NeoBundleLazy 'bufkill.vim', {
-            \   'autoload' : {
-            \     'commands' : ['BD']
-            \   },
-            \ }
+NeoBundle 'bufkill.vim'
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   'autoload' : {
             \     'commands' : ['NarrowRegion', 'NRMulti']
             \   },
             \ }
+
+NeoBundleLazy 'dimasg/vim-mark', {
+            \   'autoload' : {
+            \     'commands' : ['Mark', 'MarkLoad', 'MarkClear'],
+            \     'mappings' : ['<Plug>', ','],
+            \   },
+            \ }
+    let g:mwDefaultHighlightingPalette = 'maximum'
+    " Remove the default overriding of * and #, use: >
+    nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
+    nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
 
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
             \   'autoload' : {
@@ -133,6 +160,10 @@ NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
             \ }
 
 NeoBundle 'jiangmiao/auto-pairs'
+    " Disable default maps because it maps <C-H>, which conflicts with others
+    let g:AutoPairsMapBS = 0
+    " But we still want to keep the <BS> behavior
+    inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>
 
 NeoBundleLazy 'junegunn/vim-easy-align', {
             \   'autoload' : {
@@ -144,7 +175,11 @@ NeoBundleLazy 'junegunn/vim-easy-align', {
     " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
     nmap <leader>a <Plug>(EasyAlign)
 
-NeoBundle 'kshenoy/vim-signature'
+NeoBundleLazy 'jeetsukumaran/vim-markology', {
+            \   'autoload' : {
+            \     'mappings' : ['m'],
+            \   },
+            \ }
 
 " use gK to investigate documentation on the word under the cursor
 NeoBundleLazy 'Keithbsmiley/investigate.vim', {
@@ -167,7 +202,6 @@ NeoBundleLazy 'Lokaltog/vim-easymotion', {
             \   }
             \ }
     map \     <Plug>(easymotion-prefix)
-    map s     <Plug>(easymotion-s)
     map <C-f> <Plug>(easymotion-sn)
     map <D-f> <Plug>(easymotion-sn)
     " not case censitive
@@ -222,7 +256,7 @@ NeoBundleLazy 'mbbill/undotree', {
     nnoremap <F5> :UndotreeToggle<CR>
 
 NeoBundle 'mhinz/vim-signify'
-    let g:signify_vcs_list = ['git']
+    let g:signify_vcs_list = ['git', 'hg']
 
 NeoBundleLazy 'osyo-manga/vim-over', {
             \   'autoload' : {
@@ -232,7 +266,7 @@ NeoBundleLazy 'osyo-manga/vim-over', {
     " modify prompt design
     let g:over_command_line_prompt = "❯ "
     " <D-M-f> to shortcut over
-    noremap <D-M-f> :OverCommandLine<cr>%s///g<Left><Left><Left>
+    noremap <C-r> :OverCommandLine<cr>%s///g<Left><Left><Left>
 
 NeoBundleLazy 'saihoooooooo/glowshi-ft.vim', {
             \   'autoload' : {
@@ -371,7 +405,7 @@ NeoBundle 'Shougo/unite.vim'
         " normal mode settings
         nmap <buffer> <ESC>     <Plug>(unite_exit)
         nmap <buffer> <leader>d <Plug>(unite_exit)
-        nmap <buffer> '         <Plug>(unite_quick_match_default_action)
+        nmap <buffer> <TAB>     <Plug>(unite_select_next_line)
 
         " insert mode settings
         imap <buffer> '         <Plug>(unite_quick_match_default_action)
@@ -613,7 +647,10 @@ NeoBundleLazy 'tpope/vim-speeddating', {
             \   'autoload' : {'insert' : 1}
             \ }
 NeoBundleLazy 'tpope/vim-surround', {
-            \   'autoload' : {'mappings' : ['S']}
+            \   'autoload' : {
+            \     'insert' : 1,
+            \     'mappings' : ['S', 's']
+            \   },
             \ }
     xmap ( S)
     xmap { S{
@@ -1196,10 +1233,10 @@ let @n='n.'
         nnoremap <leader>s? z=
     " <leader>S clear trailing whitespace
     nnoremap <leader>S :%s/\s\+$//ge<cr>:nohl<cr>
-    " <leader>d close buffer
+    " <leader>d close buffer with leave window intact
     nnoremap <leader>d :BD<CR>
     " <leader>D close buffer
-    nnoremap <leader>D :bdelete<CR>
+    nnoremap <leader>D :bd<CR>
     " <leader>f easier code formatting
     nnoremap <leader>f gg=G''
     " <leader>F easier code formatting
@@ -1326,7 +1363,7 @@ let @n='n.'
     inoremap <expr> <C-j> pumvisible() ? "\<C-e>\<Down>" : "\<Down>"
     " <C-k>: Move cursor up
     inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
-    " <C-h> move word left
+    " <C-h>: Move word left
     inoremap <C-h> <C-O>b
     " <C-l>: Move word right
     inoremap <C-l> <C-O>w
@@ -1338,23 +1375,27 @@ let @n='n.'
     inoremap <C-a> <HOME>
     " <C-e>: END
     inoremap <C-e> <END>
+    " <C-d>: Delete to end of line
+    " <C-BS>: Delete to word backward
+    inoremap <C-BS> <C-O>db
+    " <D-BS>: Delete word under cursor
+    inoremap <D-BS> <C-O>diw
 
     " <C-a>: command mode HOME
     cnoremap <C-a> <HOME>
     " <C-e>: command mode END
     cnoremap <C-e> <END>
-    " <C-h>: command mode cursor left
+    " <C-b>: command mode cursor left
     cnoremap <C-b> <LEFT>
-    " <C-l>: command mode cursor right
+    " <C-f>: command mode cursor right
     cnoremap <C-f> <RIGHT>
-    " <C-n>: next history.
+    " <C-n>: next history
     cnoremap <C-n> <Down>
-    " <C-p>: previous history.
+    " <C-p>: previous history
     cnoremap <C-p> <Up>
-    " <C-k>, K: delete to end.
-    cnoremap <C-k> <C-\>e getcmdpos() == 1 ?
-                    \ '' : getcmdline()[:getcmdpos()-2]<CR>
-    " <C-y>: paste.
+    " <C-k>: delete to end
+    cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+    " <C-y>: paste
     cnoremap <C-y> <C-r>*
 " }}}
 

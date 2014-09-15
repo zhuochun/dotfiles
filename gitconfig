@@ -11,6 +11,7 @@
 	# commits
 	aa = add -A .
 	amend = commit --amend
+    discard = checkout --
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
 	# rebase

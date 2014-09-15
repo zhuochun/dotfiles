@@ -65,7 +65,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # Editor
-export EDITOR=mvim
+export EDITOR=vim
 
 # Highlight section titles in manual pages
 export LESS_TERMCAP_md="${yellow}";
@@ -101,15 +101,15 @@ export GREP_OPTIONS="--color=auto";
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku node npm pip python rails rake rbenv ruby vagrant zsh-syntax-highlighting z)
+plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku mercurial node npm pip python rails rake rbenv rsync ruby vagrant zsh-syntax-highlighting)
 
 # Make sure local/bin first
 export PATH="/usr/local/bin:$PATH"
-# Add the Heroku Toolbelt
+# Add Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
-# Add the Postgres database
+# Add Postgres database
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-# Add android tools
+# Add Android tools
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ADT_HOME="/Users/zhuochun/Documents/Programming/Android/adt-bundle-mac-x86_64-20140702/sdk"
 export PATH="$ADT_HOME/platform-tools:$ADT_HOME/tools:$PATH"
