@@ -135,6 +135,11 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
 
 NeoBundle 'bufkill.vim'
+NeoBundleLazy 'schickling/vim-bufonly', {
+            \   'autoload' : {
+            \     'commands' : ['BufOnly', 'BOnly']
+            \   },
+            \ }
 
 NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   'autoload' : {
@@ -292,7 +297,7 @@ NeoBundle 'scrooloose/syntastic'
     let g:syntastic_error_symbol = '✗'
     let g:syntastic_warning_symbol = '⚠'
     let g:syntastic_style_error_symbol = '❄'
-    let g:syntastic_style_warning_symbol = '⚡'
+    let g:syntastic_style_warning_symbol = '❖'
     " manual syntastic check
     nnoremap <silent> <F7>   :SyntasticCheck<CR>
     " toggle syntastic between active and passive mode
@@ -361,8 +366,7 @@ NeoBundle 'Shougo/unite.vim'
     call unite#custom#source(
         \ 'neomru/file,neomru/directory',
         \ 'matchers',
-        \ ['matcher_project_files',
-        \  'matcher_fuzzy',
+        \ ['matcher_fuzzy',
         \  'matcher_hide_hidden_files'])
     call unite#filters#sorter_default#use(['sorter_rank'])
 
@@ -556,11 +560,9 @@ NeoBundle 'Shougo/neocomplete.vim'
         endfunction
 
     " <TAB>: completion
-    inoremap <silent><expr><TAB> neocomplete#mappings#complete_common_string() != '' ?
-                        \ neocomplete#mappings#complete_common_string() :
-                        \ pumvisible() ? "\<C-n>" :
-                        \ <SID>check_back_space() ? "\<TAB>" :
-                        \ neocomplete#start_manual_complete()
+    inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" :
+                               \ <SID>check_back_space() ? "\<TAB>" :
+                               \ neocomplete#start_manual_complete()
         function! s:check_back_space()
             let col = col('.') - 1
             return !col || getline('.')[col - 1] =~ '\s'
@@ -584,6 +586,17 @@ NeoBundleLazy 'rhysd/neco-ruby-keyword-args', {
             \ }
 
 NeoBundle 'Shougo/neosnippet.vim'
+    " Default expand with word boundary
+    let g:neosnippet#expand_word_boundary = 1
+    " Disables standart snippets, use vim-snippets bundle instead
+    let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
+    " Enable snipMate compatibility feature.
+    let g:neosnippet#enable_snipmate_compatibility = 1
+    " Tell Neosnippet about the other snippets
+    let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
+    " Remove snippet markers after save
+    autocmd BufWrite * NeoSnippetClearMarkers
+
     " Plugin key-mappings.
     imap <D-d> <Plug>(neosnippet_expand_or_jump)
     smap <D-d> <Plug>(neosnippet_expand_or_jump)
@@ -593,24 +606,10 @@ NeoBundle 'Shougo/neosnippet.vim'
     " Visual
     xmap <D-d> <Plug>(neosnippet_expand_target)
 
-    " Default expand with word boundary
-    let g:neosnippet#enable_word_expand = 1
-    " Disables standart snippets, use vim-snippets bundle instead
-    let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
-    " Enable snipMate compatibility feature.
-    let g:neosnippet#enable_snipmate_compatibility = 1
-    " Tell Neosnippet about the other snippets
-    let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
-
     " Snippet variables
     let g:snips_author = 'Wang Zhuochun'
     let g:snips_email  = 'stone1551@gmail.com'
     let g:snips_github = 'https://github.com/zhuochun'
-
-    " Disable the neosnippet preview candidate window
-    " When enabled, there can be too much visual noise
-    " especially when splits are used.
-    set completeopt-=preview
 
 " neosnippet snippets
 NeoBundle 'zhuochun/vim-snippets'
@@ -741,7 +740,7 @@ NeoBundleLazy 'vim-scripts/ZoomWin', {
             \ }
 
 NeoBundle 'Yggdroot/indentLine'
-    let g:indentLine_char = '┆'
+    let g:indentLine_char = '┊'
     let g:indentLine_fileTypeExclude = ['markdown', 'text']
 
 " text objects {{{
@@ -887,7 +886,7 @@ NeoBundle 'w0ng/vim-hybrid'
 " VIM Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set colorcolumn=79
+set colorcolumn=80
 set linespace=0
 set guifont=Inconsolata-dz\ for\ Powerline:h16
 set background=dark
@@ -897,6 +896,15 @@ colorscheme jellybeans
 if has('conceal')
     set conceallevel=2 concealcursor=i
 endif
+
+" Make sure Vim returns to the same line when you reopen a file.
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
 
 " enable filetype plugin
 filetype plugin on
@@ -969,6 +977,8 @@ set whichwrap+=<,>,b,s
 set scrolljump=6                    " lines to scroll when cursor leaves screen
 set scrolloff=6                     " minimum lines to keep above and below cursor
 
+set synmaxcol=800                   " no highlight on lines longer than 800 characters.
+
 " related to <TAB> indents {{{
 set shiftwidth=4
 set tabstop=4
@@ -1006,7 +1016,7 @@ set nofoldenable                    " dont fold by default
 " list chars {{
 set list
 set listchars=tab:»»,trail:⌴,extends:❯,precedes:❮,nbsp:_
-set showbreak=↪
+let &showbreak='↪ '
 " }}
 
 " no sound on errors {{{
@@ -1024,12 +1034,12 @@ set backup
 set backupdir=/tmp/,~/tmp,~/Temp
 
 " Swap files
-set swapfile
+set noswapfile
 set directory=/tmp/,~/tmp,~/Temp
 
 " Persistent undo
 if has('persistent_undo')
-    set undofile         " So is persistent undo ...
+    set undofile         " So is persistent undo
 
     if has("unix")
         set undodir=/tmp/,~/tmp,~/Temp
@@ -1037,7 +1047,7 @@ if has('persistent_undo')
         set undodir=$HOME/temp/
     endif
 
-    set undolevels=1000  " Maximum number of changes that can be undone
+    set undolevels=1000 " Maximum number of changes that can be undone
     set undoreload=1000 " Maximum number lines to save for undo on a buffer reload
 endif
 " }}}
@@ -1649,7 +1659,11 @@ function! s:MarkdownDef()
     " Format all paragraphs in buffer
     nnoremap <buffer> <D-e> ggVGgq
     " Unformat all paragraphs in buffer
-    nnoremap <buffer> <D-S-e> :%norm vipJ<cr>
+    nnoremap <buffer> <D-S-e> :%norm vipJ<CR>
+    " Insert headings
+    nnoremap <buffer> <M-1> I# <ESC>
+    nnoremap <buffer> <M-2> I## <ESC>
+    nnoremap <buffer> <M-3> I### <ESC>
     " Insert inline link
     vmap <buffer> <D-k> [f]a(
     " Insert inline image
