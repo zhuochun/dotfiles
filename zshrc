@@ -24,7 +24,7 @@ alias q="exit"
 # Jekyll Server
 alias js="jekyll server --watch --future"
 # Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.9.2/node-webkit.app/Contents/MacOS/node-webkit"
+alias nw="~/Documents/Programming/NodeWebkit/v0.10.5/node-webkit.app/Contents/MacOS/node-webkit"
 # Heroku
 alias he="heroku"
 # Rails
