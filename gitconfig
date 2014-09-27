@@ -1,12 +1,10 @@
 [user]
 	name = Wang Zhuochun
-	email = stone1551@gmail.com
+	email = zhuochun@hotmail.com
 [github]
 	user = zhuochun
 [credential]
 	helper = osxkeychain
-[push]
-	default = matching
 [alias]
 	# commits
 	aa = add -A .
@@ -14,19 +12,25 @@
     discard = checkout --
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
+
 	# rebase
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
+
 	# clone a repository including all submodules
 	c = clone --recursive
+
 	# Switch to a branch, creating it if necessary
 	go = checkout -B
 	merge-branch = !git checkout master && git merge @{-1}
+
 	# status
 	s = status -s
+
 	# diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
 	# log
 	today = log --since=midnight --author='Wang Zhuochun' --oneline
 	tree = log --graph --oneline --decorate --color --all

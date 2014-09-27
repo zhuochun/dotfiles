@@ -1,21 +1,18 @@
-" use console dialogs
-set guioptions+=c
-
-" special style modes
+" special style modes {{{
 command! LightMode call s:LightMode()
 function! s:LightMode()
     set background=light
-    colorscheme base16-railscasts
-    set linespace=2
+    colorscheme base16-atelierforest
+    set linespace=3
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction
 
 command! DarkMode call s:DarkMode()
 function! s:DarkMode()
     set background=dark
-    colorscheme hybrid
-    set linespace=2
-    set guifont=Liberation\ Mono\ for\ Powerline:h16
+    colorscheme jellybeans
+    set linespace=6
+    set guifont=InputMono\ ExLight\ for\ Powerline:h16
 endfunction
 
 command! CodingMode call s:CodingMode()
@@ -38,26 +35,28 @@ command! PresentingMode call s:PresentingMode()
 function! s:PresentingMode()
     set background=light
     colorscheme base16-solarized
-    set linespace=2
+    set linespace=3
     set guifont=Fantasque\ Sans\ Mono:h24
 endfunction
+" }}}
 
 call s:DarkMode() " use dark mode for a while
 
-" OSX: Specific keybindings
+" remove specific OSX keybindings {{{
 if has("mac")
-    " Unmap Apple+N
+    " Unmap D-n
     macmenu File.New\ Window key=<nop>
-    " Unmap Apple+T
+    " Unmap D-t
     macmenu File.New\ Tab key=<nop>
-    " Unmap Apple+O
+    " Unmap D-o
     macmenu File.Open\.\.\. key=<nop>
-    " Unmap Apple+S+T
+    " Unmap D-T
     macmenu File.Open\ Tab\.\.\. key=<nop>
-    " Unmap Apple+P
+    " Unmap D-p
     macmenu File.Print key=<nop>
-    " Unmap Apple+F
+    " Unmap D-f
     macmenu Edit.Find.Find\.\.\. key=<nop>
-    " Unmap Apple+L
+    " Unmap D-l
     macmenu Tools.List\ Errors key=<nop>
 endif
+" }}}
