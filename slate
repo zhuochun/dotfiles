@@ -1,0 +1,33 @@
+# Slate Configurations
+# https://github.com/jigish/slate
+
+# Global Configs {{{
+config defaultToCurrentScreen true
+config nudgePercentOf screenSize
+config resizePercentOf screenSize
+config focusCheckWidthMax 3000
+config windowHintsShowIcons true
+config windowHintsIgnoreHiddenWindows false
+config windowHintsSpread true
+# }}}
+
+# Alias {{{
+
+}}}
+
+# CTRL key {{{
+# Window Hints
+bind esc:ctrl hint
+}}}
+
+# HYPER key {{{
+alias hyper ctrl;shift;alt;cmd
+
+# Focus Bindings
+bind l:${hyper}    focus right
+bind h:${hyper}    focus left
+bind k:${hyper}    focus up
+bind j:${hyper}    focus down
+}}}
+
+# vim:fdm=marker
