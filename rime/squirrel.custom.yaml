@@ -1,0 +1,69 @@
+patch:
+  us_keyboard_layout:  true # 鍵盤選項：應用美式鍵盤佈局
+
+  # 修改输入法界面和配色
+  style/horizontal:    true # 候選窗横向顯示
+  style/font_point:    19   # 字號
+  style/corner_radius: 1    # 窗口圓角半徑
+  style/border_width:  6    # 窗口邊界寬度，大於圓角半徑才有效果
+  style/border_height: 8    # 窗口邊界高度，大於圓角半徑才有效果
+  style/color_scheme:  jellybeans # 選擇配色方案
+
+  # 自定义配色方案
+  # 工具：http://tieba.baidu.com/p/2491103778
+  preset_color_schemes/gruvbox:
+    name: "古屋盒／gruvbox"
+    author: "Zhuochun <zhuochun@hotmail.com>, based on morhetz/gruvbox"
+    back_color: 0x282828
+    border_color: 0x36383C
+    text_color: 0xC1F4FD
+    comment_text_color: 0x9B86D3
+    candidate_text_color: 0x26BBB8
+    hilited_text_color: 0xA1C4D5
+    hilited_back_color: 0x646F7C
+    hilited_candidate_text_color: 0x2FBDFA
+    hilited_candidate_back_color: 0x454950
+  preset_color_schemes/jellybeans:
+    name: "果豆／JellyBeans"
+    author: "Zhuochun <zhuochun@hotmail.com>, based on nanotech/jellybeans.vim"
+    back_color: 0x151515
+    border_color: 0x1C1C1C
+    text_color: 0xF0D0B0
+    comment_text_color: 0xEEB6C6
+    candidate_text_color: 0xBF9781
+    hilited_text_color: 0xF0F0F0
+    hilited_back_color: 0x606060
+    hilited_candidate_text_color: 0x64B9FF
+    hilited_candidate_back_color: 0x413C40
+
+  # 關閉中文輸入
+  # @see [http://code.google.com/p/rimeime/wiki/CustomizationGuide#在特定程序裏關閉中文輸入]
+  #
+  # Bundle Identifier c查找方法：
+  # 右键『应用.app』-> 显示包内容
+  # Contents/Info.plist -> BundleIdentifier
+  # Bundle Identifier
+  app_options/com.google.Chrome:
+    ascii_mode: true
+  app_options/com.google.Chrome.canary:
+    ascii_mode: true
+  app_options/org.mozilla.firefox:
+    ascii_mode: true
+  app_options/org.mozilla.aurora:
+    ascii_mode: true
+  app_options/com.apple.Safari:
+    ascii_mode: true
+  app_options/com.github.atom:
+    ascii_mode: true
+  app_options/io.brackets.appshell:
+    ascii_mode: true
+  app_options/com.kodowa.LightTable:
+    ascii_mode: true
+  app_options/com.adobe.Reader:
+    ascii_mode: true
+  app_options/net.sourceforge.skim-app.skim:
+    ascii_mode: true
+  app_options/com.apple.spotlight:
+    ascii_mode: true
+  app_options/com.kapeli.dash:
+    ascii_mode: true
