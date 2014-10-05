@@ -1,0 +1,125 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vrapper Configurations
+" Author: Wang Zhuochun
+" Last Edit: 06/Oct/2014 12:01 AM
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Vrapper Site
+" http://vrapper.sourceforge.net/home/
+
+" Install additional Vrapper plugins
+" In Eclipse, Help -> Install Software
+" http://vrapper.sourceforge.net/update-site/stable
+
+" Modifications on default Keys
+" In Eclipse, File -> Import -> Preferences
+" <C-*>
+"   Ctrl+d -> Unbind Command
+"   Ctrl+l -> Unbind Command
+"   Ctrl+j -> Unbind Command
+"   Ctrl+k -> Unbind Command
+"   Ctrl+n -> Unbind Command
+"   Ctrl+p -> Unbind Command
+"   Ctrl+w -> Unbind Command
+"   Ctrl+t -> Swap with Ctrl+T
+" <M-*>
+"   Content Assist      -> Alt+D
+"   Alt+/               -> Unbind Command
+"   Open Search Dialog  -> Alt+/
+"   Quick Switch Editor -> Alt+t
+
+" Indentation {{{
+set smartindent
+set autoindent
+" }}}
+
+" Search {{{
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+" }}}
+
+" Editor UI {{{
+set nolist
+set number
+set cursorline
+" }}}
+
+" Scroll {{{
+set scrolloff=3
+" }}}
+
+" Tab Stops {{{
+set noexpandtab
+set shiftround
+set softtabstop=4
+set tabstop=4
+" }}}
+
+" Exiting Insert Mode disable Input Method
+set imdisable
+
+" Enables C-n and C-p
+set contentassistmode
+
+" ; is easier than :
+noremap ; :
+noremap : ;
+
+" use <Tab> and <S-Tab> to indent {{{
+" in Normal, Visual, Select Mode
+nmap <tab> v>
+nmap <s-tab> v<
+vmap <tab> >gv
+vmap <s-tab> <gv
+" }}}
+
+" Move a line of text using <up><down> {{{
+" http://vim.wikia.com/wiki/Moving_lines_up_or_down
+nnoremap <up> :m .-2<CR>==
+nnoremap <down> :m .+1<CR>==
+vnoremap <up> :m '<-2<CR>gv=gv
+vnoremap <down> :m '>+1<CR>gv=gv
+" }}}
+
+" Repeat last Q Macro
+nnoremap Q @@
+"  Yank to the end of line
+nnoremap Y y$
+
+" Make space work in normal mode
+nnoremap <SPACE> i<SPACE><ESC>
+" Make enter work in normal mode
+nnoremap <CR> i<CR><ESC>
+
+" Close buffer
+nnoremap <leader>d :BD<CR>
+" Quick quit without save
+nnoremap <leader>q :q!<CR>
+
+" Window Split {{{
+" Tab Mappings
+nnoremap <M-1> 1gt
+nnoremap <M-2> 2gt
+nnoremap <M-3> 3gt
+nnoremap <M-4> 4gt
+nnoremap <M-5> 5gt
+nnoremap <M-6> 6gt
+nnoremap <M-7> 7gt
+nnoremap <M-8> 8gt
+nnoremap <M-9> 9gt
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Quick horizonal split
+nnoremap _ :split<cr>
+" Quick vertical split
+nnoremap <bar> :vsplit<cr>
+" }}}
+
+" vim:fdm=marker:ft=vim
