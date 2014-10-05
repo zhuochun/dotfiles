@@ -1,4 +1,14 @@
-;; Enter+<key> to Ctrl+<key>
+;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+;; AutoHotkey Configurations
+;; Author: Wang Zhuochun
+;; Last Edit: 06/Oct/2014 12:29 AM
+;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+;; Capslock to Ctrl {{{
+Capslock::Ctrl
+;; }}}
+
+;; Enter+<key> to Ctrl+<key> {{{
 Enter & a::Send ^a
 Enter & b::Send ^b
 Enter & c::Send ^c
@@ -26,12 +36,17 @@ Enter & x::Send ^x
 Enter & y::Send ^y
 Enter & z::Send ^z
 Enter::Send {Enter}
+;; }}}
 
-;; Tab-h/l switch between windows
+;; Tab+<h/l> switch between windows {{{
 Tab & h::ShiftAltTab
 Tab & l::AltTab
 Tab::Send {Tab}
+;; }}}
 
-;; Win+Numpad{Sub,Add} change sound volume
+;; Win+Numpad{Sub,Add} change sound volume {{{
 #NumpadAdd::Send {Volume_Up 5}
 #NumpadSub::Send {Volume_Down 5}
+;; }}}
+
+;; vim:fdm=marker
