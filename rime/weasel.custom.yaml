@@ -1,0 +1,36 @@
+customization:
+  distribution_code_name: Weasel
+  distribution_version: 0.9.29.1
+  generator: "Weasel::UIStyleSettings"
+  modified_time: "Fri Jan 03 01:55:31 2014"
+  rime_version: 1.1
+patch:
+  "style/color_scheme": gruvbox
+  "style/horizontal": true
+
+  # 自定义配色方案
+  # 工具：http://tieba.baidu.com/p/2491103778
+  preset_color_schemes/gruvbox:
+    name: "古屋盒／gruvbox"
+    author: "Zhuochun <zhuochun@hotmail.com>, based on morhetz/gruvbox"
+    back_color: 0x282828
+    border_color: 0x36383C
+    text_color: 0xC1F4FD
+    comment_text_color: 0x9B86D3
+    candidate_text_color: 0x26BBB8
+    hilited_text_color: 0xA1C4D5
+    hilited_back_color: 0x646F7C
+    hilited_candidate_text_color: 0x2FBDFA
+    hilited_candidate_back_color: 0x454950
+  preset_color_schemes/jellybeans:
+    name: "果豆／JellyBeans"
+    author: "Zhuochun <zhuochun@hotmail.com>, based on nanotech/jellybeans.vim"
+    back_color: 0x151515
+    border_color: 0x1C1C1C
+    text_color: 0xF0D0B0
+    comment_text_color: 0xEEB6C6
+    candidate_text_color: 0xBF9781
+    hilited_text_color: 0xF0F0F0
+    hilited_back_color: 0x606060
+    hilited_candidate_text_color: 0x64B9FF
+    hilited_candidate_back_color: 0x413C40

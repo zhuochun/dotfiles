@@ -1,5 +1,7 @@
 # Zhuochun's dotfiles
 
+A set of files across Mac and Windows.
+
 ## Vim
 
 - **Mac OS:** Use `vimrc`, require MacVim with `if_lua`.
@@ -8,11 +10,11 @@
 $ brew install macvim --with-cscope --with-lua --HEAD
 ```
 
-- **Windows:** Use `_vimrc`.
+- **Windows:** Use `windows/_vimrc`.
 
-**NOTE**: Optimized for (Vim) GUI.
+**NOTE**: Optimized for Vim GUI. I use `<D-*>` on Mac and `<M-*>` on Windows.
 
-### Setup in Mac
+### Vim Setup in Mac
 
 I use [Shougo/neobundle.vim](https://github.com/Shougo/neobundle.vim) to manage plugins.
 

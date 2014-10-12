@@ -65,7 +65,7 @@ Tab::Send {Tab}
 #NumpadSub::Send {Volume_Down 5}
 ;; }}}
 
-;; Always on Top {{{
+;; Win+` toggle always on top {{{
 #`::
     WinSet, AlwaysOnTop, Toggle, A
 return

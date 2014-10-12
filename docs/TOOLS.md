@@ -1,5 +1,7 @@
 # Tools
 
+A list of tools I use everyday.
+
 ## Package Manager
 
 - **Mac OS:** [Homebrew](http://brew.sh/)
@@ -7,7 +9,7 @@
 
 ## Clipboard Manager
 
-- **Mac OS:** [ClipMenum](http://www.clipmenu.com/)
+- **Mac OS:** [ClipMenu](http://www.clipmenu.com/)
 - **Windows:** [Ditto Clipboard Manager](http://ditto-cp.sourceforge.net/)
 
 ## Web Browser
@@ -33,22 +35,31 @@ choco install nodejs.install
 choco install ack
 choco install curl
 choco install ctags
+choco install Wget
 choco install mingw
 choco install 7zip.install
-choco install autohotkey.install
-choco install tor-browser
-choco install f.lux
 choco install TeraCopy
+choco install autohotkey.install
+choco install f.lux
+choco install tor-browser
+choco install githubforwindows
+choco install Cmder
+choco install Everything
 
 # optional
 choco install Cygwin
-choco install putty
-choco install vagrant
-choco install ccleaner
-choco install windirstat
-choco install defraggler
-choco install fiddler
 choco install OptiPNG
-choco install notepadplusplus.install
+choco install ccleaner
+choco install defraggler
 choco install expresso
+choco install fiddler
+choco install notepadplusplus.install
+choco install postgresql
+choco install putty
+choco install python
+choco install pip
+choco install truecrypt
+choco install vagrant
+choco install windirstat
+choco install clojure
 ```

@@ -21,7 +21,8 @@
 "   Ctrl+n -> Unbind Command
 "   Ctrl+p -> Unbind Command
 "   Ctrl+w -> Unbind Command
-"   Ctrl+t -> Swap with Ctrl+T
+"   Ctrl+t -> Ctrl+T
+"   Ctrl+T -> Ctrl+t
 " <M-*>
 "   Content Assist      -> Alt+D
 "   Alt+/               -> Unbind Command
