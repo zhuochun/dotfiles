@@ -1,7 +1,7 @@
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 ;; AutoHotkey Configurations
 ;; Author: Wang Zhuochun
-;; Last Edit: 07/Oct/2014 01:44 AM
+;; Last Edit: 15/Oct/2014 08:10 AM
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 #NoEnv
@@ -24,11 +24,9 @@ Enter & 9::Send ^9
 Enter & 0::Send ^0
 Enter & -::Send ^-
 Enter & =::Send ^=
-Enter & a::Send ^a
 Enter & b::Send ^b
 Enter & c::Send ^c
 Enter & d::Send ^d
-Enter & e::Send ^e
 Enter & f::Send ^f
 Enter & g::Send ^g
 Enter & i::Send ^i
@@ -46,6 +44,9 @@ Enter & w::Send ^w
 Enter & x::Send ^x
 Enter & y::Send ^y
 Enter & z::Send ^z
+; I mean Home, End
+Enter & a::Send {Home}
+Enter & e::Send {End}
 ; the special ones
 Enter & h::Send ^#h
 Enter & j::Send ^#j
