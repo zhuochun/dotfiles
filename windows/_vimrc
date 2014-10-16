@@ -11,6 +11,19 @@ set nocompatible
 
 source $VIMRUNTIME/mswin.vim
 behave mswin
+
+" encoding {{{
+set fileencoding=utf-8
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=utf-8,ucs-bom,chinese,gbk
+" }}}
+
+" enable filetype plugin {{{
+filetype plugin on
+filetype indent on
+filetype on
+" }}}
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -852,17 +865,6 @@ let g:mapleader = ","
 let mapleader = ","
 " ; is easier than :
 noremap ; :
-
-" encoding
-set fileencoding=utf-8
-set encoding=utf-8
-set termencoding=utf-8
-set fileencodings=utf-8,ucs-bom,chinese,gbk
-
-" enable filetype plugin
-filetype plugin on
-filetype indent on
-filetype on
 
 " Syntax highlighting on
 syntax on
