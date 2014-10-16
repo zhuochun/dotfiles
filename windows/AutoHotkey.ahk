@@ -72,6 +72,22 @@ Tab::Send {Tab}
 return
 ;; }}}
 
+;; Win+L measure selected text length {{{
+#+L::
+    ; reset and copy selected text to clipboard
+    Clipboard =
+    SendInput ^c
+    ClipWait
+    ; get length of text
+    text := clipboard
+    StringLen, textLength, text
+    ; save length to clipboard
+    Clipboard := textLength
+    ; report length
+    MsgBox, "%text%" has %textLength% characters.
+Return
+;; }}}
+
 ;; Elementary window switch {{{
 
 ;; 1. Move mouse to corners on screen
