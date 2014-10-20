@@ -1,7 +1,7 @@
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 ;; AutoHotkey Configurations
 ;; Author: Wang Zhuochun
-;; Last Edit: 15/Oct/2014 08:10 AM
+;; Last Edit: 17/Oct/2014 10:31 PM
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 #NoEnv
@@ -44,20 +44,27 @@ Enter & w::Send ^w
 Enter & x::Send ^x
 Enter & y::Send ^y
 Enter & z::Send ^z
-; I mean Home, End
+; I do mean Home and End
 Enter & a::Send {Home}
 Enter & e::Send {End}
-; the special ones
+; The special ones
 Enter & h::Send ^#h
 Enter & j::Send ^#j
 Enter & k::Send ^#k
 Enter & l::Send ^#l
+; Bring back Ctrl/Shift+Enter
+^Enter::Send ^{Enter}
++Enter::Send +{Enter}
+; Should work as usual
 Enter::Send {Enter}
 ;; }}}
 
 ;; Tab+<h/l> switch between windows {{{
 Tab & h::ShiftAltTab
 Tab & l::AltTab
+; Bring back Shift+Tab
++Tab::Send +{Tab}
+; Should work as usual
 Tab::Send {Tab}
 ;; }}}
 
@@ -72,7 +79,7 @@ Tab::Send {Tab}
 return
 ;; }}}
 
-;; Win+L measure selected text length {{{
+;; Win+Shift+L measure selected text length {{{
 #+L::
     ; reset and copy selected text to clipboard
     Clipboard =
@@ -94,7 +101,7 @@ Return
 ;; 2. Focus on the window under cursor
 ;; 3. Center mouse respect to the window
 
-;; Left {{{
+;; Ctrl+Win+h Left {{{
 ^#h::
     ; set mouse movements relative to screen
     CoordMode, Mouse, Screen
@@ -110,7 +117,7 @@ Return
 return
 ;; }}}
 
-;; Down {{{
+;; Ctrl+Win+j Down {{{
 ^#j::
     CoordMode, Mouse, Screen
     MouseGetPos, xPos, yPos
@@ -123,7 +130,7 @@ return
 return
 ;; }}}
 
-;; Up {{{
+;; Ctrl+Win+k Up {{{
 ^#k::
     CoordMode, Mouse, Screen
     MouseGetPos, xPos, yPos
@@ -135,7 +142,7 @@ return
 return
 ;; }}}
 
-;; Right {{{
+;; Ctrl+Win+l Right {{{
 ^#l::
     CoordMode, Mouse, Screen
     MouseGetPos, xPos, yPos
