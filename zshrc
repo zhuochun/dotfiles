@@ -43,7 +43,7 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # Jekyll Server DevMode
 alias jsd="jekyll server --watch --future --config _config.dev.yml"
 # System
-alias plz="sudo"
+alias plz="sudo !!"
 alias rmd="rm -rf"
 # Copy to clipboard
 alias ccp="pbcopy"
@@ -103,8 +103,6 @@ export GREP_OPTIONS="--color=auto";
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku mercurial node npm pip python rails rake rbenv rsync ruby vagrant zsh-syntax-highlighting)
 
-# Make sure local/bin first
-export PATH="/usr/local/bin:$PATH"
 # Add Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 # Add Postgres database

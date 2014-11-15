@@ -10,7 +10,7 @@ endfunction
 command! DarkMode call s:DarkMode()
 function! s:DarkMode()
     set background=dark
-    colorscheme jellybeans
+    colorscheme hybrid
     set linespace=6
     set guifont=InputMono\ ExLight\ for\ Powerline:h16
 endfunction
@@ -38,9 +38,9 @@ function! s:PresentingMode()
     set linespace=3
     set guifont=Fantasque\ Sans\ Mono:h24
 endfunction
-" }}}
 
-call s:DarkMode() " use dark mode for a while
+call s:CodingMode() " set default style mode
+" }}}
 
 " remove specific OSX keybindings {{{
 if has("mac")

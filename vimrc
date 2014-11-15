@@ -44,7 +44,7 @@ NeoBundleLazy 'AndrewRadev/switch.vim', {
             \   ['if', 'unless'],
             \   ['yes', 'no'],
             \   ['first', 'last'],
-            \   ['* [ ]', '* [x]'],
+            \   ['- [ ]', '- [x]'],
             \   ['get', 'post', 'put', 'patch', 'delete'],
             \   ['\.to_not', '\.to'],
             \   ['\.toBe', '\.not\.toBe'],
@@ -144,6 +144,15 @@ NeoBundleLazy 'dimasg/vim-mark', {
     " Remove the default overriding of * and #, use: >
     nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
     nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+" }}}
+
+" sequencial numbering with pattern {{{
+NeoBundleLazy 'deris/vim-rengbang', {
+            \   'autoload' : {
+            \     'commands' : ['RengBang', 'RengBangUsePrev'],
+            \     'mappings' : ['<Plug>(operator-rengbang'],
+            \   },
+            \ }
 " }}}
 
 " calendar in vim {{{
@@ -593,7 +602,7 @@ NeoBundle 'Shougo/neocomplete.vim'
     let g:neocomplete#enable_auto_delimiter = 1
     let g:neocomplete#enable_fuzzy_completion = 1
 
-    let g:neocomplete#max_list = 30
+    let g:neocomplete#max_list = 42
     let g:neocomplete#auto_completion_start_length = 1
     let g:neocomplete#manual_completion_start_length = 1
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
@@ -773,8 +782,11 @@ NeoBundleLazy 'tpope/vim-vinegar', {
 " thinca bundles {{{
 " * and # to search selection
 NeoBundleLazy 'thinca/vim-visualstar', {
-            \   'autoload' : {'mappings' : ['*', '#']}
+            \   'autoload' : {'mappings' : ['<Plug>(visualstar-']}
             \ }
+    " search without moving to next match
+    map *  <Plug>(visualstar-*)N
+    map #  <Plug>(visualstar-#)N
 
 " Perform text replacement in quickfix
 NeoBundleLazy 'thinca/vim-qfreplace', {
@@ -821,6 +833,9 @@ NeoBundleLazy 'tyru/open-browser.vim', {
             \     'mappings' : '<Plug>(openbrowser-',
             \   }
             \ }
+    " disable netrw's gx mapping.
+	let g:netrw_nogx = 1
+    " gx mappings
     nmap gx <Plug>(openbrowser-smart-search)
     vmap gx <Plug>(openbrowser-smart-search)
 " }}}
@@ -828,6 +843,8 @@ NeoBundleLazy 'tyru/open-browser.vim', {
 NeoBundleLazy 'vim-scripts/DrawIt', {
             \   'autoload' : {'commands' : ['DIstart', 'DIstop', 'DrawIt']}
             \ }
+
+NeoBundle 'whatyouhide/vim-lengthmatters'
 
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┊'
@@ -861,6 +878,8 @@ NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
 NeoBundle 'osyo-manga/vim-textobj-multiblock'   " ab | ib
 NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
+NeoBundle 'deris/vim-textobj-enclosedsyntax'    " aq | iq
+NeoBundle 'whatyouhide/vim-textobj-xmlattr'     " ax | ix
 " }}}
 
 " Writings {{{
@@ -880,14 +899,16 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 NeoBundle 'othree/html5.vim'
 NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'mattn/emmet-vim'
-    " enable emment functions in insert mode
+    " enable emmet functions in insert mode only
     let g:user_emmet_mode = 'i'
+    " complete tags using omnifunc
+    let g:use_emmet_complete_tag = 1
     " <D-y> to expand input in insert mode
     let g:user_emmet_expandabbr_key = '<D-y>'
-    " <D-Y> to goto next point
+    " <M-y> to goto next point
     let g:user_emmet_next_key = '<M-y>'
-    " <M-y> to goto prev point
-    let g:user_emmet_prev_key = '<D-Y>'
+    " <M-Y> to goto prev point
+    let g:user_emmet_prev_key = '<M-Y>'
 " }}}
 
 " Template Engines {{{
@@ -908,6 +929,7 @@ NeoBundle 'wavded/vim-stylus'
 " JavaScript {{{
 NeoBundle 'elzr/vim-json'
 NeoBundle 'kchmck/vim-coffee-script'
+    let coffee_make_options = '--bare'
 NeoBundle 'moll/vim-node'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
@@ -986,16 +1008,17 @@ NeoBundleLazy 'chase/vim-ansible-yaml'
 
 " Colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'farseer90718/flattr.vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'whatyouhide/vim-gotham'
 " }}}
 
-" NeoBundle#end {{{
+" NeoBundle end {{{
 call neobundle#end()
-" }}}
+" Installation check
+NeoBundleCheck
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -1080,7 +1103,7 @@ set winaltkeys=no            " set ALT not map to toolbar
 set autoread                 " autoread when a file is changed from the outside
 set shortmess+=filmnrxoOtT   " abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash
-set virtualedit=onemore      " allow for cursor beyond last character
+set virtualedit=block,onemore
 " }}}
 
 " basic settings 2 {{{
@@ -1198,11 +1221,13 @@ endif
         exec "nnoremap <D-".i."> ".i."gt"
     endfor
 
-    nnoremap <D-(> :tabprevious<cr>
-    nnoremap <D-)> :tabnext<cr>
-    nnoremap <D-t> :tab split<CR>
-    nnoremap <D-T> :tabnew<CR>
-    nnoremap <D-w> :tabclose<CR>
+    nnoremap <silent> <M-l> :<C-u>tabnext<CR>
+    nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
+    nnoremap <silent> <D-(> :<C-u>tabprevious<CR>
+    nnoremap <silent> <D-)> :<C-u>tabnext<CR>
+    nnoremap <silent> <D-t> :<C-u>tab split<CR>
+    nnoremap <silent> <D-T> :<C-u>tabnew<CR>
+    nnoremap <silent> <D-w> :<C-u>tabclose<CR>
 
     " splitting
     set splitright
@@ -1324,6 +1349,9 @@ endif
     " <f>       find to right (exclusive)
     " <F>       find to right (inclusive)
     " <g>       Go and Unite mappings
+    nnoremap gh H
+    nnoremap gm M
+    nnoremap gl L
     " <G>       Go to end of file
     " *<G>      Go to specific line number
     " <h>       Left
@@ -1337,11 +1365,11 @@ endif
     " <L>       Go to end of line. Goes to next line if repeated
     nnoremap <expr> L <SID>end_of_line()
         function! s:end_of_line()
-        let l = len(getline('.'))
-        if (l == 0 || l == getpos('.')[2])
-            return 'jg_'
-        else
-            return 'g_'
+            let l = len(getline('.'))
+            if (l == 0 || l == getpos('.')[2])
+                return 'jg_'
+            else
+                return 'g_'
         endfunction
     " <;>       Repeat last find f,t,F,T
     " <:>       Input Command
@@ -1360,7 +1388,18 @@ endif
     " <n>       Next search
     " <N>       Previous search
     " <m>*      Set mark {a-zA-Z}
-    " <M>       Move cursor to centre of screen
+    " <M>       Move cursor to centre of line
+    nnoremap <silent> M :<C-u>call <SID>MoveMiddleOfLine()<CR>
+        function! s:MoveMiddleOfLine()
+            let strwidth = strdisplaywidth(getline('.'))
+            let winwidth = winwidth(0)
+
+            if strwidth < winwidth
+                call cursor(0, col('$') / 2)
+            else
+                normal! M
+            endif
+        endfunction
     " <,>       Leader
     " [<]       Left Indent
     vnoremap < <gv
@@ -1823,9 +1862,4 @@ command! Draft    :execute
 
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" NeoBundleCheck {{{
-NeoBundleCheck
-" }}}
-
 " vim:ft=vim:fdm=marker:
