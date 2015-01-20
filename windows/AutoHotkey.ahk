@@ -1,14 +1,36 @@
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 ;; AutoHotkey Configurations
 ;; Author: Wang Zhuochun
-;; Last Edit: 17/Oct/2014 10:31 PM
+;; Last Edit: 20/Jan/2015 05:29 PM
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 #NoEnv
 #SingleInstance force
 
-;; Capslock to Ctrl {{{
-Capslock::Ctrl
+SendMode Input ;; Recommended for new scripts due to its superior speed and reliability
+SetTitleMatchMode RegEx ;; Change WinTitle match
+
+;; Tab+<h/l> switch between windows {{{
+Tab & h::ShiftAltTab
+Tab & l::AltTab
+Tab & b::Send {Left}
+Tab & f::Send {Right}
+Tab & j::Send {Down}
+Tab & k::Send {Up}
+Tab & ,::Send ^{Backspace}
+Tab & .::Send ^+{Delete}
+; Bring back Ctrl/Alt/Shift+Tab
+^Tab::Send ^{Tab}
+!Tab::Send !{Tab}
++Tab::Send +{Tab}
+; Should work as usual
+Tab::Send {Tab}
+;; }}}
+
+;; CapsLock to Ctrl {{{
+CapsLock::Ctrl
+;; Shift+CapsLock to work as usual
++CapsLock::CapsLock
 ;; }}}
 
 ;; Enter+<key> to Ctrl+<key> {{{
@@ -59,15 +81,6 @@ Enter & l::Send ^#l
 Enter::Send {Enter}
 ;; }}}
 
-;; Tab+<h/l> switch between windows {{{
-Tab & h::ShiftAltTab
-Tab & l::AltTab
-; Bring back Shift+Tab
-+Tab::Send +{Tab}
-; Should work as usual
-Tab::Send {Tab}
-;; }}}
-
 ;; Win+Numpad{Sub,Add} change sound volume {{{
 #NumpadAdd::Send {Volume_Up 5}
 #NumpadSub::Send {Volume_Down 5}
@@ -78,6 +91,19 @@ Tab::Send {Tab}
     WinSet, AlwaysOnTop, Toggle, A
 return
 ;; }}}
+
+;; Win+j move the active window between monitors
+#j::
+    ; get the active window's id
+    WinGet, winID, ID, A
+    ; get the active window's position (x, y)
+    WinGetPos, winX, winY, , , A
+
+    if (winX >= 1900)
+      WinMove, ahk_id %winID%, , (winX-1920), winY
+    else
+      WinMove, ahk_id %winID%, , (winX+1920), winY
+return
 
 ;; Win+Shift+L measure selected text length {{{
 #+L::
