@@ -57,3 +57,7 @@
 	prompt = false
 [merge]
 	tool = Kaleidoscope
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true

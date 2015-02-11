@@ -117,3 +117,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Ruby environment using rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# Node environment using nvm
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
