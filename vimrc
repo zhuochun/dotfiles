@@ -155,6 +155,8 @@ NeoBundleLazy 'deris/vim-rengbang', {
             \ }
 " }}}
 
+NeoBundle 'itchyny/vim-cursorword'
+
 " calendar in vim {{{
 NeoBundleLazy 'itchyny/calendar.vim', {
             \   'autoload' : { 'commands' : ['Calendar'] },
@@ -181,6 +183,17 @@ NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
             \   'autoload' : { 'commands' : ['SemanticHighlight'] },
             \ }
 
+" run tests {{{
+NeoBundleLazy 'janko-m/vim-test', {
+            \   'depends' : 'tpope/vim-dispatch',
+            \   'autoload' : {
+            \     'commands' : ['TestNearest', 'TestFile', 'TestSuite', 'TestLast'],
+            \     'mappings' : ['<Plug>(operator-rengbang'],
+            \   },
+            \ }
+    let g:test#strategy = 'dispatch'
+" }}}
+
 NeoBundle 'jiangmiao/auto-pairs'
     " Disable default BS maps because its also maps <C-H>.
     " But I still want <BS> behavior. It is mapped with AutoPairsDelete().
@@ -196,9 +209,15 @@ NeoBundleLazy 'junegunn/vim-easy-align', {
     nmap <leader>a <Plug>(EasyAlign)
 " }}}
 
+" display registers at "/@/C-R {{{
+NeoBundle 'junegunn/vim-peekaboo'
+" }}}
+
+" display markers {{{
 NeoBundleLazy 'jeetsukumaran/vim-markology', {
             \   'autoload' : { 'mappings' : ['m'], },
             \ }
+" }}}
 
 " open documentation {{{
 NeoBundleLazy 'Keithbsmiley/investigate.vim', {
@@ -207,7 +226,7 @@ NeoBundleLazy 'Keithbsmiley/investigate.vim', {
     let g:investigate_use_dash = 1
 " }}}
 
-" Multiple cursors {{{
+" multiple cursors {{{
 NeoBundleLazy 'kristijanhusak/vim-multiple-cursors', {
             \   'autoload' : {'insert' : 1}
             \ }
@@ -217,6 +236,7 @@ NeoBundleLazy 'kristijanhusak/vim-multiple-cursors', {
             exe 'NeoCompleteLock'
         endif
     endfunction
+
     " Re-enable NeoComplete when the multiple selection is canceled
     function! Multiple_cursors_after()
         if exists(':NeoCompleteUnlock') == 2
@@ -284,10 +304,12 @@ NeoBundleLazy 'majutsushi/tagbar', {
 
 NeoBundle 'matchit.zip'
 
+" undotree {{{
 NeoBundleLazy 'mbbill/undotree', {
             \   'autoload' : { 'commands': ['UndotreeToggle'] },
             \ }
     nnoremap <F5> :UndotreeToggle<CR>
+" }}}
 
 " osyo-manga bundles {{{
 NeoBundleLazy 'osyo-manga/vim-anzu', {
@@ -932,10 +954,12 @@ NeoBundle 'kchmck/vim-coffee-script'
     let coffee_make_options = '--bare'
 NeoBundle 'moll/vim-node'
 NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'mxw/vim-jsx'
+    let g:jsx_ext_required = 0
+NeoBundle 'othree/yajs.vim'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs =
-        \ 'jquery,underscore,backbone,angularjs,angularui,jasmine'
+        \ 'jquery,underscore,react,flux,jasmine,chai'
 NeoBundleLazy 'marijnh/tern_for_vim', {
         \   'build': {
         \     'windows': 'npm install',
@@ -966,7 +990,7 @@ NeoBundleLazy 'ecomba/vim-ruby-refactoring', {'autoload' : {'filetypes' : 'ruby'
 " }}}
 
 " Clojure {{{
-NeoBundle 'amdt/vim-niji'
+NeoBundleLazy 'amdt/vim-niji', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-static', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-highlight', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'tpope/vim-classpath', {'autoload' : {'filetypes' : 'clojure'}}
@@ -976,8 +1000,8 @@ NeoBundleLazy 'vim-scripts/paredit.vim', {'autoload' : {'filetypes' : 'clojure'}
 " }}}
 
 " C/Cpp {{{
-NeoBundle 'vim-jp/cpp-vim'
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundleLazy 'vim-jp/cpp-vim'
+NeoBundleLazy 'octol/vim-cpp-enhanced-highlight'
 " }}}
 
 " Markdown {{{
@@ -996,6 +1020,10 @@ NeoBundleLazy 'kannokanno/previm', {
 NeoBundle 'mhinz/vim-signify'
     let g:signify_vcs_list = ['git', 'hg']
 NeoBundle 'tpope/vim-fugitive'
+NeoBundleLazy 'idanarye/vim-merginal', {
+            \   'depends': ['tpope/vim-fugitive'],
+            \   'autoload': {'commands': ['MerginalToggle', 'Merginal']}
+            \ }
 NeoBundleLazy 'gregsexton/gitv', {
             \   'depends': ['tpope/vim-fugitive'],
             \   'autoload': {'commands': 'Gitv'}
@@ -1007,12 +1035,15 @@ NeoBundleLazy 'chase/vim-ansible-yaml'
 " }}}
 
 " Colorschemes {{{
+NeoBundle 'ajh17/Spacegray.vim'
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'gosukiwi/vim-atom-dark'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'whatyouhide/vim-gotham'
+NeoBundle 'jordwalke/flatlandia'
 " }}}
 
 " NeoBundle end {{{

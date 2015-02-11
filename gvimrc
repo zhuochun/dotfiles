@@ -18,7 +18,7 @@ endfunction
 command! CodingMode call s:CodingMode()
 function! s:CodingMode()
     set background=dark
-    colorscheme gruvbox
+    colorscheme gotham
     set linespace=3
     set guifont=Inconsolata-dz\ for\ Powerline:h16
 endfunction
