@@ -62,7 +62,9 @@ NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
 " }}}
 
 " math calculation in vim {{{
-NeoBundleLazy 'arecarn/crunch', {
+NeoBundleLazy 'arecarn/selection.vim'
+NeoBundleLazy 'arecarn/crunch.vim', {
+            \   'depends' : 'arecarn/selection.vim',
             \   'autoload' : {
             \     'mappings' : ['g=', 'g=='],
             \     'commands' : ['Crunch'],
@@ -155,8 +157,6 @@ NeoBundleLazy 'deris/vim-rengbang', {
             \ }
 " }}}
 
-NeoBundle 'itchyny/vim-cursorword'
-
 " calendar in vim {{{
 NeoBundleLazy 'itchyny/calendar.vim', {
             \   'autoload' : { 'commands' : ['Calendar'] },
@@ -207,10 +207,6 @@ NeoBundleLazy 'junegunn/vim-easy-align', {
     xmap <CR>      <Plug>(EasyAlign)
     " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
     nmap <leader>a <Plug>(EasyAlign)
-" }}}
-
-" display registers at "/@/C-R {{{
-NeoBundle 'junegunn/vim-peekaboo'
 " }}}
 
 " display markers {{{
@@ -856,7 +852,7 @@ NeoBundleLazy 'tyru/open-browser.vim', {
             \   }
             \ }
     " disable netrw's gx mapping.
-	let g:netrw_nogx = 1
+    let g:netrw_nogx = 1
     " gx mappings
     nmap gx <Plug>(openbrowser-smart-search)
     vmap gx <Plug>(openbrowser-smart-search)
@@ -883,11 +879,6 @@ NeoBundleLazy 't9md/vim-choosewin', {
     nmap <leader>ws <Plug>(choosewin-swap)
     " dont' blink at land
     let g:choosewin_blink_on_land = 0
-
-NeoBundleLazy 'vim-scripts/ZoomWin', {
-            \   'autoload' : {'commands' : ['ZoomWin']}
-            \ }
-    nmap <F12> :ZoomWin<CR>
 " }}}
 
 " Text Objects {{{
@@ -955,11 +946,10 @@ NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'moll/vim-node'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'mxw/vim-jsx'
-    let g:jsx_ext_required = 0
 NeoBundle 'othree/yajs.vim'
 NeoBundle 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs =
-        \ 'jquery,underscore,react,flux,jasmine,chai'
+        \ 'jquery,underscore,angularjs,react,flux,jasmine,chai'
 NeoBundleLazy 'marijnh/tern_for_vim', {
         \   'build': {
         \     'windows': 'npm install',
@@ -990,7 +980,7 @@ NeoBundleLazy 'ecomba/vim-ruby-refactoring', {'autoload' : {'filetypes' : 'ruby'
 " }}}
 
 " Clojure {{{
-NeoBundleLazy 'amdt/vim-niji', {'autoload' : {'filetypes' : 'clojure'}}
+NeoBundleLazy 'spinningarrow/vim-niji', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-static', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-highlight', {'autoload' : {'filetypes' : 'clojure'}}
 NeoBundleLazy 'tpope/vim-classpath', {'autoload' : {'filetypes' : 'clojure'}}
@@ -1037,13 +1027,11 @@ NeoBundleLazy 'chase/vim-ansible-yaml'
 " Colorschemes {{{
 NeoBundle 'ajh17/Spacegray.vim'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'gosukiwi/vim-atom-dark'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'whatyouhide/vim-gotham'
-NeoBundle 'jordwalke/flatlandia'
 " }}}
 
 " NeoBundle end {{{
@@ -1058,8 +1046,10 @@ NeoBundleCheck
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " basic styles
 set background=dark
-colorscheme hybrid
 set colorcolumn=79
+set lines=33 columns=99
+
+colorscheme hybrid
 set guifont=Inconsolata-dz\ for\ Powerline:h16
 
 " conceal special chars
@@ -1298,7 +1288,7 @@ endif
     " F9    Toggle iTerm 2
     " F10   Toggle Tagbar
     " F11   Toggle Goyo
-    " F12   Toggle ZoomWin
+    " F12
 " }}}
 
 " Special keys {{{

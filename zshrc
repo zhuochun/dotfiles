@@ -111,13 +111,12 @@ export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ADT_HOME="/Users/zhuochun/Documents/Programming/Android/adt-bundle-mac-x86_64-20140702/sdk"
 export PATH="$ADT_HOME/platform-tools:$ADT_HOME/tools:$PATH"
+# Add NVM tool
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 # Ruby environment using rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
-# Node environment using nvm
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
