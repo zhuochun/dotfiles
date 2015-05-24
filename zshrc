@@ -2,6 +2,7 @@
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load:
+# Look in ~/.oh-my-zsh/themes/
 # suvash blinks fino josh re5et random
 ZSH_THEME="pure"
 
@@ -55,8 +56,8 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # Other Alias
 # ==============================
 # Edit zshrc and vimrc
-alias zshrc="mvim ~/.zshrc"
-alias vimrc="mvim ~/.vimrc"
+alias zshrc="vim ~/.zshrc"
+alias vimrc="vim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 

@@ -425,7 +425,7 @@ NeoBundle 'Shougo/unite.vim'
                 \ 'ignore_pattern',
                 \ join([
                 \   '\.git/', '\.gitkeep', '\.keep', '\.hg/', '\.o', '\.DS_Store',
-                \   '_build', '_site', 'dist',
+                \   '\.idea/', '_build', '_site', 'dist',
                 \   '\.tmp/', 'tmp', 'log', '*.tar.gz', '*.zip',
                 \   'node_modules', 'bower_components', '\.sass-cache/',
                 \ ], '\|'))
@@ -442,20 +442,12 @@ NeoBundle 'Shougo/unite.vim'
         \ file_rec/git:--cached:--others:--exclude-standard<CR>
     " File switching using file_rec
     nnoremap <silent> <D-u> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<CR>
-    nnoremap <silent> <D-p> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<CR>
     " Buffer switching
-    nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers -quick-match buffer<CR>
+    nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers -start-insert buffer<CR>
     " Tab switching
-    nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs -quick-match tab<CR>
+    nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs -start-insert tab<CR>
     " Reuses the last unite buffer used
     nnoremap <silent> gor :<C-u>UniteResume<CR>
-
-    " Enabled to track yank history
-    let g:unite_source_history_yank_enable = 1
-    let g:unite_source_history_yank_save_clipboard = 1
-    " Yank history like YankRing
-    nnoremap <silent> <D-y> :<C-u>Unite -buffer-name=yank
-        \ history/yank -quick-match -no-split<CR>
 
     " Use Ag
     if executable('ag')
@@ -575,6 +567,17 @@ NeoBundleLazy 'tsukkee/unite-tag', {
             \   'autoload': {'unite_sources': 'tag'}
             \ }
     nnoremap <silent> got :<C-u>Unite -buffer-name=tags -start-insert tag<CR>
+NeoBundle 'LeafCage/yankround.vim', { 'depends': ['Shougo/unite.vim'] }
+    nnoremap <silent> <D-y> :<C-u>Unite yankround<CR>
+    " yankround mappings
+    nmap p  <Plug>(yankround-p)
+    xmap p  <Plug>(yankround-p)
+    nmap P  <Plug>(yankround-P)
+    " loop yanks
+    nmap <D-p> <Plug>(yankround-prev)
+    nmap <D-n> <Plug>(yankround-next)
+    " number of yank history to keep
+    let g:yankround_max_history = 100
 " }}}
 
 " VimShell {{{
@@ -1261,10 +1264,16 @@ endif
     nmap <C-l> <C-W>l
 
     " Use arrows to change the splited windows
-    nmap <D-right> <C-W>L
-    nmap <D-left>  <C-W>H
-    nmap <D-up>    <C-W>K
-    nmap <D-down>  <C-W>J
+    nmap <S-right> <C-W>L
+    nmap <S-left>  <C-W>H
+    nmap <S-up>    <C-W>K
+    nmap <S-down>  <C-W>J
+
+    " Use shift+arrows to resize the windows
+    nmap <D-S-right> 3<C-W>>
+    nmap <D-S-left>  3<C-W><
+    nmap <D-S-up>    3<C-W>+
+    nmap <D-S-down>  3<C-W>-
 " }}}
 
 " }}}
@@ -1289,6 +1298,7 @@ endif
     " F10   Toggle Tagbar
     " F11   Toggle Goyo
     " F12
+    nnoremap <F12> :set columns=999 lines=999<CR>
 " }}}
 
 " Special keys {{{
@@ -1349,10 +1359,8 @@ endif
     " <I>       Insert at beginning of line
     " <o>       Open new line below
     " <O>       Open new line above
-    " <p>       Paste yank after, keep cursor position
-    nnoremap p p`[
-    " <p>       Paste yank before, keep cursor position
-    nnoremap P P`[
+    " <p>       Yankround
+    " <p>       Yankround
     " <[>       tpope/unimpaired
     " <{>       Paragraphs backward
     " <]>       tpope/unimpaired
@@ -1642,7 +1650,7 @@ endif
     " <D-i> Unite buffers
     " <D-o> Unite recent files
     " <D-O> Unite outline
-    " <D-p> Unite yank
+    " <D-p>
     " <D-{> Previous Tabs
     " <D-}> Next Tabs
     " <D-a> Mac Select all
@@ -1662,7 +1670,7 @@ endif
     " <D-c> Mac Copy
     " <D-v>
     " <D-b>
-    " <D-n> Mac New Window
+    " <D-n>
     " <D-m> Mac Minimize windows
     " <D-,> Mac Advance settings
     " <D-.> Cannot map
