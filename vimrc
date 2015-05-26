@@ -1441,8 +1441,9 @@ endif
     " <?>       Search backwards
     nnoremap ? ?\v
     vnoremap ? ?\v
-    " <space>   Enter <space>
-    nnoremap <space> i<space><ESC>
+    " <SPACE>   Enter <SPACE>
+    nnoremap <SPACE> i<SPACE><ESC>
+    nnoremap <S-SPACE> a<SPACE><ESC>
     " <CR>      Enter <CR> at current position
     nnoremap <CR> i<CR><ESC>
 " }}}
@@ -1887,6 +1888,9 @@ command! Mifengtd :Unite mifengtd -start-insert -buffer-name=mifengtd
 command! Blog     :Unite bicrement -start-insert -buffer-name=bicrement
 command! Draft    :execute
     \ "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
+" yank local working directory
+command! Ywd   :let @+ = expand("%")
+command! Cpwd  :let @+ = expand("%")
 " }}}
 
 " }}}
