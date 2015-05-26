@@ -1070,17 +1070,17 @@ set completeopt-=preview
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " necessary {{{
+" enable filetype plugin
+filetype plugin on
+filetype indent on
+filetype on
+
 " , is easier than \
 let g:mapleader = ","
 let mapleader = ","
 " ; is easier than :
 noremap ; :
 noremap : ;
-
-" enable filetype plugin
-filetype plugin on
-filetype indent on
-filetype on
 
 " syntax highlighting on
 syntax on
@@ -1092,7 +1092,11 @@ syntax on
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-autocmd! FileType * setlocal formatoptions-=o
+augroup format_options
+    autocmd!
+    autocmd FileType * setlocal formatoptions+=j
+    autocmd FileType * setlocal formatoptions-=o
+augroup END
 " }}}
 
 " encoding {{{
@@ -1541,10 +1545,12 @@ endif
     " <C-y> Emmet Expand
     " <C-u> Page up
     " <C-u> Switch word case
-    inoremap <C-u> <esc>mzg~iw`za
+    inoremap <C-u> <ESC>mzg~iw`za
     " <C-i>
     " <C-o>
     " <C-p>
+    " <C-[> Jump tag backwards
+    nnoremap <C-[> <C-T>
     " <C-]> Jump tag
     " <C-a>
     " <C-s>
