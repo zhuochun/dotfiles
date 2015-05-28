@@ -5,9 +5,13 @@
 --exclude=.DS_Store
 --exclude=log
 --exclude=tmp
+--exclude=doc
 --exclude=vendor/bundle
 --exclude=node_modules
 --exclude=bower_components
+--exclude=public/assets
+
+--languages=-javascript,sql
 
 --regex-ruby=/(^|[:;])[ \t]*([A-Z][[:alnum:]_]+) *=/\2/c,class,constant/
 --regex-ruby=/(^|;)[ \t]*(has_many|belongs_to|has_one|has_and_belongs_to_many)\(? *:([[:alnum:]_]+)/\3/f,function,association/

@@ -459,20 +459,8 @@ NeoBundle 'Shougo/unite.vim'
         let g:unite_source_grep_recursive_opt = ''
     endif
     " Mapping on Ag
-    nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep -no-quit grep:.<CR>
+    nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:.<CR>
     nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep -no-quit grep:.<CR>
-
-    " Location alias
-    let g:unite_source_alias_aliases = {
-            \   'bicrement' : {
-            \     'source': 'file_rec/async',
-            \     'args': '~/Documents/Programming/Web/zhuochun.github.io/',
-            \   },
-            \   'mifengtd' : {
-            \     'source': 'file_rec/async',
-            \     'args': '~/Documents/Programming/Web/mifengtd.cn/',
-            \   },
-            \ }
 
     " Key Mappings in Unite "{{{
     autocmd! FileType unite call s:unite_my_settings()
@@ -1042,6 +1030,8 @@ call neobundle#end()
 " Installation check
 NeoBundleCheck
 " }}}
+
+" }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1363,8 +1353,8 @@ endif
     " <I>       Insert at beginning of line
     " <o>       Open new line below
     " <O>       Open new line above
-    " <p>       Yankround
-    " <p>       Yankround
+    " <p>       Yankround after
+    " <P>       Yankround before
     " <[>       tpope/unimpaired
     " <{>       Paragraphs backward
     " <]>       tpope/unimpaired
@@ -1886,14 +1876,6 @@ iab /*         /*
 command! Cwd   :cd %:p:h
 " change local working directory
 command! Clwd  :lcd %:p:h
-" }}}
-
-" Jekyll post/note {{{
-command! Atom     :!atom %
-command! Mifengtd :Unite mifengtd -start-insert -buffer-name=mifengtd
-command! Blog     :Unite bicrement -start-insert -buffer-name=bicrement
-command! Draft    :execute
-    \ "e ~/Documents/Programming/Web/zhuochun.github.io/_drafts/new-draft.markdown"
 " yank local working directory
 command! Ywd   :let @+ = expand("%")
 command! Cpwd  :let @+ = expand("%")
