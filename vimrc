@@ -35,6 +35,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundleLazy 'AndrewRadev/switch.vim', {
             \   'autoload' : { 'commands': ['Switch'] },
             \ }
+    " Default switch mapping `gs` is still available
     nnoremap + :Switch<CR>
     " Some customized definitions
     let g:switch_custom_definitions = [
@@ -134,6 +135,13 @@ NeoBundleLazy 'schickling/vim-bufonly', {
 NeoBundleLazy 'chrisbra/NrrwRgn', {
             \   'autoload' : { 'commands' : ['NarrowRegion', 'NRMulti'] }
             \ }
+
+" rest-console {{{
+NeoBundle 'diepm/vim-rest-console'
+    " set ft=rest, then <C-j> to trigger request
+    " set output buffer to json format
+    let g:vrc_output_buffer_name = '__REST_OUTPUT.json'
+" }}}
 
 " highlight phrases {{{
 NeoBundleLazy 'dimasg/vim-mark', {
@@ -341,6 +349,8 @@ NeoBundle 'scrooloose/syntastic'
     let g:syntastic_auto_loc_list = 1
     " populate syntastic errors in location list
     let g:syntastic_always_populate_loc_list = 1
+    " aggregate errors if multiple checkers enabled
+    let g:syntastic_aggregate_errors = 1
     " height of the location lists that syntastic opens
     let g:syntastic_loc_list_height = 5
     " automatic syntax checking
@@ -368,7 +378,7 @@ NeoBundleLazy 'scrooloose/nerdtree'
     let NERDTreeIgnore = [
         \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
         \ '\.git', '\.hg', '\.svn', '\.sass-cache',
-        \ '\.coverage$', '\.tmp$', '\.gitkeep$',
+        \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
         \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
 
 NeoBundle 'jistr/vim-nerdtree-tabs', {
@@ -444,8 +454,6 @@ NeoBundle 'Shougo/unite.vim'
     nnoremap <silent> <D-u> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<CR>
     " Buffer switching
     nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers -start-insert buffer<CR>
-    " Tab switching
-    nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs -start-insert tab<CR>
     " Reuses the last unite buffer used
     nnoremap <silent> gor :<C-u>UniteResume<CR>
 
@@ -724,6 +732,15 @@ NeoBundle 'zhuochun/vim-snippets'
 NeoBundle 'zhuochun/vim-dicts'
 " }}}
 
+" vim-tags {{{
+" use `:TagsGenerate`
+NeoBundle 'szw/vim-tags'
+    " do not auto generate tags
+    let g:vim_tags_auto_generate = 0
+    " use vim-dispatch
+    let g:vim_tags_use_vim_dispatch = 1
+" }}}
+
 " vim-exchange {{{
 " cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
 NeoBundleLazy 'tommcdo/vim-exchange', {
@@ -781,7 +798,7 @@ NeoBundleLazy 'tpope/vim-unimpaired', {
     " bprevious: [b, bnext: ]b, bfirst: [B
     " lprevious: [l, lnext: ]l, lfirst: [L
     " cprevious: [q, cnext: ]q, cfirst: [Q
-    " tprevious: [t, tnext: ]t,
+    " tprevious: [t, tnext: ]t
 
 NeoBundleLazy 'tpope/vim-vinegar', {
             \   'autoload' : {'mappings' : ['-']}
@@ -1157,8 +1174,10 @@ set cindent
 " }}}
 
 " word boundary {{{
-set iskeyword-=_,-,:
-set iskeyword+=$,@,%,#,`,!,?
+augroup is_keyword
+    autocmd!
+    autocmd FileType * setlocal iskeyword-=_,-,:
+augroup END
 " }}}
 
 " searching {{{
@@ -1206,7 +1225,7 @@ set tm=500
 
 " tags, backups and undos {{{
 " set tag locations
-set tags=./tags;
+set tags=./tags
 
 " Turn backup on
 set backup
@@ -1278,7 +1297,7 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Function keys {{{
-    " F1
+    " F1    Help screen
     " F2    Insert date and time
     inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
     " F3    Toggle NERDTree
@@ -1291,7 +1310,7 @@ endif
     " F9    Toggle iTerm 2
     " F10   Toggle Tagbar
     " F11   Toggle Goyo
-    " F12
+    " F12   Fullscreen
     nnoremap <F12> :set columns=999 lines=999<CR>
 " }}}
 
@@ -1456,9 +1475,10 @@ endif
     " <leader>) Edit gvimrc
     " <leader>-
     " <leader>=
-    " <leader>q Quick Quit without save
+    " <leader>q Quick quit without save
     nnoremap <leader>q :q!<CR>
     " <leader>w vim-choosewin
+    " <leader>W Toggle wrap related
     nnoremap <leader>W :call ToggleWrap()<CR>
     function! ToggleWrap()
         nnoremap <buffer> j gj
@@ -1531,7 +1551,7 @@ endif
     " <C-w>
     " <C-e>
     " <C-r>
-    " <C-t>
+    " <C-t> Jump back tag stack
     " <C-y> Emmet Expand
     " <C-u> Page up
     " <C-u> Switch word case
@@ -1539,8 +1559,7 @@ endif
     " <C-i>
     " <C-o>
     " <C-p>
-    " <C-[> Jump tag backwards
-    nnoremap <C-[> <C-T>
+    " <C-[> Same as <ESC>
     " <C-]> Jump tag
     " <C-a>
     " <C-s>
@@ -1701,7 +1720,7 @@ autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
 " }}}
 
 " Snippets {{{
-autocmd! FileType neosnippet,snippet set noexpandtab
+autocmd! FileType neosnippet,snippet setlocal noexpandtab
 " }}}
 
 " C/CPP Mappings {{{
@@ -1709,23 +1728,23 @@ autocmd! FileType cpp,c,cc,h,hpp :call s:CppDef()
 function! s:CppDef()
     " Surround * to /*
     let b:surround_42 = "/* \r */"
-    xmap 8 S*
+    xmap <buffer> 8 S*
 
     " Correct typos
-    iab uis        usi
-    iab cuot       cout
-    iab Bool       bool
-    iab boll       bool
-    iab Static     static
-    iab Virtual    virtual
-    iab True       true
-    iab False      false
-    iab String     string
-    iab prinft     printf
-    iab pritnt     printf
-    iab pirntf     printf
-    iab end;       endl;
-    iab null       NULL
+    iab <buffer> uis        usi
+    iab <buffer> cuot       cout
+    iab <buffer> Bool       bool
+    iab <buffer> boll       bool
+    iab <buffer> Static     static
+    iab <buffer> Virtual    virtual
+    iab <buffer> True       true
+    iab <buffer> False      false
+    iab <buffer> String     string
+    iab <buffer> prinft     printf
+    iab <buffer> pritnt     printf
+    iab <buffer> pirntf     printf
+    iab <buffer> end;       endl;
+    iab <buffer> null       NULL
 endfunction
 " }}}
 
@@ -1737,17 +1756,17 @@ function! s:RubyDef()
 
     " Surround % to %
     let b:surround_37 = "<% \r %>"
-    xmap % S%
+    xmap <buffer> % S%
     " Surround = to %=
     let b:surround_61 = "<%= \r %>"
-    xmap _ S=
+    xmap <buffer> _ S=
     " Surround # to #{}
     let b:surround_35 = "#{ \r }"
-    xmap # S#
+    xmap <buffer> # S#
 
     " Correct typos
-    iab elseif     elsif
-    iab ~=         =~
+    iab <buffer> elseif     elsif
+    iab <buffer> ~=         =~
 endfunction
 " }}}
 
@@ -1755,8 +1774,8 @@ endfunction
 autocmd! FileType python :call s:PythonDef()
 function! s:PythonDef()
     " Correct typos
-    iab true       True
-    iab false      False
+    iab <buffer> true       True
+    iab <buffer> false      False
 endfunction
 " }}}
 
@@ -1776,23 +1795,23 @@ function! s:WebDef()
 
     " Surround % to {{
     let b:surround_37 = "{{ \r }}"
-    xmap % S%
+    xmap <buffer> % S%
     " Surround = to {{=
     let b:surround_61 = "{{= \r }}"
-    xmap _ S=
+    xmap <buffer> _ S=
     " Surround * to <!--
     let b:surround_42 = "<!-- \r -->"
-    xmap 8 S*
+    xmap <buffer> 8 S*
 
     " Delete surround tag
-    nmap <Del> dst
+    nmap <buffer> <Del> dst
 
     " Special characters
-    iab ->> →
-    iab <<- ←
-    iab >>  »
-    iab ^^  ↑
-    iab VV  ↓
+    iab <buffer> ->> →
+    iab <buffer> <<- ←
+    iab <buffer> >>  »
+    iab <buffer> ^^  ↑
+    iab <buffer> VV  ↓
 endfunction
 " }}}
 
@@ -1801,18 +1820,17 @@ autocmd! FileType markdown :call s:MarkdownDef()
 function! s:MarkdownDef()
     setlocal shiftwidth=2
     setlocal tabstop=2
-    setlocal spell
     setlocal wrap
 
     " Surround _ to _
     let b:surround_95 = "_\r_"
-    xmap _ S_
+    xmap <buffer> _ S_
     " Surround * to **
     let b:surround_42 = "**\r**"
-    xmap 8 S*
+    xmap <buffer> 8 S*
     " Surround - to ~~
     let b:surround_45 = "~~\r~~"
-    xmap - S-
+    xmap <buffer> - S-
 
     " Add more parentheses
     let b:AutoPairs = { '(':')',   '[':']',  '{':'}',

@@ -6,6 +6,9 @@ function! s:LightMode()
     set linespace=3
     set guifont=Liberation\ Mono\ for\ Powerline:h16
 endfunction
+" source gvimrc after saving it
+autocmd! BufWritePost .gvimrc source $MYGVIMRC
+
 
 command! DarkMode call s:DarkMode()
 function! s:DarkMode()
