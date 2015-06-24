@@ -1,48 +1,38 @@
-" special style modes {{{
-command! LightMode call s:LightMode()
-function! s:LightMode()
-    set background=light
-    colorscheme base16-atelierforest
-    set linespace=3
-    set guifont=Liberation\ Mono\ for\ Powerline:h16
-endfunction
 " source gvimrc after saving it
 autocmd! BufWritePost .gvimrc source $MYGVIMRC
 
+" gui styles {{{
+command! Fullscreen :set lines=999 columns=999
 
-command! DarkMode call s:DarkMode()
-function! s:DarkMode()
+" gui fonts
+command! SmallFont :set guifont=Inconsolata-g\ for\ Powerline:h14
+command! LargeFont :set guifont=Inconsolata-g\ for\ Powerline:h16
+" }}}
+
+" common gui groups {{{
+command! DefaultMode call s:DefaultMode()
+function! s:DefaultMode()
     set background=dark
     colorscheme hybrid
-    set linespace=6
-    set guifont=InputMono\ ExLight\ for\ Powerline:h16
+
+    set lines=42 columns=142
+    set guifont=Inconsolata-g\ for\ Powerline:h14
 endfunction
 
-command! CodingMode call s:CodingMode()
-function! s:CodingMode()
-    set background=dark
-    colorscheme gotham
-    set linespace=3
-    set guifont=Inconsolata-dz\ for\ Powerline:h16
+command! MonitorMode call s:MonitorMode()
+function! s:MonitorMode()
+    set lines=999 columns=999
+    set guifont=Inconsolata-g\ for\ Powerline:h16
 endfunction
 
-command! WritingMode call s:WritingMode()
-function! s:WritingMode()
-    set background=dark
-    colorscheme base16-tomorrow
-    set linespace=5
-    set guifont=Fantasque\ Sans\ Mono:h19
-endfunction
-
-command! PresentingMode call s:PresentingMode()
-function! s:PresentingMode()
+command! PresentationMode call s:PresentationMode()
+function! s:PresentationMode()
     set background=light
     colorscheme base16-solarized
-    set linespace=3
-    set guifont=Fantasque\ Sans\ Mono:h24
-endfunction
 
-call s:CodingMode() " set default style mode
+    set lines=999 columns=999
+    set guifont=Inconsolata-g\ for\ Powerline:h23
+endfunction
 " }}}
 
 " remove specific OSX keybindings {{{
