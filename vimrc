@@ -174,27 +174,32 @@ NeoBundleLazy 'deris/vim-rengbang', {
 
 " semantic-highlight {{{
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
-            \   'autoload' : { 'commands' : ['SemanticHighlight'] },
+            \   'autoload' : {
+            \     'commands' : ['SemanticHighlight'],
+            \     'filetypes': ['ruby'],
+            \   },
             \ }
     " Activate automatically for certain filetypes
-    let g:semanticEnableFileTypes = ['ruby', 'javascript']
+    let g:semanticEnableFileTypes = ['ruby', 'javascript', 'coffee']
 " }}}
 
 " run tests {{{
 NeoBundleLazy 'janko-m/vim-test', {
             \   'depends' : 'tpope/vim-dispatch',
             \   'autoload' : {
-            \     'commands' : ['TestNearest', 'TestFile', 'TestSuite', 'TestLast'],
+            \     'commands' : ['TestLast', 'TestNearest', 'TestFile', 'TestSuite'],
             \     'mappings' : ['<Plug>(operator-rengbang'],
             \   },
             \ }
     let g:test#strategy = 'dispatch'
 " }}}
 
+" auto-pairs {{{
 NeoBundle 'jiangmiao/auto-pairs'
     " Disable default BS maps because its also maps <C-H>
     " But I still want <BS> behavior. It is mapped with AutoPairsDelete() below
     let g:AutoPairsMapBS = 0
+" }}}
 
 " EasyAlign {{{
 NeoBundleLazy 'junegunn/vim-easy-align', {
@@ -229,7 +234,7 @@ NeoBundleLazy 'Keithbsmiley/investigate.vim', {
 
 " multiple cursors {{{
 NeoBundleLazy 'terryma/vim-multiple-cursors', {
-            \   'autoload' : {'insert' : 1}
+            \   'autoload' : { 'insert' : 1 }
             \ }
     " Disable NeoComplete once start selecting multiple cursors
     function! Multiple_cursors_before()
@@ -250,18 +255,19 @@ NeoBundleLazy 'terryma/vim-multiple-cursors', {
 NeoBundleLazy 'Lokaltog/vim-easymotion', {
             \   'autoload' : { 'mappings' : ['<Plug>(easymotion-'] },
             \ }
-    " easymotion prefix
-    map s      <Plug>(easymotion-prefix)
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
     " alias to normal editor commands
     map <C-f>  <Plug>(easymotion-sn)
     map <D-f>  <Plug>(easymotion-sn)
+    " normal mode easymotion
+    nmap s     <Plug>(easymotion-f)
+    nmap S     <Plug>(easymotion-F)
     " visual mode exact target
     vmap f     <Plug>(easymotion-f)
     vmap F     <Plug>(easymotion-F)
     vmap t     <Plug>(easymotion-t)
     vmap T     <Plug>(easymotion-T)
-    " not case censitive
-    let g:EasyMotion_smartcase = 1
 " }}}
 
 " Tagbar {{{
@@ -327,8 +333,6 @@ NeoBundleLazy 'osyo-manga/vim-anzu', {
             \ }
     nmap n <Plug>(anzu-n-with-echo)
     nmap N <Plug>(anzu-N-with-echo)
-    nmap * <Plug>(anzu-star-with-echo)
-    nmap # <Plug>(anzu-sharp-with-echo)
 
 NeoBundleLazy 'osyo-manga/vim-over', {
             \   'autoload' : { 'commands' : ['OverCommandLine'] },
@@ -336,7 +340,7 @@ NeoBundleLazy 'osyo-manga/vim-over', {
     " modify prompt design
     let g:over_command_line_prompt = "❯ "
     " <D-r> shortcut over command line
-    noremap <D-r> :OverCommandLine<cr>%s///g<Left><Left><Left>
+    noremap <D-r> :OverCommandLine<CR>s/
 " }}}
 
 " Syntastic {{{
@@ -422,6 +426,7 @@ NeoBundle 'Shougo/unite.vim'
                 \   'prompt': '» ',
                 \   'marked_icon': '⚲',
                 \   'cursor-line-highlight': 'Statusline',
+                \   'short_source_names' : 1,
                 \ })
 
             " matchers
@@ -434,7 +439,13 @@ NeoBundle 'Shougo/unite.vim'
             call unite#custom#source(
                 \ 'neomru/file,neomru/directory',
                 \ 'matchers',
-                \ ['matcher_fuzzy', 'matcher_hide_hidden_files'])
+                \ ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
+
+            " converters
+            call unite#custom#source(
+                \ 'file_rec,file_rec/async,file_rec/git',
+                \ 'converters',
+                \ ['converter_file_directory'])
 
             " ignore_patterns
             call unite#custom#source(
@@ -442,9 +453,9 @@ NeoBundle 'Shougo/unite.vim'
                 \ 'ignore_pattern',
                 \ join([
                 \   '\.git/', '\.gitkeep', '\.keep', '\.hg/', '\.o', '\.DS_Store',
-                \   '\.idea/', '_build', '_site', 'dist',
-                \   '\.tmp/', 'tmp', 'log', '*.tar.gz', '*.zip',
-                \   'node_modules', 'bower_components', '\.sass-cache/',
+                \   '\.idea/', '\.tmp/', 'tmp/', 'build/', '_build/', '_site/', 'dist/',
+                \   '\.sass-cache/', 'node_modules/', 'bower_components/', 'vendor/', 'log/',
+                \   '*.tar.gz', '*.zip', '*.jpg', '*.jpeg', '*.gif', '*.png',
                 \ ], '\|'))
 
             " sorter_default
@@ -469,7 +480,7 @@ NeoBundle 'Shougo/unite.vim'
         " Use ag in unite grep source.
         let g:unite_source_grep_command = 'ag'
         let g:unite_source_grep_default_opts =
-            \ '--line-numbers --nocolor --nogroup --hidden ' .
+            \ '-i --line-numbers --nocolor --nogroup --hidden ' .
             \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'''
         let g:unite_source_grep_recursive_opt = ''
     endif
@@ -477,7 +488,7 @@ NeoBundle 'Shougo/unite.vim'
     nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:.<CR>
     nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep -no-quit grep:.<CR>
 
-    " Key Mappings in Unite "{{{
+    " Key Mappings in Unite {{{
     autocmd! FileType unite call s:unite_my_settings()
     function! s:unite_my_settings()
         " normal mode settings
@@ -517,24 +528,23 @@ NeoBundle 'Shougo/unite.vim'
 " }}}
 
 " Unite plugins {{{
-NeoBundle 'Shougo/neomru.vim', {
-        \   'depends': ['Shougo/unite.vim'],
-        \ }
+NeoBundleLazy 'Shougo/neomru.vim', {
+            \   'depends' : ['Shougo/unite.vim'],
+            \   'autoload': {'unite_sources': ['neomru', 'neomru/file', 'neomru/directory']}
+            \ }
     " <D-o> recent file
-    nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=MRU
-        \ neomru/file -start-insert<CR>
+    nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=MRU neomru/file -start-insert<CR>
     " <D-O> recent directory
-    nnoremap <silent> <D-O> :<C-u>Unite -buffer-name=MRU
-        \ neomru/directory -start-insert -default-action=lcd<CR>
+    nnoremap <silent> <D-O> :<C-u>Unite -buffer-name=MRU neomru/directory -start-insert -default-action=lcd<CR>
 
 NeoBundleLazy 'Shougo/unite-outline', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {'unite_sources': 'outline'}
             \ }
-    nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline<CR>
+    nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
 
 NeoBundleLazy 'Shougo/junkfile.vim', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {
             \     'commands' : 'JunkfileOpen',
             \     'unite_sources' : ['junkfile', 'junkfile/new'],
@@ -542,11 +552,10 @@ NeoBundleLazy 'Shougo/junkfile.vim', {
             \ }
     let g:junkfile#directory = '/Users/zhuochun/Dropbox/Mac/Note'
     " create or open a junk file
-    nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile
-            \ junkfile/new junkfile -start-insert<CR>
+    nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
 
 NeoBundleLazy 'kopischke/unite-spell-suggest', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {
             \     'unite_sources': 'spell_suggest',
             \     'filetypes' : ['markdown', 'text'],
@@ -555,33 +564,36 @@ NeoBundleLazy 'kopischke/unite-spell-suggest', {
     nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
 
 NeoBundleLazy 'ujihisa/unite-colorscheme', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {'unite_sources': 'colorscheme'}
             \ }
-    nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme -auto-preview colorscheme<CR>
+    nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
 
 NeoBundleLazy 'osyo-manga/unite-quickfix', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {'unite_sources': ['quickfix', 'location_list']}
             \ }
     nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
 
 NeoBundleLazy 'osyo-manga/unite-filetype', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {'unite_sources': ['filetype', 'filetype/new']}
             \ }
-    nnoremap <silent> gof :<C-u>Unite -buffer-name=filetypes -start-insert filetype<CR>
+    nnoremap <silent> gof :<C-u>Unite -buffer-name=filetypes filetype -start-insert<CR>
 
 NeoBundleLazy 'tsukkee/unite-tag', {
-            \   'depends': ['Shougo/unite.vim'],
+            \   'depends' : ['Shougo/unite.vim'],
             \   'autoload': {'unite_sources': 'tag'}
             \ }
-    nnoremap <silent> got :<C-u>Unite -buffer-name=tags -start-insert tag<CR>
+    nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag -start-insert<CR>
 
 NeoBundle 'LeafCage/yankround.vim', {
         \   'depends': ['Shougo/unite.vim'],
         \ }
-    nnoremap <silent> <D-y> :<C-u>Unite yankround<CR>
+    " number of yank history to keep
+    let g:yankround_max_history = 100
+    " unite mapping
+    nnoremap <silent> goy :<C-u>Unite -buffer-name=yankround yankround<CR>
     " yankround mappings
     nmap p  <Plug>(yankround-p)
     xmap p  <Plug>(yankround-p)
@@ -589,37 +601,55 @@ NeoBundle 'LeafCage/yankround.vim', {
     " loop yanks
     nmap <D-p> <Plug>(yankround-prev)
     nmap <D-n> <Plug>(yankround-next)
-    " number of yank history to keep
-    let g:yankround_max_history = 100
 " }}}
 
 " VimShell {{{
 NeoBundleLazy 'Shougo/vimshell.vim', {
             \   'depends' : 'Shougo/vimproc',
             \   'autoload' : {
-            \     'commands' : [{'name' : 'VimShell',
-            \                    'complete' : 'customlist,vimshell#complete'},
-            \                   'VimShellExecute', 'VimShellInteractive',
-            \                   'VimShellTerminal', 'VimShellPop'],
+            \     'commands' : ['VimShellPop', 'VimShellTab'],
             \     'mappings' : ['<Plug>(vimshell_'],
             \   },
             \ }
-    " send to interpreter
-    nmap <leader>e :Eval<CR>
-    vmap <leader>e :Eval<CR>
-
-    " default prompt string
+    " Default prompt string
     let g:vimshell_prompt = $USER." $ "
-    " display current dir
+    " Display current dir
     let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+    " Split height for VimShellPop (default 30)
+    let g:vimshell_popup_height = 19
+
+    " Send to interpreter
+    nnoremap <leader>e :VimShellSendString<CR>
+    vnoremap <leader>e :VimShellSendString<CR>
 
     " VimShellInteractive Commands {{{
-    command! Eval   :execute "VimShellSendString"
-    command! Pry    :execute "VimShellInteractive --split='split <bar> resize 19' pry"
-    command! Irb    :execute "VimShellInteractive --split='split <bar> resize 19' irb"
-    command! Node   :execute "VimShellInteractive --split='split <bar> resize 19' node"
-    command! Coffee :execute "VimShellInteractive --split='split <bar> resize 19' coffee"
-    command! Python :execute "VimShellInteractive --split='split <bar> resize 19' python"
+    command! Pry    :execute "VimShellInteractive --split='split <bar> resize 9' pry"
+    command! Irb    :execute "VimShellInteractive --split='split <bar> resize 9' irb"
+    command! Node   :execute "VimShellInteractive --split='split <bar> resize 9' node"
+    command! Coffee :execute "VimShellInteractive --split='split <bar> resize 9' coffee"
+    " }}}
+
+    " VimShell commands {{{
+    autocmd! FileType vimshell call s:vimshell_settings()
+    function! s:vimshell_settings()
+        " command alterative
+        call vimshell#altercmd#define('g', 'git')
+        " alias
+        call vimshell#set_alias('l', 'ls -al')
+        " autojump
+        call vimshell#set_alias('j', ':Unite -buffer-name=files -default-action=lcd -no-split -input=$$args neomru/directory')
+
+        " unmap <C-k> <Plug>(vimshell_hangup)
+        nunmap <buffer><C-k>
+        " unmap <C-l> <Plug>(vimshell_clear)
+        nunmap <buffer><C-l>
+    endfunction
+
+    autocmd FileType int-* call s:interactive_settings()
+    function! s:interactive_settings()
+        " unmap <C-l> <Plug>(vimshell_int_clear)
+        nunmap <buffer><C-l>
+    endfunction
     " }}}
 " }}}
 
@@ -637,12 +667,15 @@ NeoBundle 'Shougo/neocomplete.vim'
     let g:neocomplete#auto_completion_start_length = 1
     let g:neocomplete#manual_completion_start_length = 1
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
+    let g:neocomplete#sources#syntax#min_keyword_length = 3
+    let g:neocomplete#min_keyword_length = 3
     let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax'
 
     " Define dictionary
     let g:neocomplete#sources#dictionary#dictionaries = {
         \   'default'    : '',
         \   'vimshell'   : $CACHE.'/vimshell/command-history',
+        \   'ruby'       : $HOME.'/.vim/bundle/vim-dicts/dict/ruby.dict',
         \   'coffee'     : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
         \ }
 
@@ -653,16 +686,31 @@ NeoBundle 'Shougo/neocomplete.vim'
     let g:neocomplete#keyword_patterns._ = '\h\w*'
 
     " Enable heavy omni completion
-    let g:neocomplete#force_overwrite_completefunc = 1
-    if !exists('g:neocomplete#force_omni_input_patterns')
-        let g:neocomplete#force_omni_input_patterns = {}
-    endif
     if !exists('g:neocomplete#sources#omni#input_patterns')
         let g:neocomplete#sources#omni#input_patterns = {}
     endif
     if !exists('g:neocomplete#sources#omni#functions')
         let g:neocomplete#sources#omni#functions = {}
     endif
+    if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+    endif
+
+    " Some omni customizations
+    let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
+    let g:neocomplete#sources#omni#functions.go = 'gocomplete#Complete'
+
+    " Appoints vim source call function when completes custom and customlist command
+    let g:neocomplete#sources#vim#complete_functions = {
+        \   'Unite' : 'unite#complete_source',
+        \   'VimShellExecute' : 'vimshell#vimshell_execute_complete',
+        \   'VimShellInteractive' : 'vimshell#vimshell_execute_complete',
+        \   'VimShellTerminal' : 'vimshell#vimshell_execute_complete',
+        \   'VimShell' : 'vimshell#complete',
+        \ }
+
+    " Fallbacks on complete keywords by neocomplete and the omnifunc
+    let g:neocomplete#fallback_mappings = ["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
 
     " Plugin key-mappings
     inoremap <expr><C-g> pumvisible() ? neocomplete#undo_completion() : "<ESC>"
@@ -696,14 +744,17 @@ NeoBundle 'Shougo/neocomplete.vim'
 " NeoComplete Plugins {{{
 " Complete words in English
 NeoBundleLazy 'ujihisa/neco-look', {
-            \   'depends': ['Shougo/neocomplete.vim'],
-            \   'autoload' : {'insert' : 1}
+            \   'depends'  : ['Shougo/neocomplete.vim'],
+            \   'autoload' : { 'insert': 1 }
             \ }
-" A neocomplete plugin to complete ruby keyword args
-NeoBundleLazy 'rhysd/neco-ruby-keyword-args', {
-            \   'depends': ['Shougo/neocomplete.vim'],
-            \   'autoload' : {'filetypes' : 'ruby'}
+
+" Complete Ruby with RSense
+NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
+            \   'depends'  : ['Shougo/neocomplete.vim'],
+            \   'autoload' : { 'filetypes': 'ruby' }
             \ }
+    " set the RSense bin location
+    let g:neocomplete#sources#rsense#home_directory = '/usr/local/bin/rsense'
 " }}}
 
 " accelerated-jk {{{
@@ -883,18 +934,20 @@ NeoBundleLazy 'vim-scripts/DrawIt', {
 NeoBundle 'Yggdroot/indentLine'
     let g:indentLine_char = '┊'
     let g:indentLine_fileTypeExclude = ['markdown', 'text']
+    " redraw indent lines manually
+    nnoremap <leader>l :IndentLinesReset<CR>
 
 " window operations {{{
 NeoBundleLazy 't9md/vim-choosewin', {
             \   'autoload' : {
-            \     'commands' : 'ChooseWin',
-            \     'mappings' : '<Plug>(choosewin',
+            \     'commands' : ['ChooseWin'],
+            \     'mappings' : ['<Plug>(choosewin)'],
             \   }
             \ }
-    nmap <leader>ww <Plug>(choosewin)
-    nmap <leader>ws <Plug>(choosewin-swap)
     " dont' blink at land
     let g:choosewin_blink_on_land = 0
+    " choose window
+    nmap gow <Plug>(choosewin)
 " }}}
 
 " Text Objects {{{
@@ -957,6 +1010,7 @@ NeoBundle 'wavded/vim-stylus'
 
 " JavaScript {{{
 NeoBundle 'elzr/vim-json'
+    let g:vim_json_syntax_conceal = 0
 NeoBundle 'kchmck/vim-coffee-script'
     let coffee_make_options = '--bare'
 NeoBundle 'moll/vim-node'
@@ -985,7 +1039,7 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 NeoBundle 'vim-ruby/vim-ruby'
     let g:rubycomplete_buffer_loading = 1
     let g:rubycomplete_classes_in_global = 1
-    let g:rubycomplete_rails = 0
+    let g:rubycomplete_rails = 1
 NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-endwise', {'autoload' : {'filetypes' : 'ruby'}}
 NeoBundle 'tpope/vim-rails'
@@ -1087,8 +1141,8 @@ set colorcolumn=119
 set lines=42 columns=142
 " fonts download from https://github.com/powerline/fonts
 " set guifont=Inconsolata-g\ for\ Powerline:h14
-" set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h14
-set guifont=Source\ Code\ Pro\ for\ Powerline:h14
+set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
+" set guifont=Source\ Code\ Pro\ for\ Powerline:h14
 
 " conceal special chars
 if has('conceal')
@@ -1544,9 +1598,9 @@ endif
     " <leader>h
     " <leader>j
     " <leader>k
-    " <leader>l
+    " <leader>l Reset IndentLines
     " <leader>L Reduce a sequence of blank lines into a single line
-    nnoremap <leader>L GoZ<Esc>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
+    nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
     " <leader>z
     " <leader>x
     " <leader>c
@@ -1584,7 +1638,7 @@ endif
     " <C-y> Emmet Expand
     " <C-u> Page up
     " <C-u> Switch word case
-    inoremap <C-u> <ESC>mzg~iw`za
+    inoremap <C-U> <ESC>mzg~iw`za
     " <C-i>
     " <C-o>
     " <C-p>
@@ -1809,6 +1863,7 @@ endfunction
 " }}}
 
 " CoffeeScript Mappings {{{
+autocmd! BufRead,BufNewFile *.cson set ft=coffee
 autocmd! FileType coffee :call s:CoffeeDef()
 function! s:CoffeeDef()
     setlocal shiftwidth=2

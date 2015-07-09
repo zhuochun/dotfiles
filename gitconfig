@@ -18,14 +18,21 @@
 	rs = rebase --skip
 	ra = rebase --abort
 
+	# verbose output about tags, branches or remotes
+	tags = tag -l
+	branches = branch -a
+	remotes = remote -v
+
 	# clone a repository including all submodules
-	c = clone --recursive
+	recursive-clone = clone --recursive
+	shallow-clone = clone --depth 10
 
 	# assume unchanged on local
 	local-ignore = update-index --assume-unchanged
 
 	# Switch to a branch, creating it if necessary
-	go = checkout -B
+	co = checkout -B
+	go = checkout
 	merge-branch = !git checkout master && git merge @{-1}
 	master = checkout master
 

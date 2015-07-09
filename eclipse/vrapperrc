@@ -86,7 +86,7 @@ vnoremap <down> :m '>+1<CR>gv=gv
 
 " Repeat last Q Macro
 nnoremap Q @@
-"  Yank to the end of line
+" Yank to the end of line
 nnoremap Y y$
 
 " Make space work in normal mode
