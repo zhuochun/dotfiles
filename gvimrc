@@ -5,8 +5,8 @@ autocmd! BufWritePost .gvimrc source $MYGVIMRC
 command! Fullscreen :set lines=999 columns=999
 
 " gui fonts
-command! SmallFont :set guifont=Inconsolata-g\ for\ Powerline:h14
-command! LargeFont :set guifont=Inconsolata-g\ for\ Powerline:h16
+command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
+command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h16
 " }}}
 
 " common gui groups {{{

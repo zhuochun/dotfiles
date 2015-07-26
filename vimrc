@@ -261,8 +261,8 @@ NeoBundleLazy 'Lokaltog/vim-easymotion', {
     map <C-f>  <Plug>(easymotion-sn)
     map <D-f>  <Plug>(easymotion-sn)
     " normal mode easymotion
-    nmap s     <Plug>(easymotion-f)
-    nmap S     <Plug>(easymotion-F)
+    nmap s     <Plug>(easymotion-s)
+    vmap s     <Plug>(easymotion-s)
     " visual mode exact target
     vmap f     <Plug>(easymotion-f)
     vmap F     <Plug>(easymotion-F)
@@ -365,6 +365,8 @@ NeoBundle 'scrooloose/syntastic'
         \ 'mode': 'active',
         \ 'active_filetypes': ['javascript', 'ruby', 'coffee'],
         \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
+    " run multiple syntastic checkers
+    let g:syntastic_ruby_checkers = ["mri", "flog"]
 " }}}
 
 " NERDTree {{{
@@ -872,8 +874,10 @@ NeoBundleLazy 'thinca/vim-visualstar', {
             \   'autoload' : {'mappings' : ['<Plug>(visualstar-']}
             \ }
     " search without moving to next match
-    map *  <Plug>(visualstar-*)N
-    map #  <Plug>(visualstar-#)N
+    nmap *  <Plug>(visualstar-*)N
+    nmap #  <Plug>(visualstar-#)N
+    vmap *  <Plug>(visualstar-g*)N
+    vmap #  <Plug>(visualstar-g#)N
 
 " Perform text replacement in quickfix
 NeoBundleLazy 'thinca/vim-qfreplace', {

@@ -29,6 +29,7 @@
 
 	# assume unchanged on local
 	local-ignore = update-index --assume-unchanged
+	local-unignore = update-index --no-assume-unchanged
 
 	# Switch to a branch, creating it if necessary
 	co = checkout -B
