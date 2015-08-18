@@ -5,8 +5,11 @@ autocmd! BufWritePost .gvimrc source $MYGVIMRC
 command! Fullscreen :set lines=999 columns=999
 
 " gui fonts
-command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
-command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h16
+command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h12
+command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
+
+set background=dark
+colorscheme base16-railscasts
 " }}}
 
 " common gui groups {{{
@@ -16,19 +19,19 @@ function! s:DefaultMode()
     colorscheme hybrid
 
     set lines=42 columns=142
-    set guifont=Inconsolata-g\ for\ Powerline:h14
+    set guifont=Inconsolata-g\ for\ Powerline:h12
 endfunction
 
 command! MonitorMode call s:MonitorMode()
 function! s:MonitorMode()
     set lines=999 columns=999
-    set guifont=Inconsolata-g\ for\ Powerline:h16
+    set guifont=Inconsolata-g\ for\ Powerline:h14
 endfunction
 
 command! PresentationMode call s:PresentationMode()
 function! s:PresentationMode()
     set background=light
-    colorscheme base16-solarized
+    colorscheme PaperColor
 
     set lines=999 columns=999
     set guifont=Inconsolata-g\ for\ Powerline:h23
