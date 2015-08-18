@@ -4,6 +4,7 @@
 --type-set=haml=.haml
 --type-set=sass=.sass,.scss
 --type-set=less=.less
+--type-set=md=.markdown,.md
 
 # Do not search these directories for quicker lookup
 --ignore-dir=log

@@ -5,6 +5,7 @@
 	user = zhuochun
 [credential]
 	helper = osxkeychain
+
 [alias]
 	# commits
 	aa = add -A .
@@ -12,11 +13,14 @@
 	discard = checkout --
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
+	pick-file = checkout
 
-	# rebase
+	# rebase in short
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
+	# interactive rebase with the given number of latest commits
+	rb = "!r() { git rebase -i HEAD~$1; }; r"
 
 	# verbose output about tags, branches or remotes
 	tags = tag -l
@@ -30,6 +34,7 @@
 	# assume unchanged on local
 	local-ignore = update-index --assume-unchanged
 	local-unignore = update-index --no-assume-unchanged
+	local-ignored = "!git ls-files -v | grep ^h | cut -c 3-"
 
 	# Switch to a branch, creating it if necessary
 	co = checkout -B
@@ -49,18 +54,28 @@
 	today = log --since=midnight --author='Wang Zhuochun' --oneline
 	tree = log --graph --oneline --decorate --color --all
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-[filter "media"]
-	required = true
-	clean = git media clean %f
-	smudge = git media smudge %f
+
+	# list contributors with number of commits
+	contributors = shortlog --summary --numbered
+
 [core]
 	editor = vim
+	# global custom `.gitignore`
 	excludesfile = ~/.gitignore
+	# make `git rebase` safer on OS X
+	# more info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+	trustctime = false
+
 [push]
 	default = simple
+	# make `git push` push relevant annotated tags when pushing branches out.
+	followTags = true
 [rerere]
 	autoupdate = true
 	enabled = true
+[help]
+	# Automatically correct and execute mistyped commands
+	autocorrect = 1
 
 # set kaleidoscope as difftool on Mac
 [difftool "Kaleidoscope"]
@@ -77,6 +92,11 @@
 	prompt = false
 [merge]
 	tool = Kaleidoscope
+
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
 [filter "hawser"]
 	clean = git hawser clean %f
 	smudge = git hawser smudge %f
