@@ -4,15 +4,15 @@ A set of files across Mac and Windows.
 
 ## Vim
 
-- **Mac OS:** Use `vimrc`, require MacVim with `if_lua`.
+Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac are `<M-*>` mappings on Windows.
+
+- **Mac OS:** Use `vimrc`, requires MacVim with `if_lua`:
 
 ``` bash
-$ brew install macvim --with-cscope --with-lua --HEAD
+$ brew install macvim --override-system-vim --with-lua --with-luajit
 ```
 
-- **Windows:** Use `windows/_vimrc`.
-
-**NOTE**: Optimized for Vim GUI. I use `<D-*>` on Mac and `<M-*>` on Windows.
+- **Windows:** Use `windows/_vimrc`. Not actively updated.
 
 ### Vim Setup in Mac
 
@@ -23,8 +23,9 @@ I use [Shougo/neobundle.vim](https://github.com/Shougo/neobundle.vim) to manage 
 $ git clone https://github.com/zhuochun/dotfiles.git
 
 # link vimrc
-$ ln -s path_to_dotfiles/vimrc ~/.vimrc
-$ ln -s path_to_dotfiles/gvimrc ~/.gvimrc
+$ ln -s ~/dotfiles/vim ~/.vim
+$ ln -s ~/dotfiles/vimrc ~/.vimrc
+$ ln -s ~/dotfiles/gvimrc ~/.gvimrc
 
 # install neobundle
 # https://github.com/Shougo/neobundle.vim#quick-start
@@ -36,26 +37,28 @@ $ vim +NeoBundleInstall +qall
 
 To update plugins, run `:NeoBundleUpdate` in Vim.
 
-## Slate
+## Slate/ShiftIt
 
 [Slate](https://github.com/jigish/slate) is a powerful window management application in Mac OS.
 
 ``` bash
-$ ln -s path_to_dotfiles/slate ~/.slate
+$ ln -s ~/dotfiles/slate ~/.slate
 ```
+
+[ShiftIt](https://github.com/fikovnik/ShiftIt) is another window management application in Mac OS.
 
 ## Rime
 
-[Rime](https://code.google.com/p/rimeime/) is a powerful Chinese Input Method Engine.
+[Rime](https://github.com/rime) is a powerful Chinese Input Method Engine.
 
 ## Eclipse
 
-I use Eclipse with [Vrapper](http://vrapper.sourceforge.net/). I also modified some shortcuts.
+Use Eclipse with [Vrapper](http://vrapper.sourceforge.net/) and some modified shortcuts.
 
 Refer to `vrapperrc` file.
 
 ``` bash
-$ ln -s path_to_dotfiles/eclipse/vrapperrc ~/.vrapperrc
+$ ln -s ~/dotfiles/eclipse/vrapperrc ~/.vrapperrc
 ```
 
 ## Keyboard Enhancement in Mac
