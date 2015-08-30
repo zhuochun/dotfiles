@@ -2,20 +2,26 @@
 autocmd! FileType neosnippet,snippet setlocal noexpandtab
 " }}}
 
+" Git {{{
+autocmd! FileType gitcommit setlocal spell
+" }}}
+
 " Ruby Mappings {{{
 autocmd! FileType ruby,eruby,rdoc :call s:RubyDef()
 function! s:RubyDef()
+  setlocal iskeyword+=!,?
+
   setlocal shiftwidth=2
   setlocal tabstop=2
 
   " Surround % to %
-  let b:surround_37 = "<% \r %>"
+  let b:surround_{char2nr('%')} = "<% \r %>"
   xmap <buffer> % S%
   " Surround = to %=
-  let b:surround_61 = "<%= \r %>"
+  let b:surround_{char2nr('=')} = "<%= \r %>"
   xmap <buffer> _ S=
   " Surround # to #{}
-  let b:surround_35 = "#{\r}"
+  let b:surround_{char2nr('#')} = "#{\r}"
   xmap <buffer> # S#
 
   " Make AutoPairs match for these pairs
@@ -33,8 +39,14 @@ endfunction
 autocmd! BufRead,BufNewFile *.cson set ft=coffee
 autocmd! FileType javascript,coffee :call s:CoffeeDef()
 function! s:CoffeeDef()
+  setlocal iskeyword+=$
+
   setlocal shiftwidth=2
   setlocal tabstop=2
+
+  " Surround # to #{}
+  let b:surround_{char2nr('#')} = "#{\r}"
+  xmap <buffer> # S#
 endfunction
 " }}}
 
@@ -45,13 +57,13 @@ function! s:WebDef()
   setlocal tabstop=2
 
   " Surround % to {{
-  let b:surround_37 = "{{ \r }}"
+  let b:surround_{char2nr('%')} = "{{ \r }}"
   xmap <buffer> % S%
   " Surround = to {{=
-  let b:surround_61 = "{{= \r }}"
+  let b:surround_{char2nr('=')} = "{{= \r }}"
   xmap <buffer> _ S=
   " Surround * to <!--
-  let b:surround_42 = "<!-- \r -->"
+  let b:surround_{char2nr('*')} = "<!-- \r -->"
   xmap <buffer> 8 S*
 
   " Delete surround tag
@@ -71,16 +83,17 @@ autocmd! FileType markdown :call s:MarkdownDef()
 function! s:MarkdownDef()
   setlocal shiftwidth=2
   setlocal tabstop=2
+
   setlocal wrap
 
   " Surround _ to _
-  let b:surround_95 = "_\r_"
+  let b:surround_{char2nr('_')} = "_\r_"
   xmap <buffer> _ S_
   " Surround * to **
-  let b:surround_42 = "**\r**"
+  let b:surround_{char2nr('*')} = "**\r**"
   xmap <buffer> 8 S*
   " Surround - to ~~
-  let b:surround_45 = "~~\r~~"
+  let b:surround_{char2nr('-')} = "~~\r~~"
   xmap <buffer> - S-
 
   " Add more parentheses
@@ -126,7 +139,7 @@ endfunction
 autocmd! FileType cpp,c,cc,h,hpp :call s:CppDef()
 function! s:CppDef()
   " Surround * to /*
-  let b:surround_42 = "/* \r */"
+  let b:surround_{char2nr('*')} = "/* \r */"
   xmap <buffer> 8 S*
 
   " Correct typos

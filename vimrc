@@ -94,12 +94,14 @@ noremap : ;
 set autoread                 " Autoread when a file is changed from the outside
 set mouse=a                  " Enable mouse
 set lazyredraw               " Stops redrawing during complex operations
+set ttyfast                  " Indicates fast terminal connection
 set synmaxcol=999            " Maximum column in which to search for syntax items
 set ttimeout                 " Time out on key codes
 set timeoutlen=42            " Quick timeouts for command combinations
 set history=999              " Keep 999 lines of command line history
 set hidden                   " Change buffer even if it is not saved
 set nowrap                   " No wrap in default
+set display+=lastline        " Always try to display the last line
 set linebreak                " Wrap at word boundary, no break within a word
 set modeline                 " Make modeline (mode config in file) works
 set modelines=2              " Number of lines to checked for set commands

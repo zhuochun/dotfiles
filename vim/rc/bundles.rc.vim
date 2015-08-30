@@ -56,8 +56,12 @@ if neobundle#tap('vim-airline') "{{{
         \   'z': 45,
         \ }
 
+  " disable some plugin integrations
+  let g:airline#extensions#tagbar#enabled = 0
+  let g:airline#extensions#nrrwrgn#enabled = 0
   " disable summary of changed hunks under source control.
   let g:airline#extensions#hunks#enabled = 0
+
   " enable enhanced tabline.
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#show_buffers = 0
@@ -166,12 +170,12 @@ if neobundle#tap('vim-easy-align') "{{{
 endif "}}}
 
 if neobundle#tap('vim-multiple-cursors') "{{{
-  let g:multi_cursor_use_default_mapping = 0
   " Use default mappings for multiple-cursors
-  let g:multi_cursor_next_key = '<C-n>'
-  let g:multi_cursor_prev_key = '<C-p>'
-  let g:multi_cursor_skip_key = '<C-x>'
-  let g:multi_cursor_quit_key = '<Esc>'
+  " let g:multi_cursor_use_default_mapping = 1
+  " let g:multi_cursor_next_key = '<C-n>'
+  " let g:multi_cursor_prev_key = '<C-p>'
+  " let g:multi_cursor_skip_key = '<C-x>'
+  " let g:multi_cursor_quit_key = '<Esc>'
 
   " Disable NeoComplete once start selecting multiple cursors
   function! Multiple_cursors_before()
@@ -263,8 +267,9 @@ if neobundle#tap('undotree') "{{{
 endif "}}}
 
 if neobundle#tap('vim-anzu') "{{{
-  nmap n <Plug>(anzu-n-with-echo)
-  nmap N <Plug>(anzu-N-with-echo)
+  " map to update search status and echo matches
+  nmap n n<Plug>(anzu-update-search-status-with-echo)
+  nmap N N<Plug>(anzu-update-search-status-with-echo)
 
   call neobundle#untap()
 endif "}}}
@@ -380,8 +385,8 @@ if neobundle#tap('unite.vim') "{{{
           \ 'buffer,file,file_rec,file_rec/async,filegrep',
           \ 'ignore_pattern',
           \ join([
-          \   '\.git/', '\.gitkeep', '\.keep', '\.hg/', '\.o', '\.DS_Store',
-          \   '\.idea/', '\.tmp/', '\.sass-cache/', 'tmp/', 'build/', '_build/', 'fonts/', 'images/',
+          \   '\.git/', '\.gitkeep', '\.keep', '\.hg/', '\.o', '\.DS_Store', '\.idea/',
+          \   '\.tmp/', '\.sass-cache/', 'tmp/', 'build/', '_build/', 'fonts/', 'images/',
           \   '_site/', 'dist/', 'node_modules/', 'bower_components/', 'vendor/', 'log/',
           \   '*.tar.gz', '*.zip', '*.jpg', '*.jpeg', '*.gif', '*.png',
           \ ], '\|'))
@@ -406,7 +411,7 @@ if neobundle#tap('unite.vim') "{{{
     " Use ag in unite grep source.
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts =
-          \ '-i --line-numbers --nocolor --nogroup --hidden ' .
+          \ '-i --vimgrep --line-numbers --hidden ' .
           \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'''
     let g:unite_source_grep_recursive_opt = ''
   endif
@@ -420,14 +425,14 @@ if neobundle#tap('unite.vim') "{{{
   let g:junkfile#directory = expand('~/Documents/Notes')
   " Unite plugins settings
   nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
-  nnoremap <silent> gor :<C-u>Unite -buffer-name=MRU_files neomru/file -start-insert<CR>
+  nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
-  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert -resume<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
+  nnoremap <silent> got :<C-u>UniteWithCursorWord -buffer-name=tags tag tag/include -start-insert -resume<CR>
   " Reuses the last unite buffer used
   nnoremap <silent> gou :<C-u>UniteResume<CR>
 
@@ -533,21 +538,34 @@ if neobundle#tap('vimshell.vim') "{{{
 endif "}}}
 
 if neobundle#tap('neocomplete.vim') "{{{
-  let g:acp_enableAtStartup = 0
+  " get quiet messages in auto completion
+  if has("patch-7.4.314")
+    set shortmess+=c
+  endif
 
+  " disable AutoComplPop and use neocomplete
+  let g:acp_enableAtStartup = 0
   let g:neocomplete#enable_at_startup = 1
+
   let g:neocomplete#enable_smart_case = 1
   let g:neocomplete#enable_camel_case = 1
+
   let g:neocomplete#enable_auto_delimiter = 1
   let g:neocomplete#enable_fuzzy_completion = 1
 
-  let g:neocomplete#max_list = 19
   let g:neocomplete#auto_completion_start_length = 2
   let g:neocomplete#manual_completion_start_length = 1
-  let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+  let g:neocomplete#max_list = 42
+  let g:neocomplete#max_keyword_width = 80
   let g:neocomplete#min_keyword_length = 3
-  let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax'
+
+  let g:neocomplete#lock_iminsert = 0
+  let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax|\*ku\*'
+
+  let g:neocomplete#sources#syntax#min_keyword_length = 3
+  let g:neocomplete#sources#buffer#max_keyword_width = 42
+  let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
 
   " Define dictionary
   let g:neocomplete#sources#dictionary#dictionaries = {
@@ -556,26 +574,33 @@ if neobundle#tap('neocomplete.vim') "{{{
         \   'coffee'     : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
         \ }
 
+  " Define keyword patterns
+  if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+  endif
+
+  let g:neocomplete#keyword_patterns._ = '\h\w*'
+
   " Enable heavy omni completion
   if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
   endif
+
   if !exists('g:neocomplete#sources#omni#functions')
     let g:neocomplete#sources#omni#functions = {}
   endif
+
   if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
   endif
 
   " Some omni customizations
-  let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
-  let g:neocomplete#sources#omni#functions.go = 'gocomplete#Complete'
+  " let g:neocomplete#sources#omni#functions.go = 'gocomplete#Complete'
+  " let g:neocomplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
+  " let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
 
-  " Define keyword patterns
-  if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-  endif
-  let g:neocomplete#keyword_patterns._ = '\h\w*'
+  " Force omni customizations
+  " let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
 
   " Appoints vim source call function when completes custom and customlist command
   let g:neocomplete#sources#vim#complete_functions = {
@@ -586,7 +611,7 @@ if neobundle#tap('neocomplete.vim') "{{{
         \   'VimShell' : 'vimshell#complete',
         \ }
 
-  " Fallbacks on complete keywords by neocomplete and the omnifunc
+  " Fallbacks on complete keywords by neocomplete and omnifunc
   let g:neocomplete#fallback_mappings = ["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
 
   " Plugin key-mappings
@@ -669,16 +694,6 @@ if neobundle#tap('vim-surround') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('vim-visualstar') "{{{
-  " search without moving to next match
-  nmap *  <Plug>(visualstar-*)N
-  nmap #  <Plug>(visualstar-#)N
-  vmap *  <Plug>(visualstar-g*)N
-  vmap #  <Plug>(visualstar-g#)N
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('vim-expand-region') "{{{
   " Extend the global default regions
   function! neobundle#hooks.on_source(bundle) " {{{
@@ -756,7 +771,7 @@ if neobundle#tap('emmet-vim') "{{{
   let g:use_emmet_complete_tag = 1
   " <D-y> to expand input in insert mode
   let g:user_emmet_expandabbr_key = '<D-y>'
-  " <D-Y> to goto next point
+  "  <D-Y> to goto next point
   let g:user_emmet_next_key = '<D-Y>'
   " <M-y> to goto prev point
   let g:user_emmet_prev_key = '<M-y>'
@@ -800,21 +815,15 @@ if neobundle#tap('vim-ruby') "{{{
 endif "}}}
 
 if neobundle#tap('vim-ruby-refactoring') "{{{
-  " :RInlineTemp             - Inline Temp
-  " :RConvertPostConditional - Convert Post Conditional
-  " :RExtractConstant        - Extract Constant
-  " :RExtractLet             - Extract to Let (Rspec)
-  " :RExtractLocalVariable   - Extract Local Variable
-  " :RRenameLocalVariable    - Rename Local Variable
-  " :RRenameInstanceVariable - Rename Instance Variable
-  " :RExtractMethod          - Extract Method
+  " :RInlineTemp             : Inline Temp
+  " :RConvertPostConditional : Convert Post Conditional
+  " :RExtractConstant        : Extract Constant
+  " :RExtractLet             : Extract to Let (Rspec)
+  " :RExtractLocalVariable   : Extract Local Variable
+  " :RRenameLocalVariable    : Rename Local Variable
+  " :RRenameInstanceVariable : Rename Instance Variable
+  " :RExtractMethod          : Extract Method
   let g:ruby_refactoring_map_keys = 0
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-blockle') "{{{
-  let g:blockle_mapping = 'gr'
 
   call neobundle#untap()
 endif "}}}

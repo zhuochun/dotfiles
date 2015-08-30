@@ -1,3 +1,9 @@
+" diff two blocks of code {{{
+NeoBundleLazy 'AndrewRadev/linediff.vim', {
+      \   'autoload' : { 'commands' : ['Linediff', 'LinediffReset'] }
+      \ }
+" }}}
+
 " switch between words {{{
 NeoBundleLazy 'AndrewRadev/switch.vim', {
       \   'autoload' : { 'commands': ['Switch'] },
@@ -30,9 +36,7 @@ NeoBundle 'bling/vim-bufferline'
 " }}}
 
 " buffers {{{
-NeoBundle 'qpkorr/vim-bufkill', {
-      \   'autoload' : { 'commands' : ['BD', 'bd', 'BW', 'bw'] },
-      \ }
+NeoBundleLazy 'qpkorr/vim-bufkill'
 
 NeoBundleLazy 'schickling/vim-bufonly', {
       \   'autoload' : { 'commands' : ['BufOnly', 'BOnly'] },
@@ -40,7 +44,7 @@ NeoBundleLazy 'schickling/vim-bufonly', {
 " }}}
 
 " NrrwRgn {{{
-NeoBundle 'chrisbra/NrrwRgn', {
+NeoBundleLazy 'chrisbra/NrrwRgn', {
       \   'autoload' : {
       \     'commands' : ['NarrowRegion', 'NRPrepare', 'NRMulti'],
       \   },
@@ -66,7 +70,7 @@ NeoBundleLazy 'dimasg/vim-mark', {
 " sequencial numbering with pattern {{{
 NeoBundleLazy 'deris/vim-rengbang', {
       \   'autoload' : {
-      \     'commands' : ['RengBang', 'RengBangUsePrev'],
+      \     'commands' : ['RengBang', 'RengBangUsePrev', 'RengBangConfirm'],
       \     'mappings' : ['<Plug>(operator-rengbang'],
       \   },
       \ }
@@ -131,7 +135,7 @@ NeoBundleLazy 'jeetsukumaran/vim-markology', {
 " }}}
 
 " open documentation {{{
-NeoBundleLazy 'Keithbsmiley/investigate.vim', {
+NeoBundleLazy 'keith/investigate.vim', {
       \   'autoload' : { 'mappings' : ['gK'] },
       \ }
 " }}}
@@ -154,7 +158,9 @@ NeoBundleLazy 'majutsushi/tagbar', {
       \ }
 " }}}
 
+" match open/close {{{
 NeoBundle 'matchit.zip'
+" }}}
 
 " undotree {{{
 NeoBundleLazy 'mbbill/undotree', {
@@ -163,11 +169,11 @@ NeoBundleLazy 'mbbill/undotree', {
 " }}}
 
 " osyo-manga bundles {{{
-" NeoBundle 'osyo-manga/vim-anzu', {
-"       \   'autoload' : { 'mappings' : ['<Plug>(anzu-'] },
-"       \ }
+NeoBundleLazy 'osyo-manga/vim-anzu', {
+      \   'autoload' : { 'mappings' : ['<Plug>(anzu-'] },
+      \ }
 
-NeoBundle 'osyo-manga/vim-over', {
+NeoBundleLazy 'osyo-manga/vim-over', {
       \   'autoload' : { 'commands' : ['OverCommandLine'] },
       \ }
 " }}}
@@ -187,14 +193,17 @@ NeoBundle 'jistr/vim-nerdtree-tabs', {
 " Shougo bundles {{{
 NeoBundle 'Shougo/context_filetype.vim'
 
-NeoBundle 'Shougo/vimproc', {
+" Async execution library {{
+NeoBundle 'Shougo/vimproc.vim', {
       \   'build' : {
-      \     'windows' : 'make -f make_mingw32.mak',
+      \     'windows' : 'tools\\update-dll-mingw',
       \     'cygwin' : 'make -f make_cygwin.mak',
       \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \   },
+      \     'linux' : 'make',
+      \     'unix' : 'gmake',
+      \   }
       \ }
+" }}
 
 " Unite {{
 NeoBundle 'Shougo/unite.vim'
@@ -272,10 +281,10 @@ NeoBundle 'Shougo/neco-vim', {
       \ }
 
 " Complete Ruby with RSense
-" NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
-"       \   'depends'  : ['Shougo/neocomplete.vim'],
-"       \   'autoload' : {'filetypes': 'ruby'}
-"       \ }
+NeoBundle 'supermomonga/neocomplete-rsense.vim', {
+      \   'depends'  : ['Shougo/neocomplete.vim'],
+      \   'autoload' : {'filetypes': 'ruby'}
+      \ }
 
 " Complete Ruby with rcodetools
 " NeoBundle 'osyo-manga/vim-monster', {
@@ -343,11 +352,15 @@ NeoBundleLazy 'tpope/vim-eunuch', {
       \   },
       \ }
 
-NeoBundleLazy "tpope/vim-projectionist"
+NeoBundle 'tpope/vim-projectionist'
 
 NeoBundle 'tpope/vim-repeat'
 
 NeoBundle 'tpope/vim-surround'
+
+NeoBundleLazy 'tpope/vim-scriptease', {
+      \   'autoload' : { 'commands' : ['PP', 'Runtime', 'Disarm', 'Verbose'] },
+      \ }
 
 " bprevious: [b, bnext: ]b, bfirst: [B
 " lprevious: [l, lnext: ]l, lfirst: [L
@@ -357,16 +370,10 @@ NeoBundleLazy 'tpope/vim-unimpaired', {
       \   'autoload' : {'mappings' : ['[', ']']}
       \ }
 
-NeoBundle 'tpope/vim-vinegar', {
+NeoBundleLazy 'tpope/vim-vinegar', {
       \   'depends'  : 'scrooloose/nerdtree',
       \   'autoload' : {'mappings' : ['-']}
       \ }
-" }}}
-
-" * and # to search selection {{{
-" NeoBundleLazy 'thinca/vim-visualstar', {
-"       \   'autoload' : {'mappings' : ['<Plug>(visualstar-']}
-"       \ }
 " }}}
 
 " text replacement in quickfix {{{
@@ -379,7 +386,7 @@ NeoBundleLazy 'thinca/vim-qfreplace', {
 " }}}
 
 " vim-expand-region {{{
-NeoBundle 'terryma/vim-expand-region', {
+NeoBundleLazy 'terryma/vim-expand-region', {
       \   'autoload' : {'mappings' : ['<Plug>(expand_region']}
       \ }
 " }}}
@@ -477,16 +484,23 @@ NeoBundle 'marijnh/tern_for_vim', {
 
 " Ruby/Rails {{{
 NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-rbenv'
-NeoBundle 'tpope/vim-bundler'
-NeoBundle 'tpope/vim-rake'
 NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-liquid'
-NeoBundle 'Keithbsmiley/rspec.vim'
-NeoBundle 'duwanis/tomdoc.vim'
-NeoBundle 'ecomba/vim-ruby-refactoring'
-NeoBundle 'jgdavey/vim-blockle'
+NeoBundle 'tpope/vim-endwise'
+NeoBundleLazy 'tpope/vim-rbenv'
+NeoBundleLazy 'tpope/vim-bundler'
+NeoBundleLazy 'tpope/vim-rake'
+NeoBundleLazy 'tpope/vim-liquid'
+NeoBundle 'keith/rspec.vim'
+NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
+      \   'autoload' : {
+      \     'commands' : [
+      \       'RInlineTemp', 'RConvertPostConditional', 'RExtractConstant',
+      \       'RExtractLet', 'RExtractLocalVariable', 'RRenameLocalVariable',
+      \       'RRenameInstanceVariable', 'RExtractMethod',
+      \     ]
+      \   },
+      \ }
+NeoBundleLazy 'duwanis/tomdoc.vim'
 " }}}
 
 " Clojure {{{
@@ -508,7 +522,9 @@ NeoBundle 'fatih/vim-go'
 
 " Markdown {{{
 NeoBundle 'gabrielelana/vim-markdown'
-NeoBundle 'farseer90718/vim-regionsyntax'
+NeoBundle 'farseer90718/vim-regionsyntax', {
+      \   'autoload': {'filetypes': 'markdown'}
+      \ }
 NeoBundle 'kannokanno/previm', {
       \   'depends' : ['tyru/open-browser.vim'],
       \   'autoload': {'commands': 'PrevimOpen'}
