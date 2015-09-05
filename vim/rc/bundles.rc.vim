@@ -161,6 +161,13 @@ if neobundle#tap('auto-pairs') "{{{
 endif "}}}
 
 if neobundle#tap('vim-easy-align') "{{{
+  " Additional align delimiters
+  let g:easy_align_delimiters = {
+        \ '>': { 'pattern': '>>\|=>\|>' },
+        \ '\': { 'pattern': '\\' },
+        \ '/': { 'pattern': '//\+\|/\*\|\*/', 'delimiter_align': 'l', 'ignore_groups': ['!Comment'] },
+        \ }
+
   " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
   xmap <CR>      <Plug>(EasyAlign)
   " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
@@ -399,8 +406,8 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> <D-i>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> <D-o>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   " File switching using file_rec
-  nnoremap <silent> <D-S-I> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
-  nnoremap <silent> <D-S-O> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
+  nnoremap <silent> <D-I>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
+  nnoremap <silent> <D-O>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
   " Buffer switching
   nnoremap <silent> <C-b>   :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   " Tab switching
@@ -752,14 +759,30 @@ if neobundle#tap('vim-choosewin') "{{{
 endif "}}}
 
 if neobundle#tap('goyo.vim') "{{{
+  let g:goyo_width = 90
+
   nnoremap <F11> :Goyo<CR>
+  nnoremap <leader>G :Goyo<CR>
 
   call neobundle#untap()
 endif "}}}
 
 if neobundle#tap('limelight.vim') "{{{
-  autocmd! User GoyoEnter Limelight
-  autocmd! User GoyoLeave Limelight!
+  let g:limelight_paragraph_span = 1
+  let g:limelight_priority = -1
+
+  function! s:goyo_enter()
+    set scrolloff=999
+    Limelight
+  endfunction
+
+  function! s:goyo_leave()
+    set scrolloff=6
+    Limelight!
+  endfunction
+
+  autocmd! User GoyoEnter nested call <SID>goyo_enter()
+  autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
   call neobundle#untap()
 endif "}}}
@@ -834,8 +857,17 @@ if neobundle#tap('vim-markdown') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('mhinz/vim-signify') "{{{
-  let g:signify_vcs_list = ['git']
+if neobundle#tap('vim-gitgutter') "{{{
+  " vim-gitgutter default mappings
+  " nmap [c         <Plug>GitGutterPrevHunk
+  " nmap ]c         <Plug>GitGutterNextHunk
+  " nmap <leader>hs <Plug>GitGutterStageHunk
+  " nmap <leader>hr <Plug>GitGutterRevertHunk
+
+  " no need to update in realtime
+  let g:gitgutter_realtime = 0
+  " update when switch buffer/tab, or focus on gui
+  let g:gitgutter_eager = 1
 
   call neobundle#untap()
 endif "}}}

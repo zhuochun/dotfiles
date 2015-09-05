@@ -3,7 +3,8 @@
   " F2    Insert date and time
   inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
   " F3    Toggle NERDTree
-  " F4
+  " F4    Toggle Alternative file
+  nnoremap <F4> :A<CR>
   " F5    Toggle Undotree
   " F6    Toggle Paste mode
   set pastetoggle=<F6>
@@ -120,6 +121,7 @@
   " <;>       Repeat last find f,t,F,T
   " <:>       Input Command
   " <'>*      Move to {a-zA-Z} mark
+  " <\">*     Registers
   " <z>*      Folding
   " <x>       Delete char under cursor
   " <X>       Delete char before cursor
@@ -204,16 +206,18 @@
   nnoremap <leader>s? z=
   " <leader>S Clear trailing whitespace
   nnoremap <leader>S :%s/\s\+$//ge<CR>:nohl<CR>
-  " <leader>d Close buffer with leave window intact
-  nnoremap <leader>d :BD<CR>
+  " <leader>d Close buffer and leave Window intact
+  nnoremap <leader>d :Sayonara!<CR>
   " <leader>D Close buffer
-  nnoremap <leader>D :bd<CR>
+  nnoremap <leader>D :Sayonara<CR>
   " <leader>f Format file
   nnoremap <leader>f gg=G''
   " <leader>F Format file
   nnoremap <leader>F gg=G''
   " <leader>g
-  " <leader>h
+  " <leader>G Toggle Goyo
+  " <leader>hs GitGutterStageHunk
+  " <leader>hr GitGutterRevertHunk
   " <leader>j
   " <leader>k
   " <leader>l

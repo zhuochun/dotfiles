@@ -126,6 +126,18 @@ function! s:MarkdownDef()
 endfunction
 " }}}
 
+" Clojure Mappings {{{
+autocmd FileType lisp,clojure,scheme RainbowParentheses
+autocmd FileType lisp,clojure,scheme :call s:ClojureDef()
+function! s:ClojureDef()
+  " Make AutoPairs match for these pairs
+  let b:AutoPairs = { '(':')', '[':']', '{':'}', '"':'"' }
+
+  " Trigger fireplace Eval
+  xnoremap <buffer> <leader><leader> :Eval<CR>
+endfunction
+" }}}
+
 " Python Mappings {{{
 autocmd! FileType python :call s:PythonDef()
 function! s:PythonDef()

@@ -299,10 +299,11 @@ set noshowmode               " No show current mode
 " GUI {{{
 " fonts, powerline fonts:
 " https://github.com/powerline/fonts
-set guifont=Monoid\ HalfTight\ Retina:h11
+" set guifont=Monoid\ HalfTight\ Retina:h11
+set guifont=Hack:h12
+" set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Inconsolata-g\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
-" set guifont=Source\ Code\ Pro\ for\ Powerline:h14
 
 set guicursor=a:blinkon0     " Disable GUI blinking cursor
 set guioptions=              " Disable GUI components
