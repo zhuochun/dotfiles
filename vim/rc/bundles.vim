@@ -253,7 +253,7 @@ NeoBundleLazy 'tsukkee/unite-tag', {
 
 " VimShell {{
 NeoBundleLazy 'Shougo/vimshell.vim', {
-      \   'depends' : 'Shougo/vimproc',
+      \   'depends' : 'Shougo/vimproc.vim',
       \   'autoload' : {
       \     'commands' : ['VimShellPop', 'VimShellTab'],
       \     'mappings' : ['<Plug>(vimshell_'],
@@ -293,7 +293,7 @@ NeoBundleLazy 'Shougo/neco-vim', {
 
 " Complete Ruby with rcodetools
 " NeoBundleLazy 'osyo-manga/vim-monster', {
-"       \   'depends'  : ['Shougo/vimproc', 'Shougo/neocomplete.vim'],
+"       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
 "       \   'autoload' : {'filetypes': 'ruby'}
 "       \ }
 " }}
@@ -474,7 +474,7 @@ NeoBundleLazy 'tpope/vim-liquid'
 " CSS {{{
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundleLazy 'cakebaker/scss-syntax.vim'
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': ['sass', 'scss']}}
 NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 " }}}
 
@@ -502,13 +502,14 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 
 " Ruby/Rails {{{
 NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-rails'
 NeoBundle 'keith/rspec.vim'
-NeoBundleLazy 'tpope/vim-endwise', {'autoload': {'filetypes': 'ruby'}}
-NeoBundleLazy 'tpope/vim-rbenv'
+NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
+NeoBundleLazy 'tpope/vim-endwise', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-bundler'
 NeoBundleLazy 'tpope/vim-rake'
 NeoBundleLazy 'duwanis/tomdoc.vim'
+NeoBundleLazy 'stefanoverna/vim-i18n', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
       \   'autoload' : {
       \     'commands' : [
@@ -533,8 +534,8 @@ NeoBundle 'elixir-lang/vim-elixir'
 " }}}
 
 " C/Cpp {{{
-NeoBundleLazy 'vim-jp/cpp-vim'
-NeoBundleLazy 'octol/vim-cpp-enhanced-highlight'
+NeoBundleLazy 'vim-jp/cpp-vim', {'autoload': {'filetypes': ['c', 'cpp']}}
+NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c', 'cpp']}}
 " }}}
 
 " Go {{{
@@ -567,11 +568,12 @@ NeoBundleLazy 'gregsexton/gitv', {
 " }}}
 
 " Others {{{
-NeoBundleLazy 'chase/vim-ansible-yaml'
+NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
 " }}}
 
 " Colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'NLKNguyen/papercolor-theme'

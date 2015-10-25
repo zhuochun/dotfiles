@@ -95,7 +95,7 @@ set autoread                 " Autoread when a file is changed from the outside
 set mouse=a                  " Enable mouse
 set lazyredraw               " Stops redrawing during complex operations
 set ttyfast                  " Indicates fast terminal connection
-set synmaxcol=999            " Maximum column in which to search for syntax items
+set synmaxcol=999            " Maximum columns to have syntax coloring
 set ttimeout                 " Time out on key codes
 set timeoutlen=42            " Quick timeouts for command combinations
 set history=999              " Keep 999 lines of command line history
@@ -376,6 +376,13 @@ function! s:root()
   endif
 endfunction
 " }}
+" }}}
+
+" Load local vimrc-extra if found {{{
+let s:local_vimrc = fnamemodify(resolve(expand('<sfile>')), ':p:h').'/vimrc-extra'
+if filereadable(s:local_vimrc)
+    execute 'source' s:local_vimrc
+endif
 " }}}
 
 set secure

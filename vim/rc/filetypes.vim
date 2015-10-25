@@ -147,6 +147,16 @@ function! s:PythonDef()
 endfunction
 " }}}
 
+" Go Mappings {{{
+autocmd! FileType go :call s:GoDef()
+function! s:GoDef()
+  " Correct typos
+  iab <buffer> ;=         :=
+  iab <buffer> <=         <-
+  iab <buffer> String     string
+endfunction
+" }}}
+
 " C/CPP Mappings {{{
 autocmd! FileType cpp,c,cc,h,hpp :call s:CppDef()
 function! s:CppDef()

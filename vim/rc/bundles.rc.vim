@@ -369,9 +369,20 @@ if neobundle#tap('unite.vim') "{{{
           \   'short_source_names' : 1,
           \ })
 
+    " sorter_default
+    call unite#filters#sorter_default#use(['sorter_rank'])
+    " matcher default
+    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+    " sorters
+    call unite#custom#source(
+          \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
+          \ 'sorters',
+          \ ['sorter_selecta'])
+
     " matchers
     call unite#custom#source(
-          \ 'buffer,file,file_rec,file_rec/async,file_rec/git',
+          \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
           \ 'matchers',
           \ ['converter_relative_word', 'matcher_fuzzy'])
 
@@ -381,39 +392,34 @@ if neobundle#tap('unite.vim') "{{{
           \ 'matchers',
           \ ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
 
-    " converters
-    call unite#custom#source(
-          \ 'file_rec,file_rec/async,file_rec/git',
-          \ 'converters',
-          \ ['converter_file_directory'])
-
     " ignore_patterns
     call unite#custom#source(
           \ 'buffer,file,file_rec,file_rec/async,filegrep',
           \ 'ignore_pattern',
           \ join([
-          \   '\.git/', '\.gitkeep', '\.keep', '\.hg/', '\.o', '\.DS_Store', '\.idea/',
-          \   '\.tmp/', '\.sass-cache/', 'tmp/', 'build/', '_build/', 'fonts/', 'images/',
-          \   '_site/', 'dist/', 'node_modules/', 'bower_components/', 'vendor/', 'log/',
-          \   '*.tar.gz', '*.zip', '*.jpg', '*.jpeg', '*.gif', '*.png',
+          \   '\.git/', '\.hg/', '\.o', '\.idea/', '**/\.gitkeep', '**/\.keep', '**/\.DS_Store',
+          \   '**/\.sass-cache/', '**/\.tmp/', '**/tmp/', '**/build/', '**/_build/', '**/fonts/',
+          \   '**/images/', '**/_site/', '**/dist/', '**/node_modules/', '**/bower_components/',
+          \   '**/vendor/', '**/log/', '**/*.tar.gz', '**/*.zip',
+          \   '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.png',
           \ ], '\|'))
-
-    " sorter_default
-    call unite#filters#sorter_default#use(['sorter_rank'])
   endfunction " }}}
 
+  " Press <C-l> in Unite to refresh cached files when new files not appearing
+  " Press <C-r> to restart Unite and fix Unite glitches
+
   " File switching using git (fast)
-  nnoremap <silent> <D-i>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
-  nnoremap <silent> <D-o>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  nnoremap <silent> <D-i>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert -resume<CR>
+  nnoremap <silent> <D-o>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert -resume<CR>
   " File switching using file_rec
-  nnoremap <silent> <D-I>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
-  nnoremap <silent> <D-O>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
+  nnoremap <silent> <D-I>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert -resume<CR>
+  nnoremap <silent> <D-O>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert -resume<CR>
   " Buffer switching
   nnoremap <silent> <C-b>   :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   " Tab switching
   nnoremap <silent> <C-t>   :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
 
-  " Use Ag
+  " Use Ag to Grep
   if executable('ag')
     " Use ag in unite grep source.
     let g:unite_source_grep_command = 'ag'
@@ -423,25 +429,33 @@ if neobundle#tap('unite.vim') "{{{
     let g:unite_source_grep_recursive_opt = ''
   endif
   " Mapping on Ag
-  nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty -resume<CR>
-  nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit -resume<CR>
+  nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
+  nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
   vnoremap <silent> <D-/> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
   vnoremap <silent> <D-F> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
 
-  " Unite plugins
+  " Unite Junkfile
   let g:junkfile#directory = expand('~/Documents/Notes')
-  " Unite plugins settings
   nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
-  nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
-  nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
-  nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
+  " Unite Neomru
+  nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert -resume<CR>
+  nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd -resume<CR>
+  " Unite plugins
+  nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
-  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
+  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview -resume<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-  nnoremap <silent> got :<C-u>UniteWithCursorWord -buffer-name=tags tag tag/include -start-insert -resume<CR>
+  " Unite tag
+  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert -resume<CR>
+  " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
+  autocmd BufEnter *
+        \  if empty(&buftype)
+        \|    nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
+        \| endif
+
   " Reuses the last unite buffer used
-  nnoremap <silent> gou :<C-u>UniteResume<CR>
+  nnoremap <silent> gor :<C-u>UniteResume<CR>
 
   " Key Mappings in Unite {{{
   autocmd! FileType unite call s:unite_my_settings()
@@ -833,6 +847,13 @@ if neobundle#tap('vim-ruby') "{{{
   let g:rubycomplete_buffer_loading = 0
   let g:rubycomplete_classes_in_global = 0
   let g:rubycomplete_rails = 0
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-i18n') "{{{
+  command! LocaleTranslate :call I18nTranslateString()<CR>
+  command! LocaleDisplay   :call I18nDisplayTranslation()<CR>
 
   call neobundle#untap()
 endif "}}}

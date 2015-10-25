@@ -9,7 +9,7 @@ command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h12
 command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
 
 set background=dark
-colorscheme base16-railscasts
+colorscheme gruvbox
 " }}}
 
 " common gui groups {{{
