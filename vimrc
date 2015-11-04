@@ -14,7 +14,7 @@ if &compatible
   set nocompatible
 endif
 
-" Source individual rc files
+" Function to source individual rc files
 function! s:source_rc(path)
   execute 'source' fnameescape(expand('~/.vim/rc/' . a:path))
 endfunction
@@ -24,6 +24,7 @@ endfunction
 if has("gui_macvim")
   set macmeta
 endif
+
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -31,14 +32,14 @@ endif
 " Plugins {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" NeoBundle {{{
+" NeoBundle runtime setup {{{
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
+" }}}
 
 " Source bundles and configurations {{{
 call neobundle#begin(expand('~/.vim/bundle/'))
-
   if neobundle#load_cache()
     NeoBundleFetch 'Shougo/neobundle.vim'
     call s:source_rc('bundles.vim')
@@ -46,7 +47,6 @@ call neobundle#begin(expand('~/.vim/bundle/'))
   endif
 
   call s:source_rc('bundles.rc.vim')
-
 call neobundle#end()
 " }}}
 
@@ -64,23 +64,20 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Essential {{{
-" enable filetype plugin
+" Enable filetype plugin
 filetype plugin on
 filetype indent on
 filetype on
 
-" syntax highlighting on
+" Syntax highlighting on
 syntax on
-" }}}
 
-" encoding {{{
+" Encoding to utf-8
 set fileencoding=utf-8
 set encoding=utf-8
 set termencoding=utf-8
 set fileencodings=utf-8,ucs-bom,chinese,gbk
-" }}}
 
-" leader and : {{{
 " , is easier than \
 let g:mapleader = ","
 let mapleader = ","
@@ -175,6 +172,24 @@ nnoremap zO zczO
 nnoremap <C-z> mzzMzvzz15<c-e>`z
 " }}}
 
+" Format options {{{
+" o - insert command leader in o or O
+" t - autowrap text
+" c - autowrap comments
+" r - insert comment leader
+" mM - useful for Chinese characters, q - gq
+" j - remove comment leader when joining lines
+augroup format_options
+  autocmd!
+  autocmd FileType * setlocal formatoptions+=j
+  autocmd FileType * setlocal formatoptions-=o
+augroup END
+" }}}
+
+" Word boundary {{{
+autocmd! FileType * setlocal iskeyword-=_,-,:
+" }}}
+
 " List chars {{{
 set list
 set listchars=tab:»»,trail:⌴,conceal:…,extends:❯,precedes:❮,nbsp:_
@@ -199,7 +214,7 @@ set backupdir=/tmp/,~/tmp,~/Temp
 set noswapfile
 set directory=/tmp/,~/tmp,~/Temp
 
-" Persistent undo
+" Enable Persistent undo
 if has('persistent_undo')
   set undofile
 
@@ -217,58 +232,41 @@ endif
 " }}}
 
 " Tabs and windows {{{
-  " Switch between tab 1 ~ 9
-  for i in range(1, 9)
-    exec "nnoremap <D-".i."> ".i."gt"
-  endfor
+" Switch between tab 1 ~ 9
+for i in range(1, 9)
+  exec "nnoremap <D-".i."> ".i."gt"
+endfor
 
-  nnoremap <silent> <M-l> :<C-u>tabnext<CR>
-  nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
-  nnoremap <silent> <D-(> :<C-u>tabprevious<CR>
-  nnoremap <silent> <D-)> :<C-u>tabnext<CR>
-  nnoremap <silent> <D-t> :<C-u>tab split<CR>
-  nnoremap <silent> <D-T> :<C-u>tabnew<CR>
-  nnoremap <silent> <D-w> :<C-u>tabclose<CR>
+" Some tab shortcuts
+nnoremap <silent> <M-l> :<C-u>tabnext<CR>
+nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
+nnoremap <silent> <D-(> :<C-u>tabprevious<CR>
+nnoremap <silent> <D-)> :<C-u>tabnext<CR>
+nnoremap <silent> <D-t> :<C-u>tab split<CR>
+nnoremap <silent> <D-T> :<C-u>tabnew<CR>
+nnoremap <silent> <D-w> :<C-u>tabclose<CR>
 
-  " splitting
-  set splitright
-  set splitbelow
+" Splitting defaults
+set splitright
+set splitbelow
 
-  " Smart way to move btw. windows
-  nmap <C-j> <C-W>j
-  nmap <C-k> <C-W>k
-  nmap <C-h> <C-W>h
-  nmap <C-l> <C-W>l
+" Smart way to move btw. windows
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
 
-  " Use arrows to change the splited windows
-  nmap <S-right> <C-W>L
-  nmap <S-left>  <C-W>H
-  nmap <S-up>    <C-W>K
-  nmap <S-down>  <C-W>J
+" Use arrows to change the splited windows
+nmap <S-right> <C-W>L
+nmap <S-left>  <C-W>H
+nmap <S-up>    <C-W>K
+nmap <S-down>  <C-W>J
 
-  " Use shift+arrows to resize the windows
-  nmap <D-S-right> 3<C-W>>
-  nmap <D-S-left>  3<C-W><
-  nmap <D-S-up>    3<C-W>+
-  nmap <D-S-down>  3<C-W>-
-" }}}
-
-" Format options {{{
-" o - insert command leader in o or O
-" t - autowrap text
-" c - autowrap comments
-" r - insert comment leader
-" mM - useful for Chinese characters, q - gq
-" j - remove comment leader when joining lines
-augroup format_options
-  autocmd!
-  autocmd FileType * setlocal formatoptions+=j
-  autocmd FileType * setlocal formatoptions-=o
-augroup END
-" }}}
-
-" Word boundary {{{
-autocmd! FileType * setlocal iskeyword-=_,-,:
+" Use shift+arrows to resize the windows
+nmap <D-S-right> 3<C-W>>
+nmap <D-S-left>  3<C-W><
+nmap <D-S-up>    3<C-W>+
+nmap <D-S-down>  3<C-W>-
 " }}}
 
 " }}}
@@ -299,10 +297,10 @@ set noshowmode               " No show current mode
 " GUI {{{
 " fonts, powerline fonts:
 " https://github.com/powerline/fonts
-" set guifont=Monoid\ HalfTight\ Retina:h11
 set guifont=Hack:h12
-" set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Inconsolata-g\ for\ Powerline:h14
+" set guifont=Monoid\ HalfTight\ Retina:h11
+" set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
 
 set guicursor=a:blinkon0     " Disable GUI blinking cursor
@@ -325,9 +323,8 @@ set completeopt-=preview    " no preview window
 " Key Mappings {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Source all mappings {{{
+" Source all mappings
 call s:source_rc('mappings.vim')
-" }}}
 
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -381,12 +378,12 @@ endfunction
 " Load local vimrc-extra if found {{{
 let s:local_vimrc = fnamemodify(resolve(expand('<sfile>')), ':p:h').'/vimrc-extra'
 if filereadable(s:local_vimrc)
-    execute 'source' s:local_vimrc
+  execute 'source' s:local_vimrc
 endif
 " }}}
 
-set secure
 " }}}
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim:ft=vim:fdm=marker:sw=2:ts=2

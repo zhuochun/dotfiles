@@ -35,6 +35,12 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
 " }}}
 
+" CamelCaseMotion in W, B, E {{{
+NeoBundle 'bkad/CamelCaseMotion', {
+      \   'autoload' : { 'mappings' : ['<Plug>CamelCaseMotion'] },
+      \ }
+" }}}
+
 " buffers {{{
 NeoBundleLazy 'mhinz/vim-sayonara', {
       \   'autoload' : { 'commands' : ['Sayonara!', 'Sayonara'] },
@@ -380,12 +386,12 @@ NeoBundleLazy 'tpope/vim-scriptease', {
 " cprevious: [q, cnext: ]q, cfirst: [Q
 " tprevious: [t, tnext: ]t
 NeoBundleLazy 'tpope/vim-unimpaired', {
-      \   'autoload' : {'mappings' : ['[', ']']}
+      \   'autoload' : { 'mappings' : ['[', ']'] }
       \ }
 
 NeoBundleLazy 'tpope/vim-vinegar', {
       \   'depends'  : 'scrooloose/nerdtree',
-      \   'autoload' : {'mappings' : ['-']}
+      \   'autoload' : { 'mappings' : ['-'] }
       \ }
 " }}}
 
@@ -400,7 +406,8 @@ NeoBundleLazy 'thinca/vim-qfreplace', {
 
 " vim-expand-region {{{
 NeoBundleLazy 'terryma/vim-expand-region', {
-      \   'autoload' : {'mappings' : ['<Plug>(expand_region']}
+      \   'depends'  : ['kana/vim-textobj-user'],
+      \   'autoload' : { 'mappings' : ['<Plug>(expand_region_'] }
       \ }
 " }}}
 
@@ -417,6 +424,10 @@ NeoBundleLazy 'tyru/open-browser.vim', {
 NeoBundleLazy 'vim-scripts/DrawIt', {
       \   'autoload' : { 'commands' : ['DIstart', 'DIstop', 'DrawIt'], }
       \ }
+" }}}
+
+" targets additional text objects {{{
+NeoBundle 'wellle/targets.vim'
 " }}}
 
 " indent line indicator {{{
@@ -437,7 +448,6 @@ NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-line'               " al | il
 NeoBundle 'kana/vim-textobj-syntax'             " ay | iy
 NeoBundle 'kana/vim-textobj-indent'             " ai | ii
-NeoBundle 'kana/vim-textobj-entire'             " ae | ie
 NeoBundle 'kana/vim-textobj-lastpat'            " a/ | i/
 NeoBundle 'deris/vim-textobj-enclosedsyntax'    " aq | iq
 NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic

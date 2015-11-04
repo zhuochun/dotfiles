@@ -1,3 +1,12 @@
+if neobundle#tap('CamelCaseMotion') "{{{
+  " Default switch mapping `gs` is still available
+  map W <Plug>CamelCaseMotion_w
+  map B <Plug>CamelCaseMotion_b
+  map E <Plug>CamelCaseMotion_e
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('switch.vim') "{{{
   " Some customized definitions
   let g:switch_custom_definitions = [
@@ -716,7 +725,6 @@ if neobundle#tap('vim-surround') "{{{
 endif "}}}
 
 if neobundle#tap('vim-expand-region') "{{{
-  " Extend the global default regions
   function! neobundle#hooks.on_source(bundle) " {{{
     " [ia]v: variable segment, [i]y: syntax segment, [ia]i: indent segment
     " 'a]' :1 => supports nesting of the square brackets
