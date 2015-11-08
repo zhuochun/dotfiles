@@ -369,10 +369,8 @@
   " <D-y> Emmet expand abbr (insert)
   " <D-Y> Emmet next key
   " <D-u>
-  " <D-i> Unite files git
-  " <D-I> Unite files
-  " <D-o> Unite files git
-  " <D-O> Unite files
+  " <D-i> Unite file_rec
+  " <D-o> Unite file_rec/git
   " <D-p>
   " <D-{> Previous Tabs
   " <D-}> Next Tabs

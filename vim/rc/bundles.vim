@@ -218,8 +218,13 @@ NeoBundle 'Shougo/vimproc.vim', {
       \ }
 " }}
 
+NeoBundleLazy 'Shougo/neoinclude.vim'
+" }}
+
 " Unite {{
-NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite.vim', {
+      \   'depends' : ['Shougo/vimproc.vim'],
+      \ }
 
 NeoBundleLazy 'Shougo/neomru.vim', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -252,7 +257,7 @@ NeoBundleLazy 'osyo-manga/unite-quickfix', {
       \ }
 
 NeoBundleLazy 'tsukkee/unite-tag', {
-      \   'depends' : ['Shougo/unite.vim'],
+      \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
       \   'autoload': {'unite_sources': 'tag'}
       \ }
 " }}
@@ -269,7 +274,7 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 
 " NeoComplete {{
 NeoBundleLazy 'Shougo/neocomplete.vim', {
-      \   'depends'  : ['Shougo/context_filetype.vim'],
+      \   'depends'  : ['Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
       \   'autoload' : {'insert': 1}
       \ }
 

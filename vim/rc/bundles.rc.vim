@@ -386,47 +386,23 @@ if neobundle#tap('unite.vim') "{{{
     " sorters
     call unite#custom#source(
           \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
-          \ 'sorters',
-          \ ['sorter_selecta'])
+          \ 'sorters', ['sorter_selecta'])
 
     " matchers
     call unite#custom#source(
           \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
-          \ 'matchers',
-          \ ['converter_relative_word', 'matcher_fuzzy'])
+          \ 'matchers', ['converter_relative_word', 'matcher_fuzzy'])
+
+    " converters
+    call unite#custom#source(
+          \ 'file_rec,file_rec/async,file_rec/git,file_mru',
+          \ 'converters', ['converter_file_directory'])
 
     " matchers for neomru
     call unite#custom#source(
           \ 'neomru/file,neomru/directory',
-          \ 'matchers',
-          \ ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
-
-    " ignore_patterns
-    call unite#custom#source(
-          \ 'buffer,file,file_rec,file_rec/async,filegrep',
-          \ 'ignore_pattern',
-          \ join([
-          \   '\.git/', '\.hg/', '\.o', '\.idea/', '**/\.gitkeep', '**/\.keep', '**/\.DS_Store',
-          \   '**/\.sass-cache/', '**/\.tmp/', '**/tmp/', '**/build/', '**/_build/', '**/fonts/',
-          \   '**/images/', '**/_site/', '**/dist/', '**/node_modules/', '**/bower_components/',
-          \   '**/vendor/', '**/log/', '**/*.tar.gz', '**/*.zip',
-          \   '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.png',
-          \ ], '\|'))
+          \ 'matchers', ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
   endfunction " }}}
-
-  " Press <C-l> in Unite to refresh cached files when new files not appearing
-  " Press <C-r> to restart Unite and fix Unite glitches
-
-  " File switching using git (fast)
-  nnoremap <silent> <D-i>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert -resume<CR>
-  nnoremap <silent> <D-o>   :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert -resume<CR>
-  " File switching using file_rec
-  nnoremap <silent> <D-I>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert -resume<CR>
-  nnoremap <silent> <D-O>   :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert -resume<CR>
-  " Buffer switching
-  nnoremap <silent> <C-b>   :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
-  " Tab switching
-  nnoremap <silent> <C-t>   :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
 
   " Use Ag to Grep
   if executable('ag')
@@ -437,12 +413,29 @@ if neobundle#tap('unite.vim') "{{{
           \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'''
     let g:unite_source_grep_recursive_opt = ''
   endif
-  " Mapping on Ag
+
+  " Press <C-l> to refresh cached files when new files not appearing
+  " Press <C-r> to restart Unite and fix Unite glitches
+
+  " File switching using file_rec
+  nnoremap <silent> <D-i> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
+  " File switching using git (fast)
+  nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  " Buffer switching
+  nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
+  " Tab switching
+  nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
+
+  " Grep in current directory
   nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
   nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
+  " Grep the word under cursor in visual mode
   vnoremap <silent> <D-/> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
   vnoremap <silent> <D-F> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
 
+  " Unite resume the last unite buffer
+  nnoremap <silent> gor :<C-u>UniteResume<CR>
+  nnoremap <silent> gou :<C-u>UniteResume<CR>
   " Unite Junkfile
   let g:junkfile#directory = expand('~/Documents/Notes')
   nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
@@ -451,20 +444,17 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd -resume<CR>
   " Unite plugins
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
+  nnoremap <silent> gol :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview -resume<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-  " Unite tag
   nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert -resume<CR>
   " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
   autocmd BufEnter *
         \  if empty(&buftype)
         \|    nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
         \| endif
-
-  " Reuses the last unite buffer used
-  nnoremap <silent> gor :<C-u>UniteResume<CR>
 
   " Key Mappings in Unite {{{
   autocmd! FileType unite call s:unite_my_settings()
@@ -629,7 +619,7 @@ if neobundle#tap('neocomplete.vim') "{{{
   " let g:neocomplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
   " let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
 
-  " Force omni customizations
+  " Force omni customizations (slow)
   " let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
 
   " Appoints vim source call function when completes custom and customlist command
