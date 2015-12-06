@@ -439,6 +439,10 @@ NeoBundleLazy 'vim-scripts/DrawIt', {
       \ }
 " }}}
 
+" db access from vim {{{
+NeoBundleFetch 'vim-scripts/dbext.vim'
+" }}}
+
 " targets additional text objects {{{
 NeoBundle 'wellle/targets.vim'
 " }}}
@@ -480,9 +484,9 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 " }}}
 
 " HTML/XML {{{
-NeoBundle 'othree/html5.vim'
-NeoBundle 'gregsexton/MatchTag'
-NeoBundle 'mattn/emmet-vim'
+NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
+NeoBundleLazy 'gregsexton/MatchTag', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
+NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
 " }}}
 
 " Template Engines {{{
@@ -494,8 +498,8 @@ NeoBundleLazy 'tpope/vim-liquid'
 " }}}
 
 " CSS {{{
-NeoBundle 'ap/vim-css-color'
-NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundleLazy 'ap/vim-css-color', {'autoload': {'filetypes': ['css', 'sass', 'scss', 'less']}}
+NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload': {'filetypes': ['css', 'sass', 'scss', 'less']}}
 NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': ['sass', 'scss']}}
 NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 " }}}
@@ -504,15 +508,15 @@ NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
 " }}}
 
-" JavaScript {{{
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'othree/yajs.vim'
-NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': 'javascript'}}
-NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': 'javascript'}}
-NeoBundle 'mxw/vim-jsx'
-NeoBundle 'kchmck/vim-coffee-script'
+" JavaScript/CoffeeScript {{{
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
 NeoBundleLazy 'marijnh/tern_for_vim', {
-      \   'autoload': { 'filetypes': 'javascript' },
+      \   'autoload': { 'filetypes': ['javascript'] },
       \   'build': {
       \     'windows': 'npm install',
       \     'cygwin': 'npm install',
@@ -526,10 +530,12 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'keith/rspec.vim'
 NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
+
 NeoBundleLazy 'tpope/vim-endwise', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundleLazy 'tpope/vim-bundler'
-NeoBundleLazy 'tpope/vim-rake'
+NeoBundleLazy 'tpope/vim-bundler', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundleLazy 'tpope/vim-rake', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+
 NeoBundleLazy 'duwanis/tomdoc.vim'
 NeoBundleLazy 'stefanoverna/vim-i18n', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
@@ -548,20 +554,23 @@ NeoBundleLazy 'guns/vim-clojure-static', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-highlight', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'tpope/vim-classpath', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'tpope/vim-fireplace', {'autoload': {'filetypes': 'clojure'}}
-NeoBundleLazy 'tpope/vim-leiningen', {'autoload': {'filetypes': 'clojure'}}
+NeoBundleLazy 'tpope/vim-leiningen', {
+      \   'depends' : ['tpope/vim-dispatch'],
+      \   'autoload' : { 'filetypes': 'clojure' },
+      \ }
 " }}}
 
 " Elixir {{{
-NeoBundle 'elixir-lang/vim-elixir'
+NeoBundleLazy 'elixir-lang/vim-elixir', {'autoload': {'filetypes': 'elixir'}}
 " }}}
 
 " C/Cpp {{{
-NeoBundleLazy 'vim-jp/cpp-vim', {'autoload': {'filetypes': ['c', 'cpp']}}
-NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c', 'cpp']}}
+NeoBundleLazy 'vim-jp/cpp-vim', {'autoload': {'filetypes': ['c', 'h', 'cpp', 'hpp']}}
+NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c', 'h', 'cpp', 'hpp']}}
 " }}}
 
 " Go {{{
-NeoBundle 'fatih/vim-go'
+NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': 'go'}}
 " }}}
 
 " Markdown {{{
