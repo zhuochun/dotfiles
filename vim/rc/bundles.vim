@@ -424,13 +424,6 @@ NeoBundleLazy 'thinca/vim-qfreplace', {
       \ }
 " }}}
 
-" vim-expand-region {{{
-NeoBundleLazy 'terryma/vim-expand-region', {
-      \   'depends'  : ['kana/vim-textobj-user'],
-      \   'autoload' : { 'mappings' : ['<Plug>(expand_region_'] }
-      \ }
-" }}}
-
 " open-browser.vim {{{
 NeoBundleLazy 'tyru/open-browser.vim', {
       \   'autoload' : {

@@ -765,33 +765,6 @@ if neobundle#tap('vim-surround') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('vim-expand-region') "{{{
-  function! neobundle#hooks.on_source(bundle) " {{{
-    " [ia]v: variable segment, [i]y: syntax segment, [ia]i: indent segment
-    " 'a]' :1 => supports nesting of the square brackets
-    call expand_region#custom_text_objects({
-          \   'iv': 0, 'av': 0, 'iy': 0, 'ay': 0,
-          \   'a]': 1, 'ab': 1, 'aB': 1,
-          \ })
-
-    " Add to global default + for ruby
-    call expand_region#custom_text_objects('ruby', {
-          \   'ir': 1, 'ar': 1,
-          \ })
-
-    " Add to global default + for html
-    call expand_region#custom_text_objects('html', {
-          \   'ix': 0, 'ax': 0,
-          \   'it': 1, 'at': 1,
-          \ })
-  endfunction " }}}
-
-  xmap v    <Plug>(expand_region_expand)
-  xmap <BS> <Plug>(expand_region_shrink)
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('open-browser.vim') "{{{
   " disable netrw's gx mapping.
   let g:netrw_nogx = 1
