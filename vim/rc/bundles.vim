@@ -80,6 +80,7 @@ NeoBundleLazy 'dimasg/vim-mark', {
 " }}}
 
 " sequencial numbering with pattern {{{
+" :[range]RengBang [pattern] [start] [step] [usefirst] [format] *RengBang*
 NeoBundleLazy 'deris/vim-rengbang', {
       \   'autoload' : {
       \     'commands' : ['RengBang', 'RengBangUsePrev', 'RengBangConfirm'],
@@ -116,10 +117,9 @@ NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
 
 " trigger tests {{{
 NeoBundleLazy 'janko-m/vim-test', {
-      \   'depends' : 'tpope/vim-dispatch',
+      \   'depends' : ['tpope/vim-dispatch'],
       \   'autoload' : {
-      \     'commands' : ['TestLast', 'TestNearest', 'TestFile', 'TestSuite'],
-      \     'mappings' : ['<Plug>(operator-rengbang'],
+      \      'commands' : ['TestLast', 'TestNearest', 'TestFile', 'TestSuite'],
       \   },
       \ }
 " }}}
@@ -144,6 +144,10 @@ NeoBundleLazy 'junegunn/rainbow_parentheses.vim', {
 NeoBundleLazy 'keith/investigate.vim', {
       \   'autoload' : { 'mappings' : ['gK'] },
       \ }
+
+NeoBundleLazy 'rhysd/devdocs.vim', {
+      \   'autoload' : { 'commands' : ['DevDocs'] },
+      \ }
 " }}}
 
 " multiple cursors {{{
@@ -159,9 +163,12 @@ NeoBundleLazy 'easymotion/vim-easymotion', {
 " }}}
 
 " Yank ring {{{
-NeoBundle 'LeafCage/yankround.vim', {
+NeoBundleLazy 'LeafCage/yankround.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'yankround'}
+      \   'autoload': {
+      \     'unite_sources': ['yankround'],
+      \     'mappings': ['y', 'Y', 'p', 'P', '<Plug>(yankround-']
+      \   }
       \ }
 " }}}
 
@@ -238,7 +245,15 @@ NeoBundleLazy 'Shougo/unite-outline', {
 
 NeoBundleLazy 'Shougo/junkfile.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources' : ['junkfile', 'junkfile/new']}
+      \   'autoload': {'unite_sources': ['junkfile', 'junkfile/new']}
+      \ }
+
+NeoBundleLazy 'Shougo/unite-session', {
+      \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {
+      \     'unite_sources': ['session', 'session/new'],
+      \     'mappings': ['UniteSessionSave', 'UniteSessionLoad'],
+      \   },
       \ }
 
 NeoBundleLazy 'kopischke/unite-spell-suggest', {
@@ -319,8 +334,8 @@ NeoBundleLazy 'Shougo/neosnippet.vim', {
       \   }
       \ }
 
-NeoBundleLazy 'zhuochun/vim-snippets'
-NeoBundleLazy 'zhuochun/vim-dicts'
+NeoBundleFetch 'zhuochun/vim-snippets'
+NeoBundleFetch 'zhuochun/vim-dicts'
 " }}
 " }}}
 
@@ -459,7 +474,6 @@ NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
 NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
 NeoBundle 'osyo-manga/vim-textobj-multiblock'   " ab | ib
-NeoBundle 'whatyouhide/vim-textobj-xmlattr'     " ax | ix
 " }}}
 
 " Writing {{{
@@ -561,33 +575,36 @@ NeoBundle 'fatih/vim-go'
 NeoBundle 'gabrielelana/vim-markdown'
 
 " Highlight code in Markdown
-NeoBundleLazy 'farseer90718/vim-regionsyntax', {
-      \   'autoload': {'filetypes': 'markdown'}
-      \ }
+NeoBundleLazy 'farseer90718/vim-regionsyntax', {'autoload': {'filetypes': 'markdown'}}
 
 " Preview Markdown Result in Browser
 NeoBundleLazy 'kannokanno/previm', {
-      \   'depends' : ['tyru/open-browser.vim'],
-      \   'autoload': {'commands': 'PrevimOpen'}
+      \   'depends': ['tyru/open-browser.vim'],
+      \   'autoload': {'commands': ['PrevimOpen']}
       \ }
 " }}}
 
 " Git {{{
+NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
+
+NeoBundleLazy 'jreybert/vimagit', {'autoload': {'commands': ['Magit', 'MagitOnly']}}
 NeoBundleLazy 'gregsexton/gitv', {
-      \   'depends' : ['tpope/vim-fugitive'],
-      \   'autoload': {'commands': 'Gitv'}
+      \   'depends': ['tpope/vim-fugitive'],
+      \   'autoload': {'commands': ['Gitv']}
       \ }
 " }}}
 
 " Others {{{
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
+NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
 " }}}
 
 " Colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'joshdick/onedark.vim'
+NeoBundle 'joshdick/airline-onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'

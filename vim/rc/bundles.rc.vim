@@ -1,12 +1,3 @@
-if neobundle#tap('CamelCaseMotion') "{{{
-  " Default switch mapping `gs` is still available
-  map W <Plug>CamelCaseMotion_w
-  map B <Plug>CamelCaseMotion_b
-  map E <Plug>CamelCaseMotion_e
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('switch.vim') "{{{
   " Some customized definitions
   let g:switch_custom_definitions = [
@@ -87,6 +78,15 @@ if neobundle#tap('vim-airline') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('CamelCaseMotion') "{{{
+  " Default switch mapping `gs` is still available
+  map W <Plug>CamelCaseMotion_w
+  map B <Plug>CamelCaseMotion_b
+  map E <Plug>CamelCaseMotion_e
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('vim-bufkill') "{{{
   " No default leader-based mappings
   let g:BufKillCreateMappings = 0
@@ -97,6 +97,8 @@ if neobundle#tap('vim-bufkill') "{{{
 endif "}}}
 
 if neobundle#tap('vim-rest-console') "{{{
+  " <C-j> to trigger request
+
   " set output buffer to json format
   let g:vrc_output_buffer_name = '__REST_OUTPUT.json'
 
@@ -220,11 +222,11 @@ if neobundle#tap('vim-easymotion') "{{{
   " normal mode easymotion
   nmap s     <Plug>(easymotion-s)
   vmap s     <Plug>(easymotion-s)
-  " visual mode exact target
-  vmap f     <Plug>(easymotion-f)
-  vmap F     <Plug>(easymotion-F)
-  vmap t     <Plug>(easymotion-t)
-  vmap T     <Plug>(easymotion-T)
+  " visual mode to hit exact target in line
+  vmap f     <Plug>(easymotion-fl)
+  vmap F     <Plug>(easymotion-Fl)
+  vmap t     <Plug>(easymotion-tl)
+  vmap T     <Plug>(easymotion-Tl)
 
   call neobundle#untap()
 endif "}}}
@@ -404,13 +406,60 @@ if neobundle#tap('unite.vim') "{{{
           \ 'matchers', ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
   endfunction " }}}
 
+  " Disable auto select
+  let g:unite_enable_auto_select = 0
+
+  " Custom unite menus {{
+  let g:unite_source_menu_menus = {}
+
+    " Unite Git Menus {
+    let g:unite_source_menu_menus.git = {
+          \   'description' : 'Git Commands',
+          \ }
+    let g:unite_source_menu_menus.git.command_candidates = [
+          \   ['Previous Hunk', 'GitGutterPrevHunk'],
+          \   ['Next Hunk', 'GitGutterNextHunk'],
+          \   ['Stage Hunk', 'GitGutterStageHunk'],
+          \   ['Unstage Hunk', 'GitGutterRevertHunk'],
+          \   ['Status', 'Gstatus'],
+          \   ['Stage', 'Gwrite'],
+          \   ['Diff', 'Gvdiff'],
+          \   ['Blame', 'Gblame'],
+          \   ['Commit', 'Gcommit --verbose'],
+          \   ['Amend', 'Gcommit --amend --verbose'],
+          \   ['Revert', 'Gread'],
+          \   ['Log', 'Glog'],
+          \   ['Visual Log', 'Gitv'],
+          \   ['Browse on GitHub', 'Gbrowse'],
+          \   ['Copy GitHub Path', 'Gbrowse!'],
+          \ ]
+    " }
+
+    " Unite Ruby Refactor Menus {
+    let g:unite_source_menu_menus.ruby = {
+          \   'description' : 'Ruby Commands',
+          \ }
+    let g:unite_source_menu_menus.ruby.command_candidates = [
+          \   ['Inline Temporary Variable', 'RInlineTemp'],
+          \   ['Convert Post Condition', 'RConvertPostConditional'],
+          \   ['Extract Constant', 'RExtractConstant'],
+          \   ['Extract to Let (Rspec)', 'RExtractLet'],
+          \   ['Extract Local Variable', 'RExtractLocalVariable'],
+          \   ['Rename Local Variable', 'RRenameLocalVariable'],
+          \   ['Rename Instance Variable', 'RRenameInstanceVariable'],
+          \   ['Extract Method', 'RExtractMethod'],
+          \ ]
+    " }
+  " }}
+
   " Use Ag to Grep
   if executable('ag')
     " Use ag in unite grep source.
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts =
           \ '-i --vimgrep --line-numbers --hidden ' .
-          \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'''
+          \ '--ignore ''.git'' --ignore ''.hg'' ' .
+          \ '--ignore ''.idea'' --ignore ''node_modules'''
     let g:unite_source_grep_recursive_opt = ''
   endif
 
@@ -443,9 +492,11 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert -resume<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd -resume<CR>
   " Unite plugins
+  nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
+  nnoremap <silent> goe :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview -resume<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
@@ -850,8 +901,8 @@ if neobundle#tap('vim-ruby') "{{{
 endif "}}}
 
 if neobundle#tap('vim-i18n') "{{{
-  command! LocaleTranslate :call I18nTranslateString()<CR>
-  command! LocaleDisplay   :call I18nDisplayTranslation()<CR>
+  command! I18Translate :call I18nTranslateString()<CR>
+  command! I18Display   :call I18nDisplayTranslation()<CR>
 
   call neobundle#untap()
 endif "}}}

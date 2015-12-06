@@ -202,6 +202,14 @@ set visualbell t_vb=
 set tm=500
 " }}}
 
+" What not to save in session {{{
+set sessionoptions-=options
+set sessionoptions-=globals
+set sessionoptions-=folds
+set sessionoptions-=help
+set sessionoptions-=buffers
+" }}}
+
 " Tags, backups and undos {{{
 " Set tag locations
 set tags=./tags,tags
@@ -334,14 +342,14 @@ call s:source_rc('mappings.vim')
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Source vimrc after saving it {{{
-autocmd! BufWritePost .vimrc source $MYVIMRC
+autocmd! BufWritePost .vimrc,bundles.rc.vim source $MYVIMRC
 " }}}
 
 " Focus to the last edit line when you reopen a file {{{
 autocmd! BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \     execute 'normal! g`"zvzz' |
-      \ endif
+       \ if line("'\"") > 0 && line("'\"") <= line("$") |
+       \     execute 'normal! g`"zvzz' |
+       \ endif
 " }}}
 
 " Update diff after save {{{
