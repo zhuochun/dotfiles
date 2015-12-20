@@ -78,6 +78,12 @@ if neobundle#tap('vim-airline') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('airline-weather.vim') "{{{
+  let g:weather#area = 'Singapore,SG'
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('CamelCaseMotion') "{{{
   " Default switch mapping `gs` is still available
   map W <Plug>CamelCaseMotion_w
@@ -334,10 +340,8 @@ if neobundle#tap('syntastic') "{{{
 endif "}}}
 
 if neobundle#tap('nerdtree') "{{{
-  " Make it colourful and pretty
-  let NERDChristmasTree = 1
   " Size of the NERD tree
-  let NERDTreeWinSize = 29
+  let NERDTreeWinSize = 32
   " Disable 'bookmarks' and 'help'
   let NERDTreeMinimalUI = 1
   " Show hidden files
@@ -346,6 +350,8 @@ if neobundle#tap('nerdtree') "{{{
   let NERDTreeHighlightCursorline = 1
   " Use a single click to fold/unfold directories
   let NERDTreeMouseMode = 2
+  " Replace the netrw autocommands for exploring local directories
+  let NERDTreeHijackNetrw = 1
   " Don't display these kinds of files in NERDTree
   let NERDTreeIgnore = [
         \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
@@ -353,15 +359,8 @@ if neobundle#tap('nerdtree') "{{{
         \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
         \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
 
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-nerdtree-tabs') "{{{
-  " Do not open NERDTree on startup
-  let g:nerdtree_tabs_open_on_gui_startup = 0
-
   " Toggle NERDTree
-  map <F3> <Plug>NERDTreeTabsToggle<CR>
+  nnoremap <silent> <F3> :NERDTreeToggle<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -494,9 +493,10 @@ if neobundle#tap('unite.vim') "{{{
   " Unite plugins
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
+  nnoremap <silent> gop :<C-u>Unite -buffer-name=spell spell_suggest<CR>
+  nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
+  nnoremap <silent> gog :<C-u>Unite -buffer-name=gist gist -start-insert<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
-  nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
-  nnoremap <silent> goe :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview -resume<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
@@ -671,7 +671,7 @@ if neobundle#tap('neocomplete.vim') "{{{
   " let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
 
   " Force omni customizations (slow)
-  " let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
+  " let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
 
   " Appoints vim source call function when completes custom and customlist command
   let g:neocomplete#sources#vim#complete_functions = {
@@ -864,11 +864,19 @@ if neobundle#tap('tern_for_vim') "{{{
 endif "}}}
 
 if neobundle#tap('vim-ruby') "{{{
+  " disable the 'end' keyword colorized
   let g:ruby_no_expensive = 1
 
+  " load/evaluate code in order to provide completions. This may cause some code execution,
+  " which may be a concern. This is not enabled by default
   let g:rubycomplete_buffer_loading = 0
+  " parse the entire buffer to add a list of classes to the completion results.
+  " This feature is turned off by default.
   let g:rubycomplete_classes_in_global = 0
+  " detect and load Rails environment for files within a rails project. The feature is disabled by default.
   let g:rubycomplete_rails = 0
+  " use Bundler.require instead of parsing the Gemfile
+  let g:rubycomplete_use_bundler = 0
 
   call neobundle#untap()
 endif "}}}

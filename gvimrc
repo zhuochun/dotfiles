@@ -12,6 +12,7 @@ set background=dark
 " colorscheme gruvbox
 " colorscheme yowish
 colorscheme onedark
+" colorscheme dracula
 " }}}
 
 " common gui groups {{{

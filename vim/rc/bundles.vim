@@ -30,9 +30,25 @@ NeoBundleLazy 'arecarn/crunch.vim', {
       \ }
 " }}}
 
-" bling bundles {{{
+" Airline bundles {{{
 NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
+NeoBundle 'Wildog/airline-weather.vim', { 'depends' : ['bling/vim-airline', 'mattn/webapi-vim'] }
+" }}}
+
+" Mattn bundles {{{
+NeoBundle 'mattn/webapi-vim'
+
+" GitHub gist in vim {{
+NeoBundleLazy 'mattn/gist-vim', {
+      \   'depends'  : ['mattn/webapi-vim'],
+      \   'autoload' : {'commands': ['Gist']},
+      \ }
+NeoBundleLazy 'mattn/unite-gist', {
+      \   'depends' : ['Shougo/unite.vim', 'mattn/webapi-vim'],
+      \   'autoload': {'unite_sources': ['gist']}
+      \ }
+" }}
 " }}}
 
 " CamelCaseMotion in W, B, E {{{
@@ -142,11 +158,8 @@ NeoBundleLazy 'junegunn/rainbow_parentheses.vim', {
 
 " open documentation {{{
 NeoBundleLazy 'keith/investigate.vim', {
+      \   'frozen'   : 1,
       \   'autoload' : { 'mappings' : ['gK'] },
-      \ }
-
-NeoBundleLazy 'rhysd/devdocs.vim', {
-      \   'autoload' : { 'commands' : ['DevDocs'] },
       \ }
 " }}}
 
@@ -203,10 +216,11 @@ NeoBundle 'scrooloose/syntastic'
 " }}}
 
 " NERDTree {{{
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'jistr/vim-nerdtree-tabs', {
-      \   'depends' : 'scrooloose/nerdtree',
-      \   'autoload' : { 'mappings' : ['<Plug>(NERDTree'] },
+NeoBundle 'scrooloose/nerdtree', {
+      \   'autoload' : {
+      \     'explorer' : 1,
+      \     'mappings' : ['NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'],
+      \   }
       \ }
 " }}}
 
@@ -504,8 +518,9 @@ NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': ['sass', '
 NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 " }}}
 
-" JSON {{{
+" JSON/ProtoBuf {{{
 NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
+NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
 " JavaScript/CoffeeScript {{{
@@ -533,11 +548,13 @@ NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
 
 NeoBundleLazy 'tpope/vim-endwise', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundleLazy 'tpope/vim-bundler', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundleLazy 'tpope/vim-rake', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundleLazy 'tpope/vim-bundler' " slow NeoComplete
+NeoBundleLazy 'tpope/vim-rake' " slow NeoComplete
 
 NeoBundleLazy 'duwanis/tomdoc.vim'
-NeoBundleLazy 'stefanoverna/vim-i18n', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundleLazy 'stefanoverna/vim-i18n', {
+      \   'autoload' : { 'commands' : [ 'I18Translate', 'I18Display', ] },
+      \ }
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
       \   'autoload' : {
       \     'commands' : [
@@ -554,7 +571,7 @@ NeoBundleLazy 'guns/vim-clojure-static', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'guns/vim-clojure-highlight', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'tpope/vim-classpath', {'autoload': {'filetypes': 'clojure'}}
 NeoBundleLazy 'tpope/vim-fireplace', {'autoload': {'filetypes': 'clojure'}}
-NeoBundleLazy 'tpope/vim-leiningen', {
+NeoBundleLazy 'tpope/vim-salve', {
       \   'depends' : ['tpope/vim-dispatch'],
       \   'autoload' : { 'filetypes': 'clojure' },
       \ }
@@ -613,6 +630,8 @@ NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'NLKNguyen/papercolor-theme'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'wellsjo/wellsokai.vim'
+NeoBundle 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
