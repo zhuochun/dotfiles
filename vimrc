@@ -342,7 +342,7 @@ call s:source_rc('mappings.vim')
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Source vimrc after saving it {{{
-autocmd! BufWritePost .vimrc,bundles.rc.vim source $MYVIMRC
+autocmd! BufWritePost .vimrc,bundles.rc.vim source $MYVIMRC | redraw
 " }}}
 
 " Focus to the last edit line when you reopen a file {{{
@@ -360,27 +360,8 @@ autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
 call s:source_rc('filetypes.vim')
 " }}}
 
-" Directory related commands {{{
-" yank local working directory to clipboard
-command! Ywd   :let @+ = expand("%")
-
-" change working directory
-command! Cwd   :cd %:p:h
-" change local working directory
-command! Clwd  :lcd %:p:h
-
-" change directory to the root of the Git repository {{
-command! Root call s:root()
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: '.root
-  endif
-endfunction
-" }}
+" Source custom commands {{{
+call s:source_rc('commands.vim')
 " }}}
 
 " Load local vimrc-extra if found {{{
