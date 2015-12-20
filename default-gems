@@ -5,3 +5,4 @@ pretty_backtrace
 gem-ctags
 starscope
 rails
+rubocop

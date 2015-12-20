@@ -1,16 +1,79 @@
 # Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load:
 # Look in ~/.oh-my-zsh/themes/
 # suvash blinks fino josh re5et random
 ZSH_THEME="pure"
 
+# Zsh Plugins
+# ==============================
+# Plugins can be found in ~/.oh-my-zsh/plugins/*
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
+         git git-extras gitignore golang jsontools k node npm rails rake rbenv
+         redis-cli rsync ruby themes tmux vagrant zsh-syntax-highlighting)
+
+# Path
+# ==============================
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="/usr/local/opt/go/libexec/bin:$PATH"
+# export PATH="/Users/zhuochun/.rbenv/shims:/Users/zhuochun/.rbenv/bin:$PATH"
+
+# Load oh-my-zsh
+# ==============================
+source $ZSH/oh-my-zsh.sh
+
+# Configurations
+# ==============================
+# Ruby environment using rbenv
+export RBENV_ROOT=/usr/local/var/rbenv
+# To enable shims and autocompletion add to your profile:
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash zsh)"; fi
+
+# Go environment
+export GOPATH="$HOME/golang"
+
+# thefuck https://github.com/nvbn/thefuck
+eval "$(thefuck --alias fk)"
+
+# Environment Configurations
+# ==============================
+# Prefer US English and use UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# Editor
+export EDITOR=vim
+
+# Don’t clear the screen after quitting a manual page.
+export MANPAGER='less -X';
+
+# Highlight section titles in manual pages
+export LESS_TERMCAP_md="${yellow}";
+
+# Always enable colored `grep` output
+export GREP_OPTIONS="--color=auto";
+
+# Command line head / tail shortcuts
+# ==============================
+alias -g A='| ag'
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g M="| most"
+alias -g LL="2>&1 | less"
+alias -g CA="2>&1 | cat -A"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+alias -g P="2>&1| pygmentize -l pytb"
+
 # 1 Char Alias
 # ==============================
 alias a="ag"
 alias b="brew"
-alias c="cd"
 alias e="mvim"
 alias g="git"
 alias h="history"
@@ -18,34 +81,30 @@ alias l="ls -AlFhG"
 alias o="open"
 alias p="ps -f"
 alias q="exit"
+alias t='tail -f'
 
 # 2 Chars Alias
 # ==============================
-
-# Jekyll Server
-alias js="jekyll server --watch --future"
-# Node-Webkit Alias
-alias nw="~/Documents/Programming/NodeWebkit/v0.10.5/node-webkit.app/Contents/MacOS/node-webkit"
-# Heroku
-alias he="heroku"
 # Rails
 alias ra="rake"
 alias br="bin/rake"
 # Vim Alias
 alias ee="vim"
 alias vi="vim"
+# Git
+alias gm="git-imerge"
 # System
+alias ll="ls -lFhG"
 alias cl="clear"
+alias rm="trash"
 # Network IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # 3 Chars Alias
 # ==============================
-# Jekyll Server DevMode
-alias jsd="jekyll server --watch --future --config _config.dev.yml"
 # System
-alias plz="sudo !!"
-alias rmd="rm -rf"
+alias plz="sudo"
+alias rmd="trash"
 # Copy to clipboard
 alias ccp="pbcopy"
 # Local IP address
@@ -60,64 +119,11 @@ alias zshrc="vim ~/.zshrc"
 alias vimrc="vim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec $SHELL -l"
 
-# Locale
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-
-# Editor
-export EDITOR=vim
-
-# Highlight section titles in manual pages
-export LESS_TERMCAP_md="${yellow}";
-
-# Always enable colored `grep` output
-export GREP_OPTIONS="--color=auto";
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable bi-weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment to change how often before auto-updates occur? (in days)
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment following line if you want to disable marking untracked files under
-# VCS as dirty. This makes repository status check for large repositories much,
-# much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(autojump atom bower brew bundler coffee colored-man gem git git-extras gitignore heroku mercurial node npm pip python rails rake rbenv rsync ruby vagrant zsh-syntax-highlighting)
-
-# Add Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-# Add Postgres database
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-# Add Android tools
-export JAVA_HOME=$(/usr/libexec/java_home)
-export ADT_HOME="/Users/zhuochun/Documents/Programming/Android/adt-bundle-mac-x86_64-20140702/sdk"
-export PATH="$ADT_HOME/platform-tools:$ADT_HOME/tools:$PATH"
-# Add NVM tool
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
-
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
-
-# Ruby environment using rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# Function Helpers
+# ==============================
+function ywd {
+  pwd | tr -d "\r\n" | pbcopy
+}
