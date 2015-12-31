@@ -49,7 +49,11 @@ $ ln -s ~/dotfiles/slate ~/.slate
 
 ## Rime
 
-[Rime](https://github.com/rime) is a powerful Chinese Input Method Engine.
+[Rime](https://github.com/rime) is a powerful Chinese Input Method Engine. Use `Ctrl + ~` to adjust Traditional/Simplified Chinese.
+
+``` bash
+$ ln -s ~/dotfiles/rime/squirrel.custom.yaml ~/Library/Rime/squirrel.custom.yaml
+```
 
 ## Eclipse
 
