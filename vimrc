@@ -181,7 +181,7 @@ nnoremap <C-z> mzzMzvzz15<c-e>`z
 " j - remove comment leader when joining lines
 augroup format_options
   autocmd!
-  autocmd FileType * setlocal formatoptions+=j
+  autocmd FileType * setlocal formatoptions+=mMj
   autocmd FileType * setlocal formatoptions-=o
 augroup END
 " }}}

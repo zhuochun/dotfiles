@@ -68,7 +68,6 @@
   " <T>       find to left (inclusive)
   " <y>       Yank into register
   " <Y>       Yanking to the end of line
-  nnoremap Y y$
   " <u>       Undo
   " <U>       Undo all latest changes on last changed line
   " <i>       Insert

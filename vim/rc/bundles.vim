@@ -36,19 +36,20 @@ NeoBundle 'bling/vim-bufferline'
 NeoBundle 'Wildog/airline-weather.vim', { 'depends' : ['bling/vim-airline', 'mattn/webapi-vim'] }
 " }}}
 
-" Mattn bundles {{{
+" Web API plugin for other plugins {{{
 NeoBundle 'mattn/webapi-vim'
+" }}}
 
-" GitHub gist in vim {{
+" GitHub gist in vim {{{
 NeoBundleLazy 'mattn/gist-vim', {
       \   'depends'  : ['mattn/webapi-vim'],
       \   'autoload' : {'commands': ['Gist']},
       \ }
+
 NeoBundleLazy 'mattn/unite-gist', {
-      \   'depends' : ['Shougo/unite.vim', 'mattn/webapi-vim'],
+      \   'depends' : ['mattn/gist-vim', 'Shougo/unite.vim'],
       \   'autoload': {'unite_sources': ['gist']}
       \ }
-" }}
 " }}}
 
 " CamelCaseMotion in W, B, E {{{
@@ -117,8 +118,15 @@ NeoBundleLazy 'haya14busa/incsearch.vim', {
       \ }
 
 NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
-      \   'depends'  : 'haya14busa/incsearch.vim',
+      \   'depends'  : ['haya14busa/incsearch.vim'],
       \   'autoload' : { 'mappings' : ['<Plug>(incsearch-fuzzy-'], },
+      \ }
+" }}}
+
+" flash yank operations {{{
+NeoBundleLazy 'haya14busa/vim-operator-flashy', {
+      \   'depends'  : ['kana/vim-operator-user'],
+      \   'autoload' : { 'mappings' : ['<Plug>(operator'], },
       \ }
 " }}}
 
@@ -295,7 +303,7 @@ NeoBundleLazy 'tsukkee/unite-tag', {
 NeoBundleLazy 'Shougo/vimshell.vim', {
       \   'depends' : 'Shougo/vimproc.vim',
       \   'autoload' : {
-      \     'commands' : ['VimShellPop', 'VimShellTab'],
+      \     'commands' : ['VimShellPop', 'VimShellTab', 'VimShell', 'VimShellInteractive'],
       \     'mappings' : ['<Plug>(vimshell_'],
       \   },
       \ }
@@ -365,6 +373,10 @@ NeoBundleLazy 'kana/vim-niceblock', {
       \ }
 " }}}
 
+" custom operator {{{
+NeoBundleLazy 'kana/vim-operator-user'
+" }}}
+
 " vim-exchange {{{
 " cx{motion}, cxx (current line), cxc (clear), X (visual exchange)
 NeoBundleLazy 'tommcdo/vim-exchange', {
@@ -424,8 +436,12 @@ NeoBundleLazy 'tpope/vim-unimpaired', {
       \ }
 
 NeoBundleLazy 'tpope/vim-vinegar', {
-      \   'depends'  : 'scrooloose/nerdtree',
-      \   'autoload' : { 'mappings' : ['-'] }
+      \   'depends'  : ['scrooloose/nerdtree'],
+      \   'autoload' : {'mappings' : ['-']}
+      \ }
+
+NeoBundleLazy 'tpope/vim-endwise', {
+      \   'autoload' : {'insert': 1}
       \ }
 " }}}
 
@@ -543,14 +559,13 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 
 " Ruby/Rails {{{
 NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'keith/rspec.vim'
 NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
 
-NeoBundleLazy 'tpope/vim-endwise', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundleLazy 'tpope/vim-bundler' " slow NeoComplete
-NeoBundleLazy 'tpope/vim-rake' " slow NeoComplete
+NeoBundleLazy 'tpope/vim-bundler' " slows down NeoComplete
+NeoBundleLazy 'tpope/vim-rake' " slows down NeoComplete
 
+NeoBundleLazy 'keith/rspec.vim', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'duwanis/tomdoc.vim'
 NeoBundleLazy 'stefanoverna/vim-i18n', {
       \   'autoload' : { 'commands' : [ 'I18Translate', 'I18Display', ] },
@@ -621,6 +636,7 @@ NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
 " }}}
 
 " Colorschemes {{{
+NeoBundle 'baskerville/bubblegum'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'joshdick/onedark.vim'
 NeoBundle 'joshdick/airline-onedark.vim'
@@ -630,7 +646,6 @@ NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'NLKNguyen/papercolor-theme'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'wellsjo/wellsokai.vim'
 NeoBundle 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 " }}}
 

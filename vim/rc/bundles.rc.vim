@@ -155,6 +155,14 @@ if neobundle#tap('incsearch-fuzzy.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('vim-operator-flashy') "{{{
+  " mappings to fuzzy search
+  map  y <Plug>(operator-flashy)
+  nmap Y <Plug>(operator-flashy)$
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('semantic-highlight.vim') "{{{
   " Activate automatically for certain filetypes
   let g:semanticEnableFileTypes = ['ruby', 'javascript', 'coffee']
@@ -488,8 +496,8 @@ if neobundle#tap('unite.vim') "{{{
   let g:junkfile#directory = expand('~/Documents/Notes')
   nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
   " Unite Neomru
-  nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert -resume<CR>
-  nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd -resume<CR>
+  nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
+  nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
   " Unite plugins
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
@@ -497,10 +505,10 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> gog :<C-u>Unite -buffer-name=gist gist -start-insert<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
-  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview -resume<CR>
+  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert -resume<CR>
+  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
   " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
   autocmd BufEnter *
         \  if empty(&buftype)
@@ -576,14 +584,14 @@ if neobundle#tap('vimshell.vim') "{{{
   nnoremap <leader>e :VimShellSendString<CR>
   vnoremap <leader>e :VimShellSendString<CR>
 
-  " VimShellInteractive Commands {{{
+  " VimShellInteractive Commands {{
   command! Pry    :execute "VimShellInteractive --split='split <bar> resize 9' pry"
-  command! Irb    :execute "VimShellInteractive --split='split <bar> resize 9' irb"
+  command! Irb    :execute "VimShellInteractive --split='split <bar> resize 9' irb --simple-prompt"
   command! Node   :execute "VimShellInteractive --split='split <bar> resize 9' node"
   command! Coffee :execute "VimShellInteractive --split='split <bar> resize 9' coffee"
-  " }}}
+  " }}
 
-  " VimShell commands {{{
+  " VimShell buffer settings {{
   autocmd! FileType vimshell call s:vimshell_settings()
   function! s:vimshell_settings()
     " command alterative
@@ -591,19 +599,15 @@ if neobundle#tap('vimshell.vim') "{{{
     " alias
     call vimshell#set_alias('l', 'ls -al')
     " autojump
-    call vimshell#set_alias('j', ':Unite -buffer-name=files -default-action=lcd -no-split -input=$$args neomru/directory')
+    call vimshell#set_alias('j', ':Unite -buffer-name=files
+         \ -default-action=lcd -no-split -input=$$args neomru/directory')
+  endfunction " }}
 
-    " unmap <C-k> <Plug>(vimshell_hangup)
-    nunmap <buffer><C-k>
-    " unmap <C-l> <Plug>(vimshell_clear)
-    nunmap <buffer><C-l>
-  endfunction
-
+  " VimShellInteractive settings {{
   autocmd! FileType int-* call s:interactive_settings()
   function! s:interactive_settings()
-    " unmap <C-l> <Plug>(vimshell_int_clear)
     nunmap <buffer><C-l>
-  endfunction " }}}
+  endfunction " }}
 
   call neobundle#untap()
 endif "}}}
@@ -826,14 +830,16 @@ endif "}}}
 if neobundle#tap('emmet-vim') "{{{
   " enable emmet functions in insert mode only
   let g:user_emmet_mode = 'i'
-  " complete tags using omnifunc
-  let g:use_emmet_complete_tag = 1
+
   " <D-y> to expand input in insert mode
   let g:user_emmet_expandabbr_key = '<D-y>'
   "  <D-Y> to goto next point
   let g:user_emmet_next_key = '<D-Y>'
   " <M-y> to goto prev point
   let g:user_emmet_prev_key = '<M-y>'
+
+  " complete tags using omnifunc
+  let g:use_emmet_complete_tag = 1
 
   call neobundle#untap()
 endif "}}}
