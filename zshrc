@@ -19,7 +19,6 @@ plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/go/libexec/bin:$PATH"
-# export PATH="/Users/zhuochun/.rbenv/shims:/Users/zhuochun/.rbenv/bin:$PATH"
 
 # Load oh-my-zsh
 # ==============================
@@ -93,6 +92,8 @@ alias ee="vim"
 alias vi="vim"
 # Git
 alias gm="git-imerge"
+# Oh Emacs
+alias em="/Applications/Emacs.app/Contents/MacOS/Emacs"
 # System
 alias ll="ls -lFhG"
 alias cl="clear"
@@ -115,8 +116,8 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # Other Alias
 # ==============================
 # Edit zshrc and vimrc
-alias zshrc="vim ~/.zshrc"
-alias vimrc="vim ~/.vimrc"
+alias zshrc="gvim ~/.zshrc"
+alias vimrc="gvim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
@@ -127,3 +128,6 @@ alias reload="exec $SHELL -l"
 function ywd {
   pwd | tr -d "\r\n" | pbcopy
 }
+
+# Local configs
+if [[ -a ~/.localrc ]]; then source ~/.localrc; fi
