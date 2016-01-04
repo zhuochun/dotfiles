@@ -12,7 +12,7 @@ ZSH_THEME="pure"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
          git git-extras gitignore golang jsontools k node npm rails rake rbenv
-         redis-cli rsync ruby themes tmux vagrant zsh-syntax-highlighting)
+         redis-cli rsync ruby themes tmux tmuxinator vagrant zsh-syntax-highlighting)
 
 # Path
 # ==============================
@@ -26,10 +26,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Configurations
 # ==============================
-# Ruby environment using rbenv
-export RBENV_ROOT=/usr/local/var/rbenv
 # To enable shims and autocompletion add to your profile:
-if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash zsh)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # Go environment
 export GOPATH="$HOME/golang"
