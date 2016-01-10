@@ -166,7 +166,6 @@ NeoBundleLazy 'junegunn/rainbow_parentheses.vim', {
 
 " open documentation {{{
 NeoBundleLazy 'keith/investigate.vim', {
-      \   'frozen'   : 1,
       \   'autoload' : { 'mappings' : ['gK'] },
       \ }
 " }}}
@@ -211,7 +210,10 @@ NeoBundleLazy 'mbbill/undotree', {
 
 " osyo-manga bundles {{{
 NeoBundleLazy 'osyo-manga/vim-anzu', {
-      \   'autoload' : { 'mappings' : ['<Plug>(anzu-'] },
+      \   'autoload': {
+      \     'unite_sources': ['anzu'],
+      \     'mappings': ['<Plug>(anzu-'],
+      \   },
       \ }
 
 NeoBundleLazy 'osyo-manga/vim-over', {
@@ -233,7 +235,11 @@ NeoBundle 'scrooloose/nerdtree', {
 " }}}
 
 " Shougo bundles {{{
-NeoBundle 'Shougo/context_filetype.vim'
+NeoBundleLazy 'Shougo/context_filetype.vim', {
+      \   'autoload' : {
+      \     'function_prefix' : 'context_filetype'
+      \   }
+      \ }
 
 " Async execution library {{
 NeoBundle 'Shougo/vimproc.vim', {
@@ -312,7 +318,8 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 " NeoComplete {{
 NeoBundleLazy 'Shougo/neocomplete.vim', {
       \   'depends'  : ['Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
-      \   'autoload' : {'insert': 1}
+      \   'autoload' : {'insert': 1},
+      \   'disabled' : (!has('lua') || has('nvim'))
       \ }
 
 " Complete words in English
@@ -340,10 +347,10 @@ NeoBundleLazy 'Shougo/neco-vim', {
 "       \ }
 
 " Complete Ruby with rcodetools
-" NeoBundleLazy 'osyo-manga/vim-monster', {
-"       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
-"       \   'autoload' : {'filetypes': 'ruby'}
-"       \ }
+NeoBundleLazy 'osyo-manga/vim-monster', {
+      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
+      \   'autoload' : {'filetypes': 'ruby'}
+      \ }
 " }}
 
 " NeoSnippet {{
@@ -535,7 +542,7 @@ NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 " }}}
 
 " JSON/ProtoBuf {{{
-NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
+NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': ['json', 'javascript']}}
 NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
@@ -558,7 +565,7 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 " }}}
 
 " Ruby/Rails {{{
-NeoBundle 'vim-ruby/vim-ruby'
+NeoBundleLazy 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
 
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
@@ -603,10 +610,14 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 
 " Go {{{
 NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': 'go'}}
+NeoBundleLazy 'rhysd/unite-go-import.vim', {
+      \   'depends': ['Shougo/unite.vim'],
+      \   'autoload': {'unite_sources': 'go/import'}
+      \ }
 " }}}
 
 " Markdown {{{
-NeoBundle 'gabrielelana/vim-markdown'
+NeoBundleLazy 'gabrielelana/vim-markdown', {'autoload':{'filetypes': 'markdown'}}
 
 " Highlight code in Markdown
 NeoBundleLazy 'farseer90718/vim-regionsyntax', {'autoload': {'filetypes': 'markdown'}}
@@ -628,22 +639,31 @@ NeoBundleLazy 'gregsexton/gitv', {
       \   'depends': ['tpope/vim-fugitive'],
       \   'autoload': {'commands': ['Gitv']}
       \ }
+NeoBundleLazy 'moznion/unite-git-conflict.vim', {
+      \   'depends': ['Shougo/unite.vim'],
+      \   'autoload': {'unite_sources': 'git-conflict'}
+      \ }
 " }}}
 
 " Others {{{
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
+NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
+NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
 " Colorschemes {{{
 NeoBundle 'baskerville/bubblegum'
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'cocopon/iceberg.vim'
 NeoBundle 'joshdick/onedark.vim'
 NeoBundle 'joshdick/airline-onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'
+NeoBundle 'mhinz/vim-janah'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'NLKNguyen/papercolor-theme'
+NeoBundle 'romainl/flattened'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'zenorocha/dracula-theme', {'rtp': 'vim/'}

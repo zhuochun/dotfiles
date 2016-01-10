@@ -1,6 +1,7 @@
 " Directory related commands {{{
 " yank local working directory to clipboard
 command! Ywd   :let @+ = expand("%")
+command! Ycl   :let @+ = line(".")
 
 " change working directory
 command! Cwd   :cd %:p:h

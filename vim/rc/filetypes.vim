@@ -199,6 +199,7 @@ iab labeled    labelled
 iab seperate   separate
 iab execuse    excuse
 iab ture       true
+iab longtiude  longitude
 iab ?8         /*
 iab /8         /*
 iab /*         /*

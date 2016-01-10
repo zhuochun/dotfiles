@@ -289,7 +289,7 @@ set background=dark
 colorscheme jellybeans
 
 set colorcolumn=119
-set lines=42 columns=142
+set lines=42 columns=120
 " }}}
 
 " Styles {{{
@@ -305,11 +305,12 @@ set noshowmode               " No show current mode
 " GUI {{{
 " fonts, powerline fonts:
 " https://github.com/powerline/fonts
-set guifont=Hack:h12
+" set guifont=Hack:h12
 " set guifont=Inconsolata-g\ for\ Powerline:h14
-" set guifont=Monoid\ HalfTight\ Retina:h11
+set guifont=Monoid\ HalfTight\ Retina:h11
 " set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
+" set guifont=Monoisome:h11
 
 set guicursor=a:blinkon0     " Disable GUI blinking cursor
 set guioptions=              " Disable GUI components

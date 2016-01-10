@@ -235,9 +235,10 @@
   " <leader>m
   " <leader>M Remove ^M
   nnoremap <leader>M mmHmt:%s/<C-V><CR>//ge<CR>'tzt'm
-  " <leader>,
-  " <leader>. Switch between current and last buffer
-  nnoremap <leader>. <C-^>
+  " <leader>, Switch between current and last buffer
+  nnoremap <leader>, <C-^>
+  " <leader>. Edit macro in the cmdline-window
+  nnoremap <leader>. :<C-U><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><LEFT>
   " <leader><space> Close search highlight
   nnoremap <leader><space> :nohl<CR>
 " }}}
