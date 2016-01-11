@@ -82,14 +82,6 @@ if neobundle#tap('vim-airline') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('airline-weather.vim') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    let g:weather#area = 'Singapore,SG'
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('CamelCaseMotion') "{{{
   " Default switch mapping `gs` is still available
   map W <Plug>CamelCaseMotion_w

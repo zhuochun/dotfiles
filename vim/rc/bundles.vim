@@ -33,7 +33,6 @@ NeoBundleLazy 'arecarn/crunch.vim', {
 " Airline bundles {{{
 NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
-NeoBundle 'Wildog/airline-weather.vim', { 'depends' : ['bling/vim-airline', 'mattn/webapi-vim'] }
 " }}}
 
 " Web API plugin for other plugins {{{
