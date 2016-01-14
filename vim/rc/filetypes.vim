@@ -6,6 +6,14 @@ autocmd! FileType neosnippet,snippet setlocal noexpandtab
 autocmd! FileType gitcommit setlocal spell
 " }}}
 
+" Diff update after save {{{
+autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
+" }}}
+
+" JSON {{{
+autocmd! FileType json setlocal foldmethod=syntax
+" }}}
+
 " Ruby Mappings {{{
 autocmd! FileType ruby,eruby,rdoc :call s:RubyDef()
 function! s:RubyDef()
@@ -29,7 +37,17 @@ function! s:RubyDef()
         \   '(':')', '[':']', '{':'}', "'":"'", '"':'"', '`':'`', '|': '|'
         \ }
 
+  " Refactoring tools
+  nnoremap <buffer> grap :RAddParameter<CR>
+  nnoremap <buffer> grel :RExtractLet<CR>
+  vnoremap <buffer> grec :RExtractConstant<CR>
+  vnoremap <buffer> grev :RExtractLocalVariable<CR>
+  vnoremap <buffer> grrv :RRenameLocalVariable<CR>
+  vnoremap <buffer> grri :RRenameInstanceVariable<CR>
+  vnoremap <buffer> grem :RExtractMethod<CR>
+
   " Correct typos
+  iab <buffer> eif        elsif
   iab <buffer> elseif     elsif
   iab <buffer> ~=         =~
 endfunction
@@ -83,7 +101,6 @@ autocmd! FileType markdown :call s:MarkdownDef()
 function! s:MarkdownDef()
   setlocal shiftwidth=2
   setlocal tabstop=2
-
   setlocal wrap
 
   " Surround _ to _

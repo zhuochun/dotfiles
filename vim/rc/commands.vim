@@ -1,7 +1,7 @@
 " Directory related commands {{{
 " yank local working directory to clipboard
 command! Ywd   :let @+ = expand("%")
-command! Ycl   :let @+ = line(".")
+command! Ycl   :let @+ = expand("%") .':'. line(".")
 
 " change working directory
 command! Cwd   :cd %:p:h
@@ -52,7 +52,7 @@ endfunction
 " }}}
 
 " Format to JSON
-command! JSON :%!python -m json.tool<CR>
+command! JSON :%!python -m json.tool
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim:ft=vim:fdm=marker:sw=2:ts=2

@@ -35,22 +35,6 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
 " }}}
 
-" Web API plugin for other plugins {{{
-NeoBundle 'mattn/webapi-vim'
-" }}}
-
-" GitHub gist in vim {{{
-NeoBundleLazy 'mattn/gist-vim', {
-      \   'depends'  : ['mattn/webapi-vim'],
-      \   'autoload' : {'commands': ['Gist']},
-      \ }
-
-NeoBundleLazy 'mattn/unite-gist', {
-      \   'depends' : ['mattn/gist-vim', 'Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': ['gist']}
-      \ }
-" }}}
-
 " CamelCaseMotion in W, B, E {{{
 NeoBundle 'bkad/CamelCaseMotion', {
       \   'autoload' : { 'mappings' : ['<Plug>CamelCaseMotion'] },
@@ -105,6 +89,12 @@ NeoBundleLazy 'deris/vim-rengbang', {
       \ }
 " }}}
 
+" easymotion {{{
+NeoBundleLazy 'easymotion/vim-easymotion', {
+      \   'autoload' : { 'mappings' : ['<Plug>(easymotion-'] },
+      \ }
+" }}}
+
 " vim-asterisk: * and # to search selection {{{
 NeoBundleLazy 'haya14busa/vim-asterisk', {
       \   'autoload' : { 'mappings' : ['<Plug>(asterisk-'], },
@@ -119,13 +109,6 @@ NeoBundleLazy 'haya14busa/incsearch.vim', {
 NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
       \   'depends'  : ['haya14busa/incsearch.vim'],
       \   'autoload' : { 'mappings' : ['<Plug>(incsearch-fuzzy-'], },
-      \ }
-" }}}
-
-" flash yank operations {{{
-NeoBundleLazy 'haya14busa/vim-operator-flashy', {
-      \   'depends'  : ['kana/vim-operator-user'],
-      \   'autoload' : { 'mappings' : ['<Plug>(operator'], },
       \ }
 " }}}
 
@@ -175,12 +158,6 @@ NeoBundleLazy 'terryma/vim-multiple-cursors', {
       \ }
 " }}}
 
-" easymotion {{{
-NeoBundleLazy 'easymotion/vim-easymotion', {
-      \   'autoload' : { 'mappings' : ['<Plug>(easymotion-'] },
-      \ }
-" }}}
-
 " Yank ring {{{
 NeoBundleLazy 'LeafCage/yankround.vim', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -189,6 +166,23 @@ NeoBundleLazy 'LeafCage/yankround.vim', {
       \     'mappings': ['y', 'Y', 'p', 'P', '<Plug>(yankround-']
       \   }
       \ }
+" }}}
+
+" mattn packages {{{
+" Web API plugin for other plugins
+NeoBundle 'mattn/webapi-vim'
+
+" GitHub gist in vim {{
+NeoBundleLazy 'mattn/gist-vim', {
+      \   'depends'  : ['mattn/webapi-vim'],
+      \   'autoload' : {'commands': ['Gist']},
+      \ }
+
+NeoBundleLazy 'mattn/unite-gist', {
+      \   'depends' : ['mattn/gist-vim', 'Shougo/unite.vim'],
+      \   'autoload': {'unite_sources': ['gist']}
+      \ }
+" }}
 " }}}
 
 " Tagbar {{{
@@ -217,6 +211,12 @@ NeoBundleLazy 'osyo-manga/vim-anzu', {
 
 NeoBundleLazy 'osyo-manga/vim-over', {
       \   'autoload' : { 'commands' : ['OverCommandLine'] },
+      \ }
+" }}}
+
+" Read HackerNews {{{
+NeoBundleLazy 'ryanss/vim-hackernews', {
+      \   'autoload' : { 'commands' : ['HackerNews'] },
       \ }
 " }}}
 

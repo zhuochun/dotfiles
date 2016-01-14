@@ -353,10 +353,6 @@ autocmd! BufReadPost *
        \ endif
 " }}}
 
-" Update diff after save {{{
-autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
-" }}}
-
 " Source specific filetype settings {{{
 call s:source_rc('filetypes.vim')
 " }}}

@@ -91,17 +91,6 @@ if neobundle#tap('CamelCaseMotion') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('vim-bufkill') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " No default leader-based mappings
-    let g:BufKillCreateMappings = 0
-    " Maintain the correct cursor column position
-    let g:BufKillOverrideCtrlCaret = 1
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('vim-rest-console') "{{{
   " <C-j> to trigger request
 
@@ -122,6 +111,19 @@ if neobundle#tap('vim-mark') "{{{
   " Remove the default overriding of * and #, use: >
   nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
   nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-rengbang') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " regex pattern for insertint sequencial numbering
+    let g:rengbang_default_pattern = '\(\d\+\)'
+    " start number for sequencial numbering.
+    let g:rengbang_default_start = 1
+    " use first number for sequencial numbering
+    let g:rengbang_default_usefirst = 1
+  endfunction
 
   call neobundle#untap()
 endif "}}}
@@ -159,14 +161,6 @@ if neobundle#tap('incsearch-fuzzy.vim') "{{{
   " mappings to fuzzy search
   map z/ <Plug>(incsearch-fuzzy-/)
   map z? <Plug>(incsearch-fuzzy-?)
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-operator-flashy') "{{{
-  " mappings to fuzzy search
-  map  y <Plug>(operator-flashy)
-  nmap Y <Plug>(operator-flashy)$
 
   call neobundle#untap()
 endif "}}}
@@ -373,7 +367,7 @@ if neobundle#tap('syntastic') "{{{
           \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
 
     " run multiple syntastic checkers
-    let g:syntastic_ruby_checkers = ["mri", "rubocop"]
+    let g:syntastic_ruby_checkers = ["mri"]
   endfunction
 
   " manual syntastic check
@@ -459,21 +453,22 @@ if neobundle#tap('unite.vim') "{{{
                 \   'description' : 'Git Commands',
                 \ }
     let g:unite_source_menu_menus.git.command_candidates = [
+                \   ['Show Gist', 'Unite -buffer-name=gist gist'],
+                \   ['Gitv', 'Gitv'],
+                \   ['Magit', 'Magit'],
+                \   ['Status', 'Gstatus'],
                 \   ['Previous Hunk', 'GitGutterPrevHunk'],
                 \   ['Next Hunk', 'GitGutterNextHunk'],
                 \   ['Stage Hunk', 'GitGutterStageHunk'],
                 \   ['Unstage Hunk', 'GitGutterRevertHunk'],
-                \   ['Magit', 'Magit'],
-                \   ['Status', 'Gstatus'],
-                \   ['Stage/Add', 'Gwrite'],
+                \   ['Stage Current File', 'Gwrite'],
+                \   ['Commit All Changes', 'Gcommit --verbose'],
+                \   ['Amend Last Commit', 'Gcommit --amend --verbose'],
+                \   ['Revert Last Commit', 'Gread'],
                 \   ['Diff', 'Gvdiff'],
                 \   ['Blame', 'Gblame'],
-                \   ['Commit', 'Gcommit --verbose'],
-                \   ['Amend', 'Gcommit --amend --verbose'],
-                \   ['Revert', 'Gread'],
-                \   ['Log', 'Glog'],
-                \   ['Log Current File', 'Glog -- %'],
-                \   ['Visual Log', 'Gitv'],
+                \   ['Show Log', 'Gllog'],
+                \   ['Show Current File Log', 'Gllog -- %'],
                 \   ['Browse on GitHub', 'Gbrowse'],
                 \   ['Copy GitHub Path', 'Gbrowse!'],
                 \ ]
@@ -498,10 +493,13 @@ if neobundle#tap('unite.vim') "{{{
                 \   'description' : 'System Commands',
                 \ }
     let g:unite_source_menu_menus.common.command_candidates = [
-                \   ['Generate tags', 'cd %:p:h | Dispatch! ctags .'],
+                \   ['Yank Current File', 'Ywd'],
+                \   ['Yank Current File:Line', 'Ycl'],
                 \   ['Cd to buffer directory', 'cd %:p:h'],
-                \   ['Cd to project directory', 'Root'],
+                \   ['Cd to project roor directory', 'Root'],
+                \   ['Generate tags', 'cd %:p:h | Dispatch! ctags .'],
                 \   ['Edit .projections.json', 'cd %:p:h | e .projections.json'],
+                \   ['Show Mappings', 'Unite mapping'],
                 \   ['Source vimrc', 'so $MYVIMRC'],
                 \   ['Edit vimrc', 'e $MYVIMRC'],
                 \ ]
@@ -551,11 +549,11 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
   " Unite plugins
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
+  nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gop :<C-u>Unite -buffer-name=spell spell_suggest<CR>
   nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
-  nnoremap <silent> gog :<C-u>Unite -buffer-name=gist gist -start-insert<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
@@ -997,6 +995,7 @@ endif "}}}
 
 if neobundle#tap('vim-ruby-refactoring') "{{{
   function! neobundle#hooks.on_source(bundle)
+    " :RAddParameter           : Add Method Parameter
     " :RInlineTemp             : Inline Temp
     " :RConvertPostConditional : Convert Post Conditional
     " :RExtractConstant        : Extract Constant
