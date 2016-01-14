@@ -90,6 +90,9 @@ brew install pigz
 brew install pv
 brew install ruby-build
 brew install rbenv
+brew install rbenv-ctags
+brew install rbenv-default-gems
+brew install reattach-to-user-namespace
 brew install rename
 brew install rhino
 brew install speedtest_cli

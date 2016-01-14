@@ -13,7 +13,6 @@
 	discard = checkout --
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
-	pick-file = checkout
 
 	# rebase in short
 	rc = rebase --continue

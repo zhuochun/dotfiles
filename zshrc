@@ -14,29 +14,17 @@ plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
          git git-extras gitignore golang jsontools k node npm rails rake rbenv
          redis-cli rsync ruby themes tmux tmuxinator vagrant zsh-syntax-highlighting)
 
-# Path
-# ==============================
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="/usr/local/opt/go/libexec/bin:$PATH"
-
 # Load oh-my-zsh
 # ==============================
 source $ZSH/oh-my-zsh.sh
 
-# Configurations
-# ==============================
-# To enable shims and autocompletion add to your profile:
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
-# Go environment
-export GOPATH="$HOME/golang"
-
-# thefuck https://github.com/nvbn/thefuck
-eval "$(thefuck --alias fk)"
-
 # Environment Configurations
 # ==============================
+# Path
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="/usr/local/opt/go/libexec/bin:$PATH"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
 # Prefer US English and use UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
