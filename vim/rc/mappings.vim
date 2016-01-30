@@ -218,8 +218,8 @@
   nnoremap <leader>G :Goyo<CR>
   " <leader>hs GitGutterStageHunk
   " <leader>hr GitGutterRevertHunk
-  " <leader>j Format JSON file
-  nnoremap <leader>j :%!python -m json.tool<CR>
+  " <leader>js Format JSON file (python required)
+  nnoremap <leader>js :%!python -m json.tool<CR>
   " <leader>k
   " <leader>l
   " <leader>L Reduce a sequence of blank lines into a single line

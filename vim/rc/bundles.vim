@@ -31,7 +31,8 @@ NeoBundleLazy 'arecarn/crunch.vim', {
 " }}}
 
 " Airline bundles {{{
-NeoBundle 'bling/vim-airline'
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'bling/vim-bufferline'
 " }}}
 
@@ -167,6 +168,9 @@ NeoBundleLazy 'LeafCage/yankround.vim', {
       \   }
       \ }
 " }}}
+
+" generate tags file
+NeoBundle 'ludovicchabant/vim-gutentags'
 
 " mattn packages {{{
 " Web API plugin for other plugins
@@ -652,11 +656,10 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
 " Colorschemes {{{
+NeoBundle 'AlessandroYorba/Alduin'
 NeoBundle 'baskerville/bubblegum'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'cocopon/iceberg.vim'
 NeoBundle 'joshdick/onedark.vim'
-NeoBundle 'joshdick/airline-onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'mhinz/vim-janah'

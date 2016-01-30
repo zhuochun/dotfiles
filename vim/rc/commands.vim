@@ -51,8 +51,55 @@ function! s:scroll(line)
 endfunction
 " }}}
 
+" Correct commas at in selected lines {{{
+" https://github.com/benmills/vim-commadown
+command! -range CommaDown call <SID>commaDown()
+
+function! s:commaDown()
+  let last_line = getpos("'>")[1]
+  let current_line = line("v")
+  let current_line_contents = getline(current_line)
+  let stripped_line = substitute(current_line_contents, ",\$", "", "")
+
+  call setline(current_line, stripped_line)
+
+  if (current_line != last_line) || $USER == "fairley"
+    call setline(current_line, stripped_line . ",")
+  endif
+endfunction
+" }}}
+
+" Delete all buffers not open in windows/tabs {{{
+" https://github.com/fatih/dotfiles/blob/master/vimrc#L249
+command! BufActive call s:deleteInactiveBufs()
+
+function! s:deleteInactiveBufs()
+  " From tabpagebuflist() help, get a list of all buffers in all tabs
+  let tablist = []
+  for i in range(tabpagenr('$'))
+    call extend(tablist, tabpagebuflist(i + 1))
+  endfor
+
+  " Below originally inspired by Hara Krishna Dara and Keith Roberts
+  " http://tech.groups.yahoo.com/group/vim/message/56425
+  let nWipeouts = 0
+  for i in range(1, bufnr('$'))
+    if bufexists(i) && !getbufvar(i, "&mod") && index(tablist, i) == -1
+      " bufno exists AND isn't modified AND isn't in the list of buffers
+      " open in windows and tabs
+      silent exec 'bwipeout' i
+      let nWipeouts = nWipeouts + 1
+    endif
+  endfor
+
+  echomsg nWipeouts . ' buffer(s) wiped out'
+endfunction
+" }}}
+
 " Format to JSON
-command! JSON :%!python -m json.tool
+if executable('python')
+  command! JSON :%!python -m json.tool
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim:ft=vim:fdm=marker:sw=2:ts=2

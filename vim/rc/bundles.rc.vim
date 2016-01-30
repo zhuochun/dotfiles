@@ -70,6 +70,10 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline#extensions#tabline#show_buffers = 0
     " display tab number instead of # of splits (default)
     let g:airline#extensions#tabline#tab_nr_type = 1
+    " disable displaying tab type (far right)
+    let g:airline#extensions#tabline#show_tab_type = 0
+    " disable close button should be shown
+    let g:airline#extensions#tabline#show_close_button = 0
     " define how file names are displayed in tabline
     let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
     " no default separators for the tabline
@@ -377,26 +381,24 @@ if neobundle#tap('syntastic') "{{{
 endif "}}}
 
 if neobundle#tap('nerdtree') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " Size of the NERD tree
-    let NERDTreeWinSize = 32
-    " Disable 'bookmarks' and 'help'
-    let NERDTreeMinimalUI = 1
-    " Show hidden files
-    let NERDTreeShowHidden = 1
-    " Highlight the selected entry in the tree
-    let NERDTreeHighlightCursorline = 1
-    " Use a single click to fold/unfold directories
-    let NERDTreeMouseMode = 2
-    " Replace the netrw autocommands for exploring local directories
-    let NERDTreeHijackNetrw = 1
-    " Don't display these kinds of files in NERDTree
-    let NERDTreeIgnore = [
-          \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
-          \ '\.git', '\.hg', '\.svn', '\.sass-cache',
-          \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
-          \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
-  endfunction
+  " Size of the NERD tree
+  let NERDTreeWinSize = 32
+  " Disable 'bookmarks' and 'help'
+  let NERDTreeMinimalUI = 1
+  " Show hidden files
+  let NERDTreeShowHidden = 1
+  " Highlight the selected entry in the tree
+  let NERDTreeHighlightCursorline = 1
+  " Use a single click to fold/unfold directories
+  let NERDTreeMouseMode = 2
+  " Replace the netrw autocommands for exploring local directories
+  let NERDTreeHijackNetrw = 1
+  " Don't display these kinds of files in NERDTree
+  let NERDTreeIgnore = [
+        \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
+        \ '\.git', '\.hg', '\.svn', '\.sass-cache',
+        \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
+        \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
 
   " Toggle NERDTree
   nnoremap <silent> <F3> :NERDTreeToggle<CR>
@@ -453,14 +455,15 @@ if neobundle#tap('unite.vim') "{{{
                 \   'description' : 'Git Commands',
                 \ }
     let g:unite_source_menu_menus.git.command_candidates = [
-                \   ['Show Gist', 'Unite -buffer-name=gist gist'],
+                \   ['Gist', 'Unite -buffer-name=gist gist'],
                 \   ['Gitv', 'Gitv'],
                 \   ['Magit', 'Magit'],
                 \   ['Status', 'Gstatus'],
+                \   ['Conflicts', 'Unite git-conflict'],
                 \   ['Previous Hunk', 'GitGutterPrevHunk'],
                 \   ['Next Hunk', 'GitGutterNextHunk'],
                 \   ['Stage Hunk', 'GitGutterStageHunk'],
-                \   ['Unstage Hunk', 'GitGutterRevertHunk'],
+                \   ['Revert Hunk', 'GitGutterRevertHunk'],
                 \   ['Stage Current File', 'Gwrite'],
                 \   ['Commit All Changes', 'Gcommit --verbose'],
                 \   ['Amend Last Commit', 'Gcommit --amend --verbose'],
@@ -551,7 +554,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
-  nnoremap <silent> gop :<C-u>Unite -buffer-name=spell spell_suggest<CR>
+  nnoremap <silent> gop :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
@@ -560,6 +563,8 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
   nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
+  " Unite spell suggest
+  nnoremap <silent> gcs :<C-u>Unite -buffer-name=spell spell_suggest<CR>
 
   " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
   autocmd BufEnter *
