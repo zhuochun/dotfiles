@@ -34,6 +34,8 @@ Session.vim
 .netrwhist
 *~
 tags
+tags.lock
+tags.temp
 
 # Vim projections
 .projections.json
