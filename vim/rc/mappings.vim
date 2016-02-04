@@ -193,7 +193,8 @@
   " <leader>e
   " <leader>r
   " <leader>t
-  " <leader>y
+  " <leader>y yankround-prev
+  " <leader>Y yankround-next
   " <leader>u
   " <leader>i
   " <leader>o

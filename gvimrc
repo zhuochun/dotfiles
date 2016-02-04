@@ -42,7 +42,7 @@ endfunction
 " }}}
 
 " remove specific OSX keybindings {{{
-if has("mac")
+if has("gui_macvim")
     " Unmap D-n
     macmenu File.New\ Window key=<nop>
     " Unmap D-t
@@ -51,6 +51,10 @@ if has("mac")
     macmenu File.Open\.\.\. key=<nop>
     " Unmap D-T
     macmenu File.Open\ Tab\.\.\. key=<nop>
+    " Unmap D-W
+    macmenu File.Close\ Window key=<nop>
+    " Unmap D-w
+    macmenu File.Close key=<nop>
     " Unmap D-p
     macmenu File.Print key=<nop>
     " Unmap D-f

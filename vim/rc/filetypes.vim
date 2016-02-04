@@ -169,7 +169,6 @@ autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
   " Correct typos
   iab <buffer> ;=         :=
-  iab <buffer> <=         <-
   iab <buffer> String     string
 endfunction
 " }}}

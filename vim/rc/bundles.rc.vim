@@ -36,6 +36,7 @@ if neobundle#tap('vim-airline') "{{{
     if !exists('g:airline_symbols')
       let g:airline_symbols = {}
     endif
+    " modify whitespace symbol
     let g:airline_symbols.whitespace = '☯'
     " shorter mode names
     let g:airline_mode_map = {
@@ -633,8 +634,8 @@ if neobundle#tap('yankround.vim') "{{{
   nmap P  <Plug>(yankround-P)
 
   " loop yanks, <y, >y
-  nmap <y <Plug>(yankround-prev)
-  nmap >y <Plug>(yankround-next)
+  nmap <leader>y <Plug>(yankround-prev)
+  nmap <leader>Y <Plug>(yankround-next)
 
   call neobundle#untap()
 endif "}}}

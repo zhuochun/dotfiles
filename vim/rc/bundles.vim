@@ -471,6 +471,14 @@ NeoBundleLazy 'tyru/open-browser.vim', {
       \     'mappings' : '<Plug>(openbrowser-',
       \   }
       \ }
+
+" opens GitHub URL of current file
+NeoBundleLazy 'tyru/open-browser-github.vim', {
+      \   'depends'  : ['tyru/open-browser.vim'],
+      \   'autoload' : {
+      \     'commands' : ['OpenGithubFile', 'OpenGithubIssue'],
+      \   }
+      \ }
 " }}}
 
 " draw text boxes {{{
@@ -502,6 +510,7 @@ NeoBundleLazy 't9md/vim-choosewin', {
 
 " Text Objects {{{
 NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-entire'             " ae | ie
 NeoBundle 'kana/vim-textobj-line'               " al | il
 NeoBundle 'kana/vim-textobj-syntax'             " ay | iy
 NeoBundle 'kana/vim-textobj-indent'             " ai | ii
@@ -511,6 +520,7 @@ NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
 NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
 NeoBundle 'osyo-manga/vim-textobj-multiblock'   " ab | ib
+NeoBundle 'haya14busa/vim-textobj-number'       " an | in
 " }}}
 
 " Writing {{{
@@ -634,8 +644,8 @@ NeoBundleLazy 'kannokanno/previm', {
 
 " Git {{{
 NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-git'
 
 NeoBundleLazy 'jreybert/vimagit', {'autoload': {'commands': ['Magit', 'MagitOnly']}}
 NeoBundleLazy 'gregsexton/gitv', {

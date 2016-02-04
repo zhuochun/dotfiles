@@ -51,8 +51,10 @@ call neobundle#end()
 " }}}
 
 " Check installation for new bundles {{{
+NeoBundleCheck
+
 if !has('vim_starting')
-  NeoBundleCheck
+  call neobundle#call_hook('on_source')
 endif
 " }}}
 
@@ -307,10 +309,12 @@ set noshowmode               " No show current mode
 " https://github.com/powerline/fonts
 " set guifont=Hack:h12
 " set guifont=Inconsolata-g\ for\ Powerline:h14
-set guifont=Monoid\ HalfTight\ Retina:h11
+" set guifont=InputMonoNarrow\ Light:h13
+" set guifont=Monoid\ HalfTight\ Retina:h11
 " set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
-" set guifont=Monoisome:h11
+" set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
+set guifont=Monoisome:h11
 
 set guicursor=a:blinkon0     " Disable GUI blinking cursor
 set guioptions=              " Disable GUI components
