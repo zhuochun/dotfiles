@@ -44,7 +44,7 @@ NeoBundle 'bkad/CamelCaseMotion', {
 
 " buffers {{{
 NeoBundleLazy 'mhinz/vim-sayonara', {
-      \   'autoload' : { 'commands' : ['Sayonara!', 'Sayonara'] },
+      \   'autoload' : { 'commands' : ['Sayonara'] },
       \ }
 
 NeoBundleLazy 'schickling/vim-bufonly', {
@@ -147,25 +147,25 @@ NeoBundleLazy 'junegunn/rainbow_parentheses.vim', {
       \ }
 " }}}
 
+" improve blockwise visual mode {{{
+NeoBundleLazy 'kana/vim-niceblock', {
+      \   'autoload' : { 'mappings' : ['<Plug>(niceblock', 'v'] }
+      \ }
+" }}}
+
+" custom operator {{{
+NeoBundleLazy 'kana/vim-operator-user'
+" }}}
+
 " open documentation {{{
 NeoBundleLazy 'keith/investigate.vim', {
       \   'autoload' : { 'mappings' : ['gK'] },
       \ }
 " }}}
 
-" multiple cursors {{{
-NeoBundleLazy 'terryma/vim-multiple-cursors', {
-      \   'autoload' : { 'mappings' : ['<C-n>'] }
-      \ }
-" }}}
-
 " Yank ring {{{
-NeoBundleLazy 'LeafCage/yankround.vim', {
+NeoBundle 'LeafCage/yankround.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {
-      \     'unite_sources': ['yankround'],
-      \     'mappings': ['y', 'Y', 'p', 'P', '<Plug>(yankround-']
-      \   }
       \ }
 " }}}
 
@@ -182,9 +182,8 @@ NeoBundleLazy 'mattn/gist-vim', {
       \   'autoload' : {'commands': ['Gist']},
       \ }
 
-NeoBundleLazy 'mattn/unite-gist', {
+NeoBundle 'mattn/unite-gist', {
       \   'depends' : ['mattn/gist-vim', 'Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': ['gist']}
       \ }
 " }}
 " }}}
@@ -207,10 +206,7 @@ NeoBundleLazy 'mbbill/undotree', {
 
 " osyo-manga bundles {{{
 NeoBundleLazy 'osyo-manga/vim-anzu', {
-      \   'autoload': {
-      \     'unite_sources': ['anzu'],
-      \     'mappings': ['<Plug>(anzu-'],
-      \   },
+      \   'autoload': { 'mappings' : ['<Plug>(anzu-'] },
       \ }
 
 NeoBundleLazy 'osyo-manga/vim-over', {
@@ -264,47 +260,37 @@ NeoBundle 'Shougo/unite.vim', {
       \   'depends' : ['Shougo/vimproc.vim'],
       \ }
 
-NeoBundleLazy 'Shougo/neomru.vim', {
+NeoBundle 'Shougo/neomru.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': ['neomru/file', 'neomru/directory']}
       \ }
 
-NeoBundleLazy 'Shougo/unite-outline', {
+NeoBundle 'Shougo/unite-outline', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'outline'}
       \ }
 
-NeoBundleLazy 'Shougo/junkfile.vim', {
+NeoBundle 'Shougo/junkfile.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': ['junkfile', 'junkfile/new']}
       \ }
 
-NeoBundleLazy 'Shougo/unite-session', {
+NeoBundle 'Shougo/unite-session', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {
-      \     'unite_sources': ['session', 'session/new'],
-      \     'mappings': ['UniteSessionSave', 'UniteSessionLoad'],
-      \   },
+      \   'autoload': { 'mappings': ['UniteSessionSave', 'UniteSessionLoad'] },
       \ }
 
-NeoBundleLazy 'kopischke/unite-spell-suggest', {
+NeoBundle 'kopischke/unite-spell-suggest', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'spell_suggest'}
       \ }
 
-NeoBundleLazy 'ujihisa/unite-colorscheme', {
+NeoBundle 'ujihisa/unite-colorscheme', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'colorscheme'}
       \ }
 
-NeoBundleLazy 'osyo-manga/unite-quickfix', {
+NeoBundle 'osyo-manga/unite-quickfix', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': ['quickfix', 'location_list']}
       \ }
 
-NeoBundleLazy 'tsukkee/unite-tag', {
+NeoBundle 'tsukkee/unite-tag', {
       \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
-      \   'autoload': {'unite_sources': 'tag'}
       \ }
 " }}
 
@@ -362,7 +348,6 @@ NeoBundleLazy 'Shougo/neosnippet.vim', {
       \   'autoload' : {
       \     'insert': 1,
       \     'filetypes' : ['snippet', 'neosnippet'],
-      \     'unite_sources': ['neosnippet', 'neosnippet/user', 'neosnippet/runtime'],
       \   }
       \ }
 
@@ -377,14 +362,19 @@ NeoBundleLazy 'rhysd/accelerated-jk', {
       \ }
 " }}}
 
-" improve blockwise visual mode {{{
-NeoBundleLazy 'kana/vim-niceblock', {
-      \   'autoload' : { 'mappings' : ['<Plug>(niceblock', 'v'] }
+" window operations {{{
+NeoBundleLazy 't9md/vim-choosewin', {
+      \   'autoload' : {
+      \     'commands' : ['ChooseWin'],
+      \     'mappings' : ['<Plug>(choosewin)'],
+      \   }
       \ }
 " }}}
 
-" custom operator {{{
-NeoBundleLazy 'kana/vim-operator-user'
+" multiple cursors {{{
+NeoBundleLazy 'terryma/vim-multiple-cursors', {
+      \   'autoload' : { 'mappings' : ['<C-n>'] }
+      \ }
 " }}}
 
 " vim-exchange {{{
@@ -497,15 +487,6 @@ NeoBundle 'wellle/targets.vim'
 
 " indent line indicator {{{
 NeoBundle 'Yggdroot/indentLine'
-" }}}
-
-" window operations {{{
-NeoBundleLazy 't9md/vim-choosewin', {
-      \   'autoload' : {
-      \     'commands' : ['ChooseWin'],
-      \     'mappings' : ['<Plug>(choosewin)'],
-      \   }
-      \ }
 " }}}
 
 " Text Objects {{{
@@ -652,9 +633,9 @@ NeoBundleLazy 'gregsexton/gitv', {
       \   'depends': ['tpope/vim-fugitive'],
       \   'autoload': {'commands': ['Gitv']}
       \ }
-NeoBundleLazy 'moznion/unite-git-conflict.vim', {
+
+NeoBundle 'moznion/unite-git-conflict.vim', {
       \   'depends': ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'git-conflict'}
       \ }
 " }}}
 

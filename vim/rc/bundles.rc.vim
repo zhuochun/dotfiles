@@ -31,6 +31,8 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline_left_alt_sep = ''
     let g:airline_right_sep = ''
     let g:airline_right_alt_sep = ''
+    " set airline theme
+    let g:airline_theme = 'base16'
 
     " modify airline symbols
     if !exists('g:airline_symbols')
@@ -133,6 +135,27 @@ if neobundle#tap('vim-rengbang') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('vim-easymotion') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
+  endfunction
+
+  " alias to normal editor commands
+  map <C-f>  <Plug>(easymotion-sn)
+  map <D-f>  <Plug>(easymotion-sn)
+  " normal mode easymotion
+  nmap s     <Plug>(easymotion-s)
+  vmap s     <Plug>(easymotion-s)
+  " visual mode to hit exact target in line
+  vmap f     <Plug>(easymotion-fl)
+  vmap F     <Plug>(easymotion-Fl)
+  vmap t     <Plug>(easymotion-tl)
+  vmap T     <Plug>(easymotion-Tl)
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('vim-asterisk') "{{{
   function! neobundle#hooks.on_source(bundle)
     " keep cursor position when next/prev
@@ -224,54 +247,6 @@ if neobundle#tap('investigate.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('vim-multiple-cursors') "{{{
-  " Use default mappings for multiple-cursors
-  " let g:multi_cursor_use_default_mapping = 1
-  " let g:multi_cursor_next_key = '<C-n>'
-  " let g:multi_cursor_prev_key = '<C-p>'
-  " let g:multi_cursor_skip_key = '<C-x>'
-  " let g:multi_cursor_quit_key = '<Esc>'
-
-  function! neobundle#hooks.on_source(bundle)
-    " Disable NeoComplete once start selecting multiple cursors
-    function! Multiple_cursors_before()
-      if exists(':NeoCompleteLock') == 2
-        exe 'NeoCompleteLock'
-      endif
-    endfunction
-
-    " Re-enable NeoComplete when the multiple selection is canceled
-    function! Multiple_cursors_after()
-      if exists(':NeoCompleteUnlock') == 2
-        exe 'NeoCompleteUnlock'
-      endif
-    endfunction
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-easymotion') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " not case censitive
-    let g:EasyMotion_smartcase = 1
-  endfunction
-
-  " alias to normal editor commands
-  map <C-f>  <Plug>(easymotion-sn)
-  map <D-f>  <Plug>(easymotion-sn)
-  " normal mode easymotion
-  nmap s     <Plug>(easymotion-s)
-  vmap s     <Plug>(easymotion-s)
-  " visual mode to hit exact target in line
-  vmap f     <Plug>(easymotion-fl)
-  vmap F     <Plug>(easymotion-Fl)
-  vmap t     <Plug>(easymotion-tl)
-  vmap T     <Plug>(easymotion-Tl)
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('tagbar') "{{{
   function! neobundle#hooks.on_source(bundle)
     " sort according to order
@@ -356,6 +331,8 @@ if neobundle#tap('syntastic') "{{{
     let g:syntastic_style_error_symbol = '❄'
     let g:syntastic_style_warning_symbol = '❖'
 
+    " no check on quitting vim
+    let g:syntastic_check_on_wq = 0
     " error window will be automatically closed
     let g:syntastic_auto_loc_list = 1
     " populate syntastic errors in location list
@@ -633,9 +610,13 @@ if neobundle#tap('yankround.vim') "{{{
   xmap p  <Plug>(yankround-p)
   nmap P  <Plug>(yankround-P)
 
-  " loop yanks, <y, >y
+  " loop yanks, <leader>y, <leader>Y
   nmap <leader>y <Plug>(yankround-prev)
   nmap <leader>Y <Plug>(yankround-next)
+
+  " yanks in commandline
+  cmap <C-r> <Plug>(yankround-insert-register)
+  cmap <C-y> <Plug>(yankround-pop)
 
   call neobundle#untap()
 endif "}}}
@@ -792,13 +773,6 @@ if neobundle#tap('neocomplete.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('accelerated-jk') "{{{
-  nmap j <Plug>(accelerated_jk_gj)
-  nmap k <Plug>(accelerated_jk_gk)
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('vim-monster') "{{{
   function! neobundle#hooks.on_source(bundle)
     " Set async completion.
@@ -840,6 +814,52 @@ if neobundle#tap('neosnippet.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('accelerated-jk') "{{{
+  nmap j <Plug>(accelerated_jk_gj)
+  nmap k <Plug>(accelerated_jk_gk)
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-choosewin') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " don't blink at land
+    let g:choosewin_blink_on_land = 0
+  endfunction
+
+  " choose window
+  nmap gow <Plug>(choosewin)
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-multiple-cursors') "{{{
+  " Use default mappings for multiple-cursors
+  " let g:multi_cursor_use_default_mapping = 1
+  " let g:multi_cursor_next_key = '<C-n>'
+  " let g:multi_cursor_prev_key = '<C-p>'
+  " let g:multi_cursor_skip_key = '<C-x>'
+  " let g:multi_cursor_quit_key = '<Esc>'
+
+  function! neobundle#hooks.on_source(bundle)
+    " Disable NeoComplete once start selecting multiple cursors
+    function! Multiple_cursors_before()
+      if exists(':NeoCompleteLock') == 2
+        exe 'NeoCompleteLock'
+      endif
+    endfunction
+
+    " Re-enable NeoComplete when the multiple selection is canceled
+    function! Multiple_cursors_after()
+      if exists(':NeoCompleteUnlock') == 2
+        exe 'NeoCompleteUnlock'
+      endif
+    endfunction
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('vim-surround') "{{{
   xmap ( S)
   xmap { S{
@@ -871,18 +891,6 @@ if neobundle#tap('indentLine') "{{{
     let g:indentLine_char = '┊'
     let g:indentLine_fileTypeExclude = ['markdown', 'text']
   endfunction
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-choosewin') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " don't blink at land
-    let g:choosewin_blink_on_land = 0
-  endfunction
-
-  " choose window
-  nmap gow <Plug>(choosewin)
 
   call neobundle#untap()
 endif "}}}

@@ -104,6 +104,8 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # Edit zshrc and vimrc
 alias zshrc="gvim ~/.zshrc"
 alias vimrc="gvim ~/.vimrc"
+# Open vim Magit
+alias magit="vim -c MagitOnly"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
