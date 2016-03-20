@@ -53,6 +53,23 @@ function! s:RubyDef()
 endfunction
 " }}}
 
+" Elixir Mappings {{{
+autocmd! FileType elixir :call s:ElixirDef()
+function! s:ElixirDef()
+  setlocal iskeyword+=!,?
+
+  setlocal shiftwidth=2
+  setlocal tabstop=2
+
+  " Surround # to #{}
+  let b:surround_{char2nr('#')} = "#{\r}"
+  xmap <buffer> # S#
+
+  " Correct typos
+  iab <buffer> ~=         =~
+endfunction
+" }}}
+
 " JavaScript/CoffeeScript Mappings {{{
 autocmd! BufRead,BufNewFile *.cson set ft=coffee
 autocmd! FileType javascript,coffee :call s:CoffeeDef()

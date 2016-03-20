@@ -19,12 +19,6 @@ function! s:source_rc(path)
   execute 'source' fnameescape(expand('~/.vim/rc/' . a:path))
 endfunction
 
-" Turn on alt (option) key on macs, which behaves
-" like the 'meta' key. Thus we can now use <M-x>
-if has("gui_macvim")
-  set macmeta
-endif
-
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -225,20 +219,17 @@ set noswapfile
 set directory=/tmp/,~/tmp,~/Temp
 
 " Enable Persistent undo
-if has('persistent_undo')
-  set undofile
-
-  if has("unix")
-    set undodir=/tmp/,~/tmp,~/Temp
-  else
-    set undodir=$HOME/temp/
-  endif
-
-  " Maximum number of changes that can be undone
-  set undolevels=1000
-  " Maximum number lines to save for undo on a buffer reload
-  set undoreload=1000
+if has("unix")
+  set undodir=/tmp/,~/tmp,~/Temp
+else
+  set undodir=$HOME/temp/
 endif
+
+set undofile
+" Maximum number of changes that can be undone
+set undolevels=1000
+" Maximum number lines to save for undo on a buffer reload
+set undoreload=1000
 " }}}
 
 " Tabs and windows {{{
@@ -286,12 +277,16 @@ nmap <D-S-down>  3<C-W>-
 " VIM Visual {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Use 256 Term colors {{{
+if !has('gui_running')
+  set t_Co=256
+endif
+" }}}
+
 " Theme {{{
+set colorcolumn=119
 set background=dark
 colorscheme jellybeans
-
-set colorcolumn=119
-set lines=42 columns=120
 " }}}
 
 " Styles {{{

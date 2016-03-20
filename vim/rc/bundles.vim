@@ -4,18 +4,18 @@ NeoBundleLazy 'AndrewRadev/linediff.vim', {
       \ }
 " }}}
 
-" switch between words {{{
-NeoBundleLazy 'AndrewRadev/switch.vim', {
-      \   'autoload' : { 'commands': ['Switch'] },
-      \ }
-" }}}
-
 " powerful split and join {{{
 NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
       \   'autoload' : {
       \     'mappings' : ['gS', 'gJ'],
       \     'commands' : ['SplitjoinJoin', 'SplitjoinSplit']
       \   }
+      \ }
+" }}}
+
+" switch between words {{{
+NeoBundleLazy 'AndrewRadev/switch.vim', {
+      \   'autoload' : { 'commands': ['Switch'] },
       \ }
 " }}}
 
@@ -117,7 +117,7 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
       \   'autoload' : {
       \     'commands' : ['SemanticHighlight'],
-      \     'filetypes': ['ruby', 'coffee'],
+      \     'filetypes': ['ruby', 'coffee', 'elixir'],
       \   },
       \ }
 " }}}
@@ -253,6 +253,10 @@ NeoBundle 'Shougo/vimproc.vim', {
 " }}
 
 NeoBundleLazy 'Shougo/neoinclude.vim'
+
+NeoBundleLazy 'Shougo/echodoc', {
+      \   'autoload': { 'insert': 1, },
+      \ }
 " }}
 
 " Unite {{
@@ -330,16 +334,17 @@ NeoBundleLazy 'Shougo/neco-vim', {
       \ }
 
 " Complete Ruby with RSense
+" NeoBundleLazy 'marcus/rsense'
 " NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
-"       \   'depends'  : ['Shougo/neocomplete.vim'],
+"       \   'depends'  : ['marcus/rsense', 'Shougo/neocomplete.vim'],
 "       \   'autoload' : {'filetypes': 'ruby'}
 "       \ }
 
 " Complete Ruby with rcodetools
-NeoBundleLazy 'osyo-manga/vim-monster', {
-      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
-      \   'autoload' : {'filetypes': 'ruby'}
-      \ }
+" NeoBundleLazy 'osyo-manga/vim-monster', {
+"       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
+"       \   'autoload' : {'filetypes': 'ruby'}
+"       \ }
 " }}
 
 " NeoSnippet {{
@@ -374,6 +379,12 @@ NeoBundleLazy 't9md/vim-choosewin', {
 " multiple cursors {{{
 NeoBundleLazy 'terryma/vim-multiple-cursors', {
       \   'autoload' : { 'mappings' : ['<C-n>'] }
+      \ }
+" }}}
+
+" reference doc in vim {{{
+NeoBundleLazy 'Thinca/vim-ref', {
+      \   'autoload' : { 'commands' : ['Ref'] }
       \ }
 " }}}
 
@@ -541,12 +552,12 @@ NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
 " JavaScript/CoffeeScript {{{
-NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundle 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+NeoBundle 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundle 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
 NeoBundleLazy 'marijnh/tern_for_vim', {
       \   'autoload': { 'filetypes': ['javascript'] },
       \   'build': {
@@ -559,7 +570,7 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 " }}}
 
 " Ruby/Rails {{{
-NeoBundleLazy 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundle 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
 
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
@@ -580,6 +591,10 @@ NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
       \     ]
       \   },
       \ }
+NeoBundleLazy 'yuku-t/vim-ref-ri', {
+      \   'depends' : ['Shougo/unite.vim', 'Thinca/vim-ref'],
+      \   'autoload' : { 'filetypes': ['ruby', 'eruby'] },
+      \ }
 " }}}
 
 " Clojure {{{
@@ -594,7 +609,11 @@ NeoBundleLazy 'tpope/vim-salve', {
 " }}}
 
 " Elixir {{{
-NeoBundleLazy 'elixir-lang/vim-elixir', {'autoload': {'filetypes': 'elixir'}}
+NeoBundle 'elixir-lang/vim-elixir', {'autoload': {'filetypes': 'elixir'}}
+NeoBundleLazy 'sanmiguel/helpex.vim', {
+      \   'depends' : ['Shougo/vimproc.vim', 'Thinca/vim-ref'],
+      \   'autoload' : { 'filetypes': 'elixir' },
+      \ }
 " }}}
 
 " C/Cpp {{{
@@ -603,19 +622,14 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 " }}}
 
 " Go {{{
-NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': 'go'}}
-NeoBundleLazy 'rhysd/unite-go-import.vim', {
-      \   'depends': ['Shougo/unite.vim'],
-      \   'autoload': {'unite_sources': 'go/import'}
-      \ }
+NeoBundle 'fatih/vim-go', {'autoload': {'filetypes': 'go'}}
+NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': 'go'}}
 " }}}
 
 " Markdown {{{
-NeoBundleLazy 'gabrielelana/vim-markdown', {'autoload':{'filetypes': 'markdown'}}
-
+NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': 'markdown'}}
 " Highlight code in Markdown
-NeoBundleLazy 'farseer90718/vim-regionsyntax', {'autoload': {'filetypes': 'markdown'}}
-
+NeoBundleLazy 'blindFS/vim-regionsyntax', {'autoload': {'filetypes': 'markdown'}}
 " Preview Markdown Result in Browser
 NeoBundleLazy 'kannokanno/previm', {
       \   'depends': ['tyru/open-browser.vim'],
@@ -647,11 +661,12 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
 " Colorschemes {{{
-NeoBundle 'AlessandroYorba/Alduin'
-NeoBundle 'baskerville/bubblegum'
+NeoBundle 'AlessandroYorba/Sierra'
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'cocopon/iceberg.vim'
 NeoBundle 'joshdick/onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
+NeoBundle 'mhartington/oceanic-next'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'mhinz/vim-janah'
 NeoBundle 'nanotech/jellybeans.vim'

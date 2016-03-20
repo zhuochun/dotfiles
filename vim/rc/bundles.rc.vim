@@ -10,7 +10,6 @@ if neobundle#tap('switch.vim') "{{{
           \   ['first', 'last'],
           \   ['- [ ]', '- [x]'],
           \   ['get', 'post', 'put', 'patch', 'delete'],
-          \   ['\.to_not', '\.to'],
           \   ['\.toBe', '\.not\.toBe'],
           \   ['public', 'protected', 'private'],
           \ ]
@@ -24,6 +23,8 @@ endif "}}}
 
 if neobundle#tap('vim-airline') "{{{
   function! neobundle#hooks.on_source(bundle)
+    " set airline theme
+    let g:airline_theme = 'base16color'
     " enable powerline symbols
     let g:airline_powerline_fonts = 1
     " clear default separator symbols
@@ -31,15 +32,13 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline_left_alt_sep = ''
     let g:airline_right_sep = ''
     let g:airline_right_alt_sep = ''
-    " set airline theme
-    let g:airline_theme = 'base16'
 
     " modify airline symbols
     if !exists('g:airline_symbols')
       let g:airline_symbols = {}
     endif
     " modify whitespace symbol
-    let g:airline_symbols.whitespace = '☯'
+    let g:airline_symbols.whitespace = ''
     " shorter mode names
     let g:airline_mode_map = {
           \ '__' : '-',
@@ -54,36 +53,47 @@ if neobundle#tap('vim-airline') "{{{
           \ 'S'  : 'S',
           \ '' : 'S',
           \ }
-    " control which sections get truncated and at what width. >
+
+    " control which sections get truncated and at what width
     let g:airline#extensions#default#section_truncate_width = {
-          \   'b': 79,
-          \   'x': 60,
-          \   'y': 88,
-          \   'z': 45,
+          \ 'b': 79,
+          \ 'x': 60,
+          \ 'y': 88,
+          \ 'z': 45,
+          \ 'warning': 80,
+          \ 'error': 80,
           \ }
 
     " disable some plugin integrations
     let g:airline#extensions#tagbar#enabled = 0
-    let g:airline#extensions#nrrwrgn#enabled = 0
-    " disable summary of changed hunks under source control.
+    " disable summary of changed hunks under source control (gitgutter)
     let g:airline#extensions#hunks#enabled = 0
 
     " enable enhanced tabline.
     let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#show_buffers = 0
     " display tab number instead of # of splits (default)
     let g:airline#extensions#tabline#tab_nr_type = 1
-    " disable displaying tab type (far right)
-    let g:airline#extensions#tabline#show_tab_type = 0
-    " disable close button should be shown
-    let g:airline#extensions#tabline#show_close_button = 0
     " define how file names are displayed in tabline
     let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+    " disable displaying tab type, buffers, splits, close button
+    let g:airline#extensions#tabline#show_buffers = 0
+    let g:airline#extensions#tabline#show_tab_type = 0
+    let g:airline#extensions#tabline#show_splits = 0
+    let g:airline#extensions#tabline#show_close_button = 0
     " no default separators for the tabline
     let g:airline#extensions#tabline#left_sep = ''
     let g:airline#extensions#tabline#left_alt_sep = ''
     let g:airline#extensions#tabline#right_sep = ''
     let g:airline#extensions#tabline#right_alt_sep = ''
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-bufferline') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " do not automatically echo bufferline to the command bar
+    let g:bufferline_echo = 0
   endfunction
 
   call neobundle#untap()
@@ -196,7 +206,7 @@ endif "}}}
 if neobundle#tap('semantic-highlight.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
     " Activate automatically for certain filetypes
-    let g:semanticEnableFileTypes = ['ruby', 'javascript', 'coffee']
+    let g:semanticEnableFileTypes = ['ruby', 'javascript', 'coffee', 'elixir', 'go']
   endfunction
 
   call neobundle#untap()
@@ -346,10 +356,11 @@ if neobundle#tap('syntastic') "{{{
     let g:syntastic_mode_map = {
           \ 'mode': 'active',
           \ 'active_filetypes': ['ruby', 'javascript', 'coffee'],
-          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
+          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp', 'go'] }
 
     " run multiple syntastic checkers
     let g:syntastic_ruby_checkers = ["mri"]
+    let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
   endfunction
 
   " manual syntastic check
@@ -393,6 +404,7 @@ if neobundle#tap('unite.vim') "{{{
           \   'winheight': 6,
           \   'direction': 'dynamictop',
           \   'prompt': '» ',
+          \   'prompt_focus': 1,
           \   'marked_icon': '⚲',
           \   'cursor-line-highlight': 'Statusline',
           \   'short_source_names' : 1,
@@ -434,6 +446,7 @@ if neobundle#tap('unite.vim') "{{{
                 \ }
     let g:unite_source_menu_menus.git.command_candidates = [
                 \   ['Gist', 'Unite -buffer-name=gist gist'],
+                \   ['Grep', 'Unite grep/git:/:--cached:file'],
                 \   ['Gitv', 'Gitv'],
                 \   ['Magit', 'Magit'],
                 \   ['Status', 'Gstatus'],
@@ -459,6 +472,7 @@ if neobundle#tap('unite.vim') "{{{
                 \   'description' : 'Ruby Commands',
                 \ }
     let g:unite_source_menu_menus.ruby.command_candidates = [
+                \   ['Unite ri Documents', 'Unite ref/ri'],
                 \   ['Inline Temporary Variable', 'RInlineTemp'],
                 \   ['Convert Post Condition', 'RConvertPostConditional'],
                 \   ['Extract Constant', 'RExtractConstant'],
@@ -467,6 +481,24 @@ if neobundle#tap('unite.vim') "{{{
                 \   ['Rename Local Variable', 'RRenameLocalVariable'],
                 \   ['Rename Instance Variable', 'RRenameInstanceVariable'],
                 \   ['Extract Method', 'RExtractMethod'],
+                \ ]
+    " }
+    " Unite Go Menus {
+    let g:unite_source_menu_menus.golang = {
+                \   'description' : 'Golang Commands',
+                \ }
+    let g:unite_source_menu_menus.golang.command_candidates = [
+                \   ['Lint', 'GoLint'],
+                \   ['Format', 'GoFmt'],
+                \   ['Update Imports', 'GoImports'],
+                \   ['Goto Declaration', 'GoDef'],
+                \   ['Type Info', 'GoInfo'],
+                \   ['Doc', 'GoDoc'],
+                \   ['Doc Browser', 'GoDocBrowser'],
+                \   ['Test', 'GoTest'],
+                \   ['Test Function', 'GoTestFunc'],
+                \   ['Run', 'GoRun'],
+                \   ['Build', 'GoBuild'],
                 \ ]
     " }
     " Unite System Commands Menus {
@@ -532,6 +564,8 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
+  nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
+  nnoremap <silent> goB :<C-u>Unite -buffer-name=buffers buffer_tab -auto-resize<CR>
   nnoremap <silent> gop :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
@@ -540,7 +574,8 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
+  nnoremap <silent> got :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
+  nnoremap <silent> goT :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
   " Unite spell suggest
   nnoremap <silent> gcs :<C-u>Unite -buffer-name=spell spell_suggest<CR>
 
@@ -727,7 +762,8 @@ if neobundle#tap('neocomplete.vim') "{{{
     " let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
 
     " Force omni customizations (slow)
-    " let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
+    let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
+    let g:neocomplete#sources#omni#input_patterns.elixir = '[^.[:digit:] *\t]\.'
 
     " Appoints vim source call function when completes custom and customlist command
     let g:neocomplete#sources#vim#complete_functions = {
@@ -773,6 +809,15 @@ if neobundle#tap('neocomplete.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('neocomplete-rsense.vim') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    let g:rsenseHome = '/usr/local/bin/rsense'
+    let g:rsenseUseOmniFunc = 1
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('vim-monster') "{{{
   function! neobundle#hooks.on_source(bundle)
     " Set async completion.
@@ -806,8 +851,8 @@ if neobundle#tap('neosnippet.vim') "{{{
   imap <D-d> <Plug>(neosnippet_jump_or_expand)
   smap <D-d> <Plug>(neosnippet_jump_or_expand)
   " Alternative
-  imap <M-d> <Plug>(neosnippet_expand_or_jump)
-  smap <M-d> <Plug>(neosnippet_expand_or_jump)
+  imap <D-D> <Plug>(neosnippet_expand_or_jump)
+  smap <D-D> <Plug>(neosnippet_expand_or_jump)
   " Visual
   xmap <D-d> <Plug>(neosnippet_expand_target)
 
