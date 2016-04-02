@@ -72,6 +72,8 @@
 [rerere]
 	autoupdate = true
 	enabled = true
+[interactive]
+	singlekey = true
 [help]
 	# Automatically correct and execute mistyped commands
 	autocorrect = 1

@@ -8,11 +8,13 @@ command! Fullscreen :set lines=999 columns=999
 command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h12
 command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
 
+set lines=42 columns=120
 set background=dark
-" colorscheme gruvbox
+colorscheme gruvbox
 " colorscheme yowish
-colorscheme onedark
+" colorscheme onedark
 " colorscheme dracula
+" colorscheme flattened_dark
 " }}}
 
 " common gui groups {{{
@@ -41,8 +43,12 @@ function! s:PresentationMode()
 endfunction
 " }}}
 
-" remove specific OSX keybindings {{{
-if has("gui_macvim")
+if has("gui_macvim") " {{{
+    " Turn on alt (option) key on macs, which behaves
+    " like the 'meta' key. Thus we can now use <M-x>
+    set macmeta
+
+    " Remove specific OSX keybindings
     " Unmap D-n
     macmenu File.New\ Window key=<nop>
     " Unmap D-t
@@ -61,5 +67,4 @@ if has("gui_macvim")
     macmenu Edit.Find.Find\.\.\. key=<nop>
     " Unmap D-l
     macmenu Tools.List\ Errors key=<nop>
-endif
-" }}}
+endif " }}}
