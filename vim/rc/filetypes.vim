@@ -187,6 +187,7 @@ function! s:GoDef()
   " Correct typos
   iab <buffer> ;=         :=
   iab <buffer> String     string
+  iab <buffer> stirng     string
 endfunction
 " }}}
 

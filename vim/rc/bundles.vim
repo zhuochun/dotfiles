@@ -384,7 +384,10 @@ NeoBundleLazy 'terryma/vim-multiple-cursors', {
 
 " reference doc in vim {{{
 NeoBundleLazy 'Thinca/vim-ref', {
-      \   'autoload' : { 'commands' : ['Ref'] }
+      \   'autoload' : {
+      \     'commands' : ['Ref'],
+      \     'mappings' : ['K', '<Plug>(ref'],
+      \   }
       \ }
 " }}}
 

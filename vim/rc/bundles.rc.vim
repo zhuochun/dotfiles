@@ -271,26 +271,25 @@ if neobundle#tap('tagbar') "{{{
     let g:tagbar_iconchars = ['▸', '▾']
     " expand tag folds
     let g:tagbar_autoshowtag = 1
-    " tagbar types
+    " tagbar types coffeescript
     let g:tagbar_type_coffee = {
           \ 'ctagstype' : 'coffee',
-          \ 'kinds'     : [
-          \     'c:classes',
-          \     'm:methods',
-          \     'f:functions',
-          \     'v:variables',
-          \     'f:fields',
-          \   ]
-          \ }
+          \ 'kinds' : [
+          \   'c:classes',
+          \   'm:methods',
+          \   'f:functions',
+          \   'v:variables',
+          \   'f:fields',
+          \ ]}
+    " tagbar types markdown
     let g:tagbar_type_markdown = {
           \ 'ctagstype' : 'markdown',
           \ 'kinds' : [
-          \     'h:Heading_L1',
-          \     'i:Heading_L2',
-          \     'j:Heading_L3',
-          \     'k:Heading_L4'
-          \   ]
-          \ }
+          \   'h:Heading_L1',
+          \   'i:Heading_L2',
+          \   'j:Heading_L3',
+          \   'k:Heading_L4'
+          \ ]}
   endfunction
 
   nnoremap <F10> :TagbarToggle<CR>
@@ -789,7 +788,7 @@ if neobundle#tap('neocomplete.vim') "{{{
   endfunction
 
   " <TAB> completion
-  inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" :
+  inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
         \ <SID>check_back_space() ? "\<TAB>" :
         \ neocomplete#start_manual_complete()
   function! s:check_back_space()
@@ -1064,6 +1063,24 @@ if neobundle#tap('vim-ruby-refactoring') "{{{
     " :RRenameInstanceVariable : Rename Instance Variable
     " :RExtractMethod          : Extract Method
     let g:ruby_refactoring_map_keys = 0
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-go') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " Syntax-highlighting for Functions, Methods and Structs
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_structs = 1
+    let g:go_highlight_interfaces = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_build_constraints = 1
+    " Enable goimports to insert import paths instead of gofmt
+    let g:go_fmt_command = "goimports"
+    " Disable fmt command errors
+    let g:go_fmt_fail_silently = 1
   endfunction
 
   call neobundle#untap()

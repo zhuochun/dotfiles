@@ -379,7 +379,8 @@
   " <D-}> Next Tabs
   " <D-a> Mac Select all
   " <D-s> Mac Save
-  " <D-d> Snippet autocomplete
+  " <D-d> Snippet autocomplete jump or expand
+  " <D-D> Snippet autocomplete expand or jump
   " <D-f> Unite grep
   " <D-g>
   " <D-h> Mac Hide Window
