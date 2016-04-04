@@ -110,10 +110,9 @@ endif "}}}
 
 if neobundle#tap('vim-rest-console') "{{{
   " <C-j> to trigger request
-
   function! neobundle#hooks.on_source(bundle)
     " set output buffer to json format
-    let g:vrc_output_buffer_name = '__REST_OUTPUT.json'
+    let g:vrc_output_buffer_name = '__RESPONSE__.json'
   endfunction
 
   call neobundle#untap()
@@ -223,7 +222,7 @@ endif "}}}
 
 if neobundle#tap('auto-pairs') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " Disable default <BS> mapping because it maps <C-H>, which is used elsewhere
+    " Disable default <BS> mapping because it maps <C-h>, which is used elsewhere
     " The original <BS> behavior is mapped with AutoPairsDelete() down below
     let g:AutoPairsMapBS = 0
   endfunction
@@ -381,6 +380,8 @@ if neobundle#tap('nerdtree') "{{{
   let NERDTreeMouseMode = 2
   " Replace the netrw autocommands for exploring local directories
   let NERDTreeHijackNetrw = 1
+  " Delete old buffer which is no more valid
+  let NERDTreeAutoDeleteBuffer=1
   " Don't display these kinds of files in NERDTree
   let NERDTreeIgnore = [
         \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
@@ -493,11 +494,12 @@ if neobundle#tap('unite.vim') "{{{
                 \   ['Goto Declaration', 'GoDef'],
                 \   ['Type Info', 'GoInfo'],
                 \   ['Doc', 'GoDoc'],
-                \   ['Doc Browser', 'GoDocBrowser'],
+                \   ['Doc in Browser', 'GoDocBrowser'],
                 \   ['Test', 'GoTest'],
-                \   ['Test Function', 'GoTestFunc'],
+                \   ['Test Current Function', 'GoTestFunc'],
                 \   ['Run', 'GoRun'],
                 \   ['Build', 'GoBuild'],
+                \   ['Go Path', 'GoPath'],
                 \ ]
     " }
     " Unite System Commands Menus {
@@ -796,10 +798,10 @@ if neobundle#tap('neocomplete.vim') "{{{
     return !col || getline('.')[col - 1] =~ '\s'
   endfunction
   " <S-TAB> completion backward
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-H>"
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
   " <BS> close popup and delete backword char
   inoremap <expr><BS> pumvisible() ?
-        \ neocomplete#smart_close_popup()."\<C-H>" :
+        \ neocomplete#smart_close_popup()."\<C-h>" :
         \ AutoPairsDelete()
   " <Space> close popup
   inoremap <expr><Space> pumvisible() ?
@@ -1069,6 +1071,14 @@ if neobundle#tap('vim-ruby-refactoring') "{{{
 endif "}}}
 
 if neobundle#tap('vim-go') "{{{
+  " :GoDef         Lookup symbol and declaration
+  " :GoDoc         Lookup documentations
+  " :GoImplements  Advanced source analysis tools utilizing oracle
+  " :GoCallees     Advanced source analysis tools utilizing oracle
+  " :GoReferrers   Advanced source analysis tools utilizing oracle
+  " :GoTest        Test current file
+  " :GoTestFunc    Test current function
+  " :GoPath, :GoInstallBinaries
   function! neobundle#hooks.on_source(bundle)
     " Syntax-highlighting for Functions, Methods and Structs
     let g:go_highlight_functions = 1
@@ -1078,9 +1088,11 @@ if neobundle#tap('vim-go') "{{{
     let g:go_highlight_operators = 1
     let g:go_highlight_build_constraints = 1
     " Enable goimports to insert import paths instead of gofmt
-    let g:go_fmt_command = "goimports"
+    let g:go_fmt_command = 'goimports'
     " Disable fmt command errors
     let g:go_fmt_fail_silently = 1
+    " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
+    let g:go_dispatch_enabled = 1
   endfunction
 
   call neobundle#untap()

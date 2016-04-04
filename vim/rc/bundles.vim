@@ -625,14 +625,14 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 " }}}
 
 " Go {{{
-NeoBundle 'fatih/vim-go', {'autoload': {'filetypes': 'go'}}
-NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': 'go'}}
+NeoBundle 'fatih/vim-go', {'depends': ['tpope/vim-dispatch'], 'autoload': {'filetypes': ['go']}}
+NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
 
 " Markdown {{{
-NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': 'markdown'}}
+NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': ['markdown']}}
 " Highlight code in Markdown
-NeoBundleLazy 'blindFS/vim-regionsyntax', {'autoload': {'filetypes': 'markdown'}}
+NeoBundleLazy 'blindFS/vim-regionsyntax', {'autoload': {'filetypes': ['markdown']}}
 " Preview Markdown Result in Browser
 NeoBundleLazy 'kannokanno/previm', {
       \   'depends': ['tyru/open-browser.vim'],

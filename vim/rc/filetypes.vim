@@ -184,6 +184,9 @@ endfunction
 " Go Mappings {{{
 autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
+  " Disable list chars, ¯\_(ツ)_/¯
+  setlocal nolist
+
   " Correct typos
   iab <buffer> ;=         :=
   iab <buffer> String     string
@@ -226,9 +229,9 @@ iab tyr        try
 iab itn        int
 iab doulbe     double
 iab vodi       void
-iab brake;     break;
-iab breka;     break;
-iab breaka;    break;
+iab brake      break
+iab breka      break
+iab breaka     break
 iab labeled    labelled
 iab seperate   separate
 iab execuse    excuse

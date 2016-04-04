@@ -11,8 +11,9 @@ ZSH_THEME="pure"
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
-         git git-extras gitignore golang jsontools k node npm rails rake rbenv
-         redis-cli rsync ruby themes vagrant zsh-syntax-highlighting zsh-autosuggestions)
+         git git-extras gitignore golang jsontools k mix node npm rails rake
+         rbenv redis-cli rsync ruby themes tmux vagrant zsh-syntax-highlighting
+         zsh-autosuggestions)
 
 # Load oh-my-zsh
 # ==============================
