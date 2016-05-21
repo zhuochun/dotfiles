@@ -117,7 +117,7 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
       \   'autoload' : {
       \     'commands' : ['SemanticHighlight'],
-      \     'filetypes': ['ruby', 'coffee', 'elixir'],
+      \     'filetypes': ['ruby', 'coffee', 'elixir', 'go'],
       \   },
       \ }
 " }}}

@@ -23,8 +23,6 @@ endif "}}}
 
 if neobundle#tap('vim-airline') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " set airline theme
-    let g:airline_theme = 'base16color'
     " enable powerline symbols
     let g:airline_powerline_fonts = 1
     " clear default separator symbols
@@ -68,6 +66,8 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline#extensions#tagbar#enabled = 0
     " disable summary of changed hunks under source control (gitgutter)
     let g:airline#extensions#hunks#enabled = 0
+    " disable bufferline integration
+    let g:airline#extensions#bufferline#enabled = 0
 
     " enable enhanced tabline.
     let g:airline#extensions#tabline#enabled = 1
@@ -94,6 +94,8 @@ if neobundle#tap('vim-bufferline') "{{{
   function! neobundle#hooks.on_source(bundle)
     " do not automatically echo bufferline to the command bar
     let g:bufferline_echo = 0
+    " scrolling with fixed current buffer position
+    let g:bufferline_rotate = 1
   endfunction
 
   call neobundle#untap()
@@ -204,8 +206,25 @@ endif "}}}
 
 if neobundle#tap('semantic-highlight.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
+    " A optimally distinct colors http://tools.medialab.sciences-po.fr/iwanthue/
+    let g:semanticGUIColors = ['#A7C575', '#BDBDE4', '#E0ED85', '#E9C5E3', '#CAF19B', '#E9A9BB',
+                              \'#9BDE9D', '#F4A091', '#89EEE4', '#E1A46A', '#97DBE2', '#E2B964',
+                              \'#C4DBEC', '#D7CC71', '#B2C4CC', '#F1A87F', '#8EE9CA', '#E7C183',
+                              \'#7CC9BC', '#E9B7A2', '#87DCB0', '#CEB7B5', '#CDF8C9', '#CAB996',
+                              \'#97C19A', '#F5E2A8', '#B3D2BF', '#C6C989', '#E6E3CC', '#C2DDAA',
+                              \'#B4BC9F', '#E6E5B2']
+    " Cache color values across files
+    let g:semanticUseCache = 1
+    " Cache color values across sessions
+    let g:semanticPersistCache = 1
     " Activate automatically for certain filetypes
-    let g:semanticEnableFileTypes = ['ruby', 'javascript', 'coffee', 'elixir', 'go']
+    let g:semanticEnableFileTypes = {
+                \   'javascript' : 'js',
+                \   'coffee'     : 'coffee',
+                \   'ruby'       : 'ruby',
+                \   'elixir'     : 'elixir',
+                \   'go'         : 'go',
+                \ }
   endfunction
 
   call neobundle#untap()
@@ -353,8 +372,8 @@ if neobundle#tap('syntastic') "{{{
     " automatic syntax checking
     let g:syntastic_mode_map = {
           \ 'mode': 'active',
-          \ 'active_filetypes': ['ruby', 'javascript', 'coffee'],
-          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp', 'go'] }
+          \ 'active_filetypes': ['ruby', 'javascript', 'coffee', 'go'],
+          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
 
     " run multiple syntastic checkers
     let g:syntastic_ruby_checkers = ["mri"]
@@ -439,85 +458,95 @@ if neobundle#tap('unite.vim') "{{{
     let g:unite_enable_auto_select = 0
 
     " Custom unite menus {{
-    let g:unite_source_menu_menus = {}
-    " Unite Git Menus {
-    let g:unite_source_menu_menus.git = {
-                \   'description' : 'Git Commands',
-                \ }
-    let g:unite_source_menu_menus.git.command_candidates = [
-                \   ['Gist', 'Unite -buffer-name=gist gist'],
-                \   ['Grep', 'Unite grep/git:/:--cached:file'],
-                \   ['Gitv', 'Gitv'],
-                \   ['Magit', 'Magit'],
-                \   ['Status', 'Gstatus'],
-                \   ['Conflicts', 'Unite git-conflict'],
-                \   ['Previous Hunk', 'GitGutterPrevHunk'],
-                \   ['Next Hunk', 'GitGutterNextHunk'],
-                \   ['Stage Hunk', 'GitGutterStageHunk'],
-                \   ['Revert Hunk', 'GitGutterRevertHunk'],
-                \   ['Stage Current File', 'Gwrite'],
-                \   ['Commit All Changes', 'Gcommit --verbose'],
-                \   ['Amend Last Commit', 'Gcommit --amend --verbose'],
-                \   ['Revert Last Commit', 'Gread'],
-                \   ['Diff', 'Gvdiff'],
-                \   ['Blame', 'Gblame'],
-                \   ['Show Log', 'Gllog'],
-                \   ['Show Current File Log', 'Gllog -- %'],
-                \   ['Browse on GitHub', 'Gbrowse'],
-                \   ['Copy GitHub Path', 'Gbrowse!'],
-                \ ]
-    " }
-    " Unite Ruby Refactor Menus {
-    let g:unite_source_menu_menus.ruby = {
-                \   'description' : 'Ruby Commands',
-                \ }
-    let g:unite_source_menu_menus.ruby.command_candidates = [
-                \   ['Unite ri Documents', 'Unite ref/ri'],
-                \   ['Inline Temporary Variable', 'RInlineTemp'],
-                \   ['Convert Post Condition', 'RConvertPostConditional'],
-                \   ['Extract Constant', 'RExtractConstant'],
-                \   ['Extract Rspec Let', 'RExtractLet'],
-                \   ['Extract Local Variable', 'RExtractLocalVariable'],
-                \   ['Rename Local Variable', 'RRenameLocalVariable'],
-                \   ['Rename Instance Variable', 'RRenameInstanceVariable'],
-                \   ['Extract Method', 'RExtractMethod'],
-                \ ]
-    " }
-    " Unite Go Menus {
-    let g:unite_source_menu_menus.golang = {
-                \   'description' : 'Golang Commands',
-                \ }
-    let g:unite_source_menu_menus.golang.command_candidates = [
-                \   ['Lint', 'GoLint'],
-                \   ['Format', 'GoFmt'],
-                \   ['Update Imports', 'GoImports'],
-                \   ['Goto Declaration', 'GoDef'],
-                \   ['Type Info', 'GoInfo'],
-                \   ['Doc', 'GoDoc'],
-                \   ['Doc in Browser', 'GoDocBrowser'],
-                \   ['Test', 'GoTest'],
-                \   ['Test Current Function', 'GoTestFunc'],
-                \   ['Run', 'GoRun'],
-                \   ['Build', 'GoBuild'],
-                \   ['Go Path', 'GoPath'],
-                \ ]
-    " }
-    " Unite System Commands Menus {
-    let g:unite_source_menu_menus.common = {
-                \   'description' : 'System Commands',
-                \ }
-    let g:unite_source_menu_menus.common.command_candidates = [
-                \   ['Yank Current File', 'Ywd'],
-                \   ['Yank Current File:Line', 'Ycl'],
-                \   ['Cd to buffer directory', 'cd %:p:h'],
-                \   ['Cd to project roor directory', 'Root'],
-                \   ['Generate tags', 'cd %:p:h | Dispatch! ctags .'],
-                \   ['Edit .projections.json', 'cd %:p:h | e .projections.json'],
-                \   ['Show Mappings', 'Unite mapping'],
-                \   ['Source vimrc', 'so $MYVIMRC'],
-                \   ['Edit vimrc', 'e $MYVIMRC'],
-                \ ]
-    " }
+      let g:unite_source_menu_menus = {}
+
+      " Unite Git Menus {
+      let g:unite_source_menu_menus.git = {
+                  \   'description' : 'Git Commands',
+                  \ }
+      let g:unite_source_menu_menus.git.command_candidates = [
+                  \   ['Gist', 'Unite -buffer-name=gist gist'],
+                  \   ['Grep', 'Unite grep/git:/:--cached:file'],
+                  \   ['Gitv', 'Gitv'],
+                  \   ['Current File Gitv', 'Gitv!'],
+                  \   ['Magit', 'Magit'],
+                  \   ['Status', 'Gstatus'],
+                  \   ['Conflicts', 'Unite git-conflict'],
+                  \   ['Previous Hunk', 'GitGutterPrevHunk'],
+                  \   ['Next Hunk', 'GitGutterNextHunk'],
+                  \   ['Stage Hunk', 'GitGutterStageHunk'],
+                  \   ['Revert Hunk', 'GitGutterRevertHunk'],
+                  \   ['Stage Current File', 'Gwrite'],
+                  \   ['Commit All Changes', 'Gcommit --verbose'],
+                  \   ['Amend Last Commit', 'Gcommit --amend --verbose'],
+                  \   ['Revert Last Commit', 'Gread'],
+                  \   ['Diff', 'Gvdiff'],
+                  \   ['Blame', 'Gblame'],
+                  \   ['Show Log', 'Gllog'],
+                  \   ['Show Current File Log', 'Gllog -- %'],
+                  \   ['Browse on GitHub', 'Gbrowse'],
+                  \   ['Copy GitHub Path', 'Gbrowse!'],
+                  \ ]
+      " }
+
+      " Unite Ruby Refactor Menus {
+      let g:unite_source_menu_menus.ruby = {
+                  \   'description' : 'Ruby Commands',
+                  \ }
+      let g:unite_source_menu_menus.ruby.command_candidates = [
+                  \   ['Unite ri Documents', 'Unite ref/ri'],
+                  \   ['Inline Temporary Variable', 'RInlineTemp'],
+                  \   ['Convert Post Condition', 'RConvertPostConditional'],
+                  \   ['Extract Constant', 'RExtractConstant'],
+                  \   ['Extract Rspec Let', 'RExtractLet'],
+                  \   ['Extract Local Variable', 'RExtractLocalVariable'],
+                  \   ['Rename Local Variable', 'RRenameLocalVariable'],
+                  \   ['Rename Instance Variable', 'RRenameInstanceVariable'],
+                  \   ['Extract Method', 'RExtractMethod'],
+                  \ ]
+      " }
+
+      " Unite Go Menus {
+      let g:unite_source_menu_menus.golang = {
+                  \   'description' : 'Golang Commands',
+                  \ }
+      let g:unite_source_menu_menus.golang.command_candidates = [
+                  \   ['Lint Current File', 'GoLint'],
+                  \   ['Check Unchecked Errors', 'GoErrCheck'],
+                  \   ['Format Current File', 'GoFmt'],
+                  \   ['Rename Identifier', 'GoRename'],
+                  \   ['Update Imports', 'GoImports'],
+                  \   ['Goto Declaration', 'GoDef'],
+                  \   ['Lookup Type Info', 'GoInfo'],
+                  \   ['Lookup Referrers', 'GoReferrers'],
+                  \   ['Open Doc', 'GoDoc'],
+                  \   ['Open Doc in Browser', 'GoDocBrowser'],
+                  \   ['Test Current File', 'GoTest'],
+                  \   ['Test Current Function', 'GoTestFunc'],
+                  \   ['Run', 'GoRun'],
+                  \   ['Build', 'GoBuild'],
+                  \   ['Go Path', 'GoPath'],
+                  \   ['Go Install Binaries', 'GoInstallBinaries'],
+                  \   ['Go Update Binaries', 'GoUpdateBinaries'],
+                  \ ]
+      " }
+
+      " Unite System Commands Menus {
+      let g:unite_source_menu_menus.common = {
+                  \   'description' : 'System Commands',
+                  \ }
+      let g:unite_source_menu_menus.common.command_candidates = [
+                  \   ['Yank Current File', 'Ywd'],
+                  \   ['Yank Current File:Line', 'Ycl'],
+                  \   ['Cd to buffer directory', 'cd %:p:h'],
+                  \   ['Cd to project roor directory', 'Root'],
+                  \   ['Generate tags', 'cd %:p:h | Dispatch! ctags .'],
+                  \   ['Edit .projections.json', 'cd %:p:h | e .projections.json'],
+                  \   ['Show Mappings', 'Unite mapping'],
+                  \   ['Source vimrc', 'so $MYVIMRC'],
+                  \   ['Edit vimrc', 'e $MYVIMRC'],
+                  \ ]
+      " }
     " }}
 
     " Use Ag to Grep
@@ -557,7 +586,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> go/ :<C-u>UniteResume grep<CR>
 
   " Unite Junkfile
-  nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
+  nnoremap <silent> goj :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
   " Unite Neomru
   nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
@@ -567,7 +596,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   nnoremap <silent> goB :<C-u>Unite -buffer-name=buffers buffer_tab -auto-resize<CR>
-  nnoremap <silent> gop :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  nnoremap <silent> goi :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
@@ -577,8 +606,9 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
   nnoremap <silent> got :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
   nnoremap <silent> goT :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
+
   " Unite spell suggest
-  nnoremap <silent> gcs :<C-u>Unite -buffer-name=spell spell_suggest<CR>
+  nnoremap <silent> <leader>sc :<C-u>Unite -buffer-name=spell spell_suggest<CR>
 
   " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
   autocmd BufEnter *
@@ -1078,7 +1108,6 @@ if neobundle#tap('vim-go') "{{{
   " :GoReferrers   Advanced source analysis tools utilizing oracle
   " :GoTest        Test current file
   " :GoTestFunc    Test current function
-  " :GoPath, :GoInstallBinaries
   function! neobundle#hooks.on_source(bundle)
     " Syntax-highlighting for Functions, Methods and Structs
     let g:go_highlight_functions = 1
@@ -1093,6 +1122,8 @@ if neobundle#tap('vim-go') "{{{
     let g:go_fmt_fail_silently = 1
     " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
     let g:go_dispatch_enabled = 1
+    " Use neosnippet
+    let g:go_snippet_engine = "neosnippet"
   endfunction
 
   call neobundle#untap()

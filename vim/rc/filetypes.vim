@@ -2,6 +2,10 @@
 autocmd! FileType neosnippet,snippet setlocal noexpandtab
 " }}}
 
+" Resize splits when the window is resized {{{
+autocmd VimResized * :wincmd =
+"}}}
+
 " Git {{{
 autocmd! FileType gitcommit setlocal spell
 " }}}
@@ -184,8 +188,12 @@ endfunction
 " Go Mappings {{{
 autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
-  " Disable list chars, ¯\_(ツ)_/¯
-  setlocal nolist
+  setlocal iskeyword+=<,>,-
+
+  " Alternates between the implementation and test code
+  command! -bang A  call go#alternate#Switch(<bang>0, 'edit')
+  command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+  command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 
   " Correct typos
   iab <buffer> ;=         :=

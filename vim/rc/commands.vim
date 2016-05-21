@@ -1,7 +1,8 @@
 " Directory related commands {{{
 " yank local working directory to clipboard
 command! Ywd   :let @+ = expand("%")
-command! Ycl   :let @+ = expand("%") .':'. line(".")
+command! Ycf   :let @+ = expand("%:t")
+command! Ycl   :let @+ = expand("%") . ":" . line(".")
 
 " change working directory
 command! Cwd   :cd %:p:h
@@ -25,10 +26,10 @@ endfunction
 
 " Visual resize {{{
 " https://github.com/wellle/visual-split.vim
-command! -range VSResize     call <SID>resize(<line1>, <line2>)
-command! -range VSSplit      call <SID>split("",      <line1>, <line2>)
-command! -range VSSplitAbove call <SID>split("above", <line1>, <line2>)
-command! -range VSSplitBelow call <SID>split("below", <line1>, <line2>)
+command! -range VResize      call <SID>resize(<line1>, <line2>)
+command! -range VResizeSplit call <SID>split("",      <line1>, <line2>)
+command! -range VResizeAbove call <SID>split("above", <line1>, <line2>)
+command! -range VResizeBelow call <SID>split("below", <line1>, <line2>)
 
 " functions execute wincmds
 function! s:resize(line1, line2)

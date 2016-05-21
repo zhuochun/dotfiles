@@ -193,7 +193,14 @@
   endfunction
   " <leader>e
   " <leader>r
-  " <leader>t
+  " <leader>tl Run last test
+  nnoremap <silent> <leader>tl :TestLast<CR>
+  " <leader>tn Run nearest test
+  nnoremap <silent> <leader>tn :TestNearest<CR>
+  nnoremap <silent> <leader>tc :TestNearest<CR>
+  " <leader>tc Run current file
+  nnoremap <silent> <leader>tf :TestFile<CR>
+  nnoremap <silent> <leader>T  :TestFile<CR>
   " <leader>y yankround-prev
   " <leader>Y yankround-next
   " <leader>u
