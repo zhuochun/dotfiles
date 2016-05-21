@@ -214,12 +214,6 @@ NeoBundleLazy 'osyo-manga/vim-over', {
       \ }
 " }}}
 
-" Read HackerNews {{{
-NeoBundleLazy 'ryanss/vim-hackernews', {
-      \   'autoload' : { 'commands' : ['HackerNews'] },
-      \ }
-" }}}
-
 " Syntastic {{{
 NeoBundle 'scrooloose/syntastic'
 " }}}
@@ -664,18 +658,12 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
 " Colorschemes {{{
-NeoBundle 'AlessandroYorba/Sierra'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'cocopon/iceberg.vim'
 NeoBundle 'joshdick/onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
-NeoBundle 'mhartington/oceanic-next'
 NeoBundle 'morhetz/gruvbox'
-NeoBundle 'mhinz/vim-janah'
 NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'NLKNguyen/papercolor-theme'
 NeoBundle 'romainl/flattened'
-NeoBundle 'sjl/badwolf'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 " }}}

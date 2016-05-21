@@ -88,7 +88,7 @@ set autoread                 " Autoread when a file is changed from the outside
 set mouse=a                  " Enable mouse
 set lazyredraw               " Stops redrawing during complex operations
 set ttyfast                  " Indicates fast terminal connection
-set synmaxcol=999            " Maximum columns to have syntax coloring
+set synmaxcol=200            " Maximum columns to have syntax coloring
 set ttimeout                 " Time out on key codes
 set timeoutlen=42            " Quick timeouts for command combinations
 set history=999              " Keep 999 lines of command line history
@@ -99,6 +99,8 @@ set linebreak                " Wrap at word boundary, no break within a word
 set modeline                 " Make modeline (mode config in file) works
 set modelines=2              " Number of lines to checked for set commands
 set shortmess+=filmnrxoOtT   " Abbrev. of messages (avoids 'hit enter')
+set cpoptions-=m             " No match jumping
+set nojoinspaces             " Use one space after punctuation
 set viewoptions=folds,options,cursor,unix,slash
 set virtualedit=block,onemore
 " }}}
@@ -113,7 +115,9 @@ set wildignore+=.git,.gitkeep,.hg,.svn,.tmp,.coverage,.sass-cache
 set wildignore+=log/**,tmp/**,node_modules/**,build/**,_site/**,dist/**
 set wildignore+=vendor/bundle/**,vendor/cache/**,vendor/gems/**
 
-set complete-=i
+set complete-=i              " Disable complete scanning included files
+set complete-=t              " Disable complete scanning included tags
+
 set backspace=indent,eol,start
 set whichwrap+=[,],b,s       " Left/right move to prev/next line in insert
 
@@ -121,7 +125,6 @@ set scrolljump=6             " Lines to scroll when cursor leaves screen
 set scrolloff=6              " Minimum lines to keep above and below cursor
 set sidescroll=3             " Columns to scroll horizontally
 set sidescrolloff=6          " Minimal number of screen columns to keep
-set synmaxcol=800            " No highlight on lines longer than 800 characters
 " }}}
 
 " Indent behaviors {{{
@@ -142,8 +145,7 @@ set smartcase                " Case sensitive when pattern contains upper case c
 set infercase                " Infer the current case in insert completion
 set hlsearch                 " Highlight search things
 set incsearch                " Highlight next match on searching
-set showmatch                " Show matching bracets
-set cpoptions-=m             " No match jumping
+set showmatch                " Show matching brackets
 set matchtime=1              " Time to show the match parenthesis (in 1/10 s)
 set matchpairs+=<:>          " < and > are pairs as well
 " }}}
@@ -297,23 +299,6 @@ set relativenumber           " Show line number relatively
 set laststatus=2             " Display status bar in 2 lines
 set showcmd                  " Display incomplete commands
 set noshowmode               " No show current mode
-" }}}
-
-" GUI {{{
-" fonts, powerline fonts:
-" https://github.com/powerline/fonts
-" set guifont=Hack:h12
-" set guifont=Inconsolata-g\ for\ Powerline:h14
-" set guifont=InputMonoNarrow\ Light:h13
-" set guifont=Monoid\ HalfTight\ Retina:h11
-" set guifont=M+\ 1m\ for\ Powerline:h14
-" set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
-" set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
-set guifont=Monoisome:h11
-
-set guicursor=a:blinkon0     " Disable GUI blinking cursor
-set guioptions=              " Disable GUI components
-set winaltkeys=no            " Set ALT not map to toolbar
 " }}}
 
 " Conceal special chars {{{

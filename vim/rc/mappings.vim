@@ -52,7 +52,7 @@
   " <(>       Sentences backward
   " <)>       Sentences forward
   " <_>       Quick Horizonal split
-  nnoremap _ :sp<cr>
+  nnoremap _ :sp<CR>
   " <==>      Format current line
   " <+>       Switch
   " <q>*      Record Macro
@@ -68,6 +68,7 @@
   " <T>       find to left (inclusive)
   " <y>       Yank into register
   " <Y>       Yanking to the end of line
+  nnoremap Y y$
   " <u>       Undo
   " <U>       Undo all latest changes on last changed line
   " <i>       Insert
@@ -82,7 +83,7 @@
   " <}>       Paragraphs forward
   " <\>       Toggle folding
   " <|>       Quick vertical split
-  nnoremap <bar> :vsp<cr>
+  nnoremap <bar> :vsp<CR>
   " <a>       Append insert
   " <A>       Append at end of line
   " <s>       EasyMotion
@@ -200,7 +201,8 @@
   " <leader>o
   " <leader>p
   " <leader>a
-  " <leader>s Spell checkings
+  " <leader>s  Spell checkings
+  " <leader>sc Unite spell suggest
   nnoremap <leader>ss :setlocal spell!<CR>
   nnoremap <leader>sa zg
   nnoremap <leader>s? z=
@@ -222,7 +224,8 @@
   " <leader>js Format JSON file (python required)
   nnoremap <leader>js :%!python -m json.tool<CR>
   " <leader>k
-  " <leader>l
+  " <leader>l Redraw screen, fix syntax highlighting
+  nnoremap <leader>l :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-l>
   " <leader>L Reduce a sequence of blank lines into a single line
   nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
   " <leader>z
@@ -239,7 +242,7 @@
   " <leader>, Switch between current and last buffer
   nnoremap <leader>, <C-^>
   " <leader>. Edit macro in the cmdline-window
-  nnoremap <leader>. :<C-U><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><LEFT>
+  nnoremap <leader>. :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><LEFT>
   " <leader><space> Close search highlight
   nnoremap <leader><space> :nohl<CR>
 " }}}

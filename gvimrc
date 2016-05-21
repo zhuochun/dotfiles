@@ -1,23 +1,41 @@
-" source gvimrc after saving it
+" Source gvimrc after saving it
 autocmd! BufWritePost .gvimrc source $MYGVIMRC
 
-" gui styles {{{
-command! Fullscreen :set lines=999 columns=999
-
-" gui fonts
-command! SmallFont  :set guifont=Inconsolata-g\ for\ Powerline:h12
-command! LargeFont  :set guifont=Inconsolata-g\ for\ Powerline:h14
+" GUI styles {{{
+set guicursor=a:blinkon0     " Disable GUI blinking cursor
+set guioptions=c             " Disable GUI components, except use console dialogs
+set winaltkeys=no            " Set ALT not map to toolbar
 
 set lines=42 columns=120
 set background=dark
-colorscheme gruvbox
-" colorscheme yowish
-" colorscheme onedark
+
+set linespace=1
+set macligatures
+
+" GUI fonts {{
+" fonts, powerline fonts:
+"   - https://github.com/powerline/fonts
+"   - https://github.com/tonsky/FiraCode
+"   - https://github.com/i-tu/Hasklig
+" set guifont=Inconsolata-g\ for\ Powerline:h14
+" set guifont=InputMonoNarrow\ Light:h13
+" set guifont=M+\ 1m\ for\ Powerline:h14
+" set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
+" set guifont=Fira\ Code\ Retina:h13
+set guifont=Hasklig:h13
+" }}
+
+" GUI colorschems {{
 " colorscheme dracula
 " colorscheme flattened_dark
+" colorscheme gruvbox
+" colorscheme hybrid
+colorscheme onedark
+" colorscheme yowish
+" }}
 " }}}
 
-" common gui groups {{{
+" Common GUI groups {{{
 command! DefaultMode call s:DefaultMode()
 function! s:DefaultMode()
     set background=dark
@@ -43,7 +61,8 @@ function! s:PresentationMode()
 endfunction
 " }}}
 
-if has("gui_macvim") " {{{
+" MacVim specific {{{
+if has("gui_macvim")
     " Turn on alt (option) key on macs, which behaves
     " like the 'meta' key. Thus we can now use <M-x>
     set macmeta
