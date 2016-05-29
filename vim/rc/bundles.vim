@@ -96,6 +96,12 @@ NeoBundleLazy 'easymotion/vim-easymotion', {
       \ }
 " }}}
 
+" wrap and unwrap function arguments, lists, and dictionaries {{{
+NeoBundleLazy 'FooSoft/vim-argwrap', {
+      \   'autoload' : { 'commands' : ['ArgWrap'] },
+      \ }
+" }}}
+
 " vim-asterisk: * and # to search selection {{{
 NeoBundleLazy 'haya14busa/vim-asterisk', {
       \   'autoload' : { 'mappings' : ['<Plug>(asterisk-'], },

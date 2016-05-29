@@ -9,10 +9,9 @@ set winaltkeys=no            " Set ALT not map to toolbar
 set lines=42 columns=120
 set background=dark
 
-set linespace=1
-set macligatures
-
 " GUI fonts {{
+set macligatures             " Show ligatures with supported fonts (MacVim GUI)
+
 " fonts, powerline fonts:
 "   - https://github.com/powerline/fonts
 "   - https://github.com/tonsky/FiraCode

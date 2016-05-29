@@ -21,9 +21,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Environment Configurations
 # ==============================
-# Path
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="/usr/local/opt/go/libexec/bin:$PATH"
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 # Prefer US English and use UTF-8

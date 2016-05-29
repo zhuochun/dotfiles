@@ -167,6 +167,15 @@ if neobundle#tap('vim-easymotion') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('vim-argwrap') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " closing brace is preceded with a comma when wrapping lines
+    let g:argwrap_tail_comma = 1
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('vim-asterisk') "{{{
   function! neobundle#hooks.on_source(bundle)
     " keep cursor position when next/prev
@@ -586,7 +595,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> go/ :<C-u>UniteResume grep<CR>
 
   " Unite Junkfile
-  nnoremap <silent> goj :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
+  nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
   " Unite Neomru
   nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
@@ -596,7 +605,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   nnoremap <silent> goB :<C-u>Unite -buffer-name=buffers buffer_tab -auto-resize<CR>
-  nnoremap <silent> goi :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  nnoremap <silent> goj :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
