@@ -58,13 +58,17 @@ endfunction
 " }}}
 
 " Elixir Mappings {{{
-autocmd! FileType elixir :call s:ElixirDef()
+autocmd! FileType elixir,eelixir :call s:ElixirDef()
 function! s:ElixirDef()
-  setlocal iskeyword+=!,?
-
   setlocal shiftwidth=2
   setlocal tabstop=2
 
+  " Surround % to %
+  let b:surround_{char2nr('%')} = "<% \r %>"
+  xmap <buffer> % S%
+  " Surround = to %=
+  let b:surround_{char2nr('=')} = "<%= \r %>"
+  xmap <buffer> _ S=
   " Surround # to #{}
   let b:surround_{char2nr('#')} = "#{\r}"
   xmap <buffer> # S#

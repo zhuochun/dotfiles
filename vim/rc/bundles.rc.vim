@@ -476,9 +476,8 @@ if neobundle#tap('unite.vim') "{{{
       let g:unite_source_menu_menus.git.command_candidates = [
                   \   ['Gist', 'Unite -buffer-name=gist gist'],
                   \   ['Grep', 'Unite grep/git:/:--cached:file'],
-                  \   ['Gitv', 'Gitv'],
-                  \   ['Current File Gitv', 'Gitv!'],
-                  \   ['Magit', 'Magit'],
+                  \   ['Gitflow Magit', 'Magit'],
+                  \   ['Commit Browser', 'GV'],
                   \   ['Status', 'Gstatus'],
                   \   ['Conflicts', 'Unite git-conflict'],
                   \   ['Previous Hunk', 'GitGutterPrevHunk'],
@@ -503,7 +502,6 @@ if neobundle#tap('unite.vim') "{{{
                   \   'description' : 'Ruby Commands',
                   \ }
       let g:unite_source_menu_menus.ruby.command_candidates = [
-                  \   ['Unite ri Documents', 'Unite ref/ri'],
                   \   ['Inline Temporary Variable', 'RInlineTemp'],
                   \   ['Convert Post Condition', 'RConvertPostConditional'],
                   \   ['Extract Constant', 'RExtractConstant'],

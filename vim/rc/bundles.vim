@@ -296,6 +296,10 @@ NeoBundle 'osyo-manga/unite-quickfix', {
 NeoBundle 'tsukkee/unite-tag', {
       \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
       \ }
+
+NeoBundle 'moznion/unite-git-conflict.vim', {
+      \   'depends' : ['Shougo/unite.vim'],
+      \ }
 " }}
 
 " VimShell {{
@@ -379,15 +383,6 @@ NeoBundleLazy 't9md/vim-choosewin', {
 " multiple cursors {{{
 NeoBundleLazy 'terryma/vim-multiple-cursors', {
       \   'autoload' : { 'mappings' : ['<C-n>'] }
-      \ }
-" }}}
-
-" reference doc in vim {{{
-NeoBundleLazy 'Thinca/vim-ref', {
-      \   'autoload' : {
-      \     'commands' : ['Ref'],
-      \     'mappings' : ['K', '<Plug>(ref'],
-      \   }
       \ }
 " }}}
 
@@ -510,11 +505,9 @@ NeoBundle 'kana/vim-textobj-line'               " al | il
 NeoBundle 'kana/vim-textobj-syntax'             " ay | iy
 NeoBundle 'kana/vim-textobj-indent'             " ai | ii
 NeoBundle 'kana/vim-textobj-lastpat'            " a/ | i/
-NeoBundle 'deris/vim-textobj-enclosedsyntax'    " aq | iq
 NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
 NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
-NeoBundle 'osyo-manga/vim-textobj-multiblock'   " ab | ib
 NeoBundle 'haya14busa/vim-textobj-number'       " an | in
 " }}}
 
@@ -529,9 +522,9 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 " }}}
 
 " HTML/XML {{{
-NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
-NeoBundleLazy 'gregsexton/MatchTag', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
-NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby']}}
+NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
+NeoBundleLazy 'gregsexton/MatchTag', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
+NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
 " }}}
 
 " Template Engines {{{
@@ -579,12 +572,9 @@ NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-bundler' " slows down NeoComplete
 NeoBundleLazy 'tpope/vim-rake' " slows down NeoComplete
-
 NeoBundleLazy 'keith/rspec.vim', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundleLazy 'duwanis/tomdoc.vim'
-NeoBundleLazy 'stefanoverna/vim-i18n', {
-      \   'autoload' : { 'commands' : [ 'I18Translate', 'I18Display', ] },
-      \ }
+
+" Refactoring macros for Ruby/Rails
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
       \   'autoload' : {
       \     'commands' : [
@@ -593,10 +583,6 @@ NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
       \       'RRenameInstanceVariable', 'RExtractMethod',
       \     ]
       \   },
-      \ }
-NeoBundleLazy 'yuku-t/vim-ref-ri', {
-      \   'depends' : ['Shougo/unite.vim', 'Thinca/vim-ref'],
-      \   'autoload' : { 'filetypes': ['ruby', 'eruby'] },
       \ }
 " }}}
 
@@ -612,11 +598,9 @@ NeoBundleLazy 'tpope/vim-salve', {
 " }}}
 
 " Elixir {{{
-NeoBundle 'elixir-lang/vim-elixir', {'autoload': {'filetypes': 'elixir'}}
-NeoBundleLazy 'sanmiguel/helpex.vim', {
-      \   'depends' : ['Shougo/vimproc.vim', 'Thinca/vim-ref'],
-      \   'autoload' : { 'filetypes': 'elixir' },
-      \ }
+NeoBundle 'elixir-lang/vim-elixir', {'autoload': {'filetypes': ['elixir', 'eelixir']}}
+" https://github.com/slashmili/alchemist.vim/wiki
+NeoBundleLazy 'slashmili/alchemist.vim', {'autoload': {'filetypes': ['elixir', 'eelixir']}}
 " }}}
 
 " C/Cpp {{{
@@ -644,15 +628,14 @@ NeoBundleLazy 'kannokanno/previm', {
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-git'
-
-NeoBundleLazy 'jreybert/vimagit', {'autoload': {'commands': ['Magit', 'MagitOnly']}}
-NeoBundleLazy 'gregsexton/gitv', {
-      \   'depends': ['tpope/vim-fugitive'],
-      \   'autoload': {'commands': ['Gitv']}
+" Magit in Vim, N next hunk, S stage/unstage, CC commit message
+NeoBundleLazy 'jreybert/vimagit', {
+      \   'autoload': {'commands': ['Magit', 'MagitOnly']}
       \ }
-
-NeoBundle 'moznion/unite-git-conflict.vim', {
-      \   'depends': ['Shougo/unite.vim'],
+" A fast git commit browser
+NeoBundleLazy 'junegunn/gv.vim', {
+      \   'depends': ['tpope/vim-fugitive'],
+      \   'autoload': {'commands': ['GV', 'GV!', 'GV?']}
       \ }
 " }}}
 
