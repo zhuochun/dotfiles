@@ -1,5 +1,5 @@
 [user]
-	name = Wang Zhuochun
+	name = Zhuochun
 	email = zhuochun@hotmail.com
 [github]
 	user = zhuochun
@@ -38,16 +38,17 @@
 	# Switch to a branch, creating it if necessary
 	co = checkout -B
 	go = checkout
-	merge-branch = !git checkout master && git merge @{-1}
+	merge-branch = "!git checkout master && git merge @{-1}"
 	master = checkout master
 
 	# status
 	s = status -s
 	st = status -s
 
-	# diff between the latest commit and the current state
-	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
-	dc = diff --cached
+	# diff
+	d = diff --color --color-words --abbrev
+	dc = diff --color --color-words --abbrev --cached
+
 
 	# log
 	today = log --since=midnight --author='Wang Zhuochun' --oneline
@@ -78,21 +79,11 @@
 	# Automatically correct and execute mistyped commands
 	autocorrect = 1
 
-# set kaleidoscope as difftool on Mac
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[difftool]
-	prompt = false
 [diff]
-	tool = Kaleidoscope
+	algorithm = patience
 
-# set kaleidoscope as mergetool on Mac
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool]
-	prompt = false
 [merge]
-	tool = Kaleidoscope
+	tool = opendiff
 
 [filter "media"]
 	required = true
