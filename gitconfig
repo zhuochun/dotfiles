@@ -81,6 +81,7 @@
 
 [diff]
 	algorithm = patience
+	compactionHeuristic = true
 
 [merge]
 	tool = opendiff

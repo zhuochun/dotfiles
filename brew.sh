@@ -101,6 +101,8 @@ brew install tree
 brew install trash
 brew install webkit2png
 brew install zopfli
+brew install jq
+brew install httpie
 
 # Remove outdated versions from the cellar.
 brew cleanup
