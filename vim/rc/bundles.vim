@@ -1,22 +1,30 @@
-" diff two blocks of code {{{
+" AndrewRadev bundles {{{
+" diff two blocks of code {{
 NeoBundleLazy 'AndrewRadev/linediff.vim', {
       \   'autoload' : { 'commands' : ['Linediff', 'LinediffReset'] }
       \ }
-" }}}
+" }}
 
-" powerful split and join {{{
+" powerful split and join {{
 NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
       \   'autoload' : {
       \     'mappings' : ['gS', 'gJ'],
       \     'commands' : ['SplitjoinJoin', 'SplitjoinSplit']
       \   }
       \ }
-" }}}
+" }}
 
-" switch between words {{{
+" switch between words {{
 NeoBundleLazy 'AndrewRadev/switch.vim', {
       \   'autoload' : { 'commands': ['Switch'] },
       \ }
+" }}
+
+" grep and update {{
+NeoBundleLazy 'AndrewRadev/writable_search.vim', {
+      \   'autoload' : { 'commands': ['WritableSearch'] },
+      \ }
+" }}
 " }}}
 
 " math calculation in vim {{{
@@ -28,12 +36,6 @@ NeoBundleLazy 'arecarn/crunch.vim', {
       \     'commands' : ['Crunch'],
       \   }
       \ }
-" }}}
-
-" Airline bundles {{{
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-NeoBundle 'bling/vim-bufferline'
 " }}}
 
 " CamelCaseMotion in W, B, E {{{
@@ -121,6 +123,7 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
 
 " semantic-highlight {{{
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
+      \   'gui' : 1,
       \   'autoload' : {
       \     'commands' : ['SemanticHighlight'],
       \     'filetypes': ['ruby', 'coffee', 'elixir', 'go'],
@@ -490,6 +493,12 @@ NeoBundleLazy 'vim-scripts/DrawIt', {
 NeoBundleFetch 'vim-scripts/dbext.vim'
 " }}}
 
+" Airline bundles {{{
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundle 'bling/vim-bufferline'
+" }}}
+
 " targets additional text objects {{{
 NeoBundle 'wellle/targets.vim'
 " }}}
@@ -551,6 +560,7 @@ NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 NeoBundle 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
 NeoBundle 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundle 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript', 'coffee']}}
@@ -617,6 +627,8 @@ NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'au
 NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': ['markdown']}}
 " Highlight code in Markdown
 NeoBundleLazy 'blindFS/vim-regionsyntax', {'autoload': {'filetypes': ['markdown']}}
+" Presentation in Markdown, n next slide, p previous slide, q quit
+NeoBundleLazy 'sotte/presenting.vim', {'autoload': {'commands': ['PresentingStart']}}
 " Preview Markdown Result in Browser
 NeoBundleLazy 'kannokanno/previm', {
       \   'depends': ['tyru/open-browser.vim'],
@@ -626,8 +638,15 @@ NeoBundleLazy 'kannokanno/previm', {
 
 " Git {{{
 NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-git'
+" <CR> Jump to the revision under the cursor.
+" o    Jump to the revision under the cursor in a new split.
+" S    Jump to the revision under the cursor in a new
+" O    Jump to the revision under the cursor in a new tab.
+" -    Go to the tree containing the current tree or blob.
+" ~    Go to the current file in the [count]th first ancestor.
+" P    Go to the current file in the [count]th parent.
+NeoBundle 'tpope/vim-fugitive'
 " Magit in Vim, N next hunk, S stage/unstage, CC commit message
 NeoBundleLazy 'jreybert/vimagit', {
       \   'autoload': {'commands': ['Magit', 'MagitOnly']}
