@@ -609,7 +609,7 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 " }}}
 
 " Go {{{
-NeoBundle 'fatih/vim-go', {'depends': ['tpope/vim-dispatch'], 'autoload': {'filetypes': ['go']}}
+NeoBundle 'fatih/vim-go', {'depends': ['tpope/vim-dispatch', 'Shougo/vimproc.vim'], 'autoload': {'filetypes': ['go']}}
 NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
 

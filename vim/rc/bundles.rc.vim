@@ -381,8 +381,8 @@ if neobundle#tap('syntastic') "{{{
     " automatic syntax checking
     let g:syntastic_mode_map = {
           \ 'mode': 'active',
-          \ 'active_filetypes': ['ruby', 'javascript', 'coffee', 'go'],
-          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp'] }
+          \ 'active_filetypes': ['ruby', 'javascript', 'coffee'],
+          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp', 'go'] }
 
     " run multiple syntastic checkers
     let g:syntastic_ruby_checkers = ["mri"]
@@ -1133,8 +1133,8 @@ if neobundle#tap('vim-go') "{{{
     let g:go_fmt_fail_silently = 1
     " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
     let g:go_dispatch_enabled = 1
-    " Use neosnippet
-    let g:go_snippet_engine = "neosnippet"
+    " Using with Syntastic
+    let g:go_list_type = 'quickfix'
   endfunction
 
   call neobundle#untap()
