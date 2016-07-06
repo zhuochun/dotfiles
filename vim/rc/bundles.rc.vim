@@ -574,11 +574,11 @@ if neobundle#tap('unite.vim') "{{{
   " File switching using file_rec
   nnoremap <silent> <D-i> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
   " File switching using git (fast)
-  nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   " Buffer switching
   nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   " Tab switching
-  nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
+  nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
 
   " Grep in current directory
   nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
@@ -589,39 +589,43 @@ if neobundle#tap('unite.vim') "{{{
 
   " Unite resume the last unite buffer
   nnoremap <silent> go. :<C-u>UniteResume<CR>
-  " Unite Resume the last grep buffer
-  nnoremap <silent> go/ :<C-u>UniteResume grep<CR>
-
-  " Unite Junkfile
+  " Unite grep in current directory
+  nnoremap <silent> go/ :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
+  vnoremap <silent> go/ :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
+  nnoremap <silent> go? :<C-u>UniteResume grep<CR>
+  " Unite junkfile
   nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
-  " Unite Neomru
+  " Unite neomru
   nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
-  " Unite plugins
+  " Unite menus
   nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
+  " Unite plugins
+  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
-  nnoremap <silent> goB :<C-u>Unite -buffer-name=buffers buffer_tab -auto-resize<CR>
-  nnoremap <silent> goj :<C-u>Unite -buffer-name=files_git file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
-  nnoremap <silent> goa :<C-u>Unite -buffer-name=search anzu<CR>
+  nnoremap <silent> gou :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
+  nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag/include -start-insert<CR>
+  nnoremap <silent> goj :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
+  nnoremap <silent> goJ :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
+  nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
+  nnoremap <silent> go* :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
-  nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-  nnoremap <silent> got :<C-u>Unite -buffer-name=tabs tab -auto-resize -select=`tabpagenr()-1`<CR>
-  nnoremap <silent> goT :<C-u>Unite -buffer-name=tags tag tag/include -start-insert<CR>
 
-  " Unite spell suggest
-  nnoremap <silent> <leader>sc :<C-u>Unite -buffer-name=spell spell_suggest<CR>
-
-  " Use unite-tag instead of ^] for navigating to tags. :help unite-tag-customize
+  " Adjust unite-tag format to show more details. :help unite-tag-customize {{
+  " Max length of file name field in candidate
+  let g:unite_source_tag_max_fname_length = 42
+  " Use unite-tag instead of ^] for navigating to tags
   autocmd BufEnter *
         \  if empty(&buftype)
         \|    nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
         \| endif
+  " }}
 
   " Key Mappings in Unite {{
   autocmd! FileType unite call s:unite_my_settings()
