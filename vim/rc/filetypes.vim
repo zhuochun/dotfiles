@@ -2,16 +2,8 @@
 autocmd! FileType neosnippet,snippet setlocal noexpandtab
 " }}}
 
-" Resize splits when the window is resized {{{
-autocmd VimResized * :wincmd =
-"}}}
-
 " Git {{{
 autocmd! FileType gitcommit setlocal spell
-" }}}
-
-" Diff update after save {{{
-autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
 " }}}
 
 " JSON {{{
@@ -49,6 +41,9 @@ function! s:RubyDef()
   vnoremap <buffer> grrv :RRenameLocalVariable<CR>
   vnoremap <buffer> grri :RRenameInstanceVariable<CR>
   vnoremap <buffer> grem :RExtractMethod<CR>
+
+  " Use unite-tag instead of ^] for navigating to tags
+  nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
 
   " Correct typos
   iab <buffer> eif        elsif
@@ -90,6 +85,9 @@ function! s:CoffeeDef()
   " Surround # to #{}
   let b:surround_{char2nr('#')} = "#{\r}"
   xmap <buffer> # S#
+
+  " Use unite-tag instead of ^] for navigating to tags
+  nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
 endfunction
 " }}}
 
@@ -194,6 +192,17 @@ autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
   setlocal iskeyword+=<,>,-
 
+  " Disable whitespace checking for an individual buffer
+  let b:airline_whitespace_disabled = 1
+
+  " Go specific mappings
+  nmap <buffer> <leader>oi <Plug>(go-info)
+  nmap <buffer> <Leader>od <Plug>(go-doc)
+  nmap <buffer> <leader>or <Plug>(go-referrers)
+  nmap <buffer> <leader>ol <Plug>(go-metalinter)
+  nmap <buffer> <leader>or <Plug>(go-run)
+  nmap <buffer> <leader>oc <Plug>(go-coverage-toggle)
+
   " Alternates between the implementation and test code
   command! -bang A  call go#alternate#Switch(<bang>0, 'edit')
   command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
@@ -203,6 +212,7 @@ function! s:GoDef()
   iab <buffer> ;=         :=
   iab <buffer> String     string
   iab <buffer> stirng     string
+  iab <buffer> Springf    Sprintf
 endfunction
 " }}}
 

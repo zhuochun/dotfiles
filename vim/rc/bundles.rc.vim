@@ -155,9 +155,12 @@ if neobundle#tap('vim-easymotion') "{{{
   " alias to normal editor commands
   map <C-f>  <Plug>(easymotion-sn)
   map <D-f>  <Plug>(easymotion-sn)
-  " normal mode easymotion
+  " single char easymotion
   nmap s     <Plug>(easymotion-s)
   vmap s     <Plug>(easymotion-s)
+  " multiple chars easymotion
+  nmap S     <Plug>(easymotion-sn)
+  vmap S     <Plug>(easymotion-sn)
   " visual mode to hit exact target in line
   vmap f     <Plug>(easymotion-fl)
   vmap F     <Plug>(easymotion-Fl)
@@ -232,7 +235,6 @@ if neobundle#tap('semantic-highlight.vim') "{{{
                 \   'coffee'     : 'coffee',
                 \   'ruby'       : 'ruby',
                 \   'elixir'     : 'elixir',
-                \   'go'         : 'go',
                 \ }
   endfunction
 
@@ -385,7 +387,7 @@ if neobundle#tap('syntastic') "{{{
           \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp', 'go'] }
 
     " run multiple syntastic checkers
-    let g:syntastic_ruby_checkers = ["mri"]
+    let g:syntastic_ruby_checkers = ['mri']
     let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
   endfunction
 
@@ -467,7 +469,7 @@ if neobundle#tap('unite.vim') "{{{
     let g:unite_enable_auto_select = 0
 
     " Custom unite menus {{
-      let g:unite_source_menu_menus = {}
+    let g:unite_source_menu_menus = {}
 
       " Unite Git Menus {
       let g:unite_source_menu_menus.git = {
@@ -556,6 +558,10 @@ if neobundle#tap('unite.vim') "{{{
       " }
     " }}
 
+    " Adjust unite-tag format to show more details. :help unite-tag-customize {{
+    " Max length of file name field in candidate
+    let g:unite_source_tag_max_fname_length = 42
+
     " Use Ag to Grep
     if executable('ag')
       " Use ag in unite grep source.
@@ -603,7 +609,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   " Unite plugins
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
-  nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert -auto-highlight<CR>
+  nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   nnoremap <silent> gou :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
   nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag/include -start-insert<CR>
@@ -613,18 +619,10 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
   nnoremap <silent> go* :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
+  nnoremap <silent> goG :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-
-  " Adjust unite-tag format to show more details. :help unite-tag-customize {{
-  " Max length of file name field in candidate
-  let g:unite_source_tag_max_fname_length = 42
-  " Use unite-tag instead of ^] for navigating to tags
-  autocmd BufEnter *
-        \  if empty(&buftype)
-        \|    nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>
-        \| endif
   " }}
 
   " Key Mappings in Unite {{
@@ -639,7 +637,8 @@ if neobundle#tap('unite.vim') "{{{
     imap <buffer> <CR>      <Plug>(unite_do_default_action)
     imap <buffer> <TAB>     <Plug>(unite_select_next_line)
     imap <buffer> <S-TAB>   <Plug>(unite_select_previous_line)
-    imap <buffer> <D-d>     <Plug>(unite_complete)
+    imap <buffer> <C-k>     <Plug>(unite_complete)
+    imap <buffer> <C-j>     <Plug>(unite_complete)
 
     " path settings
     imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
@@ -774,8 +773,8 @@ if neobundle#tap('neocomplete.vim') "{{{
     " Define dictionary
     let g:neocomplete#sources#dictionary#dictionaries = {
           \   'default' : '',
-          \   'ruby'       : $HOME.'/.vim/bundle/vim-dicts/dict/ruby.dict',
-          \   'coffee'     : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
+          \   'ruby'    : $HOME.'/.vim/bundle/vim-dicts/dict/ruby.dict',
+          \   'coffee'  : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
           \ }
 
     " Define keyword patterns
@@ -785,27 +784,22 @@ if neobundle#tap('neocomplete.vim') "{{{
 
     let g:neocomplete#keyword_patterns._ = '\h\w*'
 
+    " Some omni customizations
+    if !exists('g:neocomplete#sources#omni#functions')
+      let g:neocomplete#sources#omni#functions = {}
+    endif
+
+    " vim-go
+    let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
+
     " Enable heavy omni completion
     if !exists('g:neocomplete#sources#omni#input_patterns')
       let g:neocomplete#sources#omni#input_patterns = {}
     endif
 
-    if !exists('g:neocomplete#sources#omni#functions')
-      let g:neocomplete#sources#omni#functions = {}
-    endif
-
-    if !exists('g:neocomplete#force_omni_input_patterns')
-      let g:neocomplete#force_omni_input_patterns = {}
-    endif
-
-    " Some omni customizations
-    " let g:neocomplete#sources#omni#functions.go = 'gocomplete#Complete'
-    " let g:neocomplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
-    " let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
-
-    " Force omni customizations (slow)
     let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
     let g:neocomplete#sources#omni#input_patterns.elixir = '[^.[:digit:] *\t]\.'
+    let g:neocomplete#sources#omni#input_patterns.go = '[^.[:digit:] *\t]\.'
 
     " Appoints vim source call function when completes custom and customlist command
     let g:neocomplete#sources#vim#complete_functions = {
@@ -851,19 +845,10 @@ if neobundle#tap('neocomplete.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('neocomplete-rsense.vim') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    let g:rsenseHome = '/usr/local/bin/rsense'
-    let g:rsenseUseOmniFunc = 1
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('vim-monster') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " Set async completion.
-    let g:monster#completion#rcodetools#backend = "async_rct_complete"
+    " Set completion method (async_rct_complete not working)
+    let g:monster#completion#rcodetools#backend = "rct_complete"
   endfunction
 
   call neobundle#untap()
@@ -887,16 +872,21 @@ if neobundle#tap('neosnippet.vim') "{{{
   endfunction
 
   " Remove snippet markers after save
-  autocmd! BufWrite * NeoSnippetClearMarkers
+  autocmd! BufWritePre * NeoSnippetClearMarkers
 
-  " Plugin key-mappings
-  imap <D-d> <Plug>(neosnippet_jump_or_expand)
-  smap <D-d> <Plug>(neosnippet_jump_or_expand)
-  " Alternative
-  imap <D-D> <Plug>(neosnippet_expand_or_jump)
-  smap <D-D> <Plug>(neosnippet_expand_or_jump)
-  " Visual
-  xmap <D-d> <Plug>(neosnippet_expand_target)
+  " Plugin jump then expand
+  imap <C-j> <Plug>(neosnippet_jump_or_expand)
+  smap <C-j> <Plug>(neosnippet_jump_or_expand)
+  imap <D-j> <Plug>(neosnippet_jump_or_expand)
+  smap <D-j> <Plug>(neosnippet_jump_or_expand)
+  " Alternative expand then jump
+  imap <C-k> <Plug>(neosnippet_expand_or_jump)
+  smap <C-k> <Plug>(neosnippet_expand_or_jump)
+  imap <D-k> <Plug>(neosnippet_expand_or_jump)
+  smap <D-k> <Plug>(neosnippet_expand_or_jump)
+  " Visual expand
+  xmap <C-j> <Plug>(neosnippet_expand_target)
+  xmap <D-j> <Plug>(neosnippet_expand_target)
 
   call neobundle#untap()
 endif "}}}
@@ -1120,21 +1110,32 @@ if neobundle#tap('vim-go') "{{{
   " :GoTest        Test current file
   " :GoTestFunc    Test current function
   function! neobundle#hooks.on_source(bundle)
-    " Syntax-highlighting for Functions, Methods and Structs
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_interfaces = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_build_constraints = 1
+    " Show type info (:GoInfo) for word under cursor automatically
+    let g:go_auto_type_info = 1
+    " Highlight same identifiers in file
+    let g:go_auto_sameids = 1
     " Enable goimports to insert import paths instead of gofmt
     let g:go_fmt_command = 'goimports'
-    " Disable fmt command errors
+    " Enable fmt command errors (disabled syntastic)
     let g:go_fmt_fail_silently = 1
     " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
     let g:go_dispatch_enabled = 1
-    " Using with Syntastic
-    let g:go_list_type = 'quickfix'
+    " Run GoMetaLinter on save
+    let g:go_metalinter_autosave = 1
+    let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+    " No whitespace highlights
+    let g:go_highlight_array_whitespace_error = 0
+    let g:go_highlight_chan_whitespace_error = 0
+    let g:go_highlight_space_tab_error = 0
+    let g:go_highlight_trailing_whitespace_error = 0
+    " Enable syntax highlights
+    let g:go_highlight_extra_types = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_types = 1
+    let g:go_highlight_fields = 1
+    let g:go_highlight_build_constraints = 1
   endfunction
 
   call neobundle#untap()

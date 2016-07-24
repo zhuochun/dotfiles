@@ -192,14 +192,16 @@
     nnoremap <buffer> ^ g^
   endfunction
   " <leader>e
-  " <leader>r
+  " <leader>r Redraw screen, fix syntax highlighting
+  nnoremap <leader>r :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-l>
   " <leader>tl Run last test
   nnoremap <silent> <leader>tl :TestLast<CR>
-  " <leader>tn Run nearest test
+  " <leader>tn Run nearest test/current function
   nnoremap <silent> <leader>tn :TestNearest<CR>
   nnoremap <silent> <leader>tc :TestNearest<CR>
-  " <leader>tc Run current file
   nnoremap <silent> <leader>tf :TestFile<CR>
+  " <leader>tc Run current file
+  nnoremap <silent> <leader>tt :TestFile<CR>
   nnoremap <silent> <leader>T  :TestFile<CR>
   " <leader>y yankround-prev
   " <leader>Y yankround-next
@@ -208,7 +210,7 @@
   " <leader>o
   " <leader>p
   " <leader>a
-  " <leader>s  Spell checkings
+  " <leader>s* Spell checkings
   " <leader>sc Unite spell suggest
   nnoremap <leader>ss :setlocal spell!<CR>
   nnoremap <leader>sa zg
@@ -231,13 +233,16 @@
   " <leader>js Format JSON file (python required)
   nnoremap <leader>js :%!python -m json.tool<CR>
   " <leader>k
-  " <leader>l Redraw screen, fix syntax highlighting
-  nnoremap <leader>l :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-l>
+  " <leader>l Run lint
+  nnoremap <leader>l :SyntasticCheck<CR>
   " <leader>L Reduce a sequence of blank lines into a single line
   nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
   " <leader>z
   " <leader>x
-  " <leader>c
+  " <leader>c Local change/substitute
+  nnoremap <leader>c :OverCommandLine<CR>s/
+  " <leader>C Global grep and change/substitute
+  nnoremap <leader>C :WritableSearch<CR>
   " <leader>v Select the just pasted text
   nnoremap <leader>v V`]
   " <leader>b Close all other buffers
@@ -251,7 +256,7 @@
   " <leader>. Edit macro in the cmdline-window
   nnoremap <leader>. :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><LEFT>
   " <leader><space> Close search highlight
-  nnoremap <leader><space> :nohl<CR>
+  nnoremap <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " }}}
 
 " <C-*> (Normal Mode) {{{
@@ -308,15 +313,10 @@
 " }}}
 
 " <C-*> (Insert Mode) {{{
-  inoremap <expr> <C-j> pumvisible() ? "\<C-e>\<Down>" : "\<Down>"
-  inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
-  inoremap <C-H>  <S-Left>
-  inoremap <C-L>  <S-Right>
   inoremap <C-B>  <Left>
   inoremap <C-F>  <Right>
   inoremap <C-A>  <C-O>^
   inoremap <C-E>  <End>
-  inoremap <C-D>  <C-R>=AutoPairsDelete()<CR>
   inoremap <C-BS> <C-W>
   inoremap <D-BS> <S-Right><C-W>
 " }}}
@@ -335,10 +335,11 @@
 
 " <M-*> {{{
   " <M-q>
-  " <M-w>
+  " <M-w> Tab close
   " <M-e>
   " <M-r>
-  " <M-t>
+  " <M-t> Tab split
+  " <M-T> Tab new
   " <M-y> Emmet go to prev
   " <M-u>
   " <M-i>
@@ -352,10 +353,10 @@
   " <M-d>
   " <M-f>
   " <M-g>
-  " <M-h> tabprevious
+  " <M-h> Tab previous
   " <M-j>
   " <M-k>
-  " <M-l> tabnext
+  " <M-l> Tab next
   " <M-;>
   " <M-'>
   " <M-z>

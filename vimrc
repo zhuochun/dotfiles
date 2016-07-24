@@ -88,7 +88,7 @@ set autoread                 " Autoread when a file is changed from the outside
 set mouse=a                  " Enable mouse
 set lazyredraw               " Stops redrawing during complex operations
 set ttyfast                  " Indicates fast terminal connection
-set synmaxcol=200            " Maximum columns to have syntax coloring
+set synmaxcol=180            " Maximum columns to have syntax coloring
 set ttimeout                 " Time out on key codes
 set timeoutlen=42            " Quick timeouts for command combinations
 set history=999              " Keep 999 lines of command line history
@@ -177,15 +177,8 @@ nnoremap <C-z> mzzMzvzz15<c-e>`z
 " r - insert comment leader
 " mM - useful for Chinese characters, q - gq
 " j - remove comment leader when joining lines
-augroup format_options
-  autocmd!
-  autocmd FileType * setlocal formatoptions+=mMj
-  autocmd FileType * setlocal formatoptions-=o
-augroup END
-" }}}
-
-" Word boundary {{{
-autocmd! FileType * setlocal iskeyword-=_,-,:
+set formatoptions+=mMj
+set formatoptions-=o
 " }}}
 
 " List chars {{{
@@ -243,8 +236,7 @@ endfor
 " Some tab shortcuts
 nnoremap <silent> <M-l> :<C-u>tabnext<CR>
 nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
-nnoremap <silent> <D-(> :<C-u>tabprevious<CR>
-nnoremap <silent> <D-)> :<C-u>tabnext<CR>
+" Open/close tab shortcuts
 nnoremap <silent> <D-t> :<C-u>tab split<CR>
 nnoremap <silent> <D-T> :<C-u>tabnew<CR>
 nnoremap <silent> <D-w> :<C-u>tabclose<CR>
@@ -335,6 +327,14 @@ autocmd! BufReadPost *
        \ if line("'\"") > 0 && line("'\"") <= line("$") |
        \     execute 'normal! g`"zvzz' |
        \ endif
+" }}}
+
+" Resize splits when the window is resized {{{
+autocmd! VimResized * :wincmd =
+"}}}
+
+" Diff update after save {{{
+autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif
 " }}}
 
 " Source specific filetype settings {{{

@@ -1,6 +1,7 @@
 " Directory related commands {{{
 " yank local working directory to clipboard
 command! Ywd   :let @+ = expand("%")
+command! Ycd   :let @+ = substitute(expand("%:p"), expand("~"), "~", "g")
 command! Ycf   :let @+ = expand("%:t")
 command! Ycl   :let @+ = expand("%") . ":" . line(".")
 
@@ -23,6 +24,9 @@ function! s:root()
 endfunction
 " }}
 " }}}
+
+" Find merge conflict markers
+command! Gconflit /\v^[<\|=>]{7}( .*\|$)<CR>
 
 " Visual resize {{{
 " https://github.com/wellle/visual-split.vim

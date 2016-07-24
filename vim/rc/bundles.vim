@@ -178,9 +178,6 @@ NeoBundle 'LeafCage/yankround.vim', {
       \ }
 " }}}
 
-" generate tags file
-NeoBundle 'ludovicchabant/vim-gutentags'
-
 " mattn packages {{{
 " Web API plugin for other plugins
 NeoBundle 'mattn/webapi-vim'
@@ -214,7 +211,8 @@ NeoBundleLazy 'mbbill/undotree', {
 " }}}
 
 " osyo-manga bundles {{{
-NeoBundleLazy 'osyo-manga/vim-anzu', {
+NeoBundle 'osyo-manga/vim-anzu', {
+      \   'depends' : ['Shougo/unite.vim'],
       \   'autoload': { 'mappings' : ['<Plug>(anzu-'] },
       \ }
 
@@ -340,18 +338,11 @@ NeoBundleLazy 'Shougo/neco-vim', {
       \   'autoload' : {'filetypes': 'vim'}
       \ }
 
-" Complete Ruby with RSense
-" NeoBundleLazy 'marcus/rsense'
-" NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
-"       \   'depends'  : ['marcus/rsense', 'Shougo/neocomplete.vim'],
-"       \   'autoload' : {'filetypes': 'ruby'}
-"       \ }
-
 " Complete Ruby with rcodetools
-" NeoBundleLazy 'osyo-manga/vim-monster', {
-"       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
-"       \   'autoload' : {'filetypes': 'ruby'}
-"       \ }
+NeoBundleFetch 'osyo-manga/vim-monster', {
+      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
+      \   'autoload' : {'filetypes': 'ruby'}
+      \ }
 " }}
 
 " NeoSnippet {{
