@@ -44,6 +44,9 @@ config/projections.json
 # Ruby
 coverage/
 
+# Golang
+coverage.out
+
 # Tags
 .starscope.db
 
@@ -68,4 +71,3 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
-

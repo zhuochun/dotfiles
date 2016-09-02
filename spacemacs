@@ -33,7 +33,8 @@ values."
      ;; Auto complete and snippets
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-help-tooltip t)
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-return-key-behavior 'complete)
 
      ;; <C-a> Beginning of line, <C-w> Kill a word (Backward)
      better-defaults
@@ -50,6 +51,7 @@ values."
            ruby-enable-enh-ruby-mode t
            ruby-version-manager 'rbenv)
      ruby-on-rails
+     go
      git
      markdown
      org
@@ -72,7 +74,8 @@ values."
      evil-cleverparens
      evil-commentary
      unimpaired
-     vinegar
+     (vinegar :variables
+              vinegar-reuse-dired-buffer t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -129,15 +132,15 @@ values."
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 5
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'org-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(flatui
-                         leuven
-                         spacemacs-light
+   dotspacemacs-themes '(solarized-dark
                          solarized-light
-                         solarized-dark
+                         leuven
+                         flatui
+                         spacemacs-light
                          spacemacs-dark
                          monokai
                          zenburn)
@@ -321,6 +324,9 @@ layers configuration. You are free to put any user code."
   ;; Unite mappings
   ;; gop -> <SPC p f>
   ;; goo -> <SPC s j>
+
+  ;; Golang layer configs
+  (setq gofmt-command "goimports")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
