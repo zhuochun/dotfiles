@@ -172,6 +172,10 @@ NeoBundleLazy 'keith/investigate.vim', {
       \ }
 " }}}
 
+" faster updating folds {{{
+NeoBundle 'Konfekt/FastFold'
+" }}}
+"
 " Yank ring {{{
 NeoBundle 'LeafCage/yankround.vim', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -218,6 +222,13 @@ NeoBundle 'osyo-manga/vim-anzu', {
 
 NeoBundleLazy 'osyo-manga/vim-over', {
       \   'autoload' : { 'commands' : ['OverCommandLine'] },
+      \ }
+
+NeoBundleLazy 'osyo-manga/vim-brightest', {
+      \   'autoload' : {
+      \     'commands' : ['BrightestEnable'],
+      \     'filetypes': ['go'],
+      \   }
       \ }
 " }}}
 
@@ -569,22 +580,13 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 " Ruby/Rails {{{
 NeoBundle 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
-
+" Ruby ecosystem
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-bundler' " slows down NeoComplete
 NeoBundleLazy 'tpope/vim-rake' " slows down NeoComplete
 NeoBundleLazy 'keith/rspec.vim', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-
 " Refactoring macros for Ruby/Rails
-NeoBundleLazy 'ecomba/vim-ruby-refactoring', {
-      \   'autoload' : {
-      \     'commands' : [
-      \       'RInlineTemp', 'RConvertPostConditional', 'RExtractConstant',
-      \       'RExtractLet', 'RExtractLocalVariable', 'RRenameLocalVariable',
-      \       'RRenameInstanceVariable', 'RExtractMethod',
-      \     ]
-      \   },
-      \ }
+NeoBundleLazy 'ecomba/vim-ruby-refactoring'
 " }}}
 
 " Clojure {{{
@@ -658,13 +660,16 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 
 " Colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'dracula/vim'
+NeoBundle 'rakr/vim-one'
+NeoBundle 'rakr/vim-two-firewatch'
 NeoBundle 'joshdick/onedark.vim'
+NeoBundle 'joshdick/airline-onedark.vim'
 NeoBundle 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'romainl/flattened'
 NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""

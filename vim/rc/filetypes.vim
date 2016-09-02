@@ -191,17 +191,36 @@ endfunction
 autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
   setlocal iskeyword+=<,>,-
+  setlocal nolist
 
   " Disable whitespace checking for an individual buffer
   let b:airline_whitespace_disabled = 1
 
+  " Trigger semantic highlight before write
+  if has("gui") && exists("SemanticHighlight")
+    autocmd! BufWritePre *.go :SemanticHighlight
+  endif
+
+  " Unite menus for Golang
+  nnoremap <buffer> <silent> gop :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
+
   " Go specific mappings
   nmap <buffer> <leader>oi <Plug>(go-info)
+  nmap <buffer> <leader>oI <Plug>(go-implements)
   nmap <buffer> <Leader>od <Plug>(go-doc)
+  nmap <buffer> <Leader>oD <Plug>(go-describe)
   nmap <buffer> <leader>or <Plug>(go-referrers)
   nmap <buffer> <leader>ol <Plug>(go-metalinter)
+  nmap <buffer> <leader>ob <Plug>(go-build)
   nmap <buffer> <leader>or <Plug>(go-run)
+  nmap <buffer> <leader>oR <Plug>(go-rename)
   nmap <buffer> <leader>oc <Plug>(go-coverage-toggle)
+  nmap <buffer> <leader>oC <Plug>(go-callees)
+  nmap <buffer> <leader>os <Plug>(go-callstack)
+
+  " Overwrite vim-test mappings
+  nmap <buffer> <leader>tt <Plug>(go-test)
+  nmap <buffer> <leader>tf <Plug>(go-test-func)
 
   " Alternates between the implementation and test code
   command! -bang A  call go#alternate#Switch(<bang>0, 'edit')
@@ -210,7 +229,6 @@ function! s:GoDef()
 
   " Correct typos
   iab <buffer> ;=         :=
-  iab <buffer> String     string
   iab <buffer> stirng     string
   iab <buffer> Springf    Sprintf
 endfunction
@@ -251,17 +269,16 @@ iab tyr        try
 iab itn        int
 iab doulbe     double
 iab vodi       void
+iab ture       true
 iab brake      break
 iab breka      break
 iab breaka     break
 iab labeled    labelled
 iab seperate   separate
 iab execuse    excuse
-iab ture       true
 iab longtiude  longitude
 iab ?8         /*
 iab /8         /*
-iab /*         /*
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""

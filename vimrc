@@ -280,6 +280,7 @@ endif
 " Theme {{{
 set colorcolumn=119
 set background=dark
+" Colorscheme
 colorscheme jellybeans
 " }}}
 

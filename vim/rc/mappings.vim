@@ -196,18 +196,18 @@
   nnoremap <leader>r :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-l>
   " <leader>tl Run last test
   nnoremap <silent> <leader>tl :TestLast<CR>
-  " <leader>tn Run nearest test/current function
+  " <leader>tn Run nearest test/function
   nnoremap <silent> <leader>tn :TestNearest<CR>
-  nnoremap <silent> <leader>tc :TestNearest<CR>
-  nnoremap <silent> <leader>tf :TestFile<CR>
+  nnoremap <silent> <leader>tf :TestNearest<CR>
   " <leader>tc Run current file
   nnoremap <silent> <leader>tt :TestFile<CR>
+  " <leader>T  Run current file
   nnoremap <silent> <leader>T  :TestFile<CR>
   " <leader>y yankround-prev
   " <leader>Y yankround-next
   " <leader>u
   " <leader>i
-  " <leader>o
+  " <leader>o* Filetype specific operations
   " <leader>p
   " <leader>a
   " <leader>s* Spell checkings
@@ -225,16 +225,28 @@
   nnoremap <leader>f gg=G''
   " <leader>F Format file
   nnoremap <leader>F gg=G''
-  " <leader>g
-  " <leader>G Toggle Goyo
-  nnoremap <leader>G :Goyo<CR>
+  " <leader>ga Toggle alterative files
+  nnoremap <leader>ga :A<CR>
+  " <leader>gg Toggle Goyo
+  nnoremap <leader>gg :Goyo<CR>
+  " <leader>go Toggle OverCommandLine
+  nnoremap <leader>go :OverCommandLine<CR>s/
+  " <leader>gl Run SyntasticCheck lint
+  nnoremap <leader>gl :SyntasticCheck<CR>
+  " <leader>gn Toggle NERDTree
+  nnoremap <leader>gn :NERDTreeToggle<CR>
+  " <leader>gt Toggle Tagbar
+  nnoremap <leader>gt :TagbarToggle<CR>
+  nnoremap <leader>gT :TagbarTogglePause<CR>
+  " <leader>gu Toggle Undotree
+  nnoremap <leader>gu :UndotreeToggle<CR>
+  " <leader>gw Toggle ArgWrap
+  nnoremap <leader>gw :ArgWrap<CR>
   " <leader>hs GitGutterStageHunk
   " <leader>hr GitGutterRevertHunk
   " <leader>js Format JSON file (python required)
   nnoremap <leader>js :%!python -m json.tool<CR>
   " <leader>k
-  " <leader>l Run lint
-  nnoremap <leader>l :SyntasticCheck<CR>
   " <leader>L Reduce a sequence of blank lines into a single line
   nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
   " <leader>z

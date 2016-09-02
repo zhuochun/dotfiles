@@ -73,6 +73,8 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline#extensions#tabline#enabled = 1
     " display tab number instead of # of splits (default)
     let g:airline#extensions#tabline#tab_nr_type = 1
+    " define the minimum number of tabs needed to show the tabline
+    let g:airline#extensions#tabline#tab_min_count = 2
     " define how file names are displayed in tabline
     let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
     " disable displaying tab type, buffers, splits, close button
@@ -235,7 +237,17 @@ if neobundle#tap('semantic-highlight.vim') "{{{
                 \   'coffee'     : 'coffee',
                 \   'ruby'       : 'ruby',
                 \   'elixir'     : 'elixir',
+                \   'go'         : 'go',
                 \ }
+    " Add backlists item in Golang
+    let g:semanticBlacklistOverride = {
+                \ 'go': [
+                \   'break',    'default',     'func',   'interface', 'select',
+                \   'case',     'defer',       'go',     'map',       'struct',
+                \   'chan',     'else',        'goto',   'package',   'switch',
+                \   'const',    'fallthrough', 'if',     'range',     'type',
+                \   'continue', 'for',         'import', 'return',    'var',
+                \ ]}
   endfunction
 
   call neobundle#untap()
@@ -255,6 +267,8 @@ if neobundle#tap('auto-pairs') "{{{
     " Disable default <BS> mapping because it maps <C-h>, which is used elsewhere
     " The original <BS> behavior is mapped with AutoPairsDelete() down below
     let g:AutoPairsMapBS = 0
+    " Disable jumping multiline close
+    let g:AutoPairsMultilineClose = 0
   endfunction
 
   call neobundle#untap()
@@ -288,7 +302,7 @@ endif "}}}
 
 if neobundle#tap('tagbar') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " sort according to order
+    " sort according to order in file
     let g:tagbar_sort = 0
     " default is 40
     let g:tagbar_width = 42
@@ -321,7 +335,8 @@ if neobundle#tap('tagbar') "{{{
           \ ]}
   endfunction
 
-  nnoremap <F10> :TagbarToggle<CR>
+  " Toggle Tagbar
+  nnoremap <silent> <F10> :TagbarToggle<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -336,7 +351,8 @@ if neobundle#tap('undotree') "{{{
     let g:undotree_SetFocusWhenToggle = 1
   endfunction
 
-  nnoremap <F5> :UndotreeToggle<CR>
+  " Toggle Undotree
+  nnoremap <silent> <F5> :UndotreeToggle<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -357,6 +373,19 @@ if neobundle#tap('vim-over') "{{{
 
   " <D-r> shortcut over command line
   noremap <D-r> :OverCommandLine<CR>s/
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-brightest') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " Highlight with underline
+    let g:brightest#highlight = { 'group': 'BrightestUnderline' }
+    " Enable highlight in insert mode
+    let g:brightest#enable_insert_mode = 1
+    " Enable brightest only in go
+    let g:brightest#enable_filetypes = { '_': 0, 'go': 1 }
+  endfunction
 
   call neobundle#untap()
 endif "}}}
@@ -399,11 +428,13 @@ endif "}}}
 
 if neobundle#tap('nerdtree') "{{{
   " Size of the NERD tree
-  let NERDTreeWinSize = 32
+  let NERDTreeWinSize = 42
   " Disable 'bookmarks' and 'help'
   let NERDTreeMinimalUI = 1
   " Show hidden files
   let NERDTreeShowHidden = 1
+  " Show line numbers
+  let NERDTreeShowLineNumbers = 1
   " Highlight the selected entry in the tree
   let NERDTreeHighlightCursorline = 1
   " Use a single click to fold/unfold directories
@@ -411,7 +442,7 @@ if neobundle#tap('nerdtree') "{{{
   " Replace the netrw autocommands for exploring local directories
   let NERDTreeHijackNetrw = 1
   " Delete old buffer which is no more valid
-  let NERDTreeAutoDeleteBuffer=1
+  let NERDTreeAutoDeleteBuffer = 1
   " Don't display these kinds of files in NERDTree
   let NERDTreeIgnore = [
         \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
@@ -521,6 +552,7 @@ if neobundle#tap('unite.vim') "{{{
                   \ }
       let g:unite_source_menu_menus.golang.command_candidates = [
                   \   ['Lint Current File', 'GoLint'],
+                  \   ['Metalint Current File', 'GoMetaLinter'],
                   \   ['Check Unchecked Errors', 'GoErrCheck'],
                   \   ['Format Current File', 'GoFmt'],
                   \   ['Rename Identifier', 'GoRename'],
@@ -748,24 +780,19 @@ if neobundle#tap('neocomplete.vim') "{{{
 
     " disable AutoComplPop and use neocomplete
     let g:acp_enableAtStartup = 0
-    let g:neocomplete#enable_at_startup = 1
 
+    let g:neocomplete#enable_at_startup = 1
     let g:neocomplete#enable_smart_case = 1
     let g:neocomplete#enable_camel_case = 1
-
     let g:neocomplete#enable_auto_delimiter = 1
     let g:neocomplete#enable_fuzzy_completion = 1
-
-    let g:neocomplete#auto_completion_start_length = 2
+    let g:neocomplete#auto_completion_start_length = 1
     let g:neocomplete#manual_completion_start_length = 1
-
     let g:neocomplete#max_list = 42
     let g:neocomplete#max_keyword_width = 80
     let g:neocomplete#min_keyword_length = 3
-
     let g:neocomplete#lock_iminsert = 0
     let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax|\*ku\*'
-
     let g:neocomplete#sources#syntax#min_keyword_length = 3
     let g:neocomplete#sources#buffer#max_keyword_width = 42
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
@@ -781,22 +808,18 @@ if neobundle#tap('neocomplete.vim') "{{{
     if !exists('g:neocomplete#keyword_patterns')
       let g:neocomplete#keyword_patterns = {}
     endif
-
     let g:neocomplete#keyword_patterns._ = '\h\w*'
 
     " Some omni customizations
     if !exists('g:neocomplete#sources#omni#functions')
       let g:neocomplete#sources#omni#functions = {}
     endif
-
-    " vim-go
     let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
 
     " Enable heavy omni completion
     if !exists('g:neocomplete#sources#omni#input_patterns')
       let g:neocomplete#sources#omni#input_patterns = {}
     endif
-
     let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
     let g:neocomplete#sources#omni#input_patterns.elixir = '[^.[:digit:] *\t]\.'
     let g:neocomplete#sources#omni#input_patterns.go = '[^.[:digit:] *\t]\.'
@@ -977,8 +1000,8 @@ if neobundle#tap('goyo.vim') "{{{
     let g:goyo_width = 90
   endfunction
 
+  " Toggle Goyo
   nnoremap <F11> :Goyo<CR>
-  nnoremap <leader>G :Goyo<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -1110,32 +1133,32 @@ if neobundle#tap('vim-go') "{{{
   " :GoTest        Test current file
   " :GoTestFunc    Test current function
   function! neobundle#hooks.on_source(bundle)
-    " Show type info (:GoInfo) for word under cursor automatically
-    let g:go_auto_type_info = 1
-    " Highlight same identifiers in file
-    let g:go_auto_sameids = 1
     " Enable goimports to insert import paths instead of gofmt
     let g:go_fmt_command = 'goimports'
     " Enable fmt command errors (disabled syntastic)
-    let g:go_fmt_fail_silently = 1
+    let g:go_fmt_fail_silently = 0
     " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
     let g:go_dispatch_enabled = 1
+    " Test timeout of :GoTest
+    let g:go_test_timeout = '5s'
+    " Disable auto jump to first error
+    let g:go_jump_to_error = 1
     " Run GoMetaLinter on save
     let g:go_metalinter_autosave = 1
-    let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-    " No whitespace highlights
+    let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint']
+    let g:go_metalinter_enabled = ['vet', 'errcheck', 'golint', 'interfacer']
+    " Reuse buffer when GoDef
+    let g:go_def_reuse_buffer = 0
+    " Show type info (:GoInfo) for word under cursor automatically
+    let g:go_auto_type_info = 0
+    " No auto template when create new file
+    let g:go_template_autocreate = 1
+    " No extra highlights
     let g:go_highlight_array_whitespace_error = 0
     let g:go_highlight_chan_whitespace_error = 0
     let g:go_highlight_space_tab_error = 0
     let g:go_highlight_trailing_whitespace_error = 0
-    " Enable syntax highlights
     let g:go_highlight_extra_types = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_types = 1
-    let g:go_highlight_fields = 1
-    let g:go_highlight_build_constraints = 1
   endfunction
 
   call neobundle#untap()
