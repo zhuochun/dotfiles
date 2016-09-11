@@ -8,7 +8,7 @@ begin
   emoji = JSON.parse(resp.body)
 
   num = [ARGV.first.to_i, 1].max
-  $stdout << emoji.map { |i| i['emoji'] }.sample(num).join(' ') << "\n"
+  $stdout << emoji.map { |i| i['emoji'] }.compact.sample(num).join(' ') << "\n"
 rescue Exception => e
   $stdout << "ERROR: #{e}\n"
 end
