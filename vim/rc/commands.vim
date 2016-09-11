@@ -101,8 +101,10 @@ function! s:deleteInactiveBufs()
 endfunction
 " }}}
 
-" Format to JSON
-if executable('python')
+" Format JSON
+if executable("jsonmatter")
+  command! JSON :%!jsonmatter --indent 4
+elseif executable("python")
   command! JSON :%!python -m json.tool
 endif
 
