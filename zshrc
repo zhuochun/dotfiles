@@ -55,10 +55,10 @@ alias ra="rake"
 alias br="bin/rake"
 # Vim Alias
 alias ee="vim"
-alias vi="vim"
+alias vi="nvim"
 # Git
 alias gm="git-imerge"
-alias gv="vim -c MagitOnly"
+alias gv="nvim -c MagitOnly"
 # Oh Emacs
 alias em="/Applications/Emacs.app/Contents/MacOS/Emacs"
 # System
@@ -86,7 +86,7 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 alias zshrc="gvim ~/.zshrc"
 alias vimrc="gvim ~/.vimrc"
 # Open vim Magit
-alias magit="vim -c MagitOnly"
+alias magit="nvim -c MagitOnly"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)

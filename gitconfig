@@ -21,6 +21,9 @@
 	# interactive rebase with the given number of latest commits
 	rb = "!r() { git rebase -i HEAD~$1; }; r"
 
+	# stash
+	stash-unstaged = stash --keep-index --include-untracked
+
 	# verbose output about tags, branches or remotes
 	tags = tag -l
 	branches = branch -a
