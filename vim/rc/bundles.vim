@@ -305,6 +305,10 @@ NeoBundle 'osyo-manga/unite-quickfix', {
       \   'depends' : ['Shougo/unite.vim'],
       \ }
 
+NeoBundle 'tacroe/unite-mark', {
+      \   'depends' : ['Shougo/unite.vim'],
+      \ }
+
 NeoBundle 'tsukkee/unite-tag', {
       \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
       \ }
@@ -370,7 +374,7 @@ NeoBundleFetch 'zhuochun/vim-dicts'
 " }}
 " }}}
 
-" accelerated-jk {{{
+" rhysd bundles {{{
 NeoBundleLazy 'rhysd/accelerated-jk', {
       \   'autoload' : { 'mappings' : ['<Plug>(accelerated_'] }
       \ }
@@ -435,6 +439,15 @@ NeoBundleLazy 'tpope/vim-projectionist', {
 
 NeoBundle 'tpope/vim-repeat'
 
+" ds'    : 'word'      -> word
+" dst    : <a>word</a> -> word
+" cs'[   : 'word'      -> [word]
+" cst<a> : <p>word</p> -> <a>word</a>
+" viwS'  : word        -> 'word'
+" viwS<p>: word        -> <p>word</p>
+" ysiw'  : word        -> 'word'
+" ysiw<p>: word        -> <p>word</p>
+" yss for entire line
 NeoBundle 'tpope/vim-surround'
 
 NeoBundleLazy 'tpope/vim-scriptease', {
@@ -445,6 +458,7 @@ NeoBundleLazy 'tpope/vim-scriptease', {
 " lprevious: [l, lnext: ]l, lfirst: [L
 " cprevious: [q, cnext: ]q, cfirst: [Q
 " tprevious: [t, tnext: ]t
+" prev hunk: [n, nhunk: ]n
 NeoBundleLazy 'tpope/vim-unimpaired', {
       \   'autoload' : { 'mappings' : ['[', ']'] }
       \ }
@@ -613,6 +627,7 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 
 " Go {{{
 NeoBundle 'fatih/vim-go', {'depends': ['tpope/vim-dispatch', 'Shougo/vimproc.vim'], 'autoload': {'filetypes': ['go']}}
+NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
 NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
 
@@ -661,13 +676,13 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " Colorschemes {{{
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'dracula/vim'
-NeoBundle 'rakr/vim-one'
-NeoBundle 'rakr/vim-two-firewatch'
-NeoBundle 'joshdick/onedark.vim'
-NeoBundle 'joshdick/airline-onedark.vim'
+NeoBundle 'jacoborus/tender'
 NeoBundle 'KabbAmine/yowish.vim'
+NeoBundle 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'rakr/vim-one'
+NeoBundle 'rakr/vim-two-firewatch'
 NeoBundle 'romainl/flattened'
 NeoBundle 'w0ng/vim-hybrid'
 " }}}

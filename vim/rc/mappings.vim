@@ -45,6 +45,7 @@
   " <#>       Search word under cursor backwards
   " <$>       To the end of the line
   " <%>       Move between open/close tags
+  cnoremap %% <C-R>=expand("%:h") . "/"<CR>
   " *<%>      Move to percentage of file
   " <^>       To the first non-blank character of the line.
   " <&>       Synonym for `:s` (repeat last substitute)
@@ -97,6 +98,7 @@
   nnoremap gh H
   nnoremap gm M
   nnoremap gl L
+  " <gq>      Format text in motion
   " <go>*     Unite mappings
   " <G>       Go to end of file
   " *<G>      Go to specific line number
@@ -215,6 +217,9 @@
   nnoremap <leader>ss :setlocal spell!<CR>
   nnoremap <leader>sa zg
   nnoremap <leader>s? z=
+  " <leader>s* System clipping
+  vnoremap <leader>sy "+y
+  nnoremap <leader>sp "+p
   " <leader>S Clear trailing whitespace
   nnoremap <leader>S :%s/\s\+$//ge<CR>:nohl<CR>
   " <leader>d Close buffer and leave Window intact
@@ -254,7 +259,7 @@
   " <leader>c Local change/substitute
   nnoremap <leader>c :OverCommandLine<CR>s/
   " <leader>C Global grep and change/substitute
-  nnoremap <leader>C :WritableSearch<CR>
+  nnoremap <leader>C :WritableSearch
   " <leader>v Select the just pasted text
   nnoremap <leader>v V`]
   " <leader>b Close all other buffers

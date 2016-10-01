@@ -19,19 +19,21 @@ set macligatures             " Show ligatures with supported fonts (MacVim GUI)
 "   - https://be5invis.github.io/Iosevka
 " set guifont=Inconsolata-g\ for\ Powerline:h14
 " set guifont=InputMonoNarrow\ Light:h13
-set guifont=Iosevka:h13
+set guifont=Iosevka\ Light:h13
 " set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
 " set guifont=Fira\ Code\ Retina:h13
-" set guifont=Hasklig:h13
+" set guifont=Hasklig\ Light:h13
 " }}
 
 " GUI colorschems {{
+" colorscheme base16-eighties
+" colorscheme base16-ocean
 " colorscheme dracula
 " colorscheme flattened_dark
 " colorscheme gruvbox
 " colorscheme hybrid
-" colorscheme onedark
+" colorscheme one
 colorscheme two-firewatch
 " colorscheme yowish
 " }}

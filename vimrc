@@ -174,10 +174,11 @@ nnoremap <C-z> mzzMzvzz15<c-e>`z
 " o - insert command leader in o or O
 " t - autowrap text
 " c - autowrap comments
+" q - allow formatting of comments with gq
 " r - insert comment leader
-" mM - useful for Chinese characters, q - gq
+" mM - useful for Chinese characters
 " j - remove comment leader when joining lines
-set formatoptions+=mMj
+set formatoptions+=mMjq
 set formatoptions-=o
 " }}}
 

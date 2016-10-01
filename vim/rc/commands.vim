@@ -25,9 +25,6 @@ endfunction
 " }}
 " }}}
 
-" Find merge conflict markers
-command! Gconflit /\v^[<\|=>]{7}( .*\|$)<CR>
-
 " Visual resize {{{
 " https://github.com/wellle/visual-split.vim
 command! -range VResize      call <SID>resize(<line1>, <line2>)

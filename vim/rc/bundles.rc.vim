@@ -449,6 +449,9 @@ if neobundle#tap('nerdtree') "{{{
         \ '\.git', '\.hg', '\.svn', '\.sass-cache',
         \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
         \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
+  " The old better arrows
+  let g:NERDTreeDirArrowExpandable = '▸'
+  let g:NERDTreeDirArrowCollapsible = '▾'
 
   " Toggle NERDTree
   nnoremap <silent> <F3> :NERDTreeToggle<CR>
@@ -466,8 +469,6 @@ if neobundle#tap('unite.vim') "{{{
           \   'direction': 'dynamictop',
           \   'prompt': '» ',
           \   'prompt_focus': 1,
-          \   'marked_icon': '⚲',
-          \   'cursor-line-highlight': 'Statusline',
           \   'short_source_names' : 1,
           \ })
 
@@ -494,7 +495,7 @@ if neobundle#tap('unite.vim') "{{{
     " matchers for neomru
     call unite#custom#source(
           \ 'neomru/file,neomru/directory',
-          \ 'matchers', ['matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
+          \ 'matchers', ['converter_relative_word', 'matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
 
     " Disable auto select
     let g:unite_enable_auto_select = 0
@@ -637,9 +638,10 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
   nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
   " Unite menus
-  nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
-  nnoremap <silent> gog :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
+  nnoremap <silent> goM :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
+  nnoremap <silent> goG :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   " Unite plugins
+  nnoremap <silent> gom :<C-u>Unite -buffer-name=marks mark<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
@@ -651,7 +653,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
   nnoremap <silent> go* :<C-u>Unite -buffer-name=search anzu<CR>
   nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
-  nnoremap <silent> goG :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
+  nnoremap <silent> gog :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
   nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
   nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
   nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
@@ -683,7 +685,7 @@ if neobundle#tap('unite.vim') "{{{
 
     " replace/rename
     let unite = unite#get_current_unite()
-    if unite.profile_name ==# '^search'
+    if unite.profile_name ==# '^search' || unite.profile_name ==# '^grep'
       nnoremap <silent><buffer><expr> r  unite#do_action('replace')
     else
       nnoremap <silent><buffer><expr> r  unite#do_action('rename')
@@ -773,11 +775,6 @@ endif "}}}
 
 if neobundle#tap('neocomplete.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " get quiet messages in auto completion
-    if has("patch-7.4.314")
-      set shortmess+=c
-    endif
-
     " disable AutoComplPop and use neocomplete
     let g:acp_enableAtStartup = 0
 
@@ -821,8 +818,6 @@ if neobundle#tap('neocomplete.vim') "{{{
       let g:neocomplete#sources#omni#input_patterns = {}
     endif
     let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
-    let g:neocomplete#sources#omni#input_patterns.elixir = '[^.[:digit:] *\t]\.'
-    let g:neocomplete#sources#omni#input_patterns.go = '[^.[:digit:] *\t]\.'
 
     " Appoints vim source call function when completes custom and customlist command
     let g:neocomplete#sources#vim#complete_functions = {
@@ -883,8 +878,10 @@ if neobundle#tap('neosnippet.vim') "{{{
     let g:neosnippet#expand_word_boundary = 1
     " Disables standart snippets, use vim-snippets bundle instead
     let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
-    " Enable snipMate compatibility feature.
+    " Enable SnipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
+    " Enable complete done
+    let g:neosnippet#enable_complete_done = 1
     " Tell Neosnippet about the other snippets
     let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
@@ -1124,19 +1121,14 @@ if neobundle#tap('vim-ruby-refactoring') "{{{
   call neobundle#untap()
 endif "}}}
 
+" https://github.com/fatih/vim-go-tutorial
+" https://www.youtube.com/watch?v=7BqJ8dzygtU
 if neobundle#tap('vim-go') "{{{
-  " :GoDef         Lookup symbol and declaration
-  " :GoDoc         Lookup documentations
-  " :GoImplements  Advanced source analysis tools utilizing oracle
-  " :GoCallees     Advanced source analysis tools utilizing oracle
-  " :GoReferrers   Advanced source analysis tools utilizing oracle
-  " :GoTest        Test current file
-  " :GoTestFunc    Test current function
   function! neobundle#hooks.on_source(bundle)
     " Enable goimports to insert import paths instead of gofmt
     let g:go_fmt_command = 'goimports'
-    " Enable fmt command errors (disabled syntastic)
-    let g:go_fmt_fail_silently = 0
+    " Disable fmt command errors
+    let g:go_fmt_fail_silently = 1
     " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
     let g:go_dispatch_enabled = 1
     " Test timeout of :GoTest
@@ -1148,11 +1140,13 @@ if neobundle#tap('vim-go') "{{{
     let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint']
     let g:go_metalinter_enabled = ['vet', 'errcheck', 'golint', 'interfacer']
     " Reuse buffer when GoDef
-    let g:go_def_reuse_buffer = 0
+    let g:go_def_reuse_buffer = 1
     " Show type info (:GoInfo) for word under cursor automatically
     let g:go_auto_type_info = 0
     " No auto template when create new file
-    let g:go_template_autocreate = 1
+    let g:go_template_autocreate = 0
+    " Use camelcase for tags, :GoAddTags
+    let g:go_snippet_case_type = "camelcase"
     " No extra highlights
     let g:go_highlight_array_whitespace_error = 0
     let g:go_highlight_chan_whitespace_error = 0
