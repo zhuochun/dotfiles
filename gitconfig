@@ -14,6 +14,9 @@
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
 
+	# push politely
+	please = push --force-with-lease
+
 	# rebase in short
 	rc = rebase --continue
 	rs = rebase --skip
@@ -41,12 +44,14 @@
 	# Switch to a branch, creating it if necessary
 	co = checkout -B
 	go = checkout
-	merge-branch = "!git checkout master && git merge @{-1}"
 	master = checkout master
 
+	# merge branch
+	merge-branch = "!git checkout master && git merge @{-1}"
+
 	# status
-	s = status -s
-	st = status -s
+	s = status --short
+	st = status --short --branch
 
 	# diff
 	d = diff --color --color-words --abbrev
