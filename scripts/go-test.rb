@@ -88,10 +88,13 @@ def go_test(relative_path, options = "")
                line.light_cyan
              when /PASS:/
                line.green
-             when /coverage: (\d+.\d)%/
-               word = "coverage: #{$1.to_s}%".bold
-               $1.to_f < 60.0 ? word.red.bold : word.green.bold
-               line.gsub(/coverage: (\d+.\d)%/, word)
+             when /coverage: (\d+.\d+)\%/
+               cov = $1.to_f
+               word = "coverage: #{cov}\%".bold
+               word = if cov < 60.0 then word.red
+                      elsif cov < 90.0 then word.yellow
+                      else word.green end
+               line.gsub(/coverage: \d+.\d+\%/, word)
              else
                line
              end
@@ -174,7 +177,7 @@ loop do
     # open coverage report
     `go tool cover -html=coverage.out`
 
-  when 'refresh'
+  when 'refresh', 'reload'
     cached_packages = {}
     cache_packages(cached_packages)
     LOG.info "#{cached_packages.size} PACKAGES WITH TESTS:\n#{cached_packages.values.map(&:yellow).join("\n")}"
