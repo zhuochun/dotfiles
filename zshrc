@@ -98,5 +98,8 @@ function ywd {
   pwd | tr -d "\r\n" | pbcopy
 }
 
+# Fzf https://github.com/junegunn/fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # Local configs
-if [[ -a ~/.localrc ]]; then source ~/.localrc; fi
+[ -f ~/.localrc ] && source ~/.localrc
