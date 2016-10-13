@@ -6,8 +6,16 @@ autocmd! FileType neosnippet,snippet setlocal noexpandtab
 autocmd! FileType gitcommit setlocal spell
 " }}}
 
+" SQL {{{
+" brew install pgformatter
+" https://github.com/darold/pgFormatter
+autocmd! FileType sql setl formatprg=pg_format\ -f\ 2
+" }}}
+
 " JSON {{{
-autocmd! FileType json setlocal foldmethod=syntax
+" npm install jsonmatter -g
+" https://github.com/hotoo/jsonmatter
+autocmd! FileType json setlocal foldmethod=syntax formatprg=jsonmatter\ -i\ 4
 " }}}
 
 " Ruby Mappings {{{

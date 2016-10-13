@@ -98,12 +98,5 @@ function! s:deleteInactiveBufs()
 endfunction
 " }}}
 
-" Format JSON
-if executable("jsonmatter")
-  command! JSON :%!jsonmatter --indent 4
-elseif executable("python")
-  command! JSON :%!python -m json.tool
-endif
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim:ft=vim:fdm=marker:sw=2:ts=2
