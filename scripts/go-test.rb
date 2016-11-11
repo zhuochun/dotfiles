@@ -66,12 +66,15 @@ def lookup_package(pkgs, name)
   end
 end
 
-def go_test(relative_path, options = "")
+def go_test(path, options = "")
   anybar_notify("yellow")
+
+  cmd = "go test #{path} #{options}".strip
+  LOG.info("Running: #{cmd.bold}".blue)
 
   test_passed = true
   output_lines = []
-  IO.popen("go test #{options} #{relative_path}/...") do |io|
+  IO.popen(cmd) do |io|
     while line = io.gets
       # shorten and highlight path in line
       shorten_regex = /#{Regexp.escape(PROJECT_ROOT)}([\w\/]*)/
@@ -125,7 +128,7 @@ listener = Listen.to(Dir.pwd, only: /\.go$/) do |modified, added, removed|
     LOG.info("Detected changes in #{relative_path.gsub(PROJECT_ROOT, '.').bold}".cyan)
 
     last_dir = relative_path
-    go_test(relative_path, "-v")
+    go_test(File.join(relative_path, "..."), "-v")
   end
 
   print "> ".blue.bold
@@ -138,61 +141,94 @@ at_exit { anybar_notify("white") }
 # Cache the packages in project directory
 cache_packages(cached_packages)
 # Initial run on whole project
-go_test(PROJECT_ROOT)
+go_test(File.join(PROJECT_ROOT, "..."))
 
 # Listen on instructions
 loop do
   print "> ".blue.bold
 
   case $stdin.gets.chomp.strip.downcase
-  when /^test(\s+\w+)?$/
+  when /^t(\s+\w+)?$/, /^test(\s+\w+)?$/
     # run all tests in package or in project
     input = $1 ? $1.strip : ""
 
     if input.empty?
-      go_test(PROJECT_ROOT)
+      go_test(File.join(PROJECT_ROOT, "..."))
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg), "-v")
+      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-v")
     else
       LOG.info "No package is identified"
     end
 
-  when /^cov(\s+\w+)?$/
+  # tf api/api_test.go:32
+  # go test github.com/test/data -run TestTest
+  when /^tf\s+([\w\/\.]+_test.go):(\d+)?$/, /^testfunc\s+([\w\/\.]+_test.go):(\d+)?$/
+    file = $1.strip
+    lineno = $2.to_i
+    LOG.info "Lookup nearest test: #{file.bold}, lineno: #{lineno}"
+
+    func_name = ""
+    File.open(file, 'r') do |f|
+      f.each_line do |line|
+        break if f.lineno > lineno
+        func_name = line =~ /^func ((?:Test|Example)\w+?)\(/ ? $1 : func_name
+      end
+    end
+
+    if func_name.empty?
+      LOG.info "No test func is identified"
+    else
+      go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v")
+    end
+
+  when /^race(\s+\w+)?$/
+    # run all tests in package or in project
+    input = $1 ? $1.strip : ""
+
+    if input.empty?
+      go_test(File.join(PROJECT_ROOT, "..."), "-race")
+    elsif pkg = lookup_package(cached_packages, input)
+      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-race")
+    else
+      LOG.info "No package is identified"
+    end
+
+  when /^c(\s+\w+)?$/, /^cov(\s+\w+)?$/
     # run coverage tests of package
     input = $1 ? $1.strip : ""
 
     if input.empty?
-      go_test(last_dir, "-coverprofile=coverage.out") unless last_dir.empty?
+      go_test(File.join(last_dir, "..."), "-coverprofile=coverage.out") unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg), "-coverprofile=coverage.out")
+      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-coverprofile=coverage.out")
     else
       LOG.info "No package is identified"
     end
 
-  when 'covall', 'cov .'
+  when 'covall', 'cov .', 'c.'
     # run coverage test of all packages
-    go_test(PROJECT_ROOT, "-cover")
+    go_test(File.join(PROJECT_ROOT, "..."), "-cover")
 
-  when 'covreport', 'report'
-    # open coverage report
-    `go tool cover -html=coverage.out`
+  when 'covreport', 'report', 'rpt'
+    `go tool cover -html=coverage.out` # open coverage report
 
-  when 'refresh', 'reload'
+  when 'r', 'refresh', 'reload'
     cached_packages = {}
     cache_packages(cached_packages)
     LOG.info "#{cached_packages.size} PACKAGES WITH TESTS:\n#{cached_packages.values.map(&:yellow).join("\n")}"
 
-  when 'quit', 'exit'
+  when 'q', 'quit', 'exit'
     exit(0)
 
   else
     LOG.info <<-EOF
-    COMMANDS:
+    #{"COMMANDS:".blue.bold}
 
     #{"test [package]".green.bold}: run all tests in the package or in the whole project
+    #{"testfunc file:lineno".green.bold}: run nearest test near the line in file
     #{"cov [package]".green.bold}: run coverage test on the package or last triggered packages
     #{"covall".green.bold}: run coverage tests for all packages
-    #{"covreport".green.bold}: open the coverage report in browser
+    #{"report".green.bold}: open the coverage report in browser
     #{"refresh".green.bold}: refresh the cached packages
     #{"quit".green.bold}: exit script
     EOF
