@@ -87,9 +87,8 @@
   nnoremap <bar> :vsp<CR>
   " <a>       Append insert
   " <A>       Append at end of line
-  " <s>       EasyMotion
-  " <S>       Substitue, don't update default register
-  nnoremap S "_s
+  " <s>       EasyMotion (1 char)
+  " <S>       EasyMotion (2 chars)
   " <d>       Delete
   " <D>       Delete to end of line
   " <f>       find to right (exclusive)
@@ -240,6 +239,7 @@
   nnoremap <leader>gl :SyntasticCheck<CR>
   " <leader>gn Toggle NERDTree
   nnoremap <leader>gn :NERDTreeToggle<CR>
+  " <leader>gm Toggle Unite Menu (filetype specific)
   " <leader>gt Toggle Tagbar
   nnoremap <leader>gt :TagbarToggle<CR>
   nnoremap <leader>gT :TagbarTogglePause<CR>

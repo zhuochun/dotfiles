@@ -150,6 +150,8 @@ endif "}}}
 
 if neobundle#tap('vim-easymotion') "{{{
   function! neobundle#hooks.on_source(bundle)
+    " disable default mappings
+    let g:EasyMotion_do_mapping = 0
     " not case censitive
     let g:EasyMotion_smartcase = 1
   endfunction
@@ -161,8 +163,8 @@ if neobundle#tap('vim-easymotion') "{{{
   nmap s     <Plug>(easymotion-s)
   vmap s     <Plug>(easymotion-s)
   " multiple chars easymotion
-  nmap S     <Plug>(easymotion-sn)
-  vmap S     <Plug>(easymotion-sn)
+  nmap S     <Plug>(easymotion-s2)
+  vmap S     <Plug>(easymotion-s2)
   " visual mode to hit exact target in line
   vmap f     <Plug>(easymotion-fl)
   vmap F     <Plug>(easymotion-Fl)
@@ -641,6 +643,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> goM :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
   nnoremap <silent> goG :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
   " Unite plugins
+  nnoremap <silent> gor :<C-u>Unite -buffer-name=register register<CR>
   nnoremap <silent> gom :<C-u>Unite -buffer-name=marks mark<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
@@ -674,10 +677,12 @@ if neobundle#tap('unite.vim') "{{{
     imap <buffer> <C-k>     <Plug>(unite_complete)
     imap <buffer> <C-j>     <Plug>(unite_complete)
 
+    " preview, use p to toggle preview
+    nmap <buffer> <C-p>     <Plug>(unite_toggle_auto_preview)
+
     " path settings
     imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
     nmap <buffer> <C-y>     <Plug>(unite_narrowing_path)
-    nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
 
     " change directory
     nnoremap <silent><buffer><expr> cd   unite#do_action('lcd')
@@ -783,13 +788,17 @@ if neobundle#tap('neocomplete.vim') "{{{
     let g:neocomplete#enable_camel_case = 1
     let g:neocomplete#enable_auto_delimiter = 1
     let g:neocomplete#enable_fuzzy_completion = 1
+
     let g:neocomplete#auto_completion_start_length = 1
     let g:neocomplete#manual_completion_start_length = 1
+
     let g:neocomplete#max_list = 42
     let g:neocomplete#max_keyword_width = 80
     let g:neocomplete#min_keyword_length = 3
+
     let g:neocomplete#lock_iminsert = 0
     let g:neocomplete#lock_buffer_name_pattern = '\.log\|\.log\.\|.*quickrun.*\|.jax|\*ku\*'
+
     let g:neocomplete#sources#syntax#min_keyword_length = 3
     let g:neocomplete#sources#buffer#max_keyword_width = 42
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
@@ -800,24 +809,6 @@ if neobundle#tap('neocomplete.vim') "{{{
           \   'ruby'    : $HOME.'/.vim/bundle/vim-dicts/dict/ruby.dict',
           \   'coffee'  : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
           \ }
-
-    " Define keyword patterns
-    if !exists('g:neocomplete#keyword_patterns')
-      let g:neocomplete#keyword_patterns = {}
-    endif
-    let g:neocomplete#keyword_patterns._ = '\h\w*'
-
-    " Some omni customizations
-    if !exists('g:neocomplete#sources#omni#functions')
-      let g:neocomplete#sources#omni#functions = {}
-    endif
-    let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
-
-    " Enable heavy omni completion
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-      let g:neocomplete#sources#omni#input_patterns = {}
-    endif
-    let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::\w*'
 
     " Appoints vim source call function when completes custom and customlist command
     let g:neocomplete#sources#vim#complete_functions = {
@@ -1134,7 +1125,7 @@ if neobundle#tap('vim-go') "{{{
     " Test timeout of :GoTest
     let g:go_test_timeout = '5s'
     " Disable auto jump to first error
-    let g:go_jump_to_error = 1
+    let g:go_jump_to_error = 0
     " Run GoMetaLinter on save
     let g:go_metalinter_autosave = 1
     let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint']
@@ -1147,12 +1138,6 @@ if neobundle#tap('vim-go') "{{{
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
     let g:go_snippet_case_type = "camelcase"
-    " No extra highlights
-    let g:go_highlight_array_whitespace_error = 0
-    let g:go_highlight_chan_whitespace_error = 0
-    let g:go_highlight_space_tab_error = 0
-    let g:go_highlight_trailing_whitespace_error = 0
-    let g:go_highlight_extra_types = 1
   endfunction
 
   call neobundle#untap()

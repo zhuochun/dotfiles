@@ -210,12 +210,12 @@ function! s:GoDef()
   endif
 
   " Unite menus for Golang
-  nnoremap <buffer> <silent> gop :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
+  nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
+  nnoremap <buffer> <silent> <leader>gi :<C-u>Unite go/import -start-insert<CR>
 
   " Go specific mappings
   nmap <buffer> <leader>oi <Plug>(go-info)
-  nmap <buffer> <leader>oI <Plug>(go-implements)
-  nmap <buffer> <Leader>od <Plug>(go-doc)
+  nmap <buffer> <leader>od <Plug>(go-doc)
   nmap <buffer> <Leader>oD <Plug>(go-describe)
   nmap <buffer> <leader>or <Plug>(go-referrers)
   nmap <buffer> <leader>ol <Plug>(go-metalinter)

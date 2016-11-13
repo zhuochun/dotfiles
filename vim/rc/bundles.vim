@@ -123,7 +123,6 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
 
 " semantic-highlight {{{
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
-      \   'gui' : 1,
       \   'autoload' : {
       \     'commands' : ['SemanticHighlight'],
       \     'filetypes': ['ruby', 'coffee', 'elixir', 'go'],
@@ -215,9 +214,9 @@ NeoBundleLazy 'mbbill/undotree', {
 " }}}
 
 " osyo-manga bundles {{{
-NeoBundle 'osyo-manga/vim-anzu', {
+NeoBundleLazy 'osyo-manga/vim-anzu', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': { 'mappings' : ['<Plug>(anzu-'] },
+      \   'autoload': { 'mappings' : ['<Plug>(anzu-', 'n'] },
       \ }
 
 NeoBundleLazy 'osyo-manga/vim-over', {
@@ -377,6 +376,16 @@ NeoBundleFetch 'zhuochun/vim-dicts'
 " rhysd bundles {{{
 NeoBundleLazy 'rhysd/accelerated-jk', {
       \   'autoload' : { 'mappings' : ['<Plug>(accelerated_'] }
+      \ }
+
+" nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
+" nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
+" nmap <buffer>ct <Plug>(conflict-marker-themselves)
+" nmap <buffer>co <Plug>(conflict-marker-ourselves)
+" nmap <buffer>cn <Plug>(conflict-marker-none)
+" nmap <buffer>cb <Plug>(conflict-marker-both)
+NeoBundleLazy 'rhysd/conflict-marker.vim', {
+      \   'autoload' : { 'mappings' : ['[x', ']x', '<Plug>(conflict-marker'] }
       \ }
 " }}}
 
@@ -626,7 +635,10 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 " }}}
 
 " Go {{{
-NeoBundle 'fatih/vim-go', {'depends': ['tpope/vim-dispatch', 'Shougo/vimproc.vim'], 'autoload': {'filetypes': ['go']}}
+NeoBundle 'fatih/vim-go', {
+      \   'depends': ['tpope/vim-dispatch', 'Shougo/vimproc.vim'],
+      \   'autoload': {'filetypes': ['go']},
+      \ }
 NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
 NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
@@ -684,6 +696,7 @@ NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
 NeoBundle 'romainl/flattened'
+NeoBundle 'tyrannicaltoucan/vim-quantum'
 NeoBundle 'w0ng/vim-hybrid'
 " }}}
 
