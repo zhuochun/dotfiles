@@ -148,8 +148,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Hack"
-                               :size 15
+   dotspacemacs-default-font '("Hasklig Light"
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -331,3 +331,18 @@ layers configuration. You are free to put any user code."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (highlight company inflections pcache ob-elixir org minitest hide-comnt go-guru auto-complete anzu git-gutter magit-popup async inf-ruby iedit undo-tree yasnippet markdown-mode git-commit with-editor s uuidgen org-projectile org-download mwim link-hint git-link flyspell-correct-helm flyspell-correct flycheck-mix eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff eshell-z dumb-jump darkokai-theme column-enforce-mode color-identifiers-mode zenburn-theme ws-butler tao-theme spacemacs-theme spaceline persp-mode org-plus-contrib open-junk-file neotree leuven-theme indent-guide help-fns+ helm-themes helm-descbinds helm-ag gruvbox-theme grandshell-theme google-translate evil-surround evil-search-highlight-persist darktooth-theme color-theme-sanityinc-tomorrow badwolf-theme ample-theme alchemist ace-link smartparens flycheck go-mode helm helm-core magit hydra projectile f which-key zonokai-theme zen-and-art-theme xterm-color window-numbering volatile-highlights vi-tilde-fringe use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smooth-scrolling smeargle shell-pop seti-theme rvm ruby-tools ruby-test-mode ruby-end rubocop rspec-mode robe reverse-theme restart-emacs rbenv rainbow-mode rainbow-identifiers rainbow-delimiters railscasts-theme quelpa purple-haze-theme projectile-rails professional-theme powerline popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme paradox page-break-lines orgit organic-green-theme org-repo-todo org-present org-pomodoro org-bullets omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow macrostep lush-theme lorem-ipsum linum-relative light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme info+ ido-vertical-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-company helm-c-yasnippet hc-zenburn-theme gruber-darker-theme gotham-theme golden-ratio go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme flycheck-pos-tip flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator feature-mode farmhouse-theme fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-commentary evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme eshell-prompt-extras esh-help enh-ruby-mode engine-mode elixir-mode elisp-slime-nav dracula-theme django-theme diff-hl define-word darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme company-statistics company-quickhelp company-go colorsarenice-theme color-theme-sanityinc-solarized clues-theme clean-aindent-mode chruby cherry-blossom-theme busybee-theme bundler buffer-move bubbleberry-theme bracketed-paste birds-of-paradise-plus-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
