@@ -19,6 +19,10 @@ plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
 # ==============================
 source $ZSH/oh-my-zsh.sh
 
+# Configs
+# ==============================
+export TERM=xterm-256color
+
 # Command line head / tail shortcuts
 # ==============================
 alias -g A='| ag'
@@ -27,11 +31,12 @@ alias -g T='| tail'
 alias -g G='| grep'
 alias -g L="| less"
 alias -g M="| most"
+alias -g P="2>&1| pygmentize -l pytb"
 alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
 alias -g NE="2> /dev/null"
+alias -g NGT="--ignore '*_test.go'"
 alias -g NUL="> /dev/null 2>&1"
-alias -g P="2>&1| pygmentize -l pytb"
 
 # 1 Char Alias
 # ==============================

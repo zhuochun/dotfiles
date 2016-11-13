@@ -19,11 +19,13 @@ set macligatures             " Show ligatures with supported fonts (MacVim GUI)
 "   - https://be5invis.github.io/Iosevka
 " set guifont=Inconsolata-g\ for\ Powerline:h14
 " set guifont=InputMonoNarrow\ Light:h13
-set guifont=Iosevka\ Light:h13
+" set guifont=Iosevka\ Light:h13
 " set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
-" set guifont=Fira\ Code\ Retina:h13
+" set guifont=Office\ Code\ Pro\ Light:h12
+" set guifont=Fira\ Code\ Light:h12
 " set guifont=Hasklig\ Light:h13
+set guifont=Roboto\ Mono\ for\ Powerline:h11
 " }}
 
 " GUI colorschems {{
@@ -34,6 +36,7 @@ set guifont=Iosevka\ Light:h13
 " colorscheme gruvbox
 " colorscheme hybrid
 " colorscheme one
+" colorscheme tender
 colorscheme two-firewatch
 " colorscheme yowish
 " }}
@@ -52,7 +55,7 @@ endfunction
 command! MonitorMode call s:MonitorMode()
 function! s:MonitorMode()
   set lines=999 columns=999
-  set guifont=Inconsolata-g\ for\ Powerline:h14
+  set guifont=Iosevka\ Light:h14
 endfunction
 
 command! PresentationMode call s:PresentationMode()

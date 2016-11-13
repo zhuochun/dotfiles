@@ -273,8 +273,8 @@ nmap <D-S-down>  3<C-W>-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Use 256 Term colors {{{
-if !has('gui_running')
-  set t_Co=256
+if has("termguicolors") && !has('gui_running')
+  set termguicolors
 endif
 " }}}
 
