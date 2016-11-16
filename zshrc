@@ -11,9 +11,9 @@ ZSH_THEME="pure"
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
-         git git-extras gitignore golang jsontools k mix node npm rails rake
-         rbenv redis-cli rsync ruby themes tmux vagrant zsh-syntax-highlighting
-         zsh-autosuggestions)
+    git git-extras gitignore golang jsontools k mix node npm rails rake
+    rbenv redis-cli rsync ruby themes tmux vagrant zsh-syntax-highlighting
+    zsh-autosuggestions)
 
 # Load oh-my-zsh
 # ==============================
@@ -100,7 +100,15 @@ alias reload="exec $SHELL -l"
 # Function Helpers
 # ==============================
 function ywd {
-  pwd | tr -d "\r\n" | pbcopy
+    pwd | tr -d "\r\n" | pbcopy
+}
+
+# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
+# the `.git` directory, listing directories first. The output gets piped into
+# `less` with options to preserve color and line numbers, unless the output is
+# small enough for one screen.
+function tre() {
+    tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
 # Fzf https://github.com/junegunn/fzf
