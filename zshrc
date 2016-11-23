@@ -61,6 +61,8 @@ alias br="bin/rake"
 # Vim Alias
 alias ee="vim"
 alias vi="nvim"
+# Tmux
+alias tm=tmux
 # Git
 alias gm="git-imerge"
 alias gv="nvim -c MagitOnly"
