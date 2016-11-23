@@ -77,8 +77,11 @@ def go_test(path, options = "")
   IO.popen(cmd) do |io|
     while line = io.gets
       # shorten and highlight path in line
-      shorten_regex = /#{Regexp.escape(PROJECT_ROOT)}([\w\/]*)/
-      line = line.gsub(shorten_regex, '.\1'.yellow)
+      line = line.gsub(File.join(GO_PATH_SRC, PROJECT_ROOT), '.'.yellow)
+      line = line.gsub(File.join(GO_PATH_SRC, File.split(PROJECT_ROOT)[0]), '..'.yellow)
+      # shorten project path
+      line = line.gsub(PROJECT_ROOT, '.'.yellow)
+      line = line.gsub(File.split(PROJECT_ROOT)[0], '..'.yellow)
       # replace head indication
       line = line.gsub(/^ok\b/, 'ok'.green.bold)
       line = line.gsub(/^FAIL\b/, 'FAIL'.light_yellow.on_red.bold)
@@ -211,6 +214,14 @@ loop do
 
   when 'covreport', 'report', 'rpt'
     `go tool cover -html=coverage.out` # open coverage report
+
+  when 'halt', 'pause'
+    listener.pause
+    LOG.info "File watcher paused: #{listener.paused?}"
+
+  when 'unhalt', 'go'
+    listener.unpause
+    LOG.info "File watcher unpaused: #{!listener.paused?}"
 
   when 'r', 'refresh', 'reload'
     cached_packages = {}
