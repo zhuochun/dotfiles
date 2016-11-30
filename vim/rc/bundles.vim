@@ -56,7 +56,7 @@ NeoBundleLazy 'schickling/vim-bufonly', {
 
 " NrrwRgn {{{
 NeoBundleLazy 'chrisbra/NrrwRgn', {
-      \   'autoload' : { 'commands' : ['NarrowRegion', 'NRPrepare', 'NRMulti'], },
+      \   'autoload' : { 'commands' : ['NarrowRegion', 'NRPrepare', 'NRMulti'] },
       \ }
 " }}}
 
@@ -183,15 +183,15 @@ NeoBundle 'LeafCage/yankround.vim', {
 
 " mattn packages {{{
 " Web API plugin for other plugins
-NeoBundle 'mattn/webapi-vim'
+NeoBundleLazy 'mattn/webapi-vim'
 
 " GitHub gist in vim {{
 NeoBundleLazy 'mattn/gist-vim', {
-      \   'depends'  : ['mattn/webapi-vim'],
+      \   'depends'  : ['mattn/webapi-vim', 'mattn/unite-gist'],
       \   'autoload' : {'commands': ['Gist']},
       \ }
 
-NeoBundle 'mattn/unite-gist', {
+NeoBundleLazy 'mattn/unite-gist', {
       \   'depends' : ['mattn/gist-vim', 'Shougo/unite.vim'],
       \ }
 " }}
@@ -232,7 +232,9 @@ NeoBundleLazy 'osyo-manga/vim-brightest', {
 " }}}
 
 " Syntastic {{{
-NeoBundle 'scrooloose/syntastic'
+NeoBundleLazy 'vim-syntastic/syntastic', {
+      \   'autoload' : { 'focus' : 1 },
+      \ }
 " }}}
 
 " NERDTree {{{
@@ -287,29 +289,34 @@ NeoBundle 'Shougo/junkfile.vim', {
       \   'depends' : ['Shougo/unite.vim'],
       \ }
 
-NeoBundle 'Shougo/unite-session', {
+NeoBundleLazy 'Shougo/unite-session', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': { 'mappings': ['UniteSessionSave', 'UniteSessionLoad'] },
+      \   'autoload': {'mappings': ['UniteSessionSave', 'UniteSessionLoad']},
       \ }
 
-NeoBundle 'kopischke/unite-spell-suggest', {
+NeoBundleLazy 'kopischke/unite-spell-suggest', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {'autoload':{'filetypes': ['markdown']}},
       \ }
 
-NeoBundle 'ujihisa/unite-colorscheme', {
+NeoBundleLazy 'ujihisa/unite-colorscheme', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {'insert': 1},
       \ }
 
-NeoBundle 'osyo-manga/unite-quickfix', {
+NeoBundleLazy 'osyo-manga/unite-quickfix', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {'insert': 1},
       \ }
 
-NeoBundle 'tacroe/unite-mark', {
+NeoBundleLazy 'tacroe/unite-mark', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {'insert': 1},
       \ }
 
-NeoBundle 'tsukkee/unite-tag', {
+NeoBundleLazy 'tsukkee/unite-tag', {
       \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
+      \   'autoload': {'insert': 1},
       \ }
 
 NeoBundle 'moznion/unite-git-conflict.vim', {
@@ -535,14 +542,13 @@ NeoBundle 'Yggdroot/indentLine'
 " Text Objects {{{
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-entire'             " ae | ie
-NeoBundle 'kana/vim-textobj-line'               " al | il
-NeoBundle 'kana/vim-textobj-syntax'             " ay | iy
+NeoBundleLazy 'kana/vim-textobj-line'           " al | il
+NeoBundleLazy 'kana/vim-textobj-syntax'         " ay | iy
 NeoBundle 'kana/vim-textobj-indent'             " ai | ii
 NeoBundle 'kana/vim-textobj-lastpat'            " a/ | i/
-NeoBundle 'idbrii/textobj-word-column.vim'      " ac | ic
 NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
-NeoBundle 'nelstrom/vim-textobj-rubyblock'      " ar | ir
-NeoBundle 'haya14busa/vim-textobj-number'       " an | in
+NeoBundleLazy 'mattn/vim-textobj-url', {'autoload':{'filetypes': ['markdown']}}                " au | iu
+NeoBundleLazy 'nelstrom/vim-textobj-rubyblock', {'autoload': {'filetypes': ['ruby', 'eruby']}} " ar | ir
 " }}}
 
 " Writing {{{
@@ -584,7 +590,7 @@ NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " JavaScript/CoffeeScript {{{
 NeoBundle 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
 NeoBundle 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundle 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
@@ -658,7 +664,7 @@ NeoBundleLazy 'kannokanno/previm', {
 
 " Git {{{
 NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-git'
+NeoBundleLazy 'tpope/vim-git', {'autoload': {'filetypes': 'git'}}
 " <CR> Jump to the revision under the cursor.
 " o    Jump to the revision under the cursor in a new split.
 " S    Jump to the revision under the cursor in a new
@@ -686,16 +692,16 @@ NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
 " Colorschemes {{{
-NeoBundle 'chriskempson/base16-vim'
+NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundle 'dracula/vim'
-NeoBundle 'jacoborus/tender'
-NeoBundle 'KabbAmine/yowish.vim'
-NeoBundle 'kristijanhusak/vim-hybrid-material'
+NeoBundleLazy 'jacoborus/tender'
+NeoBundleLazy 'KabbAmine/yowish.vim'
+NeoBundleLazy 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
-NeoBundle 'romainl/flattened'
+NeoBundleLazy 'romainl/flattened'
 NeoBundle 'tyrannicaltoucan/vim-quantum'
 NeoBundle 'w0ng/vim-hybrid'
 " }}}
