@@ -17,6 +17,7 @@ go get -v -u github.com/newhook/go-symbols
 go get -v -u github.com/nsf/gocode
 go get -v -u github.com/rogpeppe/godef
 go get -v -u github.com/tpng/gopkgs
+go get -v -u github.com/y0ssar1an/q
 go get -v -u github.com/zmb3/gogetdoc
 
 go get -v -u golang.org/x/tools/cmd/goimports

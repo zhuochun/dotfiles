@@ -4,3 +4,4 @@
 
 gem install listen
 gem install colorize
+gem install mysql2
