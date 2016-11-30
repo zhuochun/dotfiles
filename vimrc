@@ -282,7 +282,7 @@ endif
 set colorcolumn=119
 set background=dark
 " Colorscheme
-colorscheme jellybeans
+colorscheme one
 " }}}
 
 " Styles {{{

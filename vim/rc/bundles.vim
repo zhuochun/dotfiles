@@ -691,6 +691,11 @@ NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 " }}}
 
+" Termimal (Tmux) {{{
+NeoBundle 'christoomey/vim-tmux-navigator', {'terminal': 1}
+NeoBundle 'sjl/vitality.vim', {'terminal': 1}
+" }}}
+
 " Colorschemes {{{
 NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundle 'dracula/vim'

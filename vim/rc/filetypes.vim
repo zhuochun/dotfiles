@@ -205,7 +205,7 @@ function! s:GoDef()
   let b:airline_whitespace_disabled = 1
 
   " Trigger semantic highlight before write
-  if has("gui") && exists("SemanticHighlight")
+  if (has("gui") || has("termguicolors")) && exists("SemanticHighlight")
     autocmd! BufWritePre *.go :SemanticHighlight
   endif
 
