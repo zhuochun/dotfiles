@@ -98,6 +98,9 @@ alias magit="nvim -c MagitOnly"
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
+# https://github.com/y0ssar1an/q
+alias qq="$GOPATH/src/github.com/y0ssar1an/q/q.sh"
+alias rmqq="rm $TMPDIR/q"
 
 # Function Helpers
 # ==============================
