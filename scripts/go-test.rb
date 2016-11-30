@@ -13,6 +13,8 @@
 #   gem install colorize
 # - https://github.com/tonsky/AnyBar (optional)
 #   brew cask install anybar
+# - https://github.com/y0ssar1an/q (optional)
+#   go get -u github.com/y0ssar1an/q
 #
 require "logger"
 require "socket"
@@ -97,8 +99,8 @@ def go_test(path, options = "")
              when /coverage: (\d+.\d+)\%/
                cov = $1.to_f
                word = "coverage: #{cov}\%".bold
-               word = if cov < 60.0 then word.red
-                      elsif cov < 90.0 then word.yellow
+               word = if cov < 70.0 then word.red
+                      elsif cov < 85.0 then word.yellow
                       else word.green end
                line.gsub(/coverage: \d+.\d+\%/, word)
              else
@@ -208,18 +210,19 @@ loop do
       LOG.info "No package is identified"
     end
 
-  when 'covall', 'cov .', 'c.'
+  when 'c.', 'cov .', 'covall'
     # run coverage test of all packages
     go_test(File.join(PROJECT_ROOT, "..."), "-cover")
 
-  when 'covreport', 'report', 'rpt'
-    `go tool cover -html=coverage.out` # open coverage report
+  when 'rpt', 'report', 'covreport'
+    # open coverage report
+    `go tool cover -html=coverage.out`
 
   when 'halt', 'pause'
     listener.pause
     LOG.info "File watcher paused: #{listener.paused?}"
 
-  when 'unhalt', 'go'
+  when 'unhalt', 'unpause'
     listener.unpause
     LOG.info "File watcher unpaused: #{!listener.paused?}"
 
@@ -237,9 +240,12 @@ loop do
 
     #{"test [package]".green.bold}: run all tests in the package or in the whole project
     #{"testfunc file:lineno".green.bold}: run nearest test near the line in file
+    #{"race [package]".green.bold}: run race test in the package or in the whole project
     #{"cov [package]".green.bold}: run coverage test on the package or last triggered packages
     #{"covall".green.bold}: run coverage tests for all packages
     #{"report".green.bold}: open the coverage report in browser
+    #{"halt".green.bold}: pause file listener temporary
+    #{"unhalt".green.bold}: unpause file listener
     #{"refresh".green.bold}: refresh the cached packages
     #{"quit".green.bold}: exit script
     EOF
