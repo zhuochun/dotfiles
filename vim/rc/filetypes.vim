@@ -192,6 +192,7 @@ function! s:PythonDef()
   " Correct typos
   iab <buffer> true       True
   iab <buffer> false      False
+  iab <buffer> eif        elif
 endfunction
 " }}}
 

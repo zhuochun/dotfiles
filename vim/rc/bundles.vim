@@ -649,6 +649,11 @@ NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
 NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
 
+" Python {{{
+NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
+NeoBundleLazy 'tweekmonster/braceless.vim', {'autoload': {'filetypes': ['python']}}
+" }}}
+
 " Markdown {{{
 NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': ['markdown']}}
 " Highlight code in Markdown
@@ -689,6 +694,7 @@ NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
+NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
 " }}}
 
 " Termimal (Tmux) {{{
@@ -699,7 +705,8 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 " Colorschemes {{{
 NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundle 'dracula/vim'
-NeoBundleLazy 'jacoborus/tender'
+NeoBundle 'dikiaap/minimalist'
+NeoBundle 'jacoborus/tender'
 NeoBundleLazy 'KabbAmine/yowish.vim'
 NeoBundleLazy 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
