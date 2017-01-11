@@ -4,6 +4,7 @@
 # Somehow vim-go :GoInstallBinaries doesn't work for me
 # https://github.com/fatih/vim-go/blob/master/plugin/go.vim#L9
 
+go get -v -u github.com/FiloSottile/gorebuild
 go get -v -u github.com/alecthomas/gometalinter
 go get -v -u github.com/cweill/gotests/...
 go get -v -u github.com/fatih/motion
@@ -17,6 +18,7 @@ go get -v -u github.com/newhook/go-symbols
 go get -v -u github.com/nsf/gocode
 go get -v -u github.com/rogpeppe/godef
 go get -v -u github.com/tpng/gopkgs
+go get -v -u github.com/vektra/mockery/.../
 go get -v -u github.com/y0ssar1an/q
 go get -v -u github.com/zmb3/gogetdoc
 
