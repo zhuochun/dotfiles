@@ -1,6 +1,6 @@
 # Environment Configurations
 # ==============================
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
 
 # Prefer US English and use UTF-8
 export LANG=en_US.UTF-8

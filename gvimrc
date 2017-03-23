@@ -23,9 +23,9 @@ set macligatures             " Show ligatures with supported fonts (MacVim GUI)
 " set guifont=M+\ 1m\ for\ Powerline:h14
 " set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
 " set guifont=Office\ Code\ Pro\ Light:h12
-" set guifont=Fira\ Code\ Light:h12
-" set guifont=Hasklig\ Light:h13
-set guifont=Roboto\ Mono\ for\ Powerline:h11
+" set guifont=Fira\ Code:h13
+set guifont=Hasklig:h13
+" set guifont=Roboto\ Mono\ for\ Powerline:h13
 " }}
 
 " GUI colorschems {{
@@ -39,6 +39,7 @@ set guifont=Roboto\ Mono\ for\ Powerline:h11
 " colorscheme tender
 colorscheme two-firewatch
 " colorscheme yowish
+" colorscheme quantum
 " }}
 " }}}
 
