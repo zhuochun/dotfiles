@@ -39,7 +39,7 @@ NeoBundleLazy 'arecarn/crunch.vim', {
 " }}}
 
 " CamelCaseMotion in W, B, E {{{
-NeoBundle 'bkad/CamelCaseMotion', {
+NeoBundleLazy 'bkad/CamelCaseMotion', {
       \   'autoload' : { 'mappings' : ['<Plug>CamelCaseMotion'] },
       \ }
 " }}}
@@ -254,7 +254,7 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
       \ }
 
 " Async execution library {{
-NeoBundle 'Shougo/vimproc.vim', {
+NeoBundleLazy 'Shougo/vimproc.vim', {
       \   'build' : {
       \     'windows' : 'tools\\update-dll-mingw',
       \     'cygwin' : 'make -f make_cygwin.mak',
@@ -319,8 +319,9 @@ NeoBundleLazy 'tsukkee/unite-tag', {
       \   'autoload': {'insert': 1},
       \ }
 
-NeoBundle 'moznion/unite-git-conflict.vim', {
+NeoBundleLazy 'moznion/unite-git-conflict.vim', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': { 'explorer' : 1 }
       \ }
 " }}
 
@@ -336,7 +337,7 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 
 " NeoComplete {{
 NeoBundleLazy 'Shougo/neocomplete.vim', {
-      \   'depends'  : ['Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
+      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
       \   'autoload' : {'insert': 1},
       \   'disabled' : (!has('lua') || has('nvim'))
       \ }
@@ -368,7 +369,7 @@ NeoBundleFetch 'osyo-manga/vim-monster', {
 
 " NeoSnippet {{
 NeoBundleLazy 'Shougo/neosnippet.vim', {
-      \   'depends'  : ['Shougo/context_filetype.vim'],
+      \   'depends'  : ['Shougo/neocomplete.vim', 'Shougo/context_filetype.vim'],
       \   'autoload' : {
       \     'insert': 1,
       \     'filetypes' : ['snippet', 'neosnippet'],
@@ -380,11 +381,7 @@ NeoBundleFetch 'zhuochun/vim-dicts'
 " }}
 " }}}
 
-" rhysd bundles {{{
-NeoBundleLazy 'rhysd/accelerated-jk', {
-      \   'autoload' : { 'mappings' : ['<Plug>(accelerated_'] }
-      \ }
-
+" Git conflict marker {{{
 " nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
 " nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
 " nmap <buffer>ct <Plug>(conflict-marker-themselves)
@@ -438,7 +435,9 @@ NeoBundleLazy 'tpope/vim-characterize', {
       \   'autoload' : {'mappings' : ['ga']}
       \ }
 
-NeoBundle 'tpope/vim-dispatch'
+NeoBundleLazy 'tpope/vim-dispatch', {
+      \   'autoload' : { 'commands' : ['Dispatch'] },
+      \ }
 
 NeoBundleLazy 'tpope/vim-eunuch', {
       \   'autoload' : {
@@ -527,7 +526,7 @@ NeoBundleFetch 'vim-scripts/dbext.vim'
 
 " Airline bundles {{{
 NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundleLazy 'vim-airline/vim-airline-themes'
 NeoBundle 'bling/vim-bufferline'
 " }}}
 
@@ -541,12 +540,11 @@ NeoBundle 'Yggdroot/indentLine'
 
 " Text Objects {{{
 NeoBundle 'kana/vim-textobj-user'
-NeoBundle 'kana/vim-textobj-entire'             " ae | ie
-NeoBundleLazy 'kana/vim-textobj-line'           " al | il
-NeoBundleLazy 'kana/vim-textobj-syntax'         " ay | iy
-NeoBundle 'kana/vim-textobj-indent'             " ai | ii
-NeoBundle 'kana/vim-textobj-lastpat'            " a/ | i/
-NeoBundle 'Julian/vim-textobj-variable-segment' " av | iv
+NeoBundleLazy 'kana/vim-textobj-entire', {'autoload':{'insert': 1, 'focus': 1}}                " ae | ie
+NeoBundleLazy 'kana/vim-textobj-indent', {'autoload':{'insert': 1, 'focus': 1}}                " ai | ii
+NeoBundleLazy 'kana/vim-textobj-lastpat', {'autoload':{'insert': 1, 'focus': 1}}               " a/ | i/
+NeoBundleLazy 'haya14busa/vim-textobj-number', {'autoload':{'insert': 1, 'focus': 1}}          " an | in
+NeoBundleLazy 'Julian/vim-textobj-variable-segment', {'autoload':{'insert': 1, 'focus': 1}}    " av | iv
 NeoBundleLazy 'mattn/vim-textobj-url', {'autoload':{'filetypes': ['markdown']}}                " au | iu
 NeoBundleLazy 'nelstrom/vim-textobj-rubyblock', {'autoload': {'filetypes': ['ruby', 'eruby']}} " ar | ir
 " }}}
@@ -570,6 +568,7 @@ NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eru
 " Template Engines {{{
 NeoBundleLazy 'digitaltoad/vim-jade'
 NeoBundleLazy 'nono/vim-handlebars'
+NeoBundleLazy 'posva/vim-vue'
 NeoBundleLazy 'slim-template/vim-slim'
 NeoBundleLazy 'tpope/vim-haml'
 NeoBundleLazy 'tpope/vim-liquid'
@@ -578,6 +577,7 @@ NeoBundleLazy 'tpope/vim-liquid'
 " CSS {{{
 NeoBundleLazy 'ap/vim-css-color', {'autoload': {'filetypes': ['css', 'sass', 'scss', 'less']}}
 NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload': {'filetypes': ['css', 'sass', 'scss', 'less']}}
+NeoBundleLazy 'othree/csscomplete.vim', {'autoload': {'filetypes': ['css', 'sass', 'scss', 'less']}}
 NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': ['sass', 'scss']}}
 NeoBundleLazy 'groenewege/vim-less', {'autoload': {'filetypes': 'less'}}
 " }}}
@@ -594,8 +594,8 @@ NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coff
 NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleLazy 'marijnh/tern_for_vim', {
+NeoBundleLazy 'MaxMEllon/vim-jsx-pretty', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleFetch 'marijnh/tern_for_vim', {
       \   'autoload': { 'filetypes': ['javascript'] },
       \   'build': {
       \     'windows': 'npm install',
@@ -608,7 +608,7 @@ NeoBundleLazy 'marijnh/tern_for_vim', {
 
 " Ruby/Rails {{{
 NeoBundle 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
-NeoBundle 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist']}
+NeoBundleLazy 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist'], 'autoload': {'filetypes': ['ruby', 'eruby']}}
 " Ruby ecosystem
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-bundler' " slows down NeoComplete
@@ -642,7 +642,7 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 
 " Go {{{
 NeoBundle 'fatih/vim-go', {
-      \   'depends': ['tpope/vim-dispatch', 'Shougo/vimproc.vim'],
+      \   'depends': ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
       \   'autoload': {'filetypes': ['go']},
       \ }
 NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
@@ -690,11 +690,13 @@ NeoBundleLazy 'junegunn/gv.vim', {
 " }}}
 
 " Others {{{
+NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
+NeoBundleLazy 'tbastos/vim-lua', {'autoload': {'filetypes': 'lua'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
-NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
+NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
 " }}}
 
 " Termimal (Tmux) {{{
@@ -703,18 +705,19 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 " }}}
 
 " Colorschemes {{{
+NeoBundle 'alessandroyorba/monrovia'
 NeoBundleLazy 'chriskempson/base16-vim'
-NeoBundle 'dracula/vim'
-NeoBundle 'dikiaap/minimalist'
-NeoBundle 'jacoborus/tender'
-NeoBundleLazy 'KabbAmine/yowish.vim'
+NeoBundleLazy 'dracula/vim'
+NeoBundleLazy 'dikiaap/minimalist'
+NeoBundleLazy 'jacoborus/tender'
+NeoBundle 'KabbAmine/yowish.vim'
 NeoBundleLazy 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
 NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'rakr/vim-one'
+NeoBundleLazy 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
 NeoBundleLazy 'romainl/flattened'
-NeoBundle 'tyrannicaltoucan/vim-quantum'
+NeoBundleLazy 'tyrannicaltoucan/vim-quantum'
 NeoBundle 'w0ng/vim-hybrid'
 " }}}
 

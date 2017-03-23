@@ -230,7 +230,7 @@
   " <leader>F Format file
   nnoremap <leader>F gg=G''
   " <leader>ga Toggle alterative files
-  nnoremap <leader>ga :A<CR>
+  nnoremap <leader>ga :tab split<CR>
   " <leader>gg Toggle Goyo
   nnoremap <leader>gg :Goyo<CR>
   " <leader>go Toggle OverCommandLine

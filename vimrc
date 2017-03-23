@@ -282,7 +282,9 @@ endif
 set colorcolumn=119
 set background=dark
 " Colorscheme
-colorscheme one
+colorscheme two-firewatch
+" Airline theme
+let g:airline_theme='twofirewatch'
 " }}}
 
 " Styles {{{

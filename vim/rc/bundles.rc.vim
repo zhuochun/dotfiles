@@ -616,10 +616,6 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> <D-i> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
   " File switching using git (fast)
   nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
-  " Buffer switching
-  nnoremap <silent> <C-b> :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
-  " Tab switching
-  nnoremap <silent> <C-t> :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
 
   " Grep in current directory
   nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
@@ -803,13 +799,6 @@ if neobundle#tap('neocomplete.vim') "{{{
     let g:neocomplete#sources#buffer#max_keyword_width = 42
     let g:neocomplete#sources#buffer#disabled_pattern = '\.log\|\.log\.\|\.jax'
 
-    " Define dictionary
-    let g:neocomplete#sources#dictionary#dictionaries = {
-          \   'default' : '',
-          \   'ruby'    : $HOME.'/.vim/bundle/vim-dicts/dict/ruby.dict',
-          \   'coffee'  : $HOME.'/.vim/bundle/vim-dicts/dict/node.dict',
-          \ }
-
     " Appoints vim source call function when completes custom and customlist command
     let g:neocomplete#sources#vim#complete_functions = {
           \   'Unite' : 'unite#complete_source',
@@ -871,8 +860,8 @@ if neobundle#tap('neosnippet.vim') "{{{
     let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
     " Enable SnipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
-    " Enable complete done
-    let g:neosnippet#enable_complete_done = 1
+    " Enable complete func type
+    let g:neosnippet#enable_completed_snippet = 1
     " Tell Neosnippet about the other snippets
     let g:neosnippet#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
@@ -898,13 +887,6 @@ if neobundle#tap('neosnippet.vim') "{{{
   " Visual expand
   xmap <C-j> <Plug>(neosnippet_expand_target)
   xmap <D-j> <Plug>(neosnippet_expand_target)
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('accelerated-jk') "{{{
-  nmap j <Plug>(accelerated_jk_gj)
-  nmap k <Plug>(accelerated_jk_gk)
 
   call neobundle#untap()
 endif "}}}
@@ -1120,24 +1102,25 @@ if neobundle#tap('vim-go') "{{{
     let g:go_fmt_command = 'goimports'
     " Disable fmt command errors
     let g:go_fmt_fail_silently = 1
-    " Enable dispatch to execute :GoRun, :GoBuild and :GoGenerate
-    let g:go_dispatch_enabled = 1
-    " Test timeout of :GoTest
-    let g:go_test_timeout = '5s'
-    " Disable auto jump to first error
-    let g:go_jump_to_error = 0
     " Run GoMetaLinter on save
     let g:go_metalinter_autosave = 1
     let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint']
-    let g:go_metalinter_enabled = ['vet', 'errcheck', 'golint', 'interfacer']
+    " Disable auto jump to first error
+    let g:go_jump_to_error = 1
     " Reuse buffer when GoDef
     let g:go_def_reuse_buffer = 1
-    " Show type info (:GoInfo) for word under cursor automatically
-    let g:go_auto_type_info = 0
+    " Disable show :GoInfo for word under cursor automatically
+    let g:go_auto_type_info = 1
     " No auto template when create new file
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
     let g:go_snippet_case_type = "camelcase"
+    " No highlights commonly used library types
+    let g:go_highlight_extra_types = 1
+    " Highlights go:generate directives
+    let g:go_highlight_generate_tags = 1
+    " Echoes information about various Go commands
+    let g:go_echo_command_info = 1
   endfunction
 
   call neobundle#untap()
@@ -1164,6 +1147,15 @@ if neobundle#tap('vim-gitgutter') "{{{
   " nmap ]c         <Plug>GitGutterNextHunk
   " nmap <leader>hs <Plug>GitGutterStageHunk
   " nmap <leader>hr <Plug>GitGutterRevertHunk
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-tmux-navigator') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " disable tmux navigator when zooming the Vim pane
+    let g:tmux_navigator_disable_when_zoomed = 1
+  endfunction
 
   call neobundle#untap()
 endif "}}}
