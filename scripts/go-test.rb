@@ -153,14 +153,16 @@ loop do
   print "> ".blue.bold
 
   case $stdin.gets.chomp.strip.downcase
-  when /^t(\s+\w+)?$/, /^test(\s+\w+)?$/
+  when /^t(\s+\w+\.?)?$/, /^test(\s+\w+\.?)?$/
     # run all tests in package or in project
     input = $1 ? $1.strip : ""
+    # run in single directory package
+    dir = input.end_with?(".") ? (input.chop! && ".") : "..."
 
     if input.empty?
-      go_test(File.join(PROJECT_ROOT, "..."))
+      go_test(File.join(PROJECT_ROOT, dir))
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-v")
+      go_test(File.join(PROJECT_ROOT, pkg, dir), "-v")
     else
       LOG.info "No package is identified"
     end
@@ -186,31 +188,35 @@ loop do
       go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v")
     end
 
-  when /^race(\s+\w+)?$/
+  when /^race(\s+\w+\.?)?$/
     # run all tests in package or in project
     input = $1 ? $1.strip : ""
+    # run in single directory package
+    dir = input.end_with?(".") ? (input.chop! && ".") : "..."
 
     if input.empty?
-      go_test(File.join(PROJECT_ROOT, "..."), "-race")
+      go_test(File.join(PROJECT_ROOT, dir), "-race")
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-race")
+      go_test(File.join(PROJECT_ROOT, pkg, dir), "-race")
     else
       LOG.info "No package is identified"
     end
 
-  when /^c(\s+\w+)?$/, /^cov(\s+\w+)?$/
+  when /^c(\s+\w+\.?)?$/, /^cov(\s+\w+\.?)?$/
     # run coverage tests of package
     input = $1 ? $1.strip : ""
+    # run in single directory package
+    dir = input.end_with?(".") ? (input.chop! && ".") : "..."
 
     if input.empty?
-      go_test(File.join(last_dir, "..."), "-coverprofile=coverage.out") unless last_dir.empty?
+      go_test(File.join(last_dir, dir), "-coverprofile=coverage.out") unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg, "..."), "-coverprofile=coverage.out")
+      go_test(File.join(PROJECT_ROOT, pkg, dir), "-coverprofile=coverage.out")
     else
       LOG.info "No package is identified"
     end
 
-  when 'c.', 'cov .', 'covall'
+  when 'ca', 'covall'
     # run coverage test of all packages
     go_test(File.join(PROJECT_ROOT, "..."), "-cover")
 
@@ -219,12 +225,12 @@ loop do
     `go tool cover -html=coverage.out`
 
   when 'halt', 'pause'
-    listener.pause
-    LOG.info "File watcher paused: #{listener.paused?}"
+    listener.stop
+    LOG.info "File watcher paused: #{listener.paused?}, processing: #{listener.processing?}"
 
   when 'unhalt', 'unpause'
-    listener.unpause
-    LOG.info "File watcher unpaused: #{!listener.paused?}"
+    listener.start
+    LOG.info "File watcher paused: #{!listener.paused?}, processing: #{listener.processing?}"
 
   when 'r', 'refresh', 'reload'
     cached_packages = {}
