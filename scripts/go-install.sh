@@ -7,6 +7,7 @@
 go get -v -u github.com/FiloSottile/gorebuild
 go get -v -u github.com/alecthomas/gometalinter
 go get -v -u github.com/cweill/gotests/...
+go get -v -u github.com/fatih/gomodifytags
 go get -v -u github.com/fatih/motion
 go get -v -u github.com/golang/lint/golint
 go get -v -u github.com/josharian/impl

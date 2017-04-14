@@ -7,14 +7,17 @@
 #
 # Dependency:
 #
-# - https://github.com/guard/listen
 #   gem install listen
-# - https://github.com/fazibear/colorize
 #   gem install colorize
-# - https://github.com/tonsky/AnyBar (optional)
+#
+# - https://github.com/guard/listen
+# - https://github.com/fazibear/colorize
+#
+# Dependency (Optional):
+#
 #   brew cask install anybar
-# - https://github.com/y0ssar1an/q (optional)
-#   go get -u github.com/y0ssar1an/q
+#
+# - https://github.com/tonsky/AnyBar (optional)
 #
 require "logger"
 require "socket"
@@ -32,7 +35,7 @@ PROJECT_ROOT = Dir.pwd.gsub(GO_PATH_SRC, "")
 LOG.info("Listening: #{PROJECT_ROOT.bold}".blue)
 
 # Record the last changed directory
-last_dir = ""
+last_dir = PROJECT_ROOT
 # Cache all the packages
 cached_packages = {}
 
@@ -44,19 +47,32 @@ def anybar_notify(color)
 end
 
 def cache_packages(pkgs)
+  pkgs.clear
+
   Dir.glob("**/*_test.go") do |file|
     dir = File.dirname(file)
     pkg = File.split(dir).last
 
     pkgs[pkg] = dir
   end
+
+  true
 end
 
 def lookup_package(pkgs, name)
   return nil if name.nil? || name.empty?
 
-  found = pkgs.find do |pkg, dir|
-    pkg == name || pkg.start_with?(name)
+  found, refreshed = nil, false
+  loop do
+    found = pkgs.find do |pkg, dir|
+      pkg == name || pkg.start_with?(name)
+    end
+
+    if found || refreshed
+      break
+    else
+      refreshed = cache_packages(pkgs)
+    end
   end
 
   if found
@@ -153,21 +169,26 @@ loop do
   print "> ".blue.bold
 
   case $stdin.gets.chomp.strip.downcase
+
+  # run all tests in package or in project
   when /^t(\s+\w+\.?)?$/, /^test(\s+\w+\.?)?$/
-    # run all tests in package or in project
     input = $1 ? $1.strip : ""
     # run in single directory package
     dir = input.end_with?(".") ? (input.chop! && ".") : "..."
 
     if input.empty?
-      go_test(File.join(PROJECT_ROOT, dir))
+      go_test(File.join(last_dir, dir)) unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
       go_test(File.join(PROJECT_ROOT, pkg, dir), "-v")
     else
       LOG.info "No package is identified"
     end
 
-  # tf api/api_test.go:32
+  # run test of all packages
+  when 'ta', 'testall'
+    go_test(File.join(PROJECT_ROOT, dir))
+
+  # example tf api/api_test.go:32
   # go test github.com/test/data -run TestTest
   when /^tf\s+([\w\/\.]+_test.go):(\d+)?$/, /^testfunc\s+([\w\/\.]+_test.go):(\d+)?$/
     file = $1.strip
@@ -188,22 +209,22 @@ loop do
       go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v")
     end
 
-  when /^race(\s+\w+\.?)?$/
-    # run all tests in package or in project
+  # run all tests in package or in project
+  when /^r(\s+\w+\.?)?$/, /^race(\s+\w+\.?)?$/
     input = $1 ? $1.strip : ""
     # run in single directory package
     dir = input.end_with?(".") ? (input.chop! && ".") : "..."
 
     if input.empty?
-      go_test(File.join(PROJECT_ROOT, dir), "-race")
+      go_test(File.join(last_dir, dir), "-race") unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
       go_test(File.join(PROJECT_ROOT, pkg, dir), "-race")
     else
       LOG.info "No package is identified"
     end
 
+  # run coverage tests of package
   when /^c(\s+\w+\.?)?$/, /^cov(\s+\w+\.?)?$/
-    # run coverage tests of package
     input = $1 ? $1.strip : ""
     # run in single directory package
     dir = input.end_with?(".") ? (input.chop! && ".") : "..."
@@ -216,13 +237,18 @@ loop do
       LOG.info "No package is identified"
     end
 
+  # run coverage test of all packages
   when 'ca', 'covall'
-    # run coverage test of all packages
     go_test(File.join(PROJECT_ROOT, "..."), "-cover")
 
+  # open coverage report
   when 'rpt', 'report', 'covreport'
-    # open coverage report
     `go tool cover -html=coverage.out`
+
+  # refresh and list the cached packages with tests
+  when 'r', 'l', 'refresh', 'reload'
+    cache_packages(cached_packages)
+    LOG.info "#{cached_packages.size} PACKAGES WITH TESTS:\n#{cached_packages.values.map(&:yellow).join("\n")}"
 
   when 'halt', 'pause'
     listener.stop
@@ -232,11 +258,6 @@ loop do
     listener.start
     LOG.info "File watcher paused: #{!listener.paused?}, processing: #{listener.processing?}"
 
-  when 'r', 'refresh', 'reload'
-    cached_packages = {}
-    cache_packages(cached_packages)
-    LOG.info "#{cached_packages.size} PACKAGES WITH TESTS:\n#{cached_packages.values.map(&:yellow).join("\n")}"
-
   when 'q', 'quit', 'exit'
     exit(0)
 
@@ -244,15 +265,16 @@ loop do
     LOG.info <<-EOF
     #{"COMMANDS:".blue.bold}
 
-    #{"test [package]".green.bold}: run all tests in the package or in the whole project
+    #{"test [package]".green.bold}: run all tests in the package or last triggered packages
+    #{"testall".green.bold}: run all tests in the whole project
     #{"testfunc file:lineno".green.bold}: run nearest test near the line in file
-    #{"race [package]".green.bold}: run race test in the package or in the whole project
+    #{"race [package]".green.bold}: run race test in the package or last triggered packages
     #{"cov [package]".green.bold}: run coverage test on the package or last triggered packages
     #{"covall".green.bold}: run coverage tests for all packages
     #{"report".green.bold}: open the coverage report in browser
+    #{"refresh".green.bold}: refresh and list the cached packages with tests
     #{"halt".green.bold}: pause file listener temporary
     #{"unhalt".green.bold}: unpause file listener
-    #{"refresh".green.bold}: refresh the cached packages
     #{"quit".green.bold}: exit script
     EOF
   end
