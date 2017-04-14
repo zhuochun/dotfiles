@@ -1110,7 +1110,7 @@ if neobundle#tap('vim-go') "{{{
     " Reuse buffer when GoDef
     let g:go_def_reuse_buffer = 1
     " Disable show :GoInfo for word under cursor automatically
-    let g:go_auto_type_info = 1
+    let g:go_auto_type_info = 0
     " No auto template when create new file
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
