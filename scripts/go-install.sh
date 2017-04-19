@@ -24,7 +24,9 @@ go get -v -u github.com/y0ssar1an/q
 go get -v -u github.com/zmb3/gogetdoc
 
 go get -v -u golang.org/x/tools/cmd/goimports
+go get -v -u golang.org/x/tools/cmd/gomvpkg
 go get -v -u golang.org/x/tools/cmd/gorename
 go get -v -u golang.org/x/tools/cmd/guru
 
+go get -v -u honnef.co/go/tools/cmd/staticcheck
 go get -v -u sourcegraph.com/sqs/goreturns

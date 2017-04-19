@@ -186,7 +186,7 @@ loop do
 
   # run test of all packages
   when 'ta', 'testall'
-    go_test(File.join(PROJECT_ROOT, dir))
+    go_test(File.join(PROJECT_ROOT, "..."))
 
   # example tf api/api_test.go:32
   # go test github.com/test/data -run TestTest

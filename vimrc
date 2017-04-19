@@ -290,8 +290,8 @@ let g:airline_theme='twofirewatch'
 " Styles {{{
 set shortmess=atI            " No welcome screen in gVim
 set ruler                    " Show the cursor position all the time
-set number                   " Display current line number
-set relativenumber           " Show line number relatively
+"set number                  " Display current line number
+"set relativenumber          " Show line number relatively
 set laststatus=2             " Display status bar in 2 lines
 set showcmd                  " Display incomplete commands
 set noshowmode               " No show current mode
