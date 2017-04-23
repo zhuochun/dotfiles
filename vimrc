@@ -229,7 +229,7 @@ set undoreload=1000
 " }}}
 
 " Tabs and windows {{{
-" Switch between tab 1 ~ 9
+" Switch between tab 1 ~ 9 {{
 for i in range(1, 9)
   exec "nnoremap <D-".i."> ".i."gt"
 endfor
@@ -241,6 +241,15 @@ nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
 nnoremap <silent> <D-t> :<C-u>tab split<CR>
 nnoremap <silent> <D-T> :<C-u>tabnew<CR>
 nnoremap <silent> <D-w> :<C-u>tabclose<CR>
+
+" Switch between tab 1 ~ 9 (in Terminal) {{
+for i in range(1, 9)
+  exec "nnoremap g".i." ".i."gt"
+endfor
+
+" Open/close tab shortcuts
+nnoremap <silent> g0 :<C-u>tab split<CR>
+" }}
 
 " Splitting defaults
 set splitright

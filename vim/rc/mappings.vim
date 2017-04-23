@@ -98,7 +98,8 @@
   nnoremap gm M
   nnoremap gl L
   " <gq>      Format text in motion
-  " <go>*     Unite mappings
+  " <go>1-9   Switch between tabs
+  " <go>a-Z   Unite mappings
   " <G>       Go to end of file
   " *<G>      Go to specific line number
   " <h>       Left
@@ -229,8 +230,6 @@
   nnoremap <leader>f gg=G''
   " <leader>F Format file
   nnoremap <leader>F gg=G''
-  " <leader>ga Toggle alterative files
-  nnoremap <leader>ga :tab split<CR>
   " <leader>gg Toggle Goyo
   nnoremap <leader>gg :Goyo<CR>
   " <leader>go Toggle OverCommandLine

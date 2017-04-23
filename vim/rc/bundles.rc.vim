@@ -646,6 +646,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   nnoremap <silent> gou :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
   nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag/include -start-insert<CR>
+  nnoremap <silent> goT :<C-u>UniteWithCursorWord -buffer-name=tags tag/include -start-insert<CR>
   nnoremap <silent> goj :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
   nnoremap <silent> goJ :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
   nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
@@ -1104,7 +1105,7 @@ if neobundle#tap('vim-go') "{{{
     let g:go_fmt_fail_silently = 1
     " Run GoMetaLinter on save
     let g:go_metalinter_autosave = 1
-    let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint']
+    let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint', 'ineffassign']
     " Disable auto jump to first error
     let g:go_jump_to_error = 1
     " Reuse buffer when GoDef
