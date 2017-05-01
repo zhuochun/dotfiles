@@ -8,3 +8,5 @@ gem install pretty_backtrace
 gem install listen
 gem install colorize
 gem install mysql2
+
+gem install pdf-reader
