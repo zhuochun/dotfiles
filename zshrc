@@ -86,6 +86,13 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 # Top 10 history
 alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 
+# Personal scripts https://github.com/zhuochun/dotfiles
+# ==============================
+# Watch go package directory and trigger tests
+alias wgo="~/dotfiles/scripts/go-test.rb"
+# Rename PDF based on content
+alias pdf="~/dotfiles/scripts/pdf-rename.rb"
+
 # Other Alias
 # ==============================
 # Edit zshrc and vimrc

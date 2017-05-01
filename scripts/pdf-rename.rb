@@ -3,7 +3,7 @@
 
 # Try to rename by read the PDF content
 #
-#   ./pdf-rename.rb file.pdf -Y
+#   ./pdf-rename.rb file.pdf
 #
 #   find ~/Downloads | ag "\d+.pdf" H | head -n 2 | YES=1 xargs -n 1 ./pdf-rename.rb
 #
