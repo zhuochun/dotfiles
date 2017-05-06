@@ -809,8 +809,15 @@ if neobundle#tap('neocomplete.vim') "{{{
           \   'VimShell' : 'vimshell#complete',
           \ }
 
+    " Set to use omnifunc
+    if !exists('g:neocomplete#sources#omni#functions')
+      let g:neocomplete#sources#omni#functions = {}
+    endif
+    " Per filetype omnifunc
+    let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
+
     " Fallbacks on complete keywords by neocomplete and omnifunc
-    let g:neocomplete#fallback_mappings = ["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
+    " let g:neocomplete#fallback_mappings = ['\<C-x>\<C-o>', '\<C-x>\<C-n>']
   endfunction
 
   " Plugin key-mappings
