@@ -3,9 +3,9 @@
 
 # Try to rename by read the PDF content
 #
-#   ./pdf-rename.rb file.pdf
+#   ~/dotfiles/scripts/pdf-rename.rb file.pdf
 #
-#   find ~/Downloads | ag "\d+.pdf" H | head -n 2 | YES=1 xargs -n 1 ./pdf-rename.rb
+#   find ~/Downloads | ag "\d+.pdf" | head -n 2 | YES=1 xargs -n 1 ~/dotfiles/scripts/pdf-rename.rb
 #
 # Dependency: gem install pdf-reader
 #
@@ -16,10 +16,10 @@ def agree_or_alternative(candidate, lines)
   return candidate if ENV["YES"].to_s == "1"
 
   if candidate.nil?
-    STDOUT << "Enter (line,line): ".yellow
+    STDOUT << "Enter: (LINE,LINE) "
   else
-    STDOUT << "Use \"#{candidate.red.bold}\"?\n"
-    STDOUT << "Yes or Enter (line,line): ".yellow
+    STDOUT << "Use \"#{candidate.yellow.bold}\"?\n"
+    STDOUT << "Enter: (Y/N | LINE,LINE) "
   end
 
   input = STDIN.gets.chomp
@@ -59,7 +59,6 @@ lines = begin
             .split("\n")
             .map { |line| line.strip.gsub(/\s+/, " ") }
             .select { |line| !line.empty? }
-            .take(10)
         rescue Exception => e
           STDERR << "Error: Text not found, #{e}"
           exit 1
@@ -70,28 +69,41 @@ if lines.empty?
   exit 3
 end
 
-STDOUT << "Lines:\n".blue
-lines.each_with_index do |line, idx|
-  STDOUT << "  [#{idx}] #{line}\n"
-end
-
-# simple guess by looking at the first 10 lines:
+# Make a simple guess by looking at the first 10 lines:
 #
 # - Use the first sentence with >= 3 words, and start with a capitalized char
 # - Otherwise, let the user to choose from line, or enter a new name
 #
+lines = lines.take(10)
+
 candidate_idx = lines.find_index do |line|
   words = line.split(" ")
-  return false if words.length < 3
+  next false if words.length < 3
 
   word = words[0].gsub(/[^a-zA-Z]/, "")
+  next false if word.empty? # nums (e.g. year)
+
   word[0] == word[0].upcase
+end || 0
+
+candidate = lines[candidate_idx].dup
+
+# Merge the next line if the line end with connect words
+unless (next_line = lines[candidate_idx+1]).nil?
+  if ["and", "for", "the", "to", ","].any? { |w| candidate.downcase.end_with?(w) }
+    candidate << " " << next_line
+  elsif ["on", "of"].any? { |w| next_line.downcase.start_with?(w) }
+    candidate << " " << next_line
+  end
 end
 
-candidate = lines[candidate_idx]
-# add next line if the line end with any of this
-if ["and", "for", ","].any? { |w| candidate.downcase.end_with?(w) }
-  candidate << " " << lines[candidate_idx+1]
+STDOUT << "Lines:\n"
+lines.each_with_index do |line, idx|
+  if candidate.include?(line) && (idx == candidate_idx || idx == candidate_idx+1)
+    STDOUT << "  [#{idx}] #{line.bold}\n".red
+  else
+    STDOUT << "  [#{idx}] #{line}\n"
+  end
 end
 
 candidate = agree_or_alternative(candidate, lines)
