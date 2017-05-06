@@ -9,7 +9,7 @@ Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac 
 - **Mac OS:** Use `vimrc`, requires MacVim with `if_lua`:
 
 ``` bash
-$ brew install macvim --override-system-vim --with-lua --with-luajit
+brew install macvim --override-system-vim --with-lua --with-luajit
 ```
 
 - **Windows:** Use `windows/_vimrc`. Not actively updated.
@@ -20,19 +20,19 @@ I use [Shougo/neobundle.vim](https://github.com/Shougo/neobundle.vim) to manage 
 
 ``` bash
 # clone the repository
-$ git clone https://github.com/zhuochun/dotfiles.git
+git clone https://github.com/zhuochun/dotfiles.git ~/dotfiles
 
 # link vimrc
-$ ln -s ~/dotfiles/vim ~/.vim
-$ ln -s ~/dotfiles/vimrc ~/.vimrc
-$ ln -s ~/dotfiles/gvimrc ~/.gvimrc
+ln -s ~/dotfiles/vim ~/.vim
+ln -s ~/dotfiles/vimrc ~/.vimrc
+ln -s ~/dotfiles/gvimrc ~/.gvimrc
 
 # install neobundle
 # https://github.com/Shougo/neobundle.vim#quick-start
-$ curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
+curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
 
 # install plugins
-$ vim +NeoBundleInstall +qall
+vim +NeoBundleInstall +qall
 ```
 
 To update plugins, run `:NeoBundleUpdate` in Vim.
@@ -42,32 +42,26 @@ To update plugins, run `:NeoBundleUpdate` in Vim.
 [Slate](https://github.com/jigish/slate) is a powerful window management application in Mac OS.
 
 ``` bash
-$ ln -s ~/dotfiles/slate ~/.slate
+ln -s ~/dotfiles/slate ~/.slate
 ```
 
 [ShiftIt](https://github.com/fikovnik/ShiftIt) is another window management application in Mac OS.
 
 ## Rime
 
-[Rime](https://github.com/rime) is a powerful Chinese Input Method Engine. Use `Ctrl + ~` to adjust Traditional/Simplified Chinese.
+[Rime](https://github.com/rime) is a powerful Chinese Input Method Engine.
+
+- Use `Ctrl + ~` to adjust Traditional/Simplified Chinese.
 
 ``` bash
-$ ln -s ~/dotfiles/rime/squirrel.custom.yaml ~/Library/Rime/squirrel.custom.yaml
-```
-
-## Eclipse
-
-Use Eclipse with [Vrapper](http://vrapper.sourceforge.net/) and some modified shortcuts.
-
-Refer to `vrapperrc` file.
-
-``` bash
-$ ln -s ~/dotfiles/eclipse/vrapperrc ~/.vrapperrc
+ln -s ~/dotfiles/rime/squirrel.custom.yaml ~/Library/Rime/squirrel.custom.yaml
 ```
 
 ## Keyboard Enhancement in Mac
 
 Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard).
+
+Refer to my [Ergodox-EZ](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c) layout.
 
 ## AutoHotkey
 
