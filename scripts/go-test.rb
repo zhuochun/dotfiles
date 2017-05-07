@@ -23,6 +23,7 @@ require "logger"
 require "socket"
 require "listen"
 require "colorize"
+require "readline"
 
 LOG = Logger.new(STDOUT)
 LOG.level = Logger::INFO
@@ -159,16 +160,23 @@ listener.start
 
 # Listen on exit signal
 at_exit { anybar_notify("white") }
+# Trap Ctrl+C
+stty_save = %x`stty -g`.chomp
+trap("INT") { system("stty", stty_save); exit }
+
 # Cache the packages in project directory
 cache_packages(cached_packages)
 # Initial run on whole project
-go_test(File.join(PROJECT_ROOT, "..."))
+go_test(File.join(PROJECT_ROOT, "...")) if ENV['SKIP'].nil?
+
+# Readline autocomplete package names
+Readline.completion_proc = Proc.new do |str|
+  cached_packages.keys.select { |pkg, _| pkg if pkg.start_with?(str) }
+end
 
 # Listen on instructions
-loop do
-  print "> ".blue.bold
-
-  case $stdin.gets.chomp.strip.downcase
+while line = Readline.readline("> ".blue.bold, true)
+  case line.chomp.strip.downcase
 
   # run all tests in package or in project
   when /^t(\s+\w+\.?)?$/, /^test(\s+\w+\.?)?$/

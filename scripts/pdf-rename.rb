@@ -11,18 +11,45 @@
 #
 require "pdf-reader"
 require "colorize"
+require "readline"
+require 'set'
+
+def has_conj?(l1, l2)
+  l1, l2 = l1.downcase, l2.downcase
+
+  ["and", "for", "the", "to", "on", "of", ",", "&"].any? do |w|
+    l1.end_with?(" " + w) || l2.start_with?(w + " ")
+  end
+end
+
+def slug(str)
+  str.downcase.gsub(/[^\w]/, '-').gsub(/-+/, '-').gsub(/^-|-$/, '')
+end
 
 def agree_or_alternative(candidate, lines)
   return candidate if ENV["YES"].to_s == "1"
 
-  if candidate.nil?
-    STDOUT << "Enter: (LINE,LINE) "
-  else
-    STDOUT << "Use \"#{candidate.yellow.bold}\"?\n"
-    STDOUT << "Enter: (Y/N | LINE,LINE) "
+  # Push lines to history, and add words to completion
+  completion_words = lines.flat_map do |line|
+    Readline::HISTORY << line
+    line.downcase.split(" ")
   end
 
-  input = STDIN.gets.chomp
+  completion_words = Set.new(completion_words).to_a
+
+  Readline.completion_proc = Proc.new do |str|
+    completion_words.select { |w| w if w.start_with?(str) }
+  end
+
+  hint = "Enter: (LINE,LINE) "
+
+  unless candidate.nil?
+    Readline::HISTORY << candidate
+    STDOUT << "Use \"#{slug(candidate).yellow.bold}\"?\n"
+    hint = "Enter: (Y/N | LINE,LINE) "
+  end
+
+  input = Readline.readline(hint, true).chomp
   return candidate if input.empty? || input.upcase == "Y"
   return "" if input.upcase == "N" # explict reject
 
@@ -36,6 +63,10 @@ def agree_or_alternative(candidate, lines)
     input
   end
 end
+
+stty_save = %x`stty -g`.chomp
+# Trap Ctrl+C
+trap("INT") { system("stty", stty_save); exit }
 
 if ARGV.length != 1
   STDERR << "Usage: ./pdf-rename.rb filename.pdf\n"
@@ -84,22 +115,22 @@ candidate_idx = lines.find_index do |line|
   next false if word.empty? # nums (e.g. year)
 
   word[0] == word[0].upcase
-end || 0
+end
 
-candidate = lines[candidate_idx].dup
+candidate = candidate_idx.nil? ? "" : lines[candidate_idx].dup
 
 # Merge the next line if the line end with connect words
-unless (next_line = lines[candidate_idx+1]).nil?
-  if ["and", "for", "the", "to", ","].any? { |w| candidate.downcase.end_with?(w) }
-    candidate << " " << next_line
-  elsif ["on", "of"].any? { |w| next_line.downcase.start_with?(w) }
+unless candidate_idx.nil?
+  next_line = lines[candidate_idx+1]
+
+  if !next_line.nil? && has_conj?(candidate, next_line)
     candidate << " " << next_line
   end
 end
 
 STDOUT << "Lines:\n"
 lines.each_with_index do |line, idx|
-  if candidate.include?(line) && (idx == candidate_idx || idx == candidate_idx+1)
+  if candidate.include?(line) && (idx == candidate_idx || idx-1 == candidate_idx)
     STDOUT << "  [#{idx}] #{line.bold}\n".red
   else
     STDOUT << "  [#{idx}] #{line}\n"
@@ -113,9 +144,7 @@ if candidate.empty?
 end
 
 path, filename = File.split(ARGV[0])
-
-slug = candidate.downcase.gsub(/[^\w]/, '-').gsub(/-+/, '-').gsub(/^-|-$/, '')
-new_file = File.join(path, "#{slug}.pdf")
+new_file = File.join(path, "#{slug(candidate)}.pdf")
 
 File.rename(ARGV[0], new_file)
 STDOUT << "Renamed: #{ARGV[0].blue} -> #{new_file.green}\n"
