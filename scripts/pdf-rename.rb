@@ -12,18 +12,25 @@
 require "pdf-reader"
 require "colorize"
 require "readline"
-require 'set'
+require "set"
 
 def has_conj?(l1, l2)
   l1, l2 = l1.downcase, l2.downcase
 
-  ["and", "for", "the", "to", "on", "of", ",", "&"].any? do |w|
-    l1.end_with?(" " + w) || l2.start_with?(w + " ")
+  ["and", "for", "the", "to", "on", "of", "&", /\w+,$/, /\w+:$/, /\w+'s$/].any? do |w|
+    if w.is_a?(Regexp)
+      w.match(l1) || w.match(l2)
+    else
+      l1.end_with?(" " + w) || l2.start_with?(w + " ")
+    end
   end
 end
 
 def slug(str)
-  str.downcase.gsub(/[^\w]/, '-').gsub(/-+/, '-').gsub(/^-|-$/, '')
+  str.downcase
+    .gsub(/[^\w]/, '-')
+    .gsub(/-a-|-s-|-+/, '-') # remove "a", or "xx's"
+    .gsub(/^-|-$/, '')
 end
 
 def agree_or_alternative(candidate, lines)
@@ -43,9 +50,9 @@ def agree_or_alternative(candidate, lines)
 
   hint = "Enter: (LINE,LINE) "
 
-  unless candidate.nil?
+  unless candidate.empty?
     Readline::HISTORY << candidate
-    STDOUT << "Use \"#{slug(candidate).yellow.bold}\"?\n"
+    STDOUT << "\nUse: \"#{slug(candidate).yellow}\"?\n".bold
     hint = "Enter: (Y/N | LINE,LINE) "
   end
 
@@ -76,12 +83,12 @@ end
 r = begin
       PDF::Reader.new(ARGV[0])
     rescue Exception => e
-      STDERR << "Error: Invalid Pdf, #{e}"
+      STDERR << "Error: Invalid Pdf, #{e}".red
       exit 1
     end
 
 if r.page_count < 1
-  STDERR << "Error: No page found\n"
+  STDERR << "Error: No page found\n".red
   exit 3
 end
 
@@ -91,22 +98,28 @@ lines = begin
             .map { |line| line.strip.gsub(/\s+/, " ") }
             .select { |line| !line.empty? }
         rescue Exception => e
-          STDERR << "Error: Text not found, #{e}"
+          STDERR << "Error: Text not found, #{e}".red
           exit 1
         end
 
 if lines.empty?
-  STDERR << "Error: Empty first page\n"
+  STDERR << "Error: Empty first page\n".red
   exit 3
 end
 
-# Make a simple guess by looking at the first 10 lines:
+# Make a simple guess by looking at the pdf metadata or first 10 lines in content:
 #
+# - Use info[:Title] if exists and not ending with extension pdf
 # - Use the first sentence with >= 3 words, and start with a capitalized char
 # - Otherwise, let the user to choose from line, or enter a new name
 #
 lines = lines.take(10)
 
+# PDF Title from metadata `mdls -name kMDItemTitle abc.pdf`
+pdf_title = (r.info()[:Title] || "").downcase
+
+# Candidate Title line idx from pdf content
+# candidate_idx could be nil if there is no line matched
 candidate_idx = lines.find_index do |line|
   words = line.split(" ")
   next false if words.length < 3
@@ -117,34 +130,42 @@ candidate_idx = lines.find_index do |line|
   word[0] == word[0].upcase
 end
 
-candidate = candidate_idx.nil? ? "" : lines[candidate_idx].dup
+candidate = if !pdf_title.empty? && !pdf_title.end_with?("pdf")
+              pdf_title
+            elsif candidate_idx
+              line = lines[candidate_idx]
+              next_line = lines[candidate_idx+1]
+              # Merge the next line if the line end with connect words
+              if next_line && has_conj?(line, next_line)
+                line + " " + next_line
+              else
+                line
+              end
+            else
+              ""
+            end
 
-# Merge the next line if the line end with connect words
-unless candidate_idx.nil?
-  next_line = lines[candidate_idx+1]
-
-  if !next_line.nil? && has_conj?(candidate, next_line)
-    candidate << " " << next_line
-  end
-end
-
-STDOUT << "Lines:\n"
 lines.each_with_index do |line, idx|
   if candidate.include?(line) && (idx == candidate_idx || idx-1 == candidate_idx)
-    STDOUT << "  [#{idx}] #{line.bold}\n".red
+    STDOUT << "[#{idx}] #{line.bold}\n".blue
   else
-    STDOUT << "  [#{idx}] #{line}\n"
+    STDOUT << "[#{idx}] #{line}\n"
   end
 end
 
 candidate = agree_or_alternative(candidate, lines)
 if candidate.empty?
-  STDERR << "Error: No title found\n"
+  STDERR << "Error: No title found\n".red
   exit 4
 end
 
 path, filename = File.split(ARGV[0])
 new_file = File.join(path, "#{slug(candidate)}.pdf")
 
-File.rename(ARGV[0], new_file)
-STDOUT << "Renamed: #{ARGV[0].blue} -> #{new_file.green}\n"
+if File.exists?(new_file)
+  STDERR << "Error: File already exists".red
+  exit 1
+else
+  File.rename(ARGV[0], new_file)
+  STDOUT << "Renamed: #{ARGV[0].blue} -> #{new_file.green}\n"
+end
