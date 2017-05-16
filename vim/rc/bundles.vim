@@ -339,7 +339,7 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 NeoBundleLazy 'Shougo/neocomplete.vim', {
       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
       \   'autoload' : {'insert': 1},
-      \   'disabled' : (!has('lua') || has('nvim'))
+      \   'disabled' : (!has('lua'))
       \ }
 
 " Complete words in English

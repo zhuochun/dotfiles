@@ -26,13 +26,13 @@ endfunction
 " Plugins {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" NeoBundle runtime setup {{{
+" NeoBundle runtime setup {{
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-" }}}
+" }}
 
-" Source bundles and configurations {{{
+" Source bundles and configurations {{
 call neobundle#begin(expand('~/.vim/bundle/'))
   if neobundle#load_cache()
     NeoBundleFetch 'Shougo/neobundle.vim'
@@ -42,15 +42,15 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 
   call s:source_rc('bundles.rc.vim')
 call neobundle#end()
-" }}}
+" }}
 
-" Check installation for new bundles {{{
+" Check installation for new bundles {{
 NeoBundleCheck
 
 if !has('vim_starting')
   call neobundle#call_hook('on_source')
 endif
-" }}}
+" }}
 
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -298,7 +298,8 @@ let g:airline_theme='twofirewatch'
 
 " Styles {{{
 set shortmess=atI            " No welcome screen in gVim
-set ruler                    " Show the cursor position all the time
+set title                    " Display title
+"set ruler                   " Show the cursor position all the time
 "set number                  " Display current line number
 "set relativenumber          " Show line number relatively
 set laststatus=2             " Display status bar in 2 lines
@@ -341,10 +342,6 @@ autocmd! BufReadPost *
        \     execute 'normal! g`"zvzz' |
        \ endif
 " }}}
-
-" Resize splits when the window is resized {{{
-autocmd! VimResized * :wincmd =
-"}}}
 
 " Diff update after save {{{
 autocmd! InsertLeave,BufWritePost * if &l:diff | diffupdate | endif

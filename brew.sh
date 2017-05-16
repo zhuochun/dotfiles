@@ -49,6 +49,10 @@ brew install narwhal
 # Install MacVim
 brew install macvim --override-system-vi --with-lua --with-luajit
 
+# Install NeoVim
+brew tap neovim/neovim
+brew install neovim
+
 # Install some CTF tools; see https://github.com/ctfs/write-ups.
 brew install aircrack-ng
 brew install bfg
@@ -103,6 +107,7 @@ brew install webkit2png
 brew install zopfli
 brew install jq
 brew install httpie
+brew install selecta
 
 # Remove outdated versions from the cellar.
 brew cleanup

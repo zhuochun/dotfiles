@@ -15,6 +15,7 @@ go get -v -u github.com/jstemmer/gotags
 go get -v -u github.com/kisielk/errcheck
 go get -v -u github.com/klauspost/asmfmt/cmd/asmfmt
 go get -v -u github.com/lukehoban/go-outline
+go get -v -u github.com/mvdan/interfacer/cmd/interfacer
 go get -v -u github.com/newhook/go-symbols
 go get -v -u github.com/nsf/gocode
 go get -v -u github.com/rogpeppe/godef

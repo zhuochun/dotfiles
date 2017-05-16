@@ -24,18 +24,21 @@ export TERM=xterm-256color
 
 # Command line head / tail shortcuts
 # ==============================
-alias -g A='| ag'
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
+alias -g A="| ag"
+alias -g H="| head"
+alias -g T="| tail"
+alias -g G="| grep"
 alias -g L="| less"
 alias -g M="| most"
-alias -g P="2>&1| pygmentize -l pytb"
+
+alias -g PM="2>&1 | pygmentize -l pytb"
 alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
 alias -g NE="2> /dev/null"
-alias -g NGT="--ignore '*_test.go'"
+
+alias -g NGO="--ignore '*_test.go'"
 alias -g NUL="> /dev/null 2>&1"
+alias -g GRP="| sort | uniq -c | sort -r"
 
 # 1 Char Alias
 # ==============================
@@ -50,7 +53,7 @@ alias m="man"
 alias o="open"
 alias p="ps -f"
 alias q="exit"
-alias t='tail -f'
+alias t="tail -f"
 
 # 2 Chars Alias
 # ==============================
@@ -61,12 +64,10 @@ alias br="bin/rake"
 alias ee="vim"
 alias vi="nvim"
 # Tmux
-alias tm=tmux
+alias tm="tmux"
 # Git
 alias gm="git-imerge"
 alias gv="nvim -c MagitOnly"
-# Oh Emacs
-alias em="/Applications/Emacs.app/Contents/MacOS/Emacs"
 # System
 alias ll="ls -lFhG"
 alias cl="clear"
