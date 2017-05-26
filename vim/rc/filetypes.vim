@@ -192,16 +192,17 @@ function! s:PythonDef()
   " Correct typos
   iab <buffer> true       True
   iab <buffer> false      False
-  iab <buffer> eif        elif
+  iab <buffer> eif        elif:<LEFT>
+  iab <buffer> els        else:
 endfunction
+
+" Other configs
+autocmd! FileType python BracelessEnable +indent
 " }}}
 
 " Go Mappings {{{
 autocmd! FileType go :call s:GoDef()
 function! s:GoDef()
-  setlocal iskeyword+=<,>,-
-  setlocal nolist
-
   " Disable whitespace checking for an individual buffer
   let b:airline_whitespace_disabled = 1
 
@@ -212,7 +213,9 @@ function! s:GoDef()
 
   " Unite menus for Golang
   nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
+  " Unite go/import
   nnoremap <buffer> <silent> <leader>gi :<C-u>Unite go/import -start-insert<CR>
+  nnoremap <buffer> <silent> <leader>oI :<C-u>Unite go/import -start-insert<CR>
 
   " Go specific mappings
   nmap <buffer> <leader>oi <Plug>(go-info)

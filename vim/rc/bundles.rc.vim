@@ -642,6 +642,7 @@ if neobundle#tap('unite.vim') "{{{
   nnoremap <silent> gor :<C-u>Unite -buffer-name=register register<CR>
   nnoremap <silent> gom :<C-u>Unite -buffer-name=marks mark<CR>
   nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
+  nnoremap <silent> goC :<C-u>Unite -buffer-name=colorscheme font -auto-preview<CR>
   nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
   nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
   nnoremap <silent> gou :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
@@ -967,7 +968,7 @@ if neobundle#tap('indentLine') "{{{
   function! neobundle#hooks.on_source(bundle)
     let g:indentLine_faster = 1
     let g:indentLine_char = '┊'
-    let g:indentLine_fileTypeExclude = ['markdown', 'text']
+    let g:indentLine_fileTypeExclude = ['markdown', 'text', 'go']
   endfunction
 
   call neobundle#untap()

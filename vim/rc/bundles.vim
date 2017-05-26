@@ -38,6 +38,10 @@ NeoBundleLazy 'arecarn/crunch.vim', {
       \ }
 " }}}
 
+" open file:line {{{
+NeoBundle 'bogado/file-line'
+" }}}
+
 " CamelCaseMotion in W, B, E {{{
 NeoBundleLazy 'bkad/CamelCaseMotion', {
       \   'autoload' : { 'mappings' : ['<Plug>CamelCaseMotion'] },
@@ -125,7 +129,7 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
       \   'autoload' : {
       \     'commands' : ['SemanticHighlight'],
-      \     'filetypes': ['ruby', 'coffee', 'elixir', 'go'],
+      \     'filetypes': ['ruby', 'python', 'coffee', 'elixir', 'go'],
       \   },
       \ }
 " }}}
@@ -233,7 +237,14 @@ NeoBundleLazy 'osyo-manga/vim-brightest', {
 
 " Syntastic {{{
 NeoBundleLazy 'vim-syntastic/syntastic', {
-      \   'autoload' : { 'focus' : 1 },
+      \   'autoload' : {'insert': 1, 'focus' : 1},
+      \   'disabled' : (has('nvim')),
+      \ }
+" }}}
+
+" Format Code {{{
+NeoBundleLazy 'sbdchd/neoformat', {
+      \   'autoload': {'commands': ['Neoformat', 'Neoformat!']},
       \ }
 " }}}
 
@@ -241,7 +252,7 @@ NeoBundleLazy 'vim-syntastic/syntastic', {
 NeoBundle 'scrooloose/nerdtree', {
       \   'autoload' : {
       \     'explorer' : 1,
-      \     'mappings' : ['NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'],
+      \     'commands' : ['NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'],
       \   }
       \ }
 " }}}
@@ -291,17 +302,20 @@ NeoBundle 'Shougo/junkfile.vim', {
 
 NeoBundleLazy 'Shougo/unite-session', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'mappings': ['UniteSessionSave', 'UniteSessionLoad']},
+      \   'autoload': {'commands': ['UniteSessionSave', 'UniteSessionLoad']},
       \ }
 
 NeoBundleLazy 'kopischke/unite-spell-suggest', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'autoload':{'filetypes': ['markdown']}},
+      \   'autoload': {'filetypes': ['markdown']},
       \ }
 
 NeoBundleLazy 'ujihisa/unite-colorscheme', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': {'insert': 1},
+      \ }
+
+NeoBundleLazy 'ujihisa/unite-font', {
+      \   'depends' : ['Shougo/unite.vim'],
       \ }
 
 NeoBundleLazy 'osyo-manga/unite-quickfix', {
@@ -321,7 +335,7 @@ NeoBundleLazy 'tsukkee/unite-tag', {
 
 NeoBundleLazy 'moznion/unite-git-conflict.vim', {
       \   'depends' : ['Shougo/unite.vim'],
-      \   'autoload': { 'explorer' : 1 }
+      \   'autoload': {'explorer': 1},
       \ }
 " }}
 
@@ -344,19 +358,16 @@ NeoBundleLazy 'Shougo/neocomplete.vim', {
 
 " Complete words in English
 NeoBundleLazy 'ujihisa/neco-look', {
-      \   'depends'  : ['Shougo/neocomplete.vim'],
       \   'autoload' : {'insert': 1}
       \ }
 
 " Complete with syntax source
 NeoBundleLazy 'Shougo/neco-syntax', {
-      \   'depends'  : ['Shougo/neocomplete.vim'],
       \   'autoload' : {'insert': 1}
       \ }
 
 " Complete vimscript
 NeoBundleLazy 'Shougo/neco-vim', {
-      \   'depends'  : ['Shougo/neocomplete.vim'],
       \   'autoload' : {'filetypes': 'vim'}
       \ }
 
@@ -369,7 +380,6 @@ NeoBundleFetch 'osyo-manga/vim-monster', {
 
 " NeoSnippet {{
 NeoBundleLazy 'Shougo/neosnippet.vim', {
-      \   'depends'  : ['Shougo/neocomplete.vim', 'Shougo/context_filetype.vim'],
       \   'autoload' : {
       \     'insert': 1,
       \     'filetypes' : ['snippet', 'neosnippet'],
@@ -428,11 +438,11 @@ NeoBundleLazy 'tpope/vim-abolish', {
 
 " Comments (gcc), Uncomment (gcu), Toggle visual block (gc)
 NeoBundleLazy 'tpope/vim-commentary', {
-      \   'autoload' : {'mappings' : ['gc', 'gcc', 'gcu']}
+      \   'autoload' : { 'mappings' : ['gc', 'gcc', 'gcu'] }
       \ }
 
 NeoBundleLazy 'tpope/vim-characterize', {
-      \   'autoload' : {'mappings' : ['ga']}
+      \   'autoload' : { 'mappings' : ['ga'] }
       \ }
 
 NeoBundleLazy 'tpope/vim-dispatch', {
@@ -448,9 +458,7 @@ NeoBundleLazy 'tpope/vim-eunuch', {
       \   },
       \ }
 
-NeoBundleLazy 'tpope/vim-projectionist', {
-      \   'autoload' : { 'explorer' : 1 }
-      \ }
+NeoBundleLazy 'tpope/vim-projectionist'
 
 NeoBundle 'tpope/vim-repeat'
 
@@ -588,8 +596,8 @@ NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
 " JavaScript/CoffeeScript {{{
-NeoBundle 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
-NeoBundle 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
@@ -607,7 +615,7 @@ NeoBundleFetch 'marijnh/tern_for_vim', {
 " }}}
 
 " Ruby/Rails {{{
-NeoBundle 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
+NeoBundleLazy 'vim-ruby/vim-ruby', {'autoload': {'filetypes': ['ruby', 'eruby']}}
 NeoBundleLazy 'tpope/vim-rails', {'depends': ['tpope/vim-projectionist'], 'autoload': {'filetypes': ['ruby', 'eruby']}}
 " Ruby ecosystem
 NeoBundleLazy 'tpope/vim-rbenv', {'autoload': {'filetypes': ['ruby', 'eruby']}}
@@ -630,7 +638,7 @@ NeoBundleLazy 'tpope/vim-salve', {
 " }}}
 
 " Elixir {{{
-NeoBundle 'elixir-lang/vim-elixir', {'autoload': {'filetypes': ['elixir', 'eelixir']}}
+NeoBundleLazy 'elixir-lang/vim-elixir', {'autoload': {'filetypes': ['elixir', 'eelixir']}}
 " https://github.com/slashmili/alchemist.vim/wiki
 NeoBundleLazy 'slashmili/alchemist.vim', {'autoload': {'filetypes': ['elixir', 'eelixir']}}
 " }}}
@@ -641,12 +649,13 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 " }}}
 
 " Go {{{
-NeoBundle 'fatih/vim-go', {
-      \   'depends': ['Shougo/vimproc.vim', 'Shougo/neocomplete.vim'],
+NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
+NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
+" go get -u github.com/haya14busa/gopkgs/cmd/gopkgs
+NeoBundleLazy 'rhysd/unite-go-import.vim', {
+      \   'depends' : ['Shougo/unite.vim'],
       \   'autoload': {'filetypes': ['go']},
       \ }
-NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
-NeoBundleLazy 'rhysd/unite-go-import.vim', {'depends': ['Shougo/unite.vim'], 'autoload': {'filetypes': ['go']}}
 " }}}
 
 " Python {{{
@@ -655,7 +664,7 @@ NeoBundleLazy 'tweekmonster/braceless.vim', {'autoload': {'filetypes': ['python'
 " }}}
 
 " Markdown {{{
-NeoBundle 'gabrielelana/vim-markdown', {'autoload':{'filetypes': ['markdown']}}
+NeoBundleLazy 'gabrielelana/vim-markdown', {'autoload':{'filetypes': ['markdown']}}
 " Highlight code in Markdown
 NeoBundleLazy 'blindFS/vim-regionsyntax', {'autoload': {'filetypes': ['markdown']}}
 " Presentation in Markdown, n next slide, p previous slide, q quit
@@ -668,8 +677,13 @@ NeoBundleLazy 'kannokanno/previm', {
 " }}}
 
 " Git {{{
-NeoBundle 'airblade/vim-gitgutter'
 NeoBundleLazy 'tpope/vim-git', {'autoload': {'filetypes': 'git'}}
+" [c         <Plug>GitGutterPrevHunk
+" ]c         <Plug>GitGutterNextHunk
+" <Leader>hs <Plug>GitGutterStageHunk
+" <Leader>hu <Plug>GitGutterUndoHunk
+" <Leader>hp <Plug>GitGutterPreviewHunk
+NeoBundle 'airblade/vim-gitgutter'
 " <CR> Jump to the revision under the cursor.
 " o    Jump to the revision under the cursor in a new split.
 " S    Jump to the revision under the cursor in a new
@@ -716,7 +730,7 @@ NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
 NeoBundleLazy 'romainl/flattened'
 NeoBundleLazy 'tyrannicaltoucan/vim-quantum'
-NeoBundle 'trevordmiller/nova-vim'
+NeoBundleLazy 'trevordmiller/nova-vim'
 NeoBundleLazy 'w0ng/vim-hybrid'
 " }}}
 

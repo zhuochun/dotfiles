@@ -116,7 +116,6 @@ set display+=lastline        " Always try to display the last line
 set linebreak                " Wrap at word boundary, no break within a word
 set modeline                 " Make modeline (mode config in file) works
 set modelines=2              " Number of lines to checked for set commands
-set shortmess+=filmnrxoOtT   " Abbrev. of messages (avoids 'hit enter')
 set cpoptions-=m             " No match jumping
 set nojoinspaces             " Use one space after punctuation
 set viewoptions=folds,options,cursor,unix,slash
@@ -133,6 +132,7 @@ set wildignore+=.git,.gitkeep,.hg,.svn,.tmp,.coverage,.sass-cache
 set wildignore+=log/**,tmp/**,node_modules/**,build/**,_site/**,dist/**
 set wildignore+=vendor/bundle/**,vendor/cache/**,vendor/gems/**
 
+" https://github.com/mhinz/vim-galore#faster-keyword-completion
 set complete-=i              " Disable complete scanning included files
 set complete-=t              " Disable complete scanning included tags
 
@@ -202,7 +202,7 @@ set formatoptions-=o
 
 " List chars {{{
 set list
-set listchars=tab:»»,trail:⌴,conceal:…,extends:❯,precedes:❮,nbsp:_
+set listchars=tab:▸\ ,trail:⌴,conceal:…,extends:❯,precedes:❮,nbsp:_
 let &showbreak='↪ '
 " }}}
 
@@ -252,19 +252,19 @@ for i in range(1, 9)
   exec "nnoremap <D-".i."> ".i."gt"
 endfor
 
-" Some tab shortcuts
+" Switch between tab 1 ~ 9 (Terminal)
+for i in range(1, 9)
+  exec "nnoremap g".i." ".i."gt"
+endfor
+" }}
+
+" Some tab shortcuts {{
 nnoremap <silent> <M-l> :<C-u>tabnext<CR>
 nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
 " Open/close tab shortcuts
 nnoremap <silent> <D-t> :<C-u>tab split<CR>
 nnoremap <silent> <D-T> :<C-u>tabnew<CR>
 nnoremap <silent> <D-w> :<C-u>tabclose<CR>
-
-" Switch between tab 1 ~ 9 (in Terminal) {{
-for i in range(1, 9)
-  exec "nnoremap g".i." ".i."gt"
-endfor
-
 " Open/close tab shortcuts
 nnoremap <silent> g0 :<C-u>tab split<CR>
 " }}
@@ -309,13 +309,12 @@ endif
 set colorcolumn=119
 set background=dark
 " Colorscheme
-colorscheme two-firewatch
-" Airline theme
-let g:airline_theme='twofirewatch'
+colorscheme gruvbox
 " }}}
 
 " Styles {{{
 set shortmess=atI            " No welcome screen in gVim
+set shortmess+=filmnrxoOtT   " Abbrev. of messages (avoids 'hit enter')
 set title                    " Display title
 "set ruler                   " Show the cursor position all the time
 "set number                  " Display current line number

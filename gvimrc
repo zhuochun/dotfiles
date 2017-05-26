@@ -35,9 +35,9 @@ set guifont=Hasklig:h13
 " colorscheme flattened_dark
 " colorscheme gruvbox
 " colorscheme hybrid
-" colorscheme one
+colorscheme one
 " colorscheme tender
-colorscheme two-firewatch
+" colorscheme two-firewatch
 " colorscheme yowish
 " colorscheme quantum
 " }}
