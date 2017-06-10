@@ -1,3 +1,12 @@
+" Notes {{{
+"
+"   :!             Runs the last external command (from your shell history)
+"   :!!            Repeats the last command
+"   :silent !{cmd} Eliminates the need to hit enter after the command is done
+"   :r !{cmd}      Puts the output of $cmd into the current buffer
+"
+" }}}
+
 " Directory related commands {{{
 " yank local working directory to clipboard
 command! Ywd   :let @+ = expand("%")

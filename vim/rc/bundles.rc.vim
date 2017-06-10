@@ -21,88 +21,6 @@ if neobundle#tap('switch.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('vim-airline') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " enable powerline symbols
-    let g:airline_powerline_fonts = 1
-    " clear default separator symbols
-    let g:airline_left_sep = ''
-    let g:airline_left_alt_sep = ''
-    let g:airline_right_sep = ''
-    let g:airline_right_alt_sep = ''
-
-    " modify airline symbols
-    if !exists('g:airline_symbols')
-      let g:airline_symbols = {}
-    endif
-    " modify whitespace symbol
-    let g:airline_symbols.whitespace = ''
-    " shorter mode names
-    let g:airline_mode_map = {
-          \ '__' : '-',
-          \ 'n'  : 'N',
-          \ 'i'  : 'I',
-          \ 'R'  : 'R',
-          \ 'c'  : 'C',
-          \ 'v'  : 'V',
-          \ 'V'  : 'V',
-          \ '' : 'V',
-          \ 's'  : 'S',
-          \ 'S'  : 'S',
-          \ '' : 'S',
-          \ }
-
-    " control which sections get truncated and at what width
-    let g:airline#extensions#default#section_truncate_width = {
-          \ 'b': 79,
-          \ 'x': 60,
-          \ 'y': 88,
-          \ 'z': 45,
-          \ 'warning': 80,
-          \ 'error': 80,
-          \ }
-
-    " disable some plugin integrations
-    let g:airline#extensions#tagbar#enabled = 0
-    " disable summary of changed hunks under source control (gitgutter)
-    let g:airline#extensions#hunks#enabled = 0
-    " disable bufferline integration
-    let g:airline#extensions#bufferline#enabled = 0
-
-    " enable enhanced tabline.
-    let g:airline#extensions#tabline#enabled = 1
-    " display tab number instead of # of splits (default)
-    let g:airline#extensions#tabline#tab_nr_type = 1
-    " define the minimum number of tabs needed to show the tabline
-    let g:airline#extensions#tabline#tab_min_count = 2
-    " define how file names are displayed in tabline
-    let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-    " disable displaying tab type, buffers, splits, close button
-    let g:airline#extensions#tabline#show_buffers = 0
-    let g:airline#extensions#tabline#show_tab_type = 0
-    let g:airline#extensions#tabline#show_splits = 0
-    let g:airline#extensions#tabline#show_close_button = 0
-    " no default separators for the tabline
-    let g:airline#extensions#tabline#left_sep = ''
-    let g:airline#extensions#tabline#left_alt_sep = ''
-    let g:airline#extensions#tabline#right_sep = ''
-    let g:airline#extensions#tabline#right_alt_sep = ''
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
-if neobundle#tap('vim-bufferline') "{{{
-  function! neobundle#hooks.on_source(bundle)
-    " do not automatically echo bufferline to the command bar
-    let g:bufferline_echo = 0
-    " scrolling with fixed current buffer position
-    let g:bufferline_rotate = 1
-  endfunction
-
-  call neobundle#untap()
-endif "}}}
-
 if neobundle#tap('CamelCaseMotion') "{{{
   " Default switch mapping `gs` is still available
   map W <Plug>CamelCaseMotion_w
@@ -154,6 +72,10 @@ if neobundle#tap('vim-easymotion') "{{{
     let g:EasyMotion_do_mapping = 0
     " not case censitive
     let g:EasyMotion_smartcase = 1
+    " jump to first match when type <Enter>
+    let g:EasyMotion_enter_jump_first = 1
+    " disable verbose messages
+    let g:EasyMotion_verbose = 0
   endfunction
 
   " alias to normal editor commands
@@ -170,6 +92,11 @@ if neobundle#tap('vim-easymotion') "{{{
   vmap F     <Plug>(easymotion-Fl)
   vmap t     <Plug>(easymotion-tl)
   vmap T     <Plug>(easymotion-Tl)
+  " linewise easymotion
+  nmap <leader>k <Plug>(easymotion-sol-k)
+  vmap <leader>k <Plug>(easymotion-sol-k)
+  nmap <leader>j <Plug>(easymotion-sol-j)
+  vmap <leader>j <Plug>(easymotion-sol-j)
 
   call neobundle#untap()
 endif "}}}
@@ -392,38 +319,14 @@ if neobundle#tap('vim-brightest') "{{{
   call neobundle#untap()
 endif "}}}
 
-if neobundle#tap('syntastic') "{{{
+if neobundle#tap('neoformat') "{{{
   function! neobundle#hooks.on_source(bundle)
-    " fancy symbols
-    let g:syntastic_error_symbol = '✗'
-    let g:syntastic_warning_symbol = '‽'
-    let g:syntastic_style_error_symbol = '❄'
-    let g:syntastic_style_warning_symbol = '❖'
-
-    " no check on quitting vim
-    let g:syntastic_check_on_wq = 0
-    " error window will be automatically closed
-    let g:syntastic_auto_loc_list = 1
-    " populate syntastic errors in location list
-    let g:syntastic_always_populate_loc_list = 1
-    " aggregate errors if multiple checkers enabled
-    let g:syntastic_aggregate_errors = 1
-    " height of the location lists that syntastic opens
-    let g:syntastic_loc_list_height = 5
-
-    " automatic syntax checking
-    let g:syntastic_mode_map = {
-          \ 'mode': 'active',
-          \ 'active_filetypes': ['ruby', 'javascript', 'coffee'],
-          \ 'passive_filetypes': ['html', 'css', 'scss', 'c', 'cpp', 'go'] }
-
-    " run multiple syntastic checkers
-    let g:syntastic_ruby_checkers = ['mri']
-    let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+    " run all enabled formatters
+    let g:neoformat_run_all_formatters = 1
   endfunction
 
-  " manual syntastic check
-  nnoremap <silent> <F7> :SyntasticCheck<CR>
+  " manual format
+  nnoremap <silent> <F8> :Neoformat<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -447,10 +350,10 @@ if neobundle#tap('nerdtree') "{{{
   let NERDTreeAutoDeleteBuffer = 1
   " Don't display these kinds of files in NERDTree
   let NERDTreeIgnore = [
-        \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
-        \ '\.git', '\.hg', '\.svn', '\.sass-cache',
-        \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
-        \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
+    \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
+    \ '\.git', '\.hg', '\.svn', '\.sass-cache',
+    \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
+    \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
   " The old better arrows
   let g:NERDTreeDirArrowExpandable = '▸'
   let g:NERDTreeDirArrowCollapsible = '▾'
@@ -497,7 +400,10 @@ if neobundle#tap('unite.vim') "{{{
     " matchers for neomru
     call unite#custom#source(
           \ 'neomru/file,neomru/directory',
-          \ 'matchers', ['converter_relative_word', 'matcher_fuzzy', 'matcher_hide_hidden_files', 'matcher_hide_current_file'])
+          \ 'matchers', [
+          \   'converter_relative_word', 'matcher_fuzzy',
+          \   'matcher_hide_hidden_files', 'matcher_hide_current_file',
+          \ ])
 
     " Disable auto select
     let g:unite_enable_auto_select = 0
@@ -816,31 +722,19 @@ if neobundle#tap('neocomplete.vim') "{{{
     endif
     " Per filetype omnifunc
     let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
-
-    " Fallbacks on complete keywords by neocomplete and omnifunc
-    " let g:neocomplete#fallback_mappings = ['\<C-x>\<C-o>', '\<C-x>\<C-n>']
-  endfunction
-
-  " Plugin key-mappings
-  inoremap <expr><C-g> pumvisible() ? neocomplete#undo_completion() : "<ESC>"
-  inoremap <expr><C-l> neocomplete#complete_common_string()
-
-  " <CR> close popup and save indent
-  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  function! s:my_cr_function()
-    return pumvisible() ? neocomplete#close_popup() : "\<CR>"
   endfunction
 
   " <TAB> completion
   inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
         \ <SID>check_back_space() ? "\<TAB>" :
         \ neocomplete#start_manual_complete()
-  function! s:check_back_space()
+  function! s:check_back_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1] =~ '\s'
   endfunction
   " <S-TAB> completion backward
   inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
   " <BS> close popup and delete backword char
   inoremap <expr><BS> pumvisible() ?
         \ neocomplete#smart_close_popup()."\<C-h>" :
@@ -848,6 +742,15 @@ if neobundle#tap('neocomplete.vim') "{{{
   " <Space> close popup
   inoremap <expr><Space> pumvisible() ?
         \ neocomplete#close_popup()."\<Space>" : "\<Space>"
+  " <CR> close popup and save indent
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+  endfunction
+
+  " <C-g> Undo completion
+  inoremap <expr><C-g> pumvisible() ? neocomplete#undo_completion() : "<ESC>"
+  inoremap <expr><C-l> neocomplete#complete_common_string()
 
   call neobundle#untap()
 endif "}}}
@@ -919,7 +822,6 @@ if neobundle#tap('vim-multiple-cursors') "{{{
   " let g:multi_cursor_prev_key = '<C-p>'
   " let g:multi_cursor_skip_key = '<C-x>'
   " let g:multi_cursor_quit_key = '<Esc>'
-
   function! neobundle#hooks.on_source(bundle)
     " Disable NeoComplete once start selecting multiple cursors
     function! Multiple_cursors_before()
@@ -960,6 +862,28 @@ if neobundle#tap('open-browser.vim') "{{{
   " gx mappings
   nmap gx <Plug>(openbrowser-smart-search)
   vmap gx <Plug>(openbrowser-smart-search)
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('ale') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " Populated any warnings and errors in quickfix list
+    let g:ale_set_loclist = 0
+    let g:ale_set_quickfix = 1
+
+    " Use GoMetaLinter in ALE
+    let g:ale_linters = {'go': ['gometalinter']}
+    " Config GoMetaLinter to run specific linters
+    let g:ale_go_gometalinter_options =
+          \ '--disable-all ' .
+          \ '--enable=golint --enable=vet --enable=vetshadow ' .
+          \ '--enable=errcheck --enable=ineffassign ' .
+          \ '--deadline=5s'
+  endfunction
+
+  " manual syntastic check
+  nnoremap <silent> <F7> :ALELint<CR>
 
   call neobundle#untap()
 endif "}}}
@@ -1112,7 +1036,7 @@ if neobundle#tap('vim-go') "{{{
     " Disable fmt command errors
     let g:go_fmt_fail_silently = 1
     " Run GoMetaLinter on save
-    let g:go_metalinter_autosave = 1
+    let g:go_metalinter_autosave = 0
     let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint', 'ineffassign']
     " Disable auto jump to first error
     let g:go_jump_to_error = 1
@@ -1124,12 +1048,31 @@ if neobundle#tap('vim-go') "{{{
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
     let g:go_snippet_case_type = "camelcase"
+    " No highlights white space after []
+    let g:go_highlight_array_whitespace_error = 0
+    " No highlights white space around <-
+    let g:go_highlight_chan_whitespace_error = 0
     " No highlights commonly used library types
-    let g:go_highlight_extra_types = 1
+    let g:go_highlight_extra_types = 0
+    " No highlights instances of tabs following spaces
+    let g:go_highlight_space_tab_error = 0
+    " No highlights trailing white space
+    let g:go_highlight_trailing_whitespace_error = 0
     " Highlights go:generate directives
     let g:go_highlight_generate_tags = 1
     " Echoes information about various Go commands
     let g:go_echo_command_info = 1
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('jedi-vim') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " Show call signatures in command line
+    let g:jedi#show_call_signatures = 2
+    " Favor other completion engine
+    let g:jedi#completions_enabled = 0
   endfunction
 
   call neobundle#untap()
@@ -1154,8 +1097,9 @@ if neobundle#tap('vim-gitgutter') "{{{
   " vim-gitgutter default mappings
   " nmap [c         <Plug>GitGutterPrevHunk
   " nmap ]c         <Plug>GitGutterNextHunk
-  " nmap <leader>hs <Plug>GitGutterStageHunk
-  " nmap <leader>hr <Plug>GitGutterRevertHunk
+  " nmap <Leader>hs <Plug>GitGutterStageHunk
+  " nmap <Leader>hu <Plug>GitGutterUndoHunk
+  " nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
   call neobundle#untap()
 endif "}}}
@@ -1164,6 +1108,68 @@ if neobundle#tap('vim-tmux-navigator') "{{{
   function! neobundle#hooks.on_source(bundle)
     " disable tmux navigator when zooming the Vim pane
     let g:tmux_navigator_disable_when_zoomed = 1
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
+if neobundle#tap('vim-airline') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " use plain ascii symbols,
+    let g:airline_symbols_ascii = 1
+    " clear default separator symbols
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    " exclude preview window statusline
+    let g:airline_exclude_preview = 1
+    " shorter mode names
+    let g:airline_mode_map = {
+          \ '__' : '-',
+          \ 'n'  : 'N',
+          \ 'i'  : 'I',
+          \ 'R'  : 'R',
+          \ 'c'  : 'C',
+          \ 'v'  : 'V',
+          \ 'V'  : 'V',
+          \ '' : 'V',
+          \ 's'  : 'S',
+          \ 'S'  : 'S',
+          \ '' : 'S',
+          \ }
+
+    " modify airline symbols
+    if !exists('g:airline_symbols')
+      let g:airline_symbols = {}
+    endif
+    " modify/clear symbols
+    let g:airline_symbols.linenr = ''
+    let g:airline_symbols.maxlinenr = ''
+
+    " disable some plugin integrations
+    let g:airline#extensions#tagbar#enabled = 0
+    " disable summary of changed hunks under source control (gitgutter)
+    let g:airline#extensions#hunks#enabled = 0
+
+    " enable enhanced tabline.
+    let g:airline#extensions#tabline#enabled = 1
+    " display tab number instead of # of splits (default)
+    let g:airline#extensions#tabline#tab_nr_type = 1
+    " define the minimum number of tabs needed to show the tabline
+    let g:airline#extensions#tabline#tab_min_count = 2
+    " define how file names are displayed in tabline
+    let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+    " disable displaying tab type, buffers, splits, close button
+    let g:airline#extensions#tabline#show_buffers = 0
+    let g:airline#extensions#tabline#show_tab_type = 0
+    let g:airline#extensions#tabline#show_splits = 0
+    let g:airline#extensions#tabline#show_close_button = 0
+    " no default separators for the tabline
+    let g:airline#extensions#tabline#left_sep = ''
+    let g:airline#extensions#tabline#left_alt_sep = ''
+    let g:airline#extensions#tabline#right_sep = ''
+    let g:airline#extensions#tabline#right_alt_sep = ''
   endfunction
 
   call neobundle#untap()

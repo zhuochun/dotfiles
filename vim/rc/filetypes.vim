@@ -9,7 +9,7 @@ autocmd! FileType gitcommit setlocal spell
 " SQL {{{
 " brew install pgformatter
 " https://github.com/darold/pgFormatter
-autocmd! FileType sql setl formatprg=pg_format\ -f\ 2
+autocmd! FileType sql setlocal formatprg=pg_format\ -f\ 2
 " }}}
 
 " JSON {{{
@@ -82,7 +82,7 @@ endfunction
 " }}}
 
 " JavaScript/CoffeeScript Mappings {{{
-autocmd! BufRead,BufNewFile *.cson set ft=coffee
+autocmd! BufRead,BufNewFile *.cson set filetype=coffee
 autocmd! FileType javascript,coffee :call s:CoffeeDef()
 function! s:CoffeeDef()
   setlocal iskeyword+=$
@@ -189,11 +189,16 @@ endfunction
 " Python Mappings {{{
 autocmd! FileType python :call s:PythonDef()
 function! s:PythonDef()
+  " Set omnifunc
+  setlocal omnifunc=jedi#completions
+  " Set foldmethod
+  setlocal foldmethod=indent
+
   " Correct typos
   iab <buffer> true       True
   iab <buffer> false      False
-  iab <buffer> eif        elif:<LEFT>
-  iab <buffer> els        else:
+  iab <buffer> none       None
+  iab <buffer> null       None
 endfunction
 
 " Other configs
@@ -214,15 +219,15 @@ function! s:GoDef()
   " Unite menus for Golang
   nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
   " Unite go/import
-  nnoremap <buffer> <silent> <leader>gi :<C-u>Unite go/import -start-insert<CR>
   nnoremap <buffer> <silent> <leader>oI :<C-u>Unite go/import -start-insert<CR>
 
   " Go specific mappings
   nmap <buffer> <leader>oi <Plug>(go-info)
   nmap <buffer> <leader>od <Plug>(go-doc)
-  nmap <buffer> <Leader>oD <Plug>(go-describe)
+  nmap <buffer> <leader>oD <Plug>(go-describe)
   nmap <buffer> <leader>or <Plug>(go-referrers)
   nmap <buffer> <leader>ol <Plug>(go-metalinter)
+  nmap <buffer> <leader>og <Plug>(go-generate)
   nmap <buffer> <leader>ob <Plug>(go-build)
   nmap <buffer> <leader>or <Plug>(go-run)
   nmap <buffer> <leader>oR <Plug>(go-rename)
@@ -241,6 +246,7 @@ function! s:GoDef()
 
   " Correct typos
   iab <buffer> ;=         :=
+  iab <buffer> null       nil
   iab <buffer> stirng     string
   iab <buffer> Springf    Sprintf
 endfunction

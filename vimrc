@@ -58,6 +58,7 @@ let g:loaded_logiPat           = 1
 let g:loaded_getscriptPlugin   = 1
 let g:loaded_gzip              = 1
 let g:loaded_man               = 1
+let g:loaded_matchparen        = 1
 let g:loaded_netrwFileHandlers = 1
 let g:loaded_netrwPlugin       = 1
 let g:loaded_netrwSettings     = 1
@@ -106,7 +107,7 @@ set autoread                 " Autoread when a file is changed from the outside
 set mouse=a                  " Enable mouse
 set lazyredraw               " Stops redrawing during complex operations
 set ttyfast                  " Indicates fast terminal connection
-set synmaxcol=180            " Maximum columns to have syntax coloring
+set synmaxcol=190            " Maximum columns to have syntax coloring
 set ttimeout                 " Time out on key codes
 set timeoutlen=42            " Quick timeouts for command combinations
 set history=999              " Keep 999 lines of command line history
@@ -252,12 +253,6 @@ for i in range(1, 9)
   exec "nnoremap <D-".i."> ".i."gt"
 endfor
 
-" Switch between tab 1 ~ 9 (Terminal)
-for i in range(1, 9)
-  exec "nnoremap g".i." ".i."gt"
-endfor
-" }}
-
 " Some tab shortcuts {{
 nnoremap <silent> <M-l> :<C-u>tabnext<CR>
 nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
@@ -265,8 +260,15 @@ nnoremap <silent> <M-h> :<C-u>tabprevious<CR>
 nnoremap <silent> <D-t> :<C-u>tab split<CR>
 nnoremap <silent> <D-T> :<C-u>tabnew<CR>
 nnoremap <silent> <D-w> :<C-u>tabclose<CR>
+" }}
+
+" Switch between tab 1 ~ 9 (Terminal) {{
+for i in range(1, 9)
+  exec "nnoremap <leader>g".i." ".i."gt"
+endfor
+
 " Open/close tab shortcuts
-nnoremap <silent> g0 :<C-u>tab split<CR>
+nnoremap <silent> <leader>g0 :<C-u>tab split<CR>
 " }}
 
 " Splitting defaults

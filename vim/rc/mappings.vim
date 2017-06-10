@@ -8,8 +8,8 @@
   " F5    Toggle Undotree
   " F6    Toggle Paste mode
   set pastetoggle=<F6>
-  " F7    Tigger Syntastic check
-  " F8
+  " F7    Trigger Lint check
+  " F8    Trigger Format
   " F9    Toggle iTerm 2
   " F10   Toggle Tagbar
   " F11   Toggle Goyo
@@ -230,12 +230,14 @@
   nnoremap <leader>f gg=G''
   " <leader>F Format file
   nnoremap <leader>F gg=G''
+  " <leader>gf Toggle Goyo
+  nnoremap <leader>gf :Neoformat<CR>
   " <leader>gg Toggle Goyo
   nnoremap <leader>gg :Goyo<CR>
   " <leader>go Toggle OverCommandLine
   nnoremap <leader>go :OverCommandLine<CR>s/
-  " <leader>gl Run SyntasticCheck lint
-  nnoremap <leader>gl :SyntasticCheck<CR>
+  " <leader>gl Toggle ALELint
+  nnoremap <leader>gl :ALENextWrap<CR>
   " <leader>gn Toggle NERDTree
   nnoremap <leader>gn :NERDTreeToggle<CR>
   " <leader>gm Toggle Unite Menu (filetype specific)

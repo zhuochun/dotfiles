@@ -178,7 +178,7 @@ NeoBundleLazy 'keith/investigate.vim', {
 " faster updating folds {{{
 NeoBundle 'Konfekt/FastFold'
 " }}}
-"
+
 " Yank ring {{{
 NeoBundle 'LeafCage/yankround.vim', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -235,13 +235,6 @@ NeoBundleLazy 'osyo-manga/vim-brightest', {
       \ }
 " }}}
 
-" Syntastic {{{
-NeoBundleLazy 'vim-syntastic/syntastic', {
-      \   'autoload' : {'insert': 1, 'focus' : 1},
-      \   'disabled' : (has('nvim')),
-      \ }
-" }}}
-
 " Format Code {{{
 NeoBundleLazy 'sbdchd/neoformat', {
       \   'autoload': {'commands': ['Neoformat', 'Neoformat!']},
@@ -276,10 +269,10 @@ NeoBundleLazy 'Shougo/vimproc.vim', {
       \ }
 " }}
 
-NeoBundleLazy 'Shougo/neoinclude.vim'
+NeoBundle 'Shougo/neoinclude.vim'
 
 NeoBundleLazy 'Shougo/echodoc', {
-      \   'autoload': { 'insert': 1, },
+      \   'autoload': {'insert': 1},
       \ }
 " }}
 
@@ -292,8 +285,9 @@ NeoBundle 'Shougo/neomru.vim', {
       \   'depends' : ['Shougo/unite.vim'],
       \ }
 
-NeoBundle 'Shougo/unite-outline', {
+NeoBundleLazy 'Shougo/unite-outline', {
       \   'depends' : ['Shougo/unite.vim'],
+      \   'autoload': {'insert': 1},
       \ }
 
 NeoBundle 'Shougo/junkfile.vim', {
@@ -329,7 +323,7 @@ NeoBundleLazy 'tacroe/unite-mark', {
       \ }
 
 NeoBundleLazy 'tsukkee/unite-tag', {
-      \   'depends' : ['Shougo/unite.vim', 'Shougo/neoinclude.vim'],
+      \   'depends' : ['Shougo/unite.vim'],
       \   'autoload': {'insert': 1},
       \ }
 
@@ -351,7 +345,7 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
 
 " NeoComplete {{
 NeoBundleLazy 'Shougo/neocomplete.vim', {
-      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/context_filetype.vim', 'Shougo/neoinclude.vim'],
+      \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/context_filetype.vim'],
       \   'autoload' : {'insert': 1},
       \   'disabled' : (!has('lua'))
       \ }
@@ -488,7 +482,7 @@ NeoBundleLazy 'tpope/vim-unimpaired', {
 
 NeoBundleLazy 'tpope/vim-vinegar', {
       \   'depends'  : ['scrooloose/nerdtree'],
-      \   'autoload' : {'mappings' : ['-']}
+      \   'autoload' : {'explorer': 1, 'mappings': ['-']}
       \ }
 
 NeoBundleLazy 'tpope/vim-endwise', {
@@ -528,14 +522,8 @@ NeoBundleLazy 'vim-scripts/DrawIt', {
       \ }
 " }}}
 
-" db access from vim {{{
-NeoBundleFetch 'vim-scripts/dbext.vim'
-" }}}
-
-" Airline bundles {{{
-NeoBundle 'vim-airline/vim-airline'
-NeoBundleLazy 'vim-airline/vim-airline-themes'
-NeoBundle 'bling/vim-bufferline'
+" Asynchronous Lint Engine {{{
+NeoBundle 'w0rp/ale'
 " }}}
 
 " targets additional text objects {{{
@@ -575,9 +563,7 @@ NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eru
 
 " Template Engines {{{
 NeoBundleLazy 'digitaltoad/vim-jade'
-NeoBundleLazy 'nono/vim-handlebars'
 NeoBundleLazy 'posva/vim-vue'
-NeoBundleLazy 'slim-template/vim-slim'
 NeoBundleLazy 'tpope/vim-haml'
 NeoBundleLazy 'tpope/vim-liquid'
 " }}}
@@ -660,7 +646,9 @@ NeoBundleLazy 'rhysd/unite-go-import.vim', {
 
 " Python {{{
 NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
+NeoBundleLazy 'jmcantrell/vim-virtualenv', {'autoload': {'filetypes': ['python']}}
 NeoBundleLazy 'tweekmonster/braceless.vim', {'autoload': {'filetypes': ['python']}}
+NeoBundleLazy 'Vimjas/vim-python-pep8-indent', {'autoload': {'filetypes': ['python']}}
 " }}}
 
 " Markdown {{{
@@ -676,8 +664,12 @@ NeoBundleLazy 'kannokanno/previm', {
       \ }
 " }}}
 
+" CSV {{{
+NeoBundleLazy 'chrisbra/csv.vim', {'autoload': {'filetypes': 'csv'}}
+" }}}
+
 " Git {{{
-NeoBundleLazy 'tpope/vim-git', {'autoload': {'filetypes': 'git'}}
+NeoBundleLazy 'tpope/vim-git', {'autoload': {'filetypes': ['git', 'gitcommit', 'gitrebase']}}
 " [c         <Plug>GitGutterPrevHunk
 " ]c         <Plug>GitGutterNextHunk
 " <Leader>hs <Plug>GitGutterStageHunk
@@ -707,7 +699,7 @@ NeoBundleLazy 'junegunn/gv.vim', {
 NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
-NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': 'Dockerfile'}}
+NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': ['Dockerfile', 'docker-compose']}}
 NeoBundleLazy 'tbastos/vim-lua', {'autoload': {'filetypes': 'lua'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
 NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
@@ -725,13 +717,18 @@ NeoBundleLazy 'jacoborus/tender'
 NeoBundleLazy 'KabbAmine/yowish.vim'
 NeoBundleLazy 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
-NeoBundle 'nanotech/jellybeans.vim'
+NeoBundleLazy 'nanotech/jellybeans.vim'
 NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
 NeoBundleLazy 'romainl/flattened'
 NeoBundleLazy 'tyrannicaltoucan/vim-quantum'
 NeoBundleLazy 'trevordmiller/nova-vim'
 NeoBundleLazy 'w0ng/vim-hybrid'
+" }}}
+
+" Airline {{{
+NeoBundle 'vim-airline/vim-airline'
+NeoBundleLazy 'vim-airline/vim-airline-themes'
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
