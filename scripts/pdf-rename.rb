@@ -9,71 +9,75 @@
 #
 # Dependency: gem install pdf-reader
 #
-require "pdf-reader"
-require "colorize"
-require "readline"
-require "set"
+require 'pdf-reader'
+require 'colorize'
+require 'readline'
+require 'set'
 
-def has_conj?(l1, l2)
-  l1, l2 = l1.downcase, l2.downcase
+def conj?(l1, l2)
+  l1 = l1.downcase
+  l2 = l2.downcase
 
-  ["and", "for", "the", "to", "on", "of", "&", /\w+,$/, /\w+:$/, /\w+'s$/].any? do |w|
+  ['and', 'for', 'the', 'to', 'on', 'of', '&', /\w+,$/, /\w+:$/, /\w+'s$/].any? do |w|
     if w.is_a?(Regexp)
       w.match(l1) || w.match(l2)
     else
-      l1.end_with?(" " + w) || l2.start_with?(w + " ")
+      l1.end_with?(' ' + w) || l2.start_with?(w + ' ')
     end
   end
 end
 
 def slug(str)
   str.downcase
-    .gsub(/[^\w]/, '-')
-    .gsub(/-a-|-s-|-+/, '-') # remove "a", or "xx's"
-    .gsub(/^-|-$/, '')
+     .gsub(/[^\w]/, '-')
+     .gsub(/-a-|-s-|-+/, '-') # remove "a", or "xx's"
+     .gsub(/^-|-$/, '')
 end
 
 def agree_or_alternative(candidate, lines)
-  return candidate if ENV["YES"].to_s == "1"
+  return candidate if ENV['YES'].to_s == '1'
 
   # Push lines to history, and add words to completion
   completion_words = lines.flat_map do |line|
     Readline::HISTORY << line
-    line.downcase.split(" ")
+    line.downcase.split(' ')
   end
 
   completion_words = Set.new(completion_words).to_a
 
-  Readline.completion_proc = Proc.new do |str|
+  Readline.completion_proc = proc do |str|
     completion_words.select { |w| w if w.start_with?(str) }
   end
 
-  hint = "Enter: (LINE,LINE) "
+  hint = 'Enter: (LINE,LINE) '
 
   unless candidate.empty?
     Readline::HISTORY << candidate
     STDOUT << "\nUse: \"#{slug(candidate).yellow}\"?\n".bold
-    hint = "Enter: (Y/N | LINE,LINE) "
+    hint = 'Enter: (Y/N | LINE,LINE) '
   end
 
   input = Readline.readline(hint, true).chomp
-  return candidate if input.empty? || input.upcase == "Y"
-  return "" if input.upcase == "N" # explict reject
+  return candidate if input.empty? || input.casecmp('Y')
+  return '' if input.casecmp('N') # explict reject
 
   if input =~ /^\d+$/
     lines[input.to_i]
   elsif input =~ /^\d+(,\d+)+$/
-    input.split(",").map(&:to_i).map do |i|
+    input.split(',').map(&:to_i).map do |i|
       lines[i]
-    end.join(" ")
+    end.join(' ')
   else
     input
   end
 end
 
-stty_save = %x`stty -g`.chomp
+stty_save = `stty -g`.chomp
 # Trap Ctrl+C
-trap("INT") { system("stty", stty_save); exit }
+trap('INT') do
+  system('stty', stty_save)
+  exit 0
+end
 
 if ARGV.length != 1
   STDERR << "Usage: ./pdf-rename.rb filename.pdf\n"
@@ -81,11 +85,11 @@ if ARGV.length != 1
 end
 
 r = begin
-      PDF::Reader.new(ARGV[0])
-    rescue Exception => e
-      STDERR << "Error: Invalid Pdf, #{e}".red
-      exit 1
-    end
+  PDF::Reader.new(ARGV[0])
+rescue Exception => e
+  STDERR << "Error: Invalid Pdf, #{e}".red
+  exit 1
+end
 
 if r.page_count < 1
   STDERR << "Error: No page found\n".red
@@ -93,14 +97,14 @@ if r.page_count < 1
 end
 
 lines = begin
-          r.pages[0].text
+  r.pages[0].text
             .split("\n")
-            .map { |line| line.strip.gsub(/\s+/, " ") }
+            .map { |line| line.strip.gsub(/\s+/, ' ') }
             .select { |line| !line.empty? }
-        rescue Exception => e
-          STDERR << "Error: Text not found, #{e}".red
-          exit 1
-        end
+rescue Exception => e
+  STDERR << "Error: Text not found, #{e}".red
+  exit 1
+end
 
 if lines.empty?
   STDERR << "Error: Empty first page\n".red
@@ -116,37 +120,35 @@ end
 lines = lines.take(10)
 
 # PDF Title from metadata `mdls -name kMDItemTitle abc.pdf`
-pdf_title = (r.info()[:Title] || "").downcase
+pdf_title = (r.info[:Title] || '').downcase
 
 # Candidate Title line idx from pdf content
 # candidate_idx could be nil if there is no line matched
 candidate_idx = lines.find_index do |line|
-  words = line.split(" ")
+  words = line.split(' ')
   next false if words.length < 3
 
-  word = words[0].gsub(/[^a-zA-Z]/, "")
+  word = words[0].gsub(/[^a-zA-Z]/, '')
   next false if word.empty? # nums (e.g. year)
 
   word[0] == word[0].upcase
 end
 
-candidate = if !pdf_title.empty? && !pdf_title.end_with?("pdf")
+candidate = if !pdf_title.empty? && !pdf_title.end_with?('pdf')
               pdf_title
             elsif candidate_idx
               line = lines[candidate_idx]
-              next_line = lines[candidate_idx+1]
+              next_line = lines[candidate_idx + 1]
               # Merge the next line if the line end with connect words
-              if next_line && has_conj?(line, next_line)
-                line + " " + next_line
+              if next_line && conj?(line, next_line)
+                line + ' ' + next_line
               else
                 line
               end
-            else
-              ""
-            end
+            end || ''
 
 lines.each_with_index do |line, idx|
-  if candidate.include?(line) && (idx == candidate_idx || idx-1 == candidate_idx)
+  if candidate.include?(line) && (idx == candidate_idx || idx - 1 == candidate_idx)
     STDOUT << "[#{idx}] #{line.bold}\n".blue
   else
     STDOUT << "[#{idx}] #{line}\n"
@@ -159,11 +161,11 @@ if candidate.empty?
   exit 4
 end
 
-path, filename = File.split(ARGV[0])
+path, = File.split(ARGV[0])
 new_file = File.join(path, "#{slug(candidate)}.pdf")
 
-if File.exists?(new_file)
-  STDERR << "Error: File already exists".red
+if File.exist?(new_file)
+  STDERR << 'Error: File already exists'.red
   exit 1
 else
   File.rename(ARGV[0], new_file)

@@ -14,7 +14,7 @@ begin
 
   tags = Hash.new { |hash, key| hash[key] = [] }
   emoji.each do |k, e|
-    next if e.is_a?(Array) || e['char'] == nil || e['char'].empty?
+    next if e.is_a?(Array) || e['char'].nil? || e['char'].empty?
     tags[k] << e['char']
     e['keywords'].each { |kw| tags[kw] << e['char'] }
   end
@@ -42,7 +42,7 @@ begin
     w # oh no, no match
   end
 
-  $stdout << words.join(" ") << "\n"
+  $stdout << words.join(' ') << "\n"
 rescue Exception => e
   $stdout << "ERROR: #{e}\n"
 end

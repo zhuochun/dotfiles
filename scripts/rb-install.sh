@@ -8,6 +8,8 @@ gem install pretty_backtrace
 
 # Linters
 gem install fasterer
+gem install rubocop
+gem install reek
 
 # Dependencies dotfile/scripts
 gem install listen

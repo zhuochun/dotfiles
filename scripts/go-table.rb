@@ -31,8 +31,8 @@ TYPE_MAP = {
   'text'          => 'string',
   'text_null'     => 'sql.NullString',
   'datetime'      => 'time.Time',
-  'datetime_null' => 'mysql.NullTime',
-}
+  'datetime_null' => 'mysql.NullTime'
+}.freeze
 
 class EntityTemplate
   attr_reader :entity_name, :p_entity_name, :schema, :db
@@ -47,13 +47,9 @@ class EntityTemplate
 
   def to_gotype(type, nullable)
     key = type.split('(').first
-    key += "_null" if nullable == 'YES'
+    key += '_null' if nullable == 'YES'
 
     TYPE_MAP.fetch(key)
-  end
-
-  def has_field?(field)
-    schema.any? { |row| row['Field'] == field }
   end
 
   def primary_key
@@ -61,7 +57,7 @@ class EntityTemplate
   end
 
   def camelcase(name, lower = false)
-    str = name.split('_').map(&:capitalize).map { |w| w == 'Id' ? "ID" : w }.join
+    str = name.split('_').map(&:capitalize).map { |w| w == 'Id' ? 'ID' : w }.join
     str[0] = str[0].downcase if lower
     str
   end
@@ -120,7 +116,7 @@ end
 db_config = {
   host: 'localhost',
   username: 'root',
-  database: ARGV[0],
+  database: ARGV[0]
 }
 
 client = Mysql2::Client.new(db_config)
