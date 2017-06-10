@@ -8,24 +8,27 @@ require 'json'
 #
 # Usage:
 #
-#   ./go-json.rb file.json structName
+#   ./go-json.rb structName file.json
+#
+#   http url | ./go-json.rb structName
 #
 
 def parse_json(text)
   JSON.parse(text)
 rescue JSON::ParserError => e
-  $stdout << "Invalid JSON file content #{e}\n"
-  exit(1)
+  raise "Invalid JSON file content #{e}\n"
 end
 
 def parse_time(time_str)
+  return nil if time_str !~ /\d{4}/
+
   %i(httpdate iso8601 rfc2822 rfc822).each do |m|
     begin
       return Time.send(m, time_str)
     rescue ArgumentError
+      next nil
     end
   end
-  nil
 end
 
 class StructWriter
@@ -40,19 +43,20 @@ class StructWriter
     @structs = [] # inner structs, for nested json objects
   end
 
-  def camelcase(name, lower = false)
-    name = name.gsub(/([A-Z])/, "_\\1") # convert snakeCase
-    str = name.split('_')
-      .map(&:capitalize)
-      .map { |w| w == 'Id' ? "ID" : w }
-      .map { |w| w == 'Ids' ? "IDs" : w }
-      .join
+  def camelcase(str, lower = false)
+    str = str.gsub(/([A-Z])/, '_\\1') # convert snakeCase
+             .split('_')
+             .map(&:capitalize)
+             .map { |w| w == 'Id' ? 'ID' : w }
+             .map { |w| w == 'Ids' ? 'IDs' : w }
+             .join
+
     str[0] = str[0].downcase if lower
     str
   end
 
   def titlelize(str)
-    name.gsub(/([A-Z][a-z])/, ' \1').strip.downcase
+    str.gsub(/([A-Z][a-z])/, ' \1').strip.downcase
   end
 
   def parse_struct(k, data)
@@ -60,8 +64,8 @@ class StructWriter
     attrs = ',omitempty' if k == 'id'
 
     if data.is_a?(Array)
-      field = field.chop # assume Array field has suffix "s"
-      prefix = "[]"
+      field = field.chop if field[-1] == 's' # assume Array field has suffix "s"
+      prefix = '[]'
       data = data.first
     end
 
@@ -80,41 +84,40 @@ class StructWriter
     when Integer, Fixnum then 'int64'
     when Float then 'float64'
     when TrueClass, FalseClass then 'bool'
-    when String then data =~ /\d{4}/ && parse_time(data) ? 'time.Time' : 'string'
+    when String then parse_time(data) ? 'time.Time' : 'string'
+    else 'null'
     end
   end
 
   def write
-    if @content.is_a?(Hash)
-      @content.each { |k, v| parse_struct(k, v) }
-    else
-      $stdout << "Invalid data: #{@content}\n"
-      exit(1)
-    end
+    raise "Invalid data: #{@content}" unless @content.is_a?(Hash)
 
-    <<-EOS
+    @content.each { |k, v| parse_struct(k, v) }
+
+    <<-EOS.gsub(/^$\n\n+/, "\n")
 // #{name} defines a struct for #{titlelize(name)}
 type #{name} struct {
     #{fields.join("\n    ")}
 }
 
-#{structs.map(&:write).join("")}
+#{structs.map(&:write).join('')}
     EOS
   end
 end
 
 # ARGV Logic
-if ARGV.length < 2
-  $stdout << "Usage: ./go-json.rb file.json StructName\n"
+if ($stdin.tty? && ARGV.length < 2) || (ARGV.length < 1)
+  $stderr << "Usage: ./go-json.rb StructName file.json\n"
   exit(1)
 end
 
-file = ARGV[0]
-unless File.exist?(file)
-  $stdout << "File #{file} not found\n"
-  exit(1)
-end
+begin
+  struct_name = ARGV.shift
+  content = parse_json(ARGF.read)
+  writer = StructWriter.new(struct_name, content, root: true)
 
-content = parse_json(File.read(file))
-writer = StructWriter.new(ARGV[1], content, root: true)
-$stdout << writer.write
+  $stdout << writer.write
+rescue Exception => e
+  $stderr << "Error: #{e}\n"
+  exit(2)
+end
