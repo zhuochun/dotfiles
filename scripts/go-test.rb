@@ -176,13 +176,13 @@ end
 
 # Cache the packages in project directory
 cache_packages(cached_packages)
-# Initial run on whole project
-go_test(File.join(PROJECT_ROOT, '...')) if ENV['SKIP'].nil?
-
 # Readline autocomplete package names
 Readline.completion_proc = proc do |str|
   cached_packages.keys.select { |pkg, _| pkg if pkg.start_with?(str) }
 end
+
+# Initial run on whole project
+go_test(File.join(PROJECT_ROOT, '...')) if ENV['SKIP'].nil?
 
 # Listen on instructions
 while line = Readline.readline('> '.blue.bold, true)
@@ -335,7 +335,7 @@ while line = Readline.readline('> '.blue.bold, true)
         print line while line = io.gets
       end
     rescue Exception => e
-      p e
+      print e
     end
 
   when 'q', 'quit', 'exit'
