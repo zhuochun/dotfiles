@@ -83,34 +83,43 @@ def lookup_package(pkgs, name)
   end
 end
 
-def go_test(path, options = '')
-  anybar_notify('yellow')
+def go_test(*args)
+  go_cmd("go test #{args.join(' ')}")
+end
 
-  cmd = "go test #{path} #{options}".strip
+def go_cmd(cmd)
   LOG.info("Running: #{cmd.bold}".blue)
 
+  anybar_notify('yellow')
+
   test_passed = true
-  output_lines = []
-  IO.popen(cmd) do |io|
+
+  IO.popen(cmd, err: [:child, :out]) do |io|
     while line = io.gets
       # shorten and highlight path in line
-      line = line.gsub(File.join(GO_PATH_SRC, PROJECT_ROOT), '.'.yellow)
-      line = line.gsub(File.join(GO_PATH_SRC, File.split(PROJECT_ROOT)[0]), '..'.yellow)
+      line = line.gsub(GO_PATH_SRC, '')
       # shorten project path
       line = line.gsub(PROJECT_ROOT, '.'.yellow)
       line = line.gsub(File.split(PROJECT_ROOT)[0], '..'.yellow)
+      line = line.gsub(File.split(File.split(PROJECT_ROOT)[0])[0], '...'.yellow)
       # replace head indication
       line = line.gsub(/^ok\b/, 'ok'.green.bold)
       line = line.gsub(/^FAIL\b/, 'FAIL'.light_yellow.on_red.bold)
       # colorize
       line = case line
+             when /^\d{4}.\d\d.\d\d \d\d:\d\d:\d\d/ # log
+               line.light_black
+                   .gsub(' WARN ', ' WARN '.yellow)
+                   .gsub(' ERROR ', ' ERROR '.red)
              when /Error Trace:/, /Error:/, /panic:/, /FAIL:/
                test_passed = false
                line.red
-             when /RUN/
+             when /^=+ RUN/
                line.light_cyan
-             when /PASS:/
+             when /^-+ PASS:/
                line.green
+             when /^Benchmark/
+               line.gsub(/^(Benchmark[\w-]+) /, '\1 '.green.bold)
              when /coverage: (\d+.\d+)\%/
                cov = Regexp.last_match(1).to_f
                word = "coverage: #{cov}\%".bold
@@ -122,11 +131,10 @@ def go_test(path, options = '')
              else
                line
              end
-      # collect all the output lines
-      output_lines << line
+      # output line
+      print line
     end
   end
-  LOG.info("\n#{output_lines.join}")
 
   if $CHILD_STATUS.success? && test_passed
     anybar_notify('green')
@@ -219,7 +227,7 @@ while line = Readline.readline('> '.blue.bold, true)
       go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v")
     end
 
-  # run all tests in package or in project
+  # run race detector in a package or in project
   when /^r(\s+\w+\.?)?$/, /^race(\s+\w+\.?)?$/
     input = Regexp.last_match(1) ? Regexp.last_match(1).strip : ''
     # run in single directory package
@@ -229,6 +237,58 @@ while line = Readline.readline('> '.blue.bold, true)
       go_test(File.join(last_dir, dir), '-race') unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
       go_test(File.join(PROJECT_ROOT, pkg, dir), '-race')
+    else
+      LOG.info 'No package is identified'
+    end
+
+  # example bf api/api_test.go:32
+  # go test -run TestTest -bench . -cpuprofile profile_cpu.out
+  when /^bf\s+([\w\/\.]+_test.go):(\d+)?$/, /^benchfunc\s+([\w\/\.]+_test.go):(\d+)?$/
+    file = Regexp.last_match(1).strip
+    lineno = Regexp.last_match(2).to_i
+    LOG.info "Lookup nearest benchmark: #{file.bold}, lineno: #{lineno}"
+
+    func_name = ''
+    File.open(file, 'r') do |f|
+      f.each_line do |line|
+        break if f.lineno > lineno
+        func_name = line =~ /^func ((?:Bench)\w+?)\(/ ? Regexp.last_match(1) : func_name
+      end
+    end
+
+    if func_name.empty?
+      LOG.info 'No benchmark func is identified'
+    else
+      dir = File.dirname(file)
+      go_cmd "(cd #{dir} && go test -bench . -run #{func_name} -benchmem -cpuprofile cpu.out -memprofile mem.out)"
+
+      pkg_name = File.basename(dir)
+      pprof_cmd = "go tool pprof #{File.join(dir, pkg_name)}.test #{File.join(dir, 'cpu.out')}".bold
+      LOG.info "pprof cmd: #{pprof_cmd}".yellow
+    end
+
+  # open pprof generated svg graph
+  when /^svg(\s+\w+\.?)?$/
+    input = Regexp.last_match(1) ? Regexp.last_match(1).strip : ''
+
+    if pkg = lookup_package(cached_packages, input)
+      pkg_name = File.basename(pkg)
+
+      `go tool pprof -svg #{File.join(pkg, pkg_name)}.test #{File.join(pkg, 'cpu.out')} > #{File.join(pkg, 'cpu.svg')}`
+      `open #{pkg}/cpu.svg`
+    else
+      LOG.info 'No package is identified'
+    end
+
+  # open go-torch https://github.com/uber/go-torch
+  when /^torch(\s+\w+\.?)?$/
+    input = Regexp.last_match(1) ? Regexp.last_match(1).strip : ''
+
+    if pkg = lookup_package(cached_packages, input)
+      pkg_name = File.basename(pkg)
+
+      `go-torch #{File.join(pkg, pkg_name)}.test #{File.join(pkg, 'cpu.out')}`
+      `open torch.svg`
     else
       LOG.info 'No package is identified'
     end
@@ -268,6 +328,16 @@ while line = Readline.readline('> '.blue.bold, true)
     listener.start
     LOG.info "File watcher paused: #{!listener.paused?}, processing: #{listener.processing?}"
 
+  # execute any ! commands
+  when /^!(.+)$/
+    begin
+      IO.popen(Regexp.last_match(1).strip, err: [:child, :out]) do |io|
+        print line while line = io.gets
+      end
+    rescue Exception => e
+      p e
+    end
+
   when 'q', 'quit', 'exit'
     exit(0)
 
@@ -277,8 +347,10 @@ while line = Readline.readline('> '.blue.bold, true)
 
     #{'test [package]'.green.bold}: run all tests in the package or last triggered packages
     #{'testall'.green.bold}: run all tests in the whole project
-    #{'testfunc file:lineno'.green.bold}: run nearest test near the line in file
+    #{'testfunc file:lineno'.green.bold}: run nearest test before the line in file
     #{'race [package]'.green.bold}: run race test in the package or last triggered packages
+    #{'benchfunc file:lineno'.green.bold}: run nearest benchmark before the line in file
+    #{'svg [package]'.green.bold}: open the generated pprof CPU svg graph in browser
     #{'cov [package]'.green.bold}: run coverage test on the package or last triggered packages
     #{'covall'.green.bold}: run coverage tests for all packages
     #{'report'.green.bold}: open the coverage report in browser

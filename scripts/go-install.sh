@@ -24,6 +24,7 @@ go get -v -u github.com/tpng/gopkgs
 go get -v -u github.com/vektra/mockery/.../
 go get -v -u github.com/y0ssar1an/q
 go get -v -u github.com/zmb3/gogetdoc
+go get -v -u github.com/uber/go-torch
 
 go get -v -u golang.org/x/tools/cmd/eg
 go get -v -u golang.org/x/tools/cmd/goimports
