@@ -10,7 +10,7 @@ require 'json'
 #
 #   ./go-json.rb structName file.json
 #
-#   http url | ./go-json.rb structName
+#   curl https://api.github.com | ~/dotfiles/scripts/go-json.rb api
 #
 
 def parse_json(text)

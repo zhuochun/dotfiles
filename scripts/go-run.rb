@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Run `go run main.go` and restart automatically after file changes
+#
+# alias wgr="~/dotfiles/scripts/go-run.rb"
+#
+# Dependency:
+#
+#   gem install listen
+#   gem install colorize
+#
+# - https://github.com/guard/listen
+# - https://github.com/fazibear/colorize
+#
+require 'listen'
+require 'colorize'
+
+if ARGV.length < 1
+  $stderr << "Usage: ./go-run.rb main.go [port]\n"
+  exit(1)
+end
+
+GO_PATH_SRC = File.join(ENV['GOPATH'], 'src', '')
+print ">>> Go Path: #{GO_PATH_SRC.bold}\n".green
+
+PROJECT_ROOT = Dir.pwd.gsub(GO_PATH_SRC, '')
+print ">>> Listening: #{PROJECT_ROOT.bold}\n".green
+
+mutex = Mutex.new
+# pipe stdouts from child process
+cmd = "go run #{ARGV[0]}"
+r, w = IO.pipe
+go_pid = spawn(cmd, out: w, err: [:child, :out], pgroup: true)
+
+print ">>> Start: #{cmd.bold}, Pid: #{go_pid.to_s.bold}\n".green
+
+# Listen on exit signal
+at_exit do
+  mutex.synchronize do
+    unless go_pid.nil?
+      Process.kill(:SIGKILL, go_pid)
+      Process.wait(go_pid)
+
+      print ">>> Killed pid: #{go_pid.to_s.bold}\n".yellow
+    end
+  end
+end
+
+# Trap Ctrl+C
+stty_save = `stty -g`.chomp
+trap('INT') do
+  system('stty', stty_save)
+  exit
+end
+
+# Listen on any non-test go file changes
+Listen.to(Dir.pwd, only: /(?<!_test)\.go$/) do |_modified, _added, _removed|
+  break if mutex.locked?
+
+  print ">>> Found files modified/added/removed\n".blue.bold
+
+  mutex.synchronize do
+    unless go_pid.nil?
+      Process.kill(:SIGKILL, go_pid)
+      Process.wait(go_pid)
+      print ">>> Killed pid: #{go_pid.to_s.bold}. Restart: #{cmd.bold}\n".blue
+    end
+
+    port = ARGV.fetch(1, 8000)
+    port_pid = `lsof -i:#{port} -t`
+    unless port_pid.empty?
+      `kill -9 #{port_pid}` # kill pid that own the service port
+      print ">>> Killed pid: #{port_pid}, port: #{port}\n".blue
+    end
+
+    go_pid = spawn(cmd, out: w, err: [:child, :out])
+    print ">>> Restarted pid: #{go_pid.to_s.bold}\n".green
+  end
+end.start
+
+# listen and read stdouts
+while line = r.gets do
+  # shorten and highlight path in line
+  line.gsub!(GO_PATH_SRC, '')
+  # shorten project path
+  line.gsub!(PROJECT_ROOT, '.')
+  line.gsub!(File.split(PROJECT_ROOT)[0], '..')
+  line.gsub!(File.split(File.split(PROJECT_ROOT)[0])[0], '...')
+  # colorize
+  line.gsub!(' WARN ', ' WARN '.yellow.bold)
+  line.gsub!(' ERROR ', ' ERROR '.red.bold)
+  line.gsub!(' INFO ', ' INFO '.blue.bold)
+
+  print line
+end
