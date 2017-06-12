@@ -91,6 +91,8 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # ==============================
 # Watch go package directory and trigger tests
 alias wgo="~/dotfiles/scripts/go-test.rb"
+# Watch go package directory and restart scripts
+alias wgr="~/dotfiles/scripts/go-run.rb"
 # Rename PDF based on content
 alias pdf="~/dotfiles/scripts/pdf-rename.rb"
 
