@@ -4,35 +4,37 @@
 # Somehow vim-go :GoInstallBinaries doesn't work for me
 # https://github.com/fatih/vim-go/blob/master/plugin/go.vim#L9
 
-go get -v -u github.com/FiloSottile/gorebuild
-go get -v -u github.com/alecthomas/gometalinter
-go get -v -u github.com/client9/misspell/cmd/misspell
-go get -v -u github.com/cweill/gotests/...
-go get -v -u github.com/fatih/gomodifytags
-go get -v -u github.com/fatih/motion
-go get -v -u github.com/golang/lint/golint
-go get -v -u github.com/josharian/impl
-go get -v -u github.com/jstemmer/gotags
-go get -v -u github.com/kisielk/errcheck
-go get -v -u github.com/klauspost/asmfmt/cmd/asmfmt
-go get -v -u github.com/lukehoban/go-outline
-go get -v -u github.com/mvdan/interfacer/cmd/interfacer
-go get -v -u github.com/newhook/go-symbols
-go get -v -u github.com/nsf/gocode
-go get -v -u github.com/rogpeppe/godef
-go get -v -u github.com/tpng/gopkgs
-go get -v -u github.com/vektra/mockery/.../
-go get -v -u github.com/y0ssar1an/q
-go get -v -u github.com/zmb3/gogetdoc
-go get -v -u github.com/uber/go-torch
+go get -u github.com/FiloSottile/gorebuild
+go get -u github.com/alecthomas/gometalinter
+go get -u github.com/client9/misspell/cmd/misspell
+go get -u github.com/cweill/gotests/...
+go get -u github.com/fatih/gomodifytags
+go get -u github.com/fatih/motion
+go get -u github.com/golang/lint/golint
+go get -u github.com/josharian/impl
+go get -u github.com/jstemmer/gotags
+go get -u github.com/kisielk/errcheck
+go get -u github.com/klauspost/asmfmt/cmd/asmfmt
+go get -u github.com/mvdan/interfacer/cmd/interfacer
+go get -u github.com/newhook/go-symbols
+go get -u github.com/nsf/gocode
+go get -u github.com/ramya-rao-a/go-outline
+go get -u github.com/rogpeppe/godef
+go get -u github.com/tpng/gopkgs
+go get -u github.com/tylerb/gotype-live
+go get -u github.com/uber/go-torch
+go get -u github.com/vektra/mockery/.../
+go get -u github.com/y0ssar1an/q
+go get -u github.com/zmb3/gogetdoc
 
-go get -v -u golang.org/x/tools/cmd/eg
-go get -v -u golang.org/x/tools/cmd/goimports
-go get -v -u golang.org/x/tools/cmd/gomvpkg
-go get -v -u golang.org/x/tools/cmd/gorename
-go get -v -u golang.org/x/tools/cmd/guru
+go get -u golang.org/x/tools/cmd/eg
+go get -u golang.org/x/tools/cmd/godoc
+go get -u golang.org/x/tools/cmd/goimports
+go get -u golang.org/x/tools/cmd/gomvpkg
+go get -u golang.org/x/tools/cmd/gorename
+go get -u golang.org/x/tools/cmd/guru
 
 # https://github.com/dominikh/go-tools
-go get -v -u honnef.co/go/tools/...
+go get -u honnef.co/go/tools/...
 # https://github.com/sqs/goreturns
-go get -v -u sourcegraph.com/sqs/goreturns
+go get -u sourcegraph.com/sqs/goreturns

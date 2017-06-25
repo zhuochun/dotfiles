@@ -125,6 +125,12 @@ NeoBundleLazy 'haya14busa/incsearch-fuzzy.vim', {
       \ }
 " }}}
 
+" calendar {{{
+NeoBundleLazy 'itchyny/calendar.vim', {
+      \   'autoload' : { 'commands' : ['Calendar'], },
+      \ }
+" }}}
+
 " semantic-highlight {{{
 NeoBundleLazy 'jaxbot/semantic-highlight.vim', {
       \   'autoload' : {
@@ -711,6 +717,7 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 " }}}
 
 " Colorschemes {{{
+NeoBundle 'ajmwagar/vim-dues'
 NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundleLazy 'dracula/vim'
 NeoBundleLazy 'jacoborus/tender'
@@ -722,7 +729,6 @@ NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
 NeoBundleLazy 'romainl/flattened'
 NeoBundleLazy 'tyrannicaltoucan/vim-quantum'
-NeoBundleLazy 'trevordmiller/nova-vim'
 NeoBundleLazy 'w0ng/vim-hybrid'
 " }}}
 
