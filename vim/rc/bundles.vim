@@ -717,17 +717,14 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 " }}}
 
 " Colorschemes {{{
-NeoBundle 'ajmwagar/vim-dues'
+NeoBundleLazy 'bluz71/vim-moonfly-colors'
 NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundleLazy 'dracula/vim'
-NeoBundleLazy 'jacoborus/tender'
 NeoBundleLazy 'KabbAmine/yowish.vim'
-NeoBundleLazy 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'morhetz/gruvbox'
 NeoBundleLazy 'nanotech/jellybeans.vim'
 NeoBundle 'rakr/vim-one'
 NeoBundle 'rakr/vim-two-firewatch'
-NeoBundleLazy 'romainl/flattened'
 NeoBundleLazy 'tyrannicaltoucan/vim-quantum'
 NeoBundleLazy 'w0ng/vim-hybrid'
 " }}}

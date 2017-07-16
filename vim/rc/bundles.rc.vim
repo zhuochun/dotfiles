@@ -1092,6 +1092,8 @@ if neobundle#tap('vim-gitgutter') "{{{
     let g:gitgutter_realtime = 0
     " update when switch buffer/tab, or focus on gui
     let g:gitgutter_eager = 1
+    " disable sign column highlight
+    let g:gitgutter_override_sign_column_highlight = 0
   endfunction
 
   " vim-gitgutter default mappings

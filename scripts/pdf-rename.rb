@@ -58,8 +58,8 @@ def agree_or_alternative(candidate, lines)
   end
 
   input = Readline.readline(hint, true).chomp
-  return candidate if input.empty? || input.casecmp('Y')
-  return '' if input.casecmp('N') # explict reject
+  return candidate if input.empty? || input.casecmp('Y') == 0
+  return '' if input.casecmp('N') == 0 # explict reject
 
   if input =~ /^\d+$/
     lines[input.to_i]

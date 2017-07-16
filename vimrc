@@ -311,8 +311,7 @@ endif
 set colorcolumn=119
 set background=dark
 " Colorscheme
-colorscheme dues
-let g:airline_theme='gruvbox'
+colorscheme gruvbox
 " }}}
 
 " Styles {{{
