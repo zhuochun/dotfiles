@@ -682,6 +682,44 @@ if neobundle#tap('vimshell.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('deoplete.nvim') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    let g:deoplete#enable_at_startup = 1
+  endfunction
+
+  " <TAB> completion
+  inoremap <silent><expr> <TAB>
+              \ pumvisible() ? "\<C-n>" :
+              \ <SID>check_back_space() ? "\<TAB>" :
+              \ deoplete#manual_complete()
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+  endfunction
+  " <S-TAB> completion backward
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+  " <BS> close popup and delete backword char
+  inoremap <expr><BS> pumvisible() ?
+        \ deoplete#smart_close_popup()."\<C-h>" :
+        \ AutoPairsDelete()
+  " <Space> close popup
+  inoremap <expr><Space> pumvisible() ?
+        \ deoplete#close_popup()."\<Space>" : "\<Space>"
+  " <CR> close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function() abort
+      return deoplete#cancel_popup() . "\<CR>"
+  endfunction
+
+  " <C-g> Undo completion
+  inoremap <expr><C-g> deoplete#undo_completion()
+  " <C-l>: redraw candidates
+  inoremap <expr><C-l> deoplete#refresh()
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('neocomplete.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
     " disable AutoComplPop and use neocomplete
@@ -1046,8 +1084,10 @@ if neobundle#tap('vim-go') "{{{
     let g:go_auto_type_info = 0
     " No auto template when create new file
     let g:go_template_autocreate = 0
-    " Use camelcase for tags, :GoAddTags
+    " Use camelcase for snippets
     let g:go_snippet_case_type = "camelcase"
+    " Use camelcase for tags, :GoAddTags
+    let g:go_addtags_transform = "camelcase"
     " No highlights white space after []
     let g:go_highlight_array_whitespace_error = 0
     " No highlights white space around <-

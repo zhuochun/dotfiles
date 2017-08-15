@@ -349,11 +349,29 @@ NeoBundleLazy 'Shougo/vimshell.vim', {
       \ }
 " }}
 
+" Deoplete.nvim {{
+NeoBundleLazy 'Shougo/deoplete.nvim', {
+      \   'depends'  : ['Shougo/context_filetype.vim'],
+      \   'autoload' : {'insert': 1},
+      \   'disabled' : (!has('nvim'))
+      \ }
+
+NeoBundleLazy 'zchee/deoplete-jedi', {
+      \   'autoload' : {'filetypes': 'python'},
+      \   'disabled' : (!has('nvim'))
+      \ }
+
+NeoBundleLazy 'zchee/deoplete-go', {
+      \   'autoload' : {'filetypes': 'go'},
+      \   'disabled' : (!has('nvim'))
+      \ }
+" }}
+
 " NeoComplete {{
 NeoBundleLazy 'Shougo/neocomplete.vim', {
       \   'depends'  : ['Shougo/vimproc.vim', 'Shougo/context_filetype.vim'],
       \   'autoload' : {'insert': 1},
-      \   'disabled' : (!has('lua'))
+      \   'disabled' : (!has('lua') || has('nvim'))
       \ }
 
 " Complete words in English
@@ -386,8 +404,8 @@ NeoBundleLazy 'Shougo/neosnippet.vim', {
       \   }
       \ }
 
-NeoBundleFetch 'zhuochun/vim-snippets'
-NeoBundleFetch 'zhuochun/vim-dicts'
+NeoBundleLazy 'zhuochun/vim-snippets'
+NeoBundleLazy 'zhuochun/vim-dicts'
 " }}
 " }}}
 

@@ -30,7 +30,8 @@ end
 def slug(str)
   str.downcase
      .gsub(/[^\w]/, '-')
-     .gsub(/-a-|-s-|-+/, '-') # remove "a", or "xx's"
+     .gsub(/^a-|-a-|-s-|-+/, '-') # remove a, xx's
+     .gsub(/-(t)-/, '\1-') # replace xx't to xxt
      .gsub(/^-|-$/, '')
 end
 
