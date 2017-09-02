@@ -22,7 +22,7 @@ NeoBundleLazy 'AndrewRadev/switch.vim', {
 
 " grep and update {{
 NeoBundleLazy 'AndrewRadev/writable_search.vim', {
-      \   'autoload' : { 'commands': ['WritableSearch'] },
+      \   'autoload' : { 'commands': ['WritableSearch', 'WritableSearchFromQuickfix'] },
       \ }
 " }}
 " }}}
@@ -213,7 +213,7 @@ NeoBundleLazy 'majutsushi/tagbar', {
       \ }
 " }}}
 
-" match open/close {{{
+" Match open/close {{{
 NeoBundle 'matchit.zip'
 " }}}
 
@@ -688,10 +688,6 @@ NeoBundleLazy 'kannokanno/previm', {
       \ }
 " }}}
 
-" CSV {{{
-NeoBundleLazy 'chrisbra/csv.vim', {'autoload': {'filetypes': 'csv'}}
-" }}}
-
 " Git {{{
 NeoBundleLazy 'tpope/vim-git', {'autoload': {'filetypes': ['git', 'gitcommit', 'gitrebase']}}
 " [c         <Plug>GitGutterPrevHunk
@@ -735,8 +731,8 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 " }}}
 
 " Colorschemes {{{
-NeoBundleLazy 'bluz71/vim-moonfly-colors'
-NeoBundleLazy 'chriskempson/base16-vim'
+NeoBundleLazy 'ayu-theme/ayu-vim'
+NeoBundle 'chriskempson/base16-vim'
 NeoBundleLazy 'dracula/vim'
 NeoBundleLazy 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'

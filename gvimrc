@@ -13,30 +13,29 @@ set background=dark
 set macligatures             " Show ligatures with supported fonts (MacVim GUI)
 
 " fonts, powerline fonts:
+"
 "   - https://github.com/powerline/fonts
 "   - https://github.com/tonsky/FiraCode
 "   - https://github.com/i-tu/Hasklig
 "   - https://be5invis.github.io/Iosevka
-" set guifont=Inconsolata-g\ for\ Powerline:h14
-" set guifont=InputMonoNarrow\ Light:h13
-" set guifont=Iosevka\ Light:h13
-" set guifont=M+\ 1m\ for\ Powerline:h14
-" set guifont=Meslo\ LG\ S\ Regular\ for\ Powerline:h13
-" set guifont=Office\ Code\ Pro\ Light:h12
-" set guifont=Fira\ Code:h13
-set guifont=Hasklig:h13
-" set guifont=Roboto\ Mono\ for\ Powerline:h13
+"
+" set guifont=Inconsolata-g\ for\ Powerline:h16
+" set guifont=InputMonoNarrow\ Light:h16
+" set guifont=Iosevka\ Light:h18
+" set guifont=M+\ 1m\ for\ Powerline:h18
+" set guifont=Office\ Code\ Pro:h16
+" set guifont=Fira\ Code:h16
+" set guifont=Hasklig:h16
+set guifont=Roboto\ Mono\ for\ Powerline:h16
 " }}
 
 " GUI colorschems {{
 " colorscheme base16-eighties
 " colorscheme base16-ocean
 " colorscheme dracula
-" colorscheme flattened_dark
 " colorscheme gruvbox
 " colorscheme hybrid
 " colorscheme one
-" colorscheme tender
 " colorscheme two-firewatch
 " colorscheme yowish
 " colorscheme quantum
@@ -47,16 +46,16 @@ set guifont=Hasklig:h13
 command! DefaultMode call s:DefaultMode()
 function! s:DefaultMode()
   set background=dark
-  colorscheme hybrid
+  colorscheme gruvbox
 
   set lines=42 columns=142
-  set guifont=Inconsolata-g\ for\ Powerline:h12
+  set guifont=Inconsolata-g\ for\ Powerline:h16
 endfunction
 
 command! MonitorMode call s:MonitorMode()
 function! s:MonitorMode()
   set lines=999 columns=999
-  set guifont=Iosevka\ Light:h14
+  set guifont=Roboto\ Mono\ for\ Powerline:h16
 endfunction
 
 command! PresentationMode call s:PresentationMode()
@@ -65,7 +64,7 @@ function! s:PresentationMode()
   colorscheme one
 
   set lines=999 columns=999
-  set guifont=Inconsolata-g\ for\ Powerline:h23
+  set guifont=Inconsolata-g\ for\ Powerline:h24
 endfunction
 " }}}
 

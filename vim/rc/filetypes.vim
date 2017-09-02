@@ -93,6 +93,9 @@ function! s:CoffeeDef()
   " Surround # to #{}
   let b:surround_{char2nr('#')} = "#{\r}"
   xmap <buffer> # S#
+  " Surround 4 to ${}
+  let b:surround_{char2nr('$')} = "${\r}"
+  xmap <buffer> 4 S$
 
   " Use unite-tag instead of ^] for navigating to tags
   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tags -immediately tag<CR>

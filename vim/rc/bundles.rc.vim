@@ -21,6 +21,17 @@ if neobundle#tap('switch.vim') "{{{
   call neobundle#untap()
 endif "}}}
 
+if neobundle#tap('writable_search.vim') "{{{
+  function! neobundle#hooks.on_source(bundle)
+    " set to use ack by default
+    let g:writable_search_backends = ["ack", "git-grep", "egrep"]
+    " display more context around the match
+    let g:writable_search_context_lines = 5
+  endfunction
+
+  call neobundle#untap()
+endif "}}}
+
 if neobundle#tap('CamelCaseMotion') "{{{
   " Default switch mapping `gs` is still available
   map W <Plug>CamelCaseMotion_w
@@ -909,6 +920,11 @@ if neobundle#tap('ale') "{{{
     " Populated any warnings and errors in quickfix list
     let g:ale_set_loclist = 0
     let g:ale_set_quickfix = 1
+    " Disable lint history
+    let g:ale_history_enabled = 0
+    let g:ale_history_log_output = 0
+    " Increase lint delay on text changed
+    let g:ale_lint_delay = 500
 
     " Use GoMetaLinter in ALE
     let g:ale_linters = {'go': ['gometalinter']}
@@ -949,8 +965,9 @@ endif "}}}
 
 if neobundle#tap('limelight.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
-    let g:limelight_paragraph_span = 1
+    let g:limelight_paragraph_span = 3
     let g:limelight_priority = -1
+    let g:limelight_default_coefficient = 0.7
   endfunction
 
   function! s:goyo_enter()
@@ -1084,8 +1101,6 @@ if neobundle#tap('vim-go') "{{{
     let g:go_auto_type_info = 0
     " No auto template when create new file
     let g:go_template_autocreate = 0
-    " Use camelcase for snippets
-    let g:go_snippet_case_type = "camelcase"
     " Use camelcase for tags, :GoAddTags
     let g:go_addtags_transform = "camelcase"
     " No highlights white space after []
@@ -1159,6 +1174,8 @@ if neobundle#tap('vim-airline') "{{{
   function! neobundle#hooks.on_source(bundle)
     " use plain ascii symbols,
     let g:airline_symbols_ascii = 1
+    " cache highlighting groups
+    let g:airline_highlighting_cache = 1
     " clear default separator symbols
     let g:airline_left_sep = ''
     let g:airline_left_alt_sep = ''

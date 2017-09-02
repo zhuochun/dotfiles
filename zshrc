@@ -12,7 +12,7 @@ ZSH_THEME="pure"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
     git git-extras gitignore golang jsontools k mix node npm rbenv redis-cli
-    rsync ruby themes tmux vagrant zsh-syntax-highlighting zsh-autosuggestions)
+    rsync ruby themes tmux vagrant zsh-autosuggestions zsh-syntax-highlighting)
 
 # Load oh-my-zsh
 # ==============================
@@ -25,6 +25,7 @@ export TERM=xterm-256color
 # Command line head / tail shortcuts
 # ==============================
 alias -g A="| ag"
+alias -g C="| pbcopy"
 alias -g H="| head"
 alias -g T="| tail"
 alias -g G="| grep"
