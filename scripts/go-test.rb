@@ -35,6 +35,21 @@ LOG.info("GOPATH: #{ENV['GOPATH'].bold}".blue)
 PROJECT_ROOT = Dir.pwd.gsub(GO_PATH_SRC, '')
 LOG.info("Listening: #{PROJECT_ROOT.bold}".blue)
 
+# Ignore patterns in output, e.g. redundant logs
+GO_TEST_IGNORE = File.join(ENV['GO_TEST_IGNORE'] || Dir.home, '.go_test_ignore')
+IGNORE_PATTERNS = []
+# Load ignore patterns
+if File.exist?(GO_TEST_IGNORE)
+  LOG.info("GO_TEST_IGNORE detected: #{GO_TEST_IGNORE.bold}".blue)
+
+  File.foreach(GO_TEST_IGNORE) do |line|
+    pattern = line.chop
+    next if pattern.empty? || pattern.start_with?('#')
+
+    IGNORE_PATTERNS << pattern
+  end
+end
+
 # Record the last changed directory
 last_dir = PROJECT_ROOT
 # Cache all the packages
@@ -83,11 +98,11 @@ def lookup_package(pkgs, name)
   end
 end
 
-def go_test(*args)
-  go_cmd("go test #{args.join(' ')}")
+def go_test(*args, verbose: false)
+  go_cmd("go test #{args.join(' ')}", verbose: verbose)
 end
 
-def go_cmd(cmd)
+def go_cmd(cmd, verbose: false)
   LOG.info("Running: #{cmd.bold}".blue)
 
   anybar_notify('yellow')
@@ -96,6 +111,8 @@ def go_cmd(cmd)
 
   IO.popen(cmd, err: [:child, :out]) do |io|
     while line = io.gets
+      # ignore patterns
+      next if !verbose && IGNORE_PATTERNS.any? { |p| Regexp.new(p).match(line) }
       # shorten and highlight path in line
       line = line.gsub(GO_PATH_SRC, '')
       # shorten project path
