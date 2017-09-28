@@ -11,6 +11,7 @@
 	aa = add -A .
 	amend = commit --amend
 	discard = checkout --
+	empty = commit --allow-empty
 	unstage = reset HEAD
 	uncommit = reset --soft HEAD^
 	decommit = reset --hard HEAD^
@@ -57,7 +58,6 @@
 	# diff
 	d = diff --color --color-words --abbrev
 	dc = diff --color --color-words --abbrev --cached
-
 
 	# log
 	today = log --since=midnight --author='Wang Zhuochun' --oneline
