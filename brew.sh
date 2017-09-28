@@ -108,6 +108,7 @@ brew install zopfli
 brew install jq
 brew install httpie
 brew install selecta
+brew install exa
 
 # Remove outdated versions from the cellar.
 brew cleanup

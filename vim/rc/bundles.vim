@@ -22,7 +22,10 @@ NeoBundleLazy 'AndrewRadev/switch.vim', {
 
 " grep and update {{
 NeoBundleLazy 'AndrewRadev/writable_search.vim', {
-      \   'autoload' : { 'commands': ['WritableSearch', 'WritableSearchFromQuickfix'] },
+      \   'depends' : 'mileszs/ack.vim',
+      \   'autoload': {
+      \     'commands': ['WritableSearch'],
+      \   }
       \ }
 " }}
 " }}}
@@ -31,9 +34,9 @@ NeoBundleLazy 'AndrewRadev/writable_search.vim', {
 NeoBundleLazy 'arecarn/selection.vim'
 NeoBundleLazy 'arecarn/crunch.vim', {
       \   'depends' : 'arecarn/selection.vim',
-      \   'autoload' : {
-      \     'mappings' : ['g=', 'g=='],
-      \     'commands' : ['Crunch'],
+      \   'autoload': {
+      \     'mappings': ['g=', 'g=='],
+      \     'commands': ['Crunch'],
       \   }
       \ }
 " }}}
@@ -167,7 +170,7 @@ NeoBundleLazy 'junegunn/rainbow_parentheses.vim', {
 
 " improve blockwise visual mode {{{
 NeoBundleLazy 'kana/vim-niceblock', {
-      \   'autoload' : { 'mappings' : ['<Plug>(niceblock', 'v'] }
+      \   'autoload' : { 'mappings' : ['<Plug>'] }
       \ }
 " }}}
 
@@ -223,6 +226,13 @@ NeoBundleLazy 'mbbill/undotree', {
       \ }
 " }}}
 
+" Ack {{{
+" :Ack [options] {pattern} [{directories}]
+NeoBundleLazy 'mileszs/ack.vim', {
+      \   'autoload' : { 'commands': ['Ack'] },
+      \ }
+" }}}
+
 " osyo-manga bundles {{{
 NeoBundleLazy 'osyo-manga/vim-anzu', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -275,7 +285,7 @@ NeoBundleLazy 'Shougo/vimproc.vim', {
       \ }
 " }}
 
-NeoBundle 'Shougo/neoinclude.vim'
+NeoBundleLazy 'Shougo/neoinclude.vim'
 
 NeoBundleLazy 'Shougo/echodoc', {
       \   'autoload': {'insert': 1},
@@ -605,15 +615,16 @@ NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': ['json', 'javascript']
 NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
-" JavaScript/CoffeeScript {{{
-NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+" JavaScript {{{
 NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+" React
 NeoBundleLazy 'MaxMEllon/vim-jsx-pretty', {'autoload': {'filetypes': ['javascript', 'coffee']}}
-NeoBundleFetch 'marijnh/tern_for_vim', {
+" Node/TernJS
+NeoBundleLazy 'moll/vim-node', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundleFetch 'ternjs/tern_for_vim', {
       \   'autoload': { 'filetypes': ['javascript'] },
       \   'build': {
       \     'windows': 'npm install',
@@ -622,6 +633,11 @@ NeoBundleFetch 'marijnh/tern_for_vim', {
       \     'unix': 'npm install',
       \   },
       \ }
+" CoffeeScript
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+" TypeScript
+NeoBundleLazy 'leafgarland/typescript-vim', {'autoload': {'filetypes': ['typescript']}}
+NeoBundleLazy 'Quramy/tsuquyomi', {'autoload': {'filetypes': ['typescript']}}
 " }}}
 
 " Ruby/Rails {{{
@@ -718,7 +734,6 @@ NeoBundleLazy 'junegunn/gv.vim', {
 " Others {{{
 NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
-NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': ['Dockerfile', 'docker-compose']}}
 NeoBundleLazy 'tbastos/vim-lua', {'autoload': {'filetypes': 'lua'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
@@ -732,7 +747,7 @@ NeoBundle 'sjl/vitality.vim', {'terminal': 1}
 
 " Colorschemes {{{
 NeoBundleLazy 'ayu-theme/ayu-vim'
-NeoBundle 'chriskempson/base16-vim'
+NeoBundleLazy 'chriskempson/base16-vim'
 NeoBundleLazy 'dracula/vim'
 NeoBundleLazy 'KabbAmine/yowish.vim'
 NeoBundle 'morhetz/gruvbox'

@@ -6,6 +6,9 @@ export ZSH=$HOME/.oh-my-zsh
 # suvash blinks fino josh re5et random
 ZSH_THEME="pure"
 
+# Use case-sensitive completion.
+CASE_SENSITIVE="false"
+
 # Zsh Plugins
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -25,13 +28,13 @@ export TERM=xterm-256color
 # Command line head / tail shortcuts
 # ==============================
 alias -g A="| ag"
-alias -g C="| pbcopy"
 alias -g H="| head"
 alias -g T="| tail"
 alias -g G="| grep"
 alias -g L="| less"
 alias -g M="| most"
 
+alias -g CP="| pbcopy"
 alias -g PM="2>&1 | pygmentize -l pytb"
 alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
@@ -48,7 +51,7 @@ alias b="brew"
 alias e="mvim"
 alias g="git"
 alias h="history"
-alias l="ls -AlFhG"
+alias l="exa -lF --group-directories-first"
 alias n="nvim"
 alias m="man"
 alias o="open"
@@ -70,7 +73,8 @@ alias tm="tmux"
 alias gm="git-imerge"
 alias gv="nvim -c MagitOnly"
 # System
-alias ll="ls -lFhG"
+alias ll="exa -alF --group-directories-first"
+alias la="exa -alF --git --group-directories-first"
 alias cl="clear"
 alias rm="trash"
 # Network IP address

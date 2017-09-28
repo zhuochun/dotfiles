@@ -15,7 +15,6 @@ go get -u github.com/josharian/impl
 go get -u github.com/jstemmer/gotags
 go get -u github.com/kisielk/errcheck
 go get -u github.com/klauspost/asmfmt/cmd/asmfmt
-go get -u github.com/mvdan/interfacer/cmd/interfacer
 go get -u github.com/newhook/go-symbols
 go get -u github.com/nsf/gocode
 go get -u github.com/ramya-rao-a/go-outline
@@ -38,3 +37,5 @@ go get -u golang.org/x/tools/cmd/guru
 go get -u honnef.co/go/tools/...
 # https://github.com/sqs/goreturns
 go get -u sourcegraph.com/sqs/goreturns
+# https://github.com/mvdan/interfacer
+go get -u mvdan.cc/interfacer

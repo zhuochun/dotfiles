@@ -24,9 +24,11 @@ endif "}}}
 if neobundle#tap('writable_search.vim') "{{{
   function! neobundle#hooks.on_source(bundle)
     " set to use ack by default
-    let g:writable_search_backends = ["ack", "git-grep", "egrep"]
+    let g:writable_search_backends = ["ack.vim", "git-grep", "egrep"]
     " display more context around the match
     let g:writable_search_context_lines = 5
+    " use statement as syntax
+    let g:writable_search_highlight = 'Statement'
   endfunction
 
   call neobundle#untap()
@@ -520,7 +522,7 @@ if neobundle#tap('unite.vim') "{{{
       let g:unite_source_grep_command = 'ag'
       let g:unite_source_grep_default_opts =
             \ '-i --vimgrep --line-numbers --hidden ' .
-            \ '--ignore ''.git'' --ignore ''.hg'' ' .
+            \ '--ignore ''.git'' --ignore ''.hg'' --ignore ''vendor'' ' .
             \ '--ignore ''.idea'' --ignore ''node_modules'''
       let g:unite_source_grep_recursive_opt = ''
     endif
@@ -923,8 +925,10 @@ if neobundle#tap('ale') "{{{
     " Disable lint history
     let g:ale_history_enabled = 0
     let g:ale_history_log_output = 0
+    " Disable lint on enter new buffer/modified buffer
+    let g:ale_lint_on_enter = 0
     " Increase lint delay on text changed
-    let g:ale_lint_delay = 500
+    let g:ale_lint_delay = 900
 
     " Use GoMetaLinter in ALE
     let g:ale_linters = {'go': ['gometalinter']}
@@ -1103,6 +1107,8 @@ if neobundle#tap('vim-go') "{{{
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
     let g:go_addtags_transform = "camelcase"
+    " Fold imports and package comments
+    let g:go_fold_enable = ['import', 'package_comment']
     " No highlights white space after []
     let g:go_highlight_array_whitespace_error = 0
     " No highlights white space around <-

@@ -1,3 +1,10 @@
+" NerdTree {{{
+autocmd! FileType nerdtree :call s:NerdTreeDef()
+function! s:NerdTreeDef() abort
+  execute 'nmap <buffer> -' g:NERDTreeMapUpdir
+endfunction
+" }}}
+
 " Snippets {{{
 autocmd! FileType neosnippet,snippet setlocal noexpandtab
 " }}}
@@ -20,7 +27,7 @@ autocmd! FileType json setlocal foldmethod=syntax formatprg=jsonmatter\ -i\ 4
 
 " Ruby Mappings {{{
 autocmd! FileType ruby,eruby,rdoc :call s:RubyDef()
-function! s:RubyDef()
+function! s:RubyDef() abort
   setlocal iskeyword+=!,?
 
   setlocal shiftwidth=2
@@ -62,7 +69,7 @@ endfunction
 
 " Elixir Mappings {{{
 autocmd! FileType elixir,eelixir :call s:ElixirDef()
-function! s:ElixirDef()
+function! s:ElixirDef() abort
   setlocal shiftwidth=2
   setlocal tabstop=2
 
@@ -84,7 +91,7 @@ endfunction
 " JavaScript/CoffeeScript Mappings {{{
 autocmd! BufRead,BufNewFile *.cson set filetype=coffee
 autocmd! FileType javascript,coffee :call s:CoffeeDef()
-function! s:CoffeeDef()
+function! s:CoffeeDef() abort
   setlocal iskeyword+=$
 
   setlocal shiftwidth=2
@@ -104,7 +111,7 @@ endfunction
 
 " Html/Xml Mappings {{{
 autocmd! FileType xhtml,html,slim,jade,xml,yaml :call s:WebDef()
-function! s:WebDef()
+function! s:WebDef() abort
   setlocal shiftwidth=2
   setlocal tabstop=2
 
@@ -132,7 +139,7 @@ endfunction
 
 " Markdown Mappings {{{
 autocmd! FileType markdown :call s:MarkdownDef()
-function! s:MarkdownDef()
+function! s:MarkdownDef() abort
   setlocal shiftwidth=2
   setlocal tabstop=2
   setlocal wrap
@@ -180,7 +187,7 @@ endfunction
 " Clojure Mappings {{{
 autocmd FileType lisp,clojure,scheme RainbowParentheses
 autocmd FileType lisp,clojure,scheme :call s:ClojureDef()
-function! s:ClojureDef()
+function! s:ClojureDef() abort
   " Make AutoPairs match for these pairs
   let b:AutoPairs = { '(':')', '[':']', '{':'}', '"':'"' }
 
@@ -191,7 +198,7 @@ endfunction
 
 " Python Mappings {{{
 autocmd! FileType python :call s:PythonDef()
-function! s:PythonDef()
+function! s:PythonDef() abort
   " Set omnifunc
   setlocal omnifunc=jedi#completions
   " Set foldmethod
@@ -210,9 +217,11 @@ autocmd! FileType python BracelessEnable +indent
 
 " Go Mappings {{{
 autocmd! FileType go :call s:GoDef()
-function! s:GoDef()
+function! s:GoDef() abort
   " Disable whitespace checking for an individual buffer
   let b:airline_whitespace_disabled = 1
+  " Set foldmethod to syntax
+  setlocal foldmethod=syntax
 
   " Trigger semantic highlight before write
   if (has("gui") || has("termguicolors")) && exists("SemanticHighlight")
@@ -223,6 +232,8 @@ function! s:GoDef()
   nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
   " Unite go/import
   nnoremap <buffer> <silent> <leader>oI :<C-u>Unite go/import -start-insert<CR>
+  " Unite go/decls
+  nnoremap <buffer> <silent> <leader>og :<C-u>Unite decls -start-insert<CR>
 
   " Go specific mappings
   nmap <buffer> <leader>oi <Plug>(go-info)
@@ -230,10 +241,10 @@ function! s:GoDef()
   nmap <buffer> <leader>oD <Plug>(go-describe)
   nmap <buffer> <leader>or <Plug>(go-referrers)
   nmap <buffer> <leader>ol <Plug>(go-metalinter)
-  nmap <buffer> <leader>og <Plug>(go-generate)
+  nmap <buffer> <leader>oG <Plug>(go-generate)
   nmap <buffer> <leader>ob <Plug>(go-build)
-  nmap <buffer> <leader>or <Plug>(go-run)
-  nmap <buffer> <leader>oR <Plug>(go-rename)
+  nmap <buffer> <leader>or <Plug>(go-rename)
+  nmap <buffer> <leader>oR <Plug>(go-run)
   nmap <buffer> <leader>oc <Plug>(go-coverage-toggle)
   nmap <buffer> <leader>oC <Plug>(go-callees)
   nmap <buffer> <leader>os <Plug>(go-callstack)
@@ -257,7 +268,7 @@ endfunction
 
 " C/CPP Mappings {{{
 autocmd! FileType cpp,c,cc,h,hpp :call s:CppDef()
-function! s:CppDef()
+function! s:CppDef() abort
   " Surround * to /*
   let b:surround_{char2nr('*')} = "/* \r */"
   xmap <buffer> 8 S*
