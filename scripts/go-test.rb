@@ -62,6 +62,20 @@ def anybar_notify(color)
   any_bar.close
 end
 
+def min_cov_filter(min_cov)
+  return nil if min_cov.nil?
+
+  lambda do |line|
+    display = if min_cov == 0 # display no test
+                /no test files/ =~ line
+              elsif m = /coverage: (\d+.\d+)\%/.match(line)
+                m[1].to_f <= min_cov
+              end
+
+    display ? line : ''
+  end
+end
+
 def cache_packages(pkgs)
   pkgs.clear
 
@@ -98,11 +112,11 @@ def lookup_package(pkgs, name)
   end
 end
 
-def go_test(*args, verbose: false)
-  go_cmd("go test #{args.join(' ')}", verbose: verbose)
+def go_test(*args, verbose: false, liner: nil)
+  go_cmd("go test #{args.join(' ')}", verbose: verbose, liner: liner)
 end
 
-def go_cmd(cmd, verbose: false)
+def go_cmd(cmd, verbose: false, liner: nil)
   LOG.info("Running: #{cmd.bold}".blue)
 
   anybar_notify('yellow')
@@ -140,16 +154,27 @@ def go_cmd(cmd, verbose: false)
              when /coverage: (\d+.\d+)\%/
                cov = Regexp.last_match(1).to_f
                word = "coverage: #{cov}\%".bold
-               word = if cov < 70.0 then word.red
-                      elsif cov < 85.0 then word.yellow
-                      else word.green
+               word = if    cov < 50.0 then word.red.on_light_yellow
+                      elsif cov < 60.0 then word.red
+                      elsif cov < 70.0 then word.light_red
+                      elsif cov < 80.0 then word.yellow
+                      elsif cov < 90.0 then word.light_yellow
+                      else
+                        line = line.light_black # make the line less obvious
+                        word.green
                       end
+
                line.gsub(/coverage: \d+.\d+\%/, word)
+             when /\[no test files\]/
+               line = line.gsub(/^?\b/, '?'.red.on_light_white)
+               line.gsub(/(no test files)/, '\1'.red.on_light_white)
              else
                line
              end
+      # liner
+      line = liner.call(line) unless liner.nil?
       # output line
-      print line
+      print line unless line.empty?
     end
   end
 
@@ -325,8 +350,14 @@ while line = Readline.readline('> '.blue.bold, true)
     end
 
   # run coverage test of all packages
-  when 'ca', 'covall'
-    go_test(File.join(PROJECT_ROOT, '...'), '-cover')
+  when /^ca(\s+\d+)?$/, /covall(\s+\d+)?$/
+    # only display packages below minimum coverage
+    min_cov = Regexp.last_match(1) ? Regexp.last_match(1).strip.to_i : nil
+
+    LOG.info "Min coverage: #{min_cov.to_s.green}" unless min_cov.nil?
+    liner = min_cov_filter(min_cov)
+
+    go_test(File.join(PROJECT_ROOT, '...'), '-cover', liner: liner)
 
   # open coverage report
   when 'rpt', 'report', 'covreport'
