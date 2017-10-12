@@ -166,7 +166,7 @@ def go_cmd(cmd, verbose: false, liner: nil)
 
                line.gsub(/coverage: \d+.\d+\%/, word)
              when /\[no test files\]/
-               line = line.gsub(/^?\b/, '?'.red.on_light_white)
+               line = line.gsub(/^\?\b/, '?'.red.on_light_white)
                line.gsub(/(no test files)/, '\1'.red.on_light_white)
              else
                line
