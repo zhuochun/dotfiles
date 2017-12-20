@@ -19,6 +19,7 @@ require 'ERB'
 # https://godoc.org/github.com/go-sql-driver/mysql#NullTime
 TYPE_MAP = {
   'int'           => 'int64',
+  'bigint'        => 'int64',
   'int_null'      => 'sql.NullInt64',
   'tinyint'       => 'bool',
   'tinyint_null'  => 'sql.NullBool',
@@ -68,6 +69,9 @@ class EntityTemplate
 
   def structErb
     <<-EOS
+// <%= entity_name %>Ref is a reference object to <%= entity_name %>
+var <%= entity_name %>Ref = &<%= entity_name %>{}
+
 // <%= entity_name %> defines a struct that map to one row in <%= db[:database] %>.<%= db[:table] %> table
 type <%= entity_name %> struct {
 <% schema.each do |row| -%>
@@ -90,18 +94,13 @@ func (data *<%= entity_name %>) SetID(ID string) {
 }
 
 // NewEntity implements the NewEntity function for Entity Interface
-func (data *<%= entity_name %>) NewEntity() Entity {
+func (data *<%= entity_name %>) NewEntity() orm.Entity {
   return &<%= entity_name %>{}
 }
 
 // GetTableName implements the GetTableName for MysqlData interface
 func (data *<%= entity_name %>) GetTableName() string {
   return "<%= db[:table] %>"
-}
-
-// GetNamespace implements the GetNamespace for redisNamespace interface
-func (data *<%= entity_name %>) GetNamespace() string {
-  return "<%= db[:database] %>_<%= db[:table] %>"
 }
     EOS
   end

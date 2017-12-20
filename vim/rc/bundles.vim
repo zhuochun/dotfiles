@@ -590,7 +590,7 @@ NeoBundleLazy 'junegunn/limelight.vim', {
 " }}}
 
 " HTML/XML {{{
-NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
+NeoBundle 'othree/html5.vim'
 NeoBundleLazy 'gregsexton/MatchTag', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
 NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eruby', 'eelixir']}}
 " }}}
@@ -720,6 +720,7 @@ NeoBundle 'airblade/vim-gitgutter'
 " ~    Go to the current file in the [count]th first ancestor.
 " P    Go to the current file in the [count]th parent.
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-rhubarb'
 " Magit in Vim, N next hunk, S stage/unstage, CC commit message
 NeoBundleLazy 'jreybert/vimagit', {
       \   'autoload': {'commands': ['Magit', 'MagitOnly']}

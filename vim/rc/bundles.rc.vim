@@ -771,8 +771,6 @@ if neobundle#tap('neocomplete.vim') "{{{
     if !exists('g:neocomplete#sources#omni#functions')
       let g:neocomplete#sources#omni#functions = {}
     endif
-    " Per filetype omnifunc
-    let g:neocomplete#sources#omni#functions.go = 'go#complete#Complete'
   endfunction
 
   " <TAB> completion
