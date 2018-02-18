@@ -766,11 +766,6 @@ if neobundle#tap('neocomplete.vim') "{{{
           \   'VimShellTerminal' : 'vimshell#vimshell_execute_complete',
           \   'VimShell' : 'vimshell#complete',
           \ }
-
-    " Set to use omnifunc
-    if !exists('g:neocomplete#sources#omni#functions')
-      let g:neocomplete#sources#omni#functions = {}
-    endif
   endfunction
 
   " <TAB> completion

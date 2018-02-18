@@ -8,6 +8,8 @@ go get -u github.com/FiloSottile/gorebuild
 go get -u github.com/alecthomas/gometalinter
 go get -u github.com/client9/misspell/cmd/misspell
 go get -u github.com/cweill/gotests/...
+go get -u github.com/davidrjenni/reftools/cmd/fillstruct
+go get -u github.com/dominikh/go-tools/cmd/keyify
 go get -u github.com/fatih/gomodifytags
 go get -u github.com/fatih/motion
 go get -u github.com/golang/lint/golint
