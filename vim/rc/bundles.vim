@@ -596,7 +596,7 @@ NeoBundleLazy 'mattn/emmet-vim', {'autoload': {'filetypes': ['html', 'xml', 'eru
 " }}}
 
 " Template Engines {{{
-NeoBundleLazy 'digitaltoad/vim-jade'
+NeoBundleLazy 'digitaltoad/vim-pug', {'autoload': {'filetypes': ['pug']}}
 NeoBundleLazy 'posva/vim-vue'
 NeoBundleLazy 'tpope/vim-haml'
 NeoBundleLazy 'tpope/vim-liquid'
@@ -616,7 +616,7 @@ NeoBundleLazy 'uarun/vim-protobuf', {'autoload': {'filetypes': 'proto'}}
 " }}}
 
 " JavaScript {{{
-NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
+NeoBundle 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
 NeoBundleLazy 'othree/es.next.syntax.vim', {'autoload': {'filetypes': ['javascript']}}
 NeoBundleLazy 'othree/javascript-libraries-syntax.vim', {'autoload': {'filetypes': ['javascript', 'coffee']}}
