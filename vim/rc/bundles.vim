@@ -735,6 +735,7 @@ NeoBundleLazy 'junegunn/gv.vim', {
 " Others {{{
 NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
 NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
+NeoBundleLazy 'henrik/vim-yaml-flattener', {'autoload': {'filetypes': 'yaml'}}
 NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': ['Dockerfile', 'docker-compose']}}
 NeoBundleLazy 'tbastos/vim-lua', {'autoload': {'filetypes': 'lua'}}
 NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}

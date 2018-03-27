@@ -21,9 +21,9 @@ go get -u github.com/newhook/go-symbols
 go get -u github.com/nsf/gocode
 go get -u github.com/ramya-rao-a/go-outline
 go get -u github.com/rogpeppe/godef
-go get -u github.com/tpng/gopkgs
 go get -u github.com/tylerb/gotype-live
 go get -u github.com/uber/go-torch
+go get -u github.com/uudashr/gopkgs/cmd/gopkgs
 go get -u github.com/vektra/mockery/.../
 go get -u github.com/y0ssar1an/q
 go get -u github.com/zmb3/gogetdoc
