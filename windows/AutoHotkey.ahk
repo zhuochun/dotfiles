@@ -29,8 +29,10 @@ Tab::Send {Tab}
 
 ;; CapsLock to Ctrl {{{
 CapsLock::Ctrl
-;; Shift+CapsLock to work as usual
-+CapsLock::CapsLock
+;; }}}
+
+;; Ctrl+Space to Ctrl+Shift {{{
+^Space::Send ^{Shift}
 ;; }}}
 
 ;; Enter+<key> to Ctrl+<key> {{{
