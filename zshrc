@@ -100,6 +100,8 @@ alias wgo="~/dotfiles/scripts/go-test.rb"
 alias wgr="~/dotfiles/scripts/go-run.rb"
 # Rename PDF based on content
 alias pdf="~/dotfiles/scripts/pdf-rename.rb"
+# Rename file to hyphen-delimit case
+alias hyphen="~/dotfiles/scripts/hyphen-rename.rb"
 
 # Other Alias
 # ==============================
