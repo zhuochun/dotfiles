@@ -28,7 +28,9 @@ Tab::Send {Tab}
 ;; }}}
 
 ;; CapsLock to Ctrl {{{
-CapsLock::Ctrl
+;https://github.com/randyrants/sharpkeys
+;SetCapsLockState, AlwaysOff
+;CapsLock::Ctrl
 ;; }}}
 
 ;; Ctrl+Space to Ctrl+Shift {{{
