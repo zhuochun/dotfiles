@@ -20,7 +20,7 @@ if ARGV.length != 1
 end
 
 files = if File.directory?(ARGV[0])
-          Dir.glob(File.join(ARGV[0], "**"))
+          Dir.glob(File.join(ARGV[0], "**/*"))
         elsif File.exist?(ARGV[0])
           [ARGV[0]]
         else

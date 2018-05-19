@@ -29,7 +29,7 @@ end
 
 def slug(str)
   str.downcase
-     .gsub(/[^\w]/, '-')
+     .gsub(/[^\w\p{Han}]/, '-')
      .gsub(/^a-|-a-|-s-|-+/, '-') # remove a, xx's
      .gsub(/-(t)-/, '\1-') # replace xx't to xxt
      .gsub(/^-|-$/, '')
