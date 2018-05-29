@@ -110,5 +110,9 @@ brew install httpie
 brew install selecta
 brew install exa
 
+# Install markdown-to-confluence wiki https://github.com/kentaro-m/md2confl
+brew tap kentaro-m/homebrew-md2confl
+brew install md2confl
+
 # Remove outdated versions from the cellar.
 brew cleanup
