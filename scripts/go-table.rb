@@ -32,7 +32,8 @@ TYPE_MAP = {
   'text'          => 'string',
   'text_null'     => 'sql.NullString',
   'datetime'      => 'time.Time',
-  'datetime_null' => 'mysql.NullTime'
+  'datetime_null' => 'mysql.NullTime',
+  'json'          => 'interface{}'
 }.freeze
 
 class EntityTemplate
