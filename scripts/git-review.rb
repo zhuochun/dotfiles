@@ -1,28 +1,37 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-# Check who are the reviewers
+require_relative './git-utils'
 
-if ARGV.length != 1
-  STDERR << "Usage: ./git-review.rb directory\n"
+# Check who are the reviewers
+#
+#   ./git-review.rb --since "2018-05-01" directory
+#
+
+if ARGV.length < 1
+  STDERR << "Usage: ./git-review.rb [git-log options] directory\n"
   exit 1
 end
 
-dir = ARGV[0]
+opt = ARGV[0...-1].join(' ') # --since "2018-05-01"
+dir = ARGV[-1]
 
-commits = `git log #{dir}`
+commits = `git log #{opt} #{dir}`
 
-reviewby = commits.split("\n").select do |line|
-  line =~ /Reviewed By:/ && line.split(", ").length < 5
-end.map do |line|
-  line[16..-1].split(", ").map(&:strip).reject { |n| n.start_with?("#") }
+COMMIT_SPLIT_REGEX = /commit \w+\n+Author: .+?\n+Date: .+?\n+/
+
+reviewed_by = commits.split(COMMIT_SPLIT_REGEX).map do |commit_msg|
+  next [] if commit_msg.empty?
+
+  commit = parse_phab_commit(commit_msg)
+  commit[:reviewed_by].reject { |n| n.start_with?('#') }
 end
 
 # count by review by group
-STDOUT << "= {Reviewed By} Group Counts\n"
+STDOUT << "= {Reviewed By} Pair Counts\n"
 
 count = Hash.new(0)
-reviewby.each { |line| count[line.sort.join(",")] += 1 }
+reviewed_by.each { |line| count[line.sort.join(',')] += 1 }
 
 inverted = Hash.new { |h, k| h[k] = [] }
 count.each { |key, val| inverted[val] << key }
@@ -39,7 +48,7 @@ STDOUT << "\n\n"
 STDOUT << "= {Reviewed By} Individual Counts\n"
 
 count2 = Hash.new(0)
-reviewby.each do |line|
+reviewed_by.each do |line|
   line.each { |n| n !~ /^O\d+/ && count2[n] += 1 }
 end
 

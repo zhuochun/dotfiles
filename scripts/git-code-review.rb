@@ -7,6 +7,8 @@ require 'date'
 require 'json'
 require 'ostruct'
 
+require_relative './git-utils'
+
 # OhMyCodeReview reminder
 #
 # Run in a directory with Phabricator config:
@@ -38,24 +40,9 @@ def load_config(path)
   OpenStruct.new(cfg)
 end
 
-BLAME = /.+? +\((.+?) +(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d [\-\+]\d{4}) +\d+\) .*/
-
 def git_blame(repo, file)
   content = `git blame #{repo}#{file}`
-  return {} if content.empty?
-
-  modified_by = {}
-  content.split("\n").each do |l|
-    m = BLAME.match(l)
-    pp l && next if m.nil?
-
-    name, date = m[1], DateTime.parse(m[2])
-    modified = modified_by[name] || {count: 0, last_edit_at: DateTime.new(0)}
-    modified[:count] += 1
-    modified[:last_edit_at] = [date, modified[:last_edit_at]].max
-    modified_by[name] = modified
-  end
-  modified_by
+  parse_git_blame(content)
 end
 
 def slack(hook, channel, msg)
@@ -85,39 +72,8 @@ def user_search(phid)
 end
 
 def commit_msg(revid)
-  begin
-    resp = conduit('differential.getcommitmessage', revision_id: revid)
-
-    title, rest = resp.split("\n\nSummary:\n")
-    if rest.nil? # no summary
-      title, rest = resp.split("\n\nReviewers:")
-    else
-      summary, rest = rest.split("\n\nReviewers:")
-    end
-
-    reviewers, rest = rest.split("\n\nReviewed By:")
-    if rest.nil?
-      reviewed_by = '' # no reviewed_by
-      reviewers, rest = reviewers.split(/\n\nSubscribers:|\n\nDifferential Revision:/)
-      subscribers, revision = rest.split("\n\nDifferential Revision:") unless rest.nil?
-    else
-      reviewed_by, rest = rest.split(/\n\nSubscribers:|\n\nDifferential Revision:/)
-      subscribers, revision = rest.split("\n\nDifferential Revision:") unless rest.nil?
-    end
-  rescue Exception => e
-    pp e
-  end
-
-  commit = {
-    title: title.to_s.strip,
-    summary: summary.to_s.strip,
-    reviewers: reviewers.to_s.strip.split(', '),
-    reviewed_by: reviewed_by.to_s.strip.split(', '),
-    subscribers: subscribers.to_s.strip.split(', '),
-    revision: revision.to_s.strip
-  }
-
-  OpenStruct.new(commit)
+  resp = conduit('differential.getcommitmessage', revision_id: revid)
+  OpenStruct.new(parse_phab_commit(resp))
 end
 
 def commit_paths(revid)
