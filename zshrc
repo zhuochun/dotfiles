@@ -94,14 +94,16 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 
 # Personal scripts https://github.com/zhuochun/dotfiles
 # ==============================
-# Watch go package directory and trigger tests
-alias wgo="~/dotfiles/scripts/go-test.rb"
-# Watch go package directory and restart scripts
-alias wgr="~/dotfiles/scripts/go-run.rb"
-# Rename PDF based on content
-alias pdf="~/dotfiles/scripts/pdf-rename.rb"
-# Rename file to hyphen-delimit case
-alias hyphen="~/dotfiles/scripts/hyphen-rename.rb"
+if [ -d ~/dotfiles/scripts ]; then
+    # Watch go package directory and trigger tests
+    alias wgo="~/dotfiles/scripts/go-test.rb"
+    # Watch go package directory and restart scripts
+    alias wgr="~/dotfiles/scripts/go-run.rb"
+    # Rename PDF based on content
+    alias pdf="~/dotfiles/scripts/rename-pdf.rb"
+    # Rename file to hyphen-delimit case
+    alias hyp="~/dotfiles/scripts/rename-to-hyphen.rb"
+fi
 
 # Other Alias
 # ==============================
