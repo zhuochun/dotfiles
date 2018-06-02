@@ -81,7 +81,7 @@ trap('INT') do
 end
 
 if ARGV.length != 1
-  STDERR << "Usage: ./pdf-rename.rb filename.pdf\n"
+  STDERR << "Usage: #{$PROGRAM_NAME} filename.pdf\n"
   exit 1
 end
 

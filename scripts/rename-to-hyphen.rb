@@ -15,7 +15,7 @@ def slug(str)
 end
 
 if ARGV.length != 1
-  STDERR << "Usage: ./hyphen-rename.rb filename.pdf\n"
+  STDERR << "Usage: #{$PROGRAM_NAME} filename.pdf\n"
   exit 1
 end
 
