@@ -214,11 +214,15 @@ end
 CONFIG_PATH = ARGV[0]
 
 loop do
-  begin
-    cfg = load_config(CONFIG_PATH)
-    scan_diffs(cfg)
-  rescue Exception => e
-    pp e
+  now = Time.new()
+
+  if now.hour >= 10 && now.hour <= 20
+    begin
+      cfg = load_config(CONFIG_PATH)
+      scan_diffs(cfg)
+    rescue Exception => e
+      pp e
+    end
   end
 
   sleep(1740) # 29 mins
