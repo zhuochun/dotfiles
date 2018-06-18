@@ -118,11 +118,10 @@ end
 
 def go_cmd(cmd, verbose: false, liner: nil)
   LOG.info("Running: #{cmd.bold}".blue)
-
   anybar_notify('yellow')
 
   test_passed = true
-
+  slow_tests = []
   IO.popen(cmd, err: [:child, :out]) do |io|
     while line = io.gets
       # ignore patterns
@@ -147,8 +146,16 @@ def go_cmd(cmd, verbose: false, liner: nil)
                line.red
              when /^=+ RUN/
                line.light_cyan
-             when /^-+ PASS:/
-               line.green
+             when /^( *-+ PASS: .+) \((\d+.\d+)s\)/
+               ts = Regexp.last_match(2).to_f
+               latency = if ts < 0.5 then '(%.2fs)' % ts
+                         elsif ts < 1.0 then '(%.2fs)'.yellow % ts
+                         else '(%.2fs)'.red % ts
+                         end
+
+               slow_tests << Regexp.last_match(1).blue + ' ' + latency + "\n" if ts >= 0.5
+
+               Regexp.last_match(1).green + ' ' + latency + "\n"
              when /^Benchmark/
                line.gsub(/^(Benchmark[\w-]+) /, '\1 '.green.bold)
              when /coverage: (\d+.\d+)\%/
@@ -179,9 +186,16 @@ def go_cmd(cmd, verbose: false, liner: nil)
   end
 
   if $CHILD_STATUS.success? && test_passed
-    anybar_notify('green')
-  else
-    anybar_notify(test_passed ? 'exclamation' : 'red') # build fail, or test fail
+    if slow_tests.empty?
+      anybar_notify('green')
+    else
+      print "=== SLOW TESTS (%d):\n".blue % slow_tests.length
+      slow_tests.each { |line| print line }
+
+      anybar_notify('blue')
+    end
+  else # build fail, or test fail
+    anybar_notify(test_passed ? 'exclamation' : 'red')
   end
 end
 
