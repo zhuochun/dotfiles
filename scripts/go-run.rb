@@ -68,7 +68,7 @@ Listen.to(Dir.pwd, only: /(?<!_test)\.go$/) do |_modified, _added, _removed|
     end
 
     port = ARGV.fetch(1, 8000)
-    port_pid = `lsof -i:#{port} -t`
+    port_pid = `lsof -i:#{port} -t`.chomp
     unless port_pid.empty?
       `kill -9 #{port_pid}` # kill pid that own the service port
       print ">>> Killed pid: #{port_pid}, port: #{port}\n".blue

@@ -153,7 +153,7 @@ def go_cmd(cmd, verbose: false, liner: nil)
                          else '(%.2fs)'.red % ts
                          end
 
-               slow_tests << Regexp.last_match(1).blue + ' ' + latency + "\n" if ts >= 0.5
+               slow_tests << Regexp.last_match(1).blue + ' ' + latency + "\n" if ts >= 0.9
 
                Regexp.last_match(1).green + ' ' + latency + "\n"
              when /^Benchmark/
