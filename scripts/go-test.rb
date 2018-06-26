@@ -121,6 +121,7 @@ def go_cmd(cmd, verbose: false, liner: nil)
   anybar_notify('yellow')
 
   test_passed = true
+
   slow_tests = []
   IO.popen(cmd, err: [:child, :out]) do |io|
     while line = io.gets
@@ -145,7 +146,7 @@ def go_cmd(cmd, verbose: false, liner: nil)
                test_passed = false
                line.red
              when /^=+ RUN/
-               line.light_cyan
+               '' # no output
              when /^( *-+ PASS: .+) \((\d+.\d+)s\)/
                ts = Regexp.last_match(2).to_f
                latency = if ts < 0.5 then '(%.2fs)' % ts
@@ -181,7 +182,7 @@ def go_cmd(cmd, verbose: false, liner: nil)
       # liner
       line = liner.call(line) unless liner.nil?
       # output line
-      print line unless line.empty?
+      print line unless line.strip.empty?
     end
   end
 
@@ -251,16 +252,16 @@ while line = Readline.readline('> '.blue.bold, true)
     dir = input.end_with?('.') ? (input.chop! && '.') : '...'
 
     if input.empty?
-      go_test(File.join(last_dir, dir)) unless last_dir.empty?
+      go_test(File.join(last_dir, dir), '-failfast') unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
-      go_test(File.join(PROJECT_ROOT, pkg, dir), '-v')
+      go_test(File.join(PROJECT_ROOT, pkg, dir), '-v -failfast')
     else
       LOG.info 'No package is identified'
     end
 
   # run test of all packages
   when 'ta', 'testall'
-    go_test(File.join(PROJECT_ROOT, '...'))
+    go_test(File.join(PROJECT_ROOT, '... -failfast'))
 
   # example tf api/api_test.go:32
   # go test github.com/test/data -run TestTest
@@ -280,7 +281,7 @@ while line = Readline.readline('> '.blue.bold, true)
     if func_name.empty?
       LOG.info 'No test func is identified'
     else
-      go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v")
+      go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v -failfast")
     end
 
   # run race detector in a package or in project
