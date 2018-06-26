@@ -195,29 +195,72 @@ def go_cmd(cmd, verbose: false, liner: nil)
 
       anybar_notify('blue')
     end
+    return true
   else # build fail, or test fail
     anybar_notify(test_passed ? 'exclamation' : 'red')
+    return false
   end
 end
 
 listener = Listen.to(Dir.pwd, only: /\.go$/) do |modified, added, removed|
-  unique_paths = {}
+  files = [modified, added, removed].flatten
+  test_files = []
 
-  [modified, added, removed].each do |group|
-    group.each { |file| unique_paths[File.dirname(file)] = true }
+  unique_paths = {}
+  files.each do |file|
+    test_files << file if file.end_with?('_test.go')
+    unique_paths[File.dirname(file)] = true
   end
 
   print "\n" # perfectionism  ┬─┬ ノ( ^_^ノ )
 
-  unique_paths.keys.each do |path|
-    relative_path = path.gsub(GO_PATH_SRC, '')
-    LOG.info("Detected changes in #{relative_path.gsub(PROJECT_ROOT, '.').bold}".cyan)
+  all_passed = true
+  # run func tests iff test files are updated
+  if test_files.length == files.length
+    ffuncs = {}
+    test_files.each do |file|
+      funcs = []
+      File.open(file, 'r') do |f|
+        f.each_line do |line|
+          if line =~ /^func ((?:Test|Example)\w+?)\(/
+            func_name = Regexp.last_match(1)
+            # do a simple deduplication when the func name is prefixed
+            funcs << func_name if funcs.empty? || !func_name.start_with?(funcs.last)
+          end
+        end
+      end if File.exist?(file)
 
-    last_dir = relative_path
-    go_test(File.join(relative_path, '...'), '-v')
+      ffuncs[file] = funcs if funcs.length > 0
+    end
+
+    ffuncs.each do |file, funcs|
+      relative_path = file.gsub(GO_PATH_SRC, '').gsub(PROJECT_ROOT, '.')
+      LOG.info("Detected test changes in #{relative_path.bold} (#{funcs.length} tests)".cyan)
+
+      funcs.each do |func|
+        relative_path = File.dirname(file).gsub(GO_PATH_SRC, '').gsub(PROJECT_ROOT, '.')
+        all_passed &= go_test(relative_path, "-run #{func} -v")
+
+        break unless all_passed # failfast
+      end
+
+      break unless all_passed # failfast
+    end
+  else
+    unique_paths.keys.each do |path|
+      relative_path = path.gsub(GO_PATH_SRC, '')
+      LOG.info("Detected changes in #{relative_path.gsub(PROJECT_ROOT, '.').bold}".cyan)
+
+      last_dir = relative_path
+      all_passed &= go_test(File.join(relative_path, '...'), '-v -failfast')
+
+      break unless all_passed # failfast
+    end
   end
 
   print '> '.blue.bold
+
+  anybar_notify(all_passed ? 'green' : 'red')
 end
 
 listener.start
