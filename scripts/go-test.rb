@@ -234,26 +234,25 @@ listener = Listen.to(Dir.pwd, only: /\.go$/) do |modified, added, removed|
     end
 
     ffuncs.each do |file, funcs|
-      relative_path = file.gsub(GO_PATH_SRC, '').gsub(PROJECT_ROOT, '.')
+      last_dir = File.dirname(file).gsub(GO_PATH_SRC, '')
+
+      relative_path = last_dir.gsub(PROJECT_ROOT, '.')
       LOG.info("Detected test changes in #{relative_path.bold} (#{funcs.length} tests)".cyan)
 
       funcs.each do |func|
-        relative_path = File.dirname(file).gsub(GO_PATH_SRC, '').gsub(PROJECT_ROOT, '.')
-        all_passed &= go_test(relative_path, "-run #{func} -v")
-
+        all_passed &= go_test(last_dir, "-run #{func} -v")
         break unless all_passed # failfast
       end
-
       break unless all_passed # failfast
     end
   else
     unique_paths.keys.each do |path|
-      relative_path = path.gsub(GO_PATH_SRC, '')
-      LOG.info("Detected changes in #{relative_path.gsub(PROJECT_ROOT, '.').bold}".cyan)
+      last_dir = path.gsub(GO_PATH_SRC, '')
 
-      last_dir = relative_path
-      all_passed &= go_test(File.join(relative_path, '...'), '-v -failfast')
+      relative_path = last_dir.gsub(PROJECT_ROOT, '.')
+      LOG.info("Detected changes in #{relative_path.bold}".cyan)
 
+      all_passed &= go_test(last_dir, '-v -failfast')
       break unless all_passed # failfast
     end
   end
@@ -400,7 +399,7 @@ while line = Readline.readline('> '.blue.bold, true)
     dir = input.end_with?('.') ? (input.chop! && '.') : '...'
 
     if input.empty?
-      go_test(File.join(last_dir, dir), '-coverprofile=coverage.out') unless last_dir.empty?
+      go_test(last_dir, '-coverprofile=coverage.out') unless last_dir.empty?
     elsif pkg = lookup_package(cached_packages, input)
       go_test(File.join(PROJECT_ROOT, pkg, dir), '-coverprofile=coverage.out')
     else
