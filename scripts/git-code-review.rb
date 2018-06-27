@@ -205,8 +205,8 @@ def scan_diffs(cfg)
       msg  = "*#{rev.author_name}* "
       
       title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
-      # Don't include diff that have WIP in the commit message
-      if title.downcase.include? "(WIP)".downcase
+      # Don't include diff that have WIP in the diff title message
+      if title.downcase.include? "(wip)"
         next
       end
       
