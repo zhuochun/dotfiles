@@ -203,7 +203,14 @@ def scan_diffs(cfg)
       pp rev.reviewers
 
       msg  = "*#{rev.author_name}* "
-      msg += "<#{cfg.diff_url}#{rev.revision.id}|#{rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')}> "
+      
+      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
+      # Don't include diff that have WIP in the commit message
+      if title.downcase.include? "(WIP)".downcase
+        next
+      end
+      
+      msg += "<#{cfg.diff_url}#{rev.revision.id}|#{}> "
 
       reviewer = rev.reviewers[0].to_s
       # fallback to random pick another diff author
