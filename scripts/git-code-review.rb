@@ -198,18 +198,17 @@ def scan_diffs(cfg)
     end
 
     msgs = revs.map do |rev|
+      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
+      # Don't include diff that have WIP in the diff title message
+      if title.downcase =~ /[\[\(]wip[\]\)]/
+        next
+      end
+      
       pp rev.revision
       pp rev.author
       pp rev.reviewers
 
       msg  = "*#{rev.author_name}* "
-      
-      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
-      # Don't include diff that have WIP in the diff title message
-      if title.downcase.include? "(wip)"
-        next
-      end
-      
       msg += "<#{cfg.diff_url}#{rev.revision.id}|#{title}> "
 
       reviewer = rev.reviewers[0].to_s
