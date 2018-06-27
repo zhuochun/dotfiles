@@ -64,7 +64,8 @@ def slack(hook, channel, msg)
     text: msg
   }
 
-  pp `echo '#{JSON.generate(payload)}' | http POST #{hook} content-type:application/json`
+  resp = `echo '#{JSON.generate(payload)}' | http POST #{hook} content-type:application/json`
+  pp "slack err: #{JSON.generate(payload)}" if resp != 'ok'
 end
 
 def conduit(api, payload)
@@ -180,6 +181,9 @@ def scan_diffs(cfg)
 
     authors = []
     revs = revs.map do |rev|
+      # don't include diff that have WIP in the diff title message
+      next if rev.fields['title'].downcase =~ /[\[\(]wip[\]\)]/
+
       commit = commit_msg(rev.id)
       paths = commit_paths(rev.id)
 
@@ -195,20 +199,14 @@ def scan_diffs(cfg)
                      commit: commit,
                      paths: paths,
                      reviewers: reviewers)
-    end
+    end.compact
 
     msgs = revs.map do |rev|
-      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
-      # Don't include diff that have WIP in the diff title message
-      if title.downcase =~ /[\[\(]wip[\]\)]/
-        next
-      end
-      
-      pp rev.revision
-      pp rev.author
-      pp rev.reviewers
+      # pp rev.revision, rev.author, rev.reviewers
 
       msg  = "*#{rev.author_name}* "
+      # remove annoying texts in diff title
+      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
       msg += "<#{cfg.diff_url}#{rev.revision.id}|#{title}> "
 
       reviewer = rev.reviewers[0].to_s
@@ -219,13 +217,12 @@ def scan_diffs(cfg)
 
       msg += "(_#{time_ago(rev.revision.fields['dateModified'])}_)"
       msg
-    end
+    end.compact
 
     if msgs.empty?
       msg = [
         'Nothing to review. Aiyoh, make more diffs lah :diya:',
         'Steady, everything has been reviewed :really_good_job:',
-        'Wah lau eh, bored is this bot, reminder there was nothing loh :bb8_run:',
         'Ah boy/girl, diffs are empty, faster chope seats :chopsticks:'
       ].sample
 
@@ -250,8 +247,7 @@ cfg = load_config(CONFIG_PATH)
 loop do
   now = Time.new
   tw = cfg.time_window
-
-  if !tw || (tw['days'].include?(now.wday) && now.hour >= tw['hours'][0] && now.hour <= tw['hours'][1])
+  if !tw || (tw['days'].include?(now.wday) && Range.new(*tw['hours']).cover?(now.hour))
     begin
       cfg = load_config(CONFIG_PATH)
       scan_diffs(cfg)
