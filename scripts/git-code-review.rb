@@ -210,7 +210,7 @@ def scan_diffs(cfg)
         next
       end
       
-      msg += "<#{cfg.diff_url}#{rev.revision.id}|#{}> "
+      msg += "<#{cfg.diff_url}#{rev.revision.id}|#{title}> "
 
       reviewer = rev.reviewers[0].to_s
       # fallback to random pick another diff author
