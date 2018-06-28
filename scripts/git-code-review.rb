@@ -146,7 +146,7 @@ def list_reviewers(cfg, author, commit, paths)
 
   # find previous committer to paths changed
   committers = {}
-  paths.sample(9).each do |path|
+  paths.take(9).each do |path|
     git_blame(cfg.repo || Dir.pwd, path).each_pair do |name, v|
       m = committers[name]
 
