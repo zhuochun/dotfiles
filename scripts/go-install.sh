@@ -9,6 +9,7 @@ go get -u github.com/alecthomas/gometalinter
 go get -u github.com/client9/misspell/cmd/misspell
 go get -u github.com/cweill/gotests/...
 go get -u github.com/davidrjenni/reftools/cmd/fillstruct
+go get -u github.com/derekparker/delve/cmd/dlv
 go get -u github.com/dominikh/go-tools/cmd/keyify
 go get -u github.com/fatih/gomodifytags
 go get -u github.com/fatih/motion
@@ -17,6 +18,7 @@ go get -u github.com/josharian/impl
 go get -u github.com/jstemmer/gotags
 go get -u github.com/kisielk/errcheck
 go get -u github.com/klauspost/asmfmt/cmd/asmfmt
+go get -u github.com/koron/iferr
 go get -u github.com/newhook/go-symbols
 go get -u github.com/nsf/gocode
 go get -u github.com/ramya-rao-a/go-outline

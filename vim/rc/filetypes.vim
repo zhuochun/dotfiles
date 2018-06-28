@@ -22,7 +22,7 @@ autocmd! FileType sql setlocal formatprg=pg_format\ -f\ 2
 " JSON {{{
 " npm install jsonmatter -g
 " https://github.com/hotoo/jsonmatter
-autocmd! FileType json setlocal foldmethod=syntax formatprg=jsonmatter\ -i\ 4
+autocmd! FileType json setlocal shiftwidth=2 tabstop=2 foldmethod=syntax formatprg=jsonmatter\ -i\ 2
 " }}}
 
 " Ruby Mappings {{{
@@ -248,6 +248,7 @@ function! s:GoDef() abort
   nmap <buffer> <leader>oc <Plug>(go-coverage-toggle)
   nmap <buffer> <leader>oC <Plug>(go-callees)
   nmap <buffer> <leader>os <Plug>(go-callstack)
+  nmap <buffer> <leader>oe <Plug>(go-iferr)
 
   " Overwrite vim-test mappings
   nmap <buffer> <leader>tt <Plug>(go-test)
