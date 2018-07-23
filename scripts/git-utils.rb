@@ -13,6 +13,7 @@ def parse_git_blame(content)
     next if m.nil?
 
     author = m[1]
+    next if author == 'Not Committed Yet'
 
     modified = modified_by[author] || { count: 0, last_edit_at: DateTime.new(0) }
     modified[:count] += 1
