@@ -318,10 +318,10 @@ while line = Readline.readline('> '.blue.bold, true)
         break if f.lineno > lineno
         func_name = line =~ /^func ((?:Test|Example)\w+?)\(/ ? Regexp.last_match(1) : func_name
       end
-    end
+    end if File.exist?(file)
 
     if func_name.empty?
-      LOG.info 'No test func is identified'
+      LOG.info 'No test func is identified'.red
     else
       go_test(File.join(PROJECT_ROOT, File.dirname(file)), "-run #{func_name} -v -failfast")
     end
@@ -353,10 +353,10 @@ while line = Readline.readline('> '.blue.bold, true)
         break if f.lineno > lineno
         func_name = line =~ /^func ((?:Bench)\w+?)\(/ ? Regexp.last_match(1) : func_name
       end
-    end
+    end if File.exist?(file)
 
     if func_name.empty?
-      LOG.info 'No benchmark func is identified'
+      LOG.info 'No benchmark func is identified'.red
     else
       dir = File.dirname(file)
       go_cmd "(cd #{dir} && go test -bench . -run #{func_name} -benchmem -cpuprofile cpu.out -memprofile mem.out)"

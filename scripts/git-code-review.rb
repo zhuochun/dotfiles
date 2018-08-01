@@ -206,7 +206,7 @@ def scan_diffs(cfg)
 
       msg  = "*#{rev.author_name}* "
       # remove annoying texts in diff title
-      title = rev.revision.fields['title'].gsub(/[<>"'\\\/]/, '')
+      title = rev.revision.fields['title'].gsub(/[\\\n<>"'\\\/]/, '')
       msg += "<#{cfg.diff_url}#{rev.revision.id}|#{title}> "
 
       reviewer = rev.reviewers[0].to_s
