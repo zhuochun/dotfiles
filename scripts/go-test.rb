@@ -149,12 +149,15 @@ def go_cmd(cmd, verbose: false, liner: nil)
                '' # no output
              when /^( *-+ PASS: .+) \((\d+.\d+)s\)/
                ts = Regexp.last_match(2).to_f
+
                latency = if ts < 0.5 then '(%.2fs)' % ts
                          elsif ts < 1.0 then '(%.2fs)'.yellow % ts
                          else '(%.2fs)'.red % ts
                          end
 
-               slow_tests << Regexp.last_match(1).blue + ' ' + latency + "\n" if ts >= 0.9
+               if ts >= 0.50 # seconds
+                 slow_tests << { text: "#{Regexp.last_match(1).blue} #{latency}\n", latency: ts }
+               end
 
                Regexp.last_match(1).green + ' ' + latency + "\n"
              when /^Benchmark/
@@ -191,7 +194,8 @@ def go_cmd(cmd, verbose: false, liner: nil)
       anybar_notify('green')
     else
       print "=== SLOW TESTS (%d):\n".blue % slow_tests.length
-      slow_tests.each { |line| print line }
+
+      slow_tests.sort_by { |t| -t[:latency] }.take(10).each { |t| print t[:text] }
 
       anybar_notify('blue')
     end
