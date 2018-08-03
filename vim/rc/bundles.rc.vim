@@ -391,14 +391,14 @@ if neobundle#tap('unite.vim') "{{{
           \ })
 
     " sorter_default
-    call unite#filters#sorter_default#use(['sorter_rank'])
+    " call unite#filters#sorter_default#use(['sorter_rank'])
     " matcher default
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
     " sorters
-    call unite#custom#source(
-          \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
-          \ 'sorters', ['sorter_selecta'])
+    " call unite#custom#source(
+    "       \ 'buffer,file,directory,file_rec,file_rec/async,file_rec/git',
+    "       \ 'sorters', ['sorter_rank'])
 
     " matchers
     call unite#custom#source(
