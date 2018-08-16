@@ -20,9 +20,9 @@ if ARGV.length != 1
 end
 
 files = if File.directory?(ARGV[0])
-          Dir.glob(File.join(ARGV[0], "**/*"))
+          Dir.glob(File.join(File.absolute_path(ARGV[0]), "**/*"))
         elsif File.exist?(ARGV[0])
-          [ARGV[0]]
+          [File.absolute_path(ARGV[0])]
         else
           STDERR << "File/Path not found\n"
           exit 2
@@ -39,14 +39,19 @@ files.each do |file|
   end
 
   new_file = File.join(path, "#{basename}#{extname}")
-  if file.casecmp(new_file) == 0
-    if file != new_file # however, not in same case
-      File.rename(file, new_file)
+
+  if file == new_file
+    next # same filename
+  elsif File.exist?(new_file) # not same name but file existed?
+    if file.casecmp(new_file) == 0 # case insensitive file check?
+      tmp_file = File.join(path, "tmp-#{basename}#{extname}")
+      STDERR << "Temp file existed: #{tmp_file}\n" if File.exist?(tmp_file)
+
+      File.rename(file, tmp_file)
+      File.rename(tmp_file, new_file)
     else
-      next
+      STDERR << "File existed: #{new_file}\n"
     end
-  elsif File.exist?(new_file)
-    STDERR << "File existed: #{new_file}\n"
   else
     File.rename(file, new_file)
   end
