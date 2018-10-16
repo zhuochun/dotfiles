@@ -676,7 +676,6 @@ NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', {'autoload': {'filetypes': ['c
 
 " Go {{{
 NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
-NeoBundleLazy 'garyburd/go-explorer', {'autoload': {'filetypes': ['go']}}
 " go get -u github.com/haya14busa/gopkgs/cmd/gopkgs
 NeoBundleLazy 'rhysd/unite-go-import.vim', {
       \   'depends' : ['Shougo/unite.vim'],
@@ -733,13 +732,12 @@ NeoBundleLazy 'junegunn/gv.vim', {
 " }}}
 
 " Others {{{
-NeoBundleLazy 'alcesleo/vim-uppercase-sql', {'autoload': {'filetypes': 'sql'}}
-NeoBundleLazy 'chase/vim-ansible-yaml', {'autoload': {'filetypes': 'ansible'}}
-NeoBundleLazy 'henrik/vim-yaml-flattener', {'autoload': {'filetypes': 'yaml'}}
-NeoBundleLazy 'honza/dockerfile.vim', {'autoload': {'filetypes': ['Dockerfile', 'docker-compose']}}
-NeoBundleLazy 'tbastos/vim-lua', {'autoload': {'filetypes': 'lua'}}
-NeoBundleLazy 'tmux-plugins/vim-tmux', {'autoload': {'filetypes': 'tmux'}}
-NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
+NeoBundle 'chase/vim-ansible-yaml'
+NeoBundle 'henrik/vim-yaml-flattener'
+NeoBundle 'hashivim/vim-terraform'
+NeoBundle 'honza/dockerfile.vim'
+NeoBundle 'tbastos/vim-lua'
+NeoBundle 'tmux-plugins/vim-tmux'
 " }}}
 
 " Termimal (Tmux) {{{

@@ -13,7 +13,6 @@ go get -u github.com/derekparker/delve/cmd/dlv
 go get -u github.com/dominikh/go-tools/cmd/keyify
 go get -u github.com/fatih/gomodifytags
 go get -u github.com/fatih/motion
-go get -u github.com/golang/lint/golint
 go get -u github.com/josharian/impl
 go get -u github.com/jstemmer/gotags
 go get -u github.com/kisielk/errcheck
@@ -30,6 +29,7 @@ go get -u github.com/vektra/mockery/.../
 go get -u github.com/y0ssar1an/q
 go get -u github.com/zmb3/gogetdoc
 
+go get -u golang.org/x/lint/golint
 go get -u golang.org/x/tools/cmd/eg
 go get -u golang.org/x/tools/cmd/godoc
 go get -u golang.org/x/tools/cmd/goimports

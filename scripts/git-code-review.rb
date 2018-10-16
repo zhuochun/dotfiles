@@ -256,5 +256,5 @@ loop do
     end
   end
 
-  sleep(1740) # 29 mins
+  sleep(3600) # 60 mins
 end
