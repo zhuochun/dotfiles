@@ -25,6 +25,9 @@ require_relative './git-utils'
 #           "days": [1, 2, 3, 4, 5],
 #           "hours": [10, 20]
 #       },
+#       "exclude_diff_prefixes": [
+#           "(wip)", "[wip]"
+#       ],
 #       "exclude_users": [],
 #       "alias_users": [
 #           {
@@ -182,7 +185,9 @@ def scan_diffs(cfg)
     authors = []
     revs = revs.map do |rev|
       # don't include diff that have WIP in the diff title message
-      next if rev.fields['title'].downcase =~ /[\[\(]wip[\]\)]/
+      next if cfg.exclude_diff_prefixes.any? do |prefix|
+        rev.fields['title'].downcase.start_with?(prefix)
+      end
 
       commit = commit_msg(rev.id)
       paths = commit_paths(rev.id)
