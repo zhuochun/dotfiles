@@ -3,9 +3,9 @@
 
 # Try to rename by read the PDF content
 #
-#   ~/dotfiles/scripts/pdf-rename.rb file.pdf
+#   rename-pdf.rb file.pdf
 #
-#   find ~/Downloads | ag "\d+.pdf" | head -n 2 | YES=1 xargs -n 1 ~/dotfiles/scripts/pdf-rename.rb
+#   find ~/Downloads | ag "\d+.pdf" | head -n 2 | YES=1 xargs -n 1 rename-pdf
 #
 # Dependency: gem install pdf-reader
 #
@@ -87,7 +87,7 @@ end
 
 r = begin
   PDF::Reader.new(ARGV[0])
-rescue Exception => e
+rescue StandardError => e
   STDERR << "Error: Invalid Pdf, #{e}".red
   exit 1
 end
@@ -102,7 +102,7 @@ lines = begin
             .split("\n")
             .map { |line| line.strip.gsub(/\s+/, ' ') }
             .select { |line| !line.empty? }
-rescue Exception => e
+rescue StandardError => e
   STDERR << "Error: Text not found, #{e}".red
   exit 1
 end

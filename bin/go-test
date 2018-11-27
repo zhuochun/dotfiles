@@ -443,7 +443,7 @@ while line = Readline.readline('> '.blue.bold, true)
       IO.popen(Regexp.last_match(1).strip, err: [:child, :out]) do |io|
         print line while line = io.gets
       end
-    rescue Exception => e
+    rescue StandardError => e
       print e
     end
 

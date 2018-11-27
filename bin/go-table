@@ -8,7 +8,7 @@ require 'ERB'
 #
 # Usage:
 #
-#   ./go-table.rb database tablename StructName
+#   go-table database tablename StructName
 #
 # Dependencies:
 #
@@ -109,7 +109,7 @@ end
 
 # ARGV Logic
 if ARGV.length < 3
-  $stdout << "Usage: ./go-table.rb database tablename StructName\n"
+  $stderr << "Usage: #{$PROGRAM_NAME} database tablename StructName\n"
   exit(1)
 end
 
@@ -124,5 +124,8 @@ table = ARGV[1]
 entity_name = ARGV[2]
 
 schema = client.query("DESCRIBE #{table};")
-template = EntityTemplate.new(entity_name, schema, db_config.merge(table: table))
+template = EntityTemplate.new(
+  entity_name,
+  schema,
+  db_config.merge(table: table))
 $stdout << template.render

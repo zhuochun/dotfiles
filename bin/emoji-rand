@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
+
 require 'net/http'
 require 'json'
 
 begin
-  uri = URI('https://cdn.rawgit.com/github/gemoji/master/db/emoji.json')
+  uri = URI('https://cdn.jsdelivr.net/gh/notwaldorf/emoji-translate/extension/emojis.json')
   resp = Net::HTTP.get_response(uri)
   emoji = JSON.parse(resp.body)
 
@@ -11,6 +12,6 @@ begin
   $stdout << emoji.map do |i|
     i['emoji'] if i['category'] != 'Flags'
   end.compact.sample(num).join(' ') << "\n"
-rescue Exception => e
+rescue StandardError => e
   $stdout << "ERROR: #{e}\n"
 end

@@ -17,7 +17,7 @@ require 'listen'
 require 'colorize'
 
 if ARGV.length < 1
-  $stderr << "Usage: ./go-run.rb main.go [port]\n"
+  $stderr << "Usage: #{$PROGRAM_NAME} main.go [port]\n"
   exit(1)
 end
 
@@ -80,7 +80,7 @@ Listen.to(Dir.pwd, only: /(?<!_test)\.go$/) do |_modified, _added, _removed|
 end.start
 
 # listen and read stdouts
-while line = r.gets do
+while line = r.gets
   # shorten and highlight path in line
   line.gsub!(GO_PATH_SRC, '')
   # shorten project path

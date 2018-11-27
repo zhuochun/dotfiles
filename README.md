@@ -4,7 +4,7 @@ A set of files across Mac and Windows.
 
 ## Vim
 
-Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac are `<M-*>` mappings on Windows.
+Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac are `<M-*>` mappings on Windows to comfort my muscle memory.
 
 - **Mac OS:** Use `vimrc`, requires MacVim with `if_lua`:
 
@@ -12,7 +12,7 @@ Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac 
 brew install macvim --override-system-vim --with-lua --with-luajit
 ```
 
-- **Windows:** Use `windows/_vimrc`. Not actively updated.
+- **Windows:** Use `windows/_vimrc` (Not actively updated).
 
 ### Vim Setup in Mac
 
@@ -37,17 +37,29 @@ vim +NeoBundleInstall +qall
 
 To update plugins, run `:NeoBundleUpdate` in Vim.
 
-## Slate/ShiftIt
+## AutoHotkey in Windows
 
-[Slate](https://github.com/jigish/slate) is a powerful window management application in Mac OS.
+I use [AutoHotkey](http://ahkscript.org/) in Windows to enhance productivity.
+
+Refer to `windows/AutoHotkey.ahk`.
+
+## Scripts
+
+I created some random/useful scripts under [/bin](https://github.com/zhuochun/dotfiles/tree/master/bin), e.g. rename PDFs.
 
 ``` bash
-ln -s ~/dotfiles/slate ~/.slate
+echo 'export PATH="$HOME/dotfiles/bin:$PATH"' >> ~/.zshrc
 ```
 
-[ShiftIt](https://github.com/fikovnik/ShiftIt) is another window management application in Mac OS.
+## Tools
 
-## Rime
+### Keyboard Enhancement in Mac
+
+Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard).
+
+Refer to my [Ergodox-EZ](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c) layout.
+
+### Rime
 
 [Rime](https://github.com/rime) is a powerful Chinese Input Method Engine.
 
@@ -57,14 +69,12 @@ ln -s ~/dotfiles/slate ~/.slate
 ln -s ~/dotfiles/rime/squirrel.custom.yaml ~/Library/Rime/squirrel.custom.yaml
 ```
 
-## Keyboard Enhancement in Mac
+### Slate/ShiftIt
 
-Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard).
+[Slate](https://github.com/jigish/slate) is a powerful window management application in Mac OS.
 
-Refer to my [Ergodox-EZ](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c) layout.
+``` bash
+ln -s ~/dotfiles/slate ~/.slate
+```
 
-## AutoHotkey
-
-I use [AutoHotkey](http://ahkscript.org/) in Windows to enhance productivity.
-
-Refer to `windows/AutoHotkey.ahk`.
+[ShiftIt](https://github.com/fikovnik/ShiftIt) is another window management application in Mac OS.

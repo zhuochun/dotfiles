@@ -3,7 +3,7 @@
 
 # Rename file name to use hyphen as delimit
 #
-# Usage: ./hyphen-rename.rb filename.pdf
+# Usage: hyphen-rename filename.pdf
 #
 
 def slug(str)

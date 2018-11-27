@@ -8,9 +8,9 @@ require 'json'
 #
 # Usage:
 #
-#   ./go-json.rb structName file.json
+#   go-json structName file.json
 #
-#   curl https://api.github.com | ~/dotfiles/scripts/go-json.rb api
+#   curl https://api.github.com | go-json api
 #
 
 def parse_json(text)
@@ -107,7 +107,7 @@ end
 
 # ARGV Logic
 if ($stdin.tty? && ARGV.length < 2) || (ARGV.length < 1)
-  $stderr << "Usage: ./go-json.rb StructName file.json\n"
+  $stderr << "Usage: #{$PROGRAM_NAME} StructName file.json\n"
   exit(1)
 end
 
@@ -117,7 +117,7 @@ begin
   writer = StructWriter.new(struct_name, content, root: true)
 
   $stdout << writer.write
-rescue Exception => e
+rescue StandardError => e
   $stderr << "Error: #{e}\n"
   exit(2)
 end

@@ -1,14 +1,15 @@
 #!/usr/bin/env ruby
+
 require 'net/http'
 require 'json'
 
 if ARGV.length < 1
-  $stdout << "Usage: ./emoji-replace.rb \"some text\"\n"
-  exit(1)
+  $stdout << "Usage: #{$PROGRAM_NAME} \"some text\"\n"
+  exit 1
 end
 
 begin
-  uri = URI('https://cdn.rawgit.com/notwaldorf/emoji-translate/master/extension/emojis.json')
+  uri = URI('https://cdn.jsdelivr.net/gh/notwaldorf/emoji-translate/extension/emojis.json')
   resp = Net::HTTP.get_response(uri)
   emoji = JSON.parse(resp.body)
 
@@ -43,6 +44,6 @@ begin
   end
 
   $stdout << words.join(' ') << "\n"
-rescue Exception => e
+rescue StandardError => e
   $stdout << "ERROR: #{e}\n"
 end

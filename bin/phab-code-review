@@ -7,13 +7,13 @@ require 'date'
 require 'json'
 require 'ostruct'
 
-require_relative './git-utils'
+require_relative '../scripts/git-utils'
 
-# OhMyCodeReview reminder
+# OhMyCodeReview reminder on Phabricator
 #
 # Run in a directory with Phabricator config:
 #
-#   ~/dotfiles/scripts/git-code-review.rb config.json
+#   phab-code-review.rb config.json
 #
 # Sample configs:
 #
