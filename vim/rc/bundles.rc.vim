@@ -1209,6 +1209,8 @@ if neobundle#tap('vim-airline') "{{{
     let g:airline#extensions#tagbar#enabled = 0
     " disable summary of changed hunks under source control (gitgutter)
     let g:airline#extensions#hunks#enabled = 0
+    " disable word count
+    let g:airline#extensions#wordcount#enabled = 0
 
     " enable enhanced tabline.
     let g:airline#extensions#tabline#enabled = 1
