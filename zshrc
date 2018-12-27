@@ -4,18 +4,28 @@ export ZSH=$HOME/.oh-my-zsh
 # Set name of the theme to load:
 # Look in ~/.oh-my-zsh/themes/
 # suvash blinks fino josh re5et random
-ZSH_THEME="pure"
+ZSH_THEME="refined"
 
-# Use case-sensitive completion.
+# Do not use case-sensitive completion.
 CASE_SENSITIVE="false"
+
+# Use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+HYPHEN_INSENSITIVE="true"
+
+# Disable marking untracked files under VCS as dirty.
+# This makes repository status check for large repositories
+# much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Zsh Plugins
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(atom autojump bower brew brew-cask bundler coffee colored-man gem
-    git git-extras gitignore golang jsontools k mix node npm rbenv redis-cli
-    rsync ruby themes tmux vagrant zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(atom autojump bundler coffee colored-man
+    gem git git-extras gitignore golang jsontools k mix node npm
+    rbenv redis-cli rsync ruby themes tmux vagrant
+    zsh-autosuggestions zsh-syntax-highlighting)
 
 # Load oh-my-zsh
 # ==============================
