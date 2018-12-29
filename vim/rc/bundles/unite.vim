@@ -146,94 +146,43 @@ if executable('ag')
     let g:unite_source_grep_recursive_opt = ''
 endif
 
-" Press <C-l> to refresh cached files when new files not appearing
-" Press <C-r> to restart Unite and fix Unite glitches
-
-" File switching using file_rec
-nnoremap <silent> <D-i> :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
-" File switching using git (fast)
-nnoremap <silent> <D-o> :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
-
-" Grep in current directory
-nnoremap <silent> <D-/> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-nnoremap <silent> <D-F> :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
-" Grep the word under cursor in visual mode
-vnoremap <silent> <D-/> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-vnoremap <silent> <D-F> :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty -no-quit<CR>
-
-" Unite resume the last unite buffer
-nnoremap <silent> go. :<C-u>UniteResume<CR>
-" Unite grep in current directory
-nnoremap <silent> go/ :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-vnoremap <silent> go/ :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-nnoremap <silent> go? :<C-u>UniteResume grep<CR>
-" Unite junkfile
-nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
-" Unite neomru
-nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
-nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
-" Unite menus
-nnoremap <silent> goM :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
-nnoremap <silent> goG :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
-" Unite plugins
-nnoremap <silent> gor :<C-u>Unite -buffer-name=register register<CR>
-nnoremap <silent> gom :<C-u>Unite -buffer-name=marks mark<CR>
-nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
-nnoremap <silent> goC :<C-u>Unite -buffer-name=colorscheme font -auto-preview<CR>
-nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
-nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
-nnoremap <silent> gou :<C-u>Unite -buffer-name=tabs tab:no-current -start-insert<CR>
-nnoremap <silent> got :<C-u>Unite -buffer-name=tags tag/include -start-insert<CR>
-nnoremap <silent> goT :<C-u>UniteWithCursorWord -buffer-name=tags tag/include -start-insert<CR>
-nnoremap <silent> goj :<C-u>Unite -buffer-name=files file_rec/git:--cached:--others:--exclude-standard -start-insert<CR>
-nnoremap <silent> goJ :<C-u>Unite -buffer-name=files file_rec/async:! -start-insert<CR>
-nnoremap <silent> gos :<C-u>Unite -buffer-name=session session/new session -start-insert<CR>
-nnoremap <silent> gos :<C-u>Unite -buffer-name=spell spell_suggest<CR>
-nnoremap <silent> go* :<C-u>Unite -buffer-name=search anzu<CR>
-nnoremap <silent> goh :<C-u>Unite -buffer-name=search line:all -start-insert<CR>
-nnoremap <silent> gog :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
-nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
-nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
-nnoremap <silent> goy :<C-u>Unite -buffer-name=yanks yankround<CR>
-" }}
-
 " Key Mappings in Unite {{
 autocmd! FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
-" normal mode settings
-nmap <buffer> <ESC>     <Plug>(unite_exit)
-nmap <buffer> <leader>d <Plug>(unite_exit)
-nmap <buffer> <TAB>     <Plug>(unite_select_next_line)
+    " normal mode settings
+    nmap <buffer> <ESC>     <Plug>(unite_exit)
+    nmap <buffer> <leader>d <Plug>(unite_exit)
+    nmap <buffer> <TAB>     <Plug>(unite_select_next_line)
 
-" insert mode settings
-imap <buffer> <CR>      <Plug>(unite_do_default_action)
-imap <buffer> <TAB>     <Plug>(unite_select_next_line)
-imap <buffer> <S-TAB>   <Plug>(unite_select_previous_line)
-imap <buffer> <C-k>     <Plug>(unite_complete)
-imap <buffer> <C-j>     <Plug>(unite_complete)
+    " insert mode settings
+    imap <buffer> <CR>      <Plug>(unite_do_default_action)
+    imap <buffer> <TAB>     <Plug>(unite_select_next_line)
+    imap <buffer> <S-TAB>   <Plug>(unite_select_previous_line)
+    imap <buffer> <C-k>     <Plug>(unite_complete)
+    imap <buffer> <C-j>     <Plug>(unite_complete)
 
-" preview, use p to toggle preview
-nmap <buffer> <C-p>     <Plug>(unite_toggle_auto_preview)
+    " preview, use p to toggle preview
+    nmap <buffer> <C-p>     <Plug>(unite_toggle_auto_preview)
 
-" path settings
-imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
-nmap <buffer> <C-y>     <Plug>(unite_narrowing_path)
+    " path settings
+    imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
+    nmap <buffer> <C-y>     <Plug>(unite_narrowing_path)
 
-" change directory
-nnoremap <silent><buffer><expr> cd   unite#do_action('lcd')
-nnoremap <silent><buffer><expr> !    unite#do_action('start')
+    " change directory
+    nnoremap <silent><buffer><expr> cd   unite#do_action('lcd')
+    nnoremap <silent><buffer><expr> !    unite#do_action('start')
 
-" replace/rename
-let unite = unite#get_current_unite()
-if unite.profile_name ==# '^search' || unite.profile_name ==# '^grep'
-    nnoremap <silent><buffer><expr> r  unite#do_action('replace')
-else
-    nnoremap <silent><buffer><expr> r  unite#do_action('rename')
-endif
+    " replace/rename
+    let unite = unite#get_current_unite()
+    if unite.profile_name ==# '^search' || unite.profile_name ==# '^grep'
+        nnoremap <silent><buffer><expr> r  unite#do_action('replace')
+    else
+        nnoremap <silent><buffer><expr> r  unite#do_action('rename')
+    endif
 
-" toggle preview window
-nnoremap <silent><buffer><expr> p
-        \ empty(filter(range(1, winnr('$')),
-        \ 'getwinvar(v:val, "&previewwindow") != 0')) ?
-        \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
-endfunction "}}
+    " toggle preview window
+    nnoremap <silent><buffer><expr> p
+            \ empty(filter(range(1, winnr('$')),
+            \ 'getwinvar(v:val, "&previewwindow") != 0')) ?
+            \ unite#do_action('preview') : ":\<C-u>pclose!\<CR>"
+endfunction " }}

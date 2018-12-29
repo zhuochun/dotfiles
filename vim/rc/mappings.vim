@@ -243,8 +243,7 @@ nnoremap <leader>sp "+p
 nnoremap <leader>S :%s/\s\+$//ge<CR>:nohl<CR>
 " <leader>d Close buffer and leave Window intact
 " <leader>D Close buffer
-" <leader>f Format file
-nnoremap <leader>f gg=G''
+" <leader>f Find and replace (WritableSearch)
 " <leader>F Format file
 nnoremap <leader>F gg=G''
 " <leader>gf Run Neoformat
@@ -259,7 +258,6 @@ nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
 " <leader>z
 " <leader>x
 " <leader>c
-" <leader>C Global grep and change/substitute (WritableSearch)
 " <leader>v Select the just pasted text
 nnoremap <leader>v V`]
 " <leader>b

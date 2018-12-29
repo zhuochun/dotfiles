@@ -230,8 +230,6 @@ function! s:GoDef() abort
 
   " Unite menus for Golang
   nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
-  " Unite go/import
-  nnoremap <buffer> <silent> <leader>oI :<C-u>Unite go/import -start-insert<CR>
   " Unite go/decls
   nnoremap <buffer> <silent> <leader>og :<C-u>Unite decls -start-insert<CR>
 
