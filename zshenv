@@ -1,5 +1,6 @@
 # Environment Configurations
 # ==============================
+export PATH="$HOME/dotfiles/bin:$PATH"
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
 
 # Prefer US English and use UTF-8

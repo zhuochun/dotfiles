@@ -75,7 +75,7 @@ alias t="tail -f"
 alias ra="rake"
 alias br="bin/rake"
 # Vim Alias
-alias ee="vim"
+alias ee="nvim"
 alias vi="nvim"
 # Tmux
 alias tm="tmux"
@@ -105,10 +105,8 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # Other Alias
 # ==============================
 # Edit zshrc and vimrc
-alias zshrc="gvim ~/.zshrc"
-alias vimrc="gvim ~/.vimrc"
-# Open vim Magit
-alias magit="nvim -c MagitOnly"
+alias zshrc="nvim ~/.zshrc"
+alias vimrc="nvim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
