@@ -1,22 +1,20 @@
 " Plugins
 " https://github.com/Shougo/dein.vim
 
-let s:dotvim_bundles = g:dotvim_root . '/bundles'
-let s:dotvim_dein = s:dotvim_bundles . '/repos/github.com/Shougo/dein.vim'
-
 " Dein config {{{
 let g:dein#types#git#clone_depth = 5
 " }}}
 
 " Dein init {{{
+let s:dotvim_dein = g:dotvim_bundles . '/repos/github.com/Shougo/dein.vim'
 execute 'set runtimepath^=' . s:dotvim_dein
 
-if !dein#load_state(s:dotvim_bundles)
+if !dein#load_state(g:dotvim_bundles)
   filetype plugin indent on
   finish
 endif
 
-call dein#begin(s:dotvim_bundles)
+call dein#begin(g:dotvim_bundles)
 
 call dein#load_toml(g:dotvim_root . '/rc/bundles.toml', {'lazy': 0})
 call dein#load_toml(g:dotvim_root . '/rc/bundles_lazy.toml', {'lazy': 1})
@@ -45,10 +43,6 @@ let g:loaded_zipPlugin         = 1
 " }}}
 
 filetype plugin indent on
-
-" Colorscheme {{{
-colorscheme gruvbox
-" }}}
 
 " Install not installed plugins on startup
 if !has('vim_starting') && dein#check_install()

@@ -2,6 +2,353 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+
+[[plugins]]
+repo = 'bogado/file-line'
+
+[[plugins]]
+repo = 'jiangmiao/auto-pairs'
+hook_source = '''
+    " Disable default <BS> mapping because it maps <C-h>, which is used elsewhere
+    " The original <BS> behavior is mapped with AutoPairsDelete() down below
+    let g:AutoPairsMapBS = 0
+    " Disable jumping multiline close
+    let g:AutoPairsMultilineClose = 0
+'''
+
+[[plugins]]
+repo = 'Konfekt/FastFold'
+
+[[plugins]]
+repo = 'LeafCage/yankround.vim'
+depends = ['unite.vim']
+hook_add = '''
+    " yankround mappings
+    nmap p  <Plug>(yankround-p)
+    xmap p  <Plug>(yankround-p)
+    nmap P  <Plug>(yankround-P)
+
+    " loop yanks, <leader>y, <leader>Y
+    nmap <leader>y <Plug>(yankround-prev)
+    nmap <leader>Y <Plug>(yankround-next)
+
+    " yanks in commandline
+    cmap <C-r> <Plug>(yankround-insert-register)
+    cmap <C-y> <Plug>(yankround-pop)
+'''
+
+[[plugins]]
+repo = 'vim-scripts/matchit.zip'
+
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+on_cmd = ['NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind']
+hook_add = '''
+    nnoremap <silent> <F3> :NERDTreeToggle<CR>
+'''
+hook_source = '''
+    " Size of the NERD tree
+    let NERDTreeWinSize = 42
+    " Disable 'bookmarks' and 'help'
+    let NERDTreeMinimalUI = 1
+    " Show hidden files
+    let NERDTreeShowHidden = 1
+    " Show line numbers
+    let NERDTreeShowLineNumbers = 1
+    " Highlight the selected entry in the tree
+    let NERDTreeHighlightCursorline = 1
+    " Use a single click to fold/unfold directories
+    let NERDTreeMouseMode = 2
+    " Replace the netrw autocommands for exploring local directories
+    let NERDTreeHijackNetrw = 1
+    " Delete old buffer which is no more valid
+    let NERDTreeAutoDeleteBuffer = 1
+    " Don't display these kinds of files in NERDTree
+    let NERDTreeIgnore = [
+    \ '\~$', '\.pyc$', '\.pyo$', '\.class$', '\.aps',
+    \ '\.git', '\.hg', '\.svn', '\.sass-cache',
+    \ '\.coverage$', '\.tmp$', '\.gitkeep$', '\.idea',
+    \ '\.vcxproj', '\.bundle', '\.DS_Store$', '\tags$']
+
+    " The old better arrows
+    let g:NERDTreeDirArrowExpandable = '▸'
+    let g:NERDTreeDirArrowCollapsible = '▾'
+'''
+
+[[plugins]]
+repo = 'Shougo/unite.vim'
+hook_source = 'source ~/dotfiles/vim/rc/bundles/unite.vim'
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+depends = ['unite.vim']
+
+[[plugins]]
+repo = 'Shougo/junkfile.vim'
+depends = ['unite.vim']
+hook_source = '''
+    let g:junkfile#directory = expand('~/Documents/Notes')
+'''
+
+[[plugins]]
+repo = 'osyo-manga/unite-quickfix'
+depends = ['unite.vim']
+
+[[plugins]]
+repo = 'moznion/unite-git-conflict.vim'
+depends = ['unite.vim']
+
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'
+depends = ['context_filetype.vim']
+hook_source = 'source ~/dotfiles/vim/rc/bundles/neocomplete.vim'
+
+[[plugins]]
+repo = 'ujihisa/neco-look'
+depends = ['neocomplete.vim']
+
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
+depends = ['vim-snippets', 'neocomplete.vim']
+hook_add = 'source ~/dotfiles/vim/rc/bundles/neosnippet.vim'
+
+[[plugins]]
+repo = 'zhuochun/vim-snippets'
+
+[[plugins]]
+repo = 'tpope/vim-eunuch'
+
+[[plugins]]
+repo = 'tpope/vim-repeat'
+
+[[plugins]]
+repo = 'tpope/vim-surround'
+hook_add = '''
+    xmap ( S)
+    xmap { S{
+    xmap [ S]
+    xmap " S"
+    xmap ' S'
+    xmap ` S`
+    xmap T St
+'''
+
+[[plugins]]
+repo = 'tpope/vim-vinegar'
+depends = ['nerdtree']
+
+[[plugins]]
+repo = 'w0rp/ale'
+hook_add = '''
+    nnoremap <silent> <F7> :ALELint<CR>
+'''
+hook_source = '''
+    " Populated any warnings and errors in quickfix list
+    let g:ale_set_loclist = 0
+    let g:ale_set_quickfix = 1
+    " Disable lint history
+    let g:ale_history_enabled = 0
+    let g:ale_history_log_output = 0
+    " Disable lint on enter new buffer/modified buffer
+    let g:ale_lint_on_enter = 0
+    " Increase lint delay on text changed
+    let g:ale_lint_delay = 900
+
+    " Use GoMetaLinter in ALE
+    let g:ale_linters = {'go': ['gometalinter']}
+    " Config GoMetaLinter to run specific linters
+    let g:ale_go_gometalinter_options =
+          \ '--disable-all ' .
+          \ '--enable=golint --enable=vet --enable=vetshadow ' .
+          \ '--enable=errcheck --enable=ineffassign ' .
+          \ '--deadline=5s'
+'''
+
+[[plugins]]
+repo = 'Yggdroot/indentLine'
+hook_source = '''
+    let g:indentLine_faster = 1
+    let g:indentLine_char = '┊'
+    let g:indentLine_fileTypeExclude = ['markdown', 'text', 'go']
+'''
+
+[[plugins]]
+repo = 'kana/vim-operator-user'
+
+[[plugins]]
+repo = 'kana/vim-textobj-user'
+
+[[plugins]]
+repo = 'kana/vim-textobj-lastpat'
+
+[[plugins]]
+repo = 'Julian/vim-textobj-variable-segment'
+
+[[plugins]]
+repo = 'othree/html5.vim'
+
+[[plugins]]
+repo = 'gregsexton/MatchTag'
+
+[[plugins]]
+repo = 'mattn/emmet-vim'
+hook_source = '''
+    " enable emmet functions in insert mode only
+    let g:user_emmet_mode = 'i'
+
+    " <D-y> to expand input in insert mode
+    let g:user_emmet_expandabbr_key = '<D-y>'
+    "  <D-Y> to goto next point
+    let g:user_emmet_next_key = '<D-Y>'
+    " <M-y> to goto prev point
+    let g:user_emmet_prev_key = '<M-y>'
+
+    " complete tags using omnifunc
+    let g:use_emmet_complete_tag = 1
+'''
+
+[[plugins]]
+repo = 'posva/vim-vue'
+
+[[plugins]]
+repo = 'tpope/vim-liquid'
+
+[[plugins]]
+repo = 'ap/vim-css-color'
+
+[[plugins]]
+repo = 'hail2u/vim-css3-syntax'
+
+[[plugins]]
+repo = 'othree/csscomplete.vim'
+
+[[plugins]]
+repo = 'elzr/vim-json'
+hook_source = '''
+    let g:vim_json_syntax_conceal = 0
+'''
+
+[[plugins]]
+repo = 'cespare/vim-toml'
+
+[[plugins]]
+repo = 'uarun/vim-protobuf'
+
+[[plugins]]
+repo = 'pangloss/vim-javascript'
+
+[[plugins]]
+repo = 'othree/yajs.vim'
+
+[[plugins]]
+repo = 'othree/es.next.syntax.vim'
+
+[[plugins]]
+repo = 'kchmck/vim-coffee-script'
+
+[[plugins]]
+repo = 'vim-ruby/vim-ruby'
+hook_source = '''
+    " disable the 'end' keyword colorized
+    let g:ruby_no_expensive = 1
+
+    " load/evaluate code in order to provide completions. This may cause some code execution,
+    " which may be a concern. This is not enabled by default
+    let g:rubycomplete_buffer_loading = 0
+    " parse the entire buffer to add a list of classes to the completion results.
+    " This feature is turned off by default.
+    let g:rubycomplete_classes_in_global = 0
+    " detect and load Rails environment for files within a rails project. The feature is disabled by default.
+    let g:rubycomplete_rails = 0
+    " use Bundler.require instead of parsing the Gemfile
+    let g:rubycomplete_use_bundler = 0
+'''
+
+[[plugins]]
+repo = 'tpope/vim-rails'
+
+[[plugins]]
+repo = 'fatih/vim-go'
+hook_source = '''
+    " Enable goimports to insert import paths instead of gofmt
+    let g:go_fmt_command = 'goimports'
+    " Disable fmt command errors
+    let g:go_fmt_fail_silently = 1
+    " Run GoMetaLinter on save
+    let g:go_metalinter_autosave = 0
+    let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint', 'ineffassign']
+    " Disable auto jump to first error
+    let g:go_jump_to_error = 1
+    " Reuse buffer when GoDef
+    let g:go_def_reuse_buffer = 1
+    " Disable show :GoInfo for word under cursor automatically
+    let g:go_auto_type_info = 0
+    " No auto template when create new file
+    let g:go_template_autocreate = 0
+    " Use camelcase for tags, :GoAddTags
+    let g:go_addtags_transform = "camelcase"
+    " Fold imports and package comments
+    let g:go_fold_enable = ['import', 'package_comment']
+    " No highlights white space after []
+    let g:go_highlight_array_whitespace_error = 0
+    " No highlights white space around <-
+    let g:go_highlight_chan_whitespace_error = 0
+    " No highlights commonly used library types
+    let g:go_highlight_extra_types = 0
+    " No highlights instances of tabs following spaces
+    let g:go_highlight_space_tab_error = 0
+    " No highlights trailing white space
+    let g:go_highlight_trailing_whitespace_error = 0
+    " Highlights go:generate directives
+    let g:go_highlight_generate_tags = 1
+    " Echoes information about various Go commands
+    let g:go_echo_command_info = 1
+'''
+
+[[plugins]]
+repo = 'gabrielelana/vim-markdown'
+hook_source = '''
+    let g:markdown_enable_mappings = 0
+'''
+
+[[plugins]]
+repo = 'blindFS/vim-regionsyntax'
+on_ft = ['markdown']
+
+[[plugins]]
+repo = 'tpope/vim-git'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_source = '''
+    " no need to update in realtime
+    let g:gitgutter_realtime = 0
+    " update when switch buffer/tab, or focus on gui
+    let g:gitgutter_eager = 1
+    " disable sign column highlight
+    let g:gitgutter_override_sign_column_highlight = 0
+'''
+
+[[plugins]]
+repo = 'tmux-plugins/vim-tmux'
+
+[[plugins]]
+repo = 'christoomey/vim-tmux-navigator'
+on_if = '!has("gui_running")'
+hook_source = '''
+    let g:tmux_navigator_disable_when_zoomed = 1
+'''
+
+[[plugins]]
+repo = 'sjl/vitality.vim'
+on_if = '!has("gui_running")'
+
+[[plugins]]
 repo = 'morhetz/gruvbox'
 
 [[plugins]]
@@ -9,3 +356,10 @@ repo = 'rakr/vim-one'
 
 [[plugins]]
 repo = 'rakr/vim-two-firewatch'
+
+[[plugins]]
+repo = 'vim-airline/vim-airline'
+hook_source = 'source ~/dotfiles/vim/rc/bundles/airline.vim'
+
+[[plugins]]
+repo = 'vim-airline/vim-airline-themes'

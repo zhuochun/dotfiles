@@ -1,17 +1,6 @@
-" Use 256 Term colors {{{
-if has("termguicolors") && !has('gui_running')
-  set termguicolors
-endif
-" }}}
-
-" Theme {{{
+" Styles {{{
 set colorcolumn=119
 set background=dark
-" Default colorscheme
-colorscheme blue
-" }}}
-
-" Styles {{{
 set shortmess=atI            " No welcome screen in gVim
 set shortmess+=filmnrxoOtT   " Abbrev. of messages (avoids 'hit enter')
 set title                    " Display title
@@ -22,8 +11,12 @@ set laststatus=2             " Display status bar in 2 lines
 set showcmd                  " Display incomplete commands
 set noshowmode               " No show current mode
 
+if has("termguicolors") && !has('gui_running')
+  set termguicolors
+endif
+
 if !exists('g:syntax_on')
-  syntax enable              " Syntax highlighting
+  syntax enable
 endif
 " }}}
 

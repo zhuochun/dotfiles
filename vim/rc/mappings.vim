@@ -242,31 +242,13 @@ nnoremap <leader>sp "+p
 " <leader>S Clear trailing whitespace
 nnoremap <leader>S :%s/\s\+$//ge<CR>:nohl<CR>
 " <leader>d Close buffer and leave Window intact
-nnoremap <leader>d :Sayonara!<CR>
 " <leader>D Close buffer
-nnoremap <leader>D :Sayonara<CR>
 " <leader>f Format file
 nnoremap <leader>f gg=G''
 " <leader>F Format file
 nnoremap <leader>F gg=G''
-" <leader>gf Toggle Goyo
-nnoremap <leader>gf :Neoformat<CR>
-" <leader>gg Toggle Goyo
-nnoremap <leader>gg :Goyo<CR>
-" <leader>go Toggle OverCommandLine
-nnoremap <leader>go :OverCommandLine<CR>s/
-" <leader>gl Toggle ALELint
-nnoremap <leader>gl :ALENextWrap<CR>
-" <leader>gn Toggle NERDTree
-nnoremap <leader>gn :NERDTreeToggle<CR>
+" <leader>gf Run Neoformat
 " <leader>gm Toggle Unite Menu (filetype specific)
-" <leader>gt Toggle Tagbar
-nnoremap <leader>gt :TagbarToggle<CR>
-nnoremap <leader>gT :TagbarTogglePause<CR>
-" <leader>gu Toggle Undotree
-nnoremap <leader>gu :UndotreeToggle<CR>
-" <leader>gw Toggle ArgWrap
-nnoremap <leader>gw :ArgWrap<CR>
 " <leader>hs GitGutterStageHunk
 " <leader>hr GitGutterRevertHunk
 " <leader>js Format JSON file (python required)
@@ -276,16 +258,14 @@ nnoremap <leader>js :%!python -m json.tool<CR>
 nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
 " <leader>z
 " <leader>x
-" <leader>c Local change/substitute
-nnoremap <leader>c :OverCommandLine<CR>s/
-" <leader>C Global grep and change/substitute
-nnoremap <leader>C :WritableSearch
+" <leader>c
+" <leader>C Global grep and change/substitute (WritableSearch)
 " <leader>v Select the just pasted text
 nnoremap <leader>v V`]
-" <leader>b Close all other buffers
-nnoremap <leader>B :BufOnly<CR>
-" <leader>n
-" <leader>m
+" <leader>b
+" <leader>B Close other buffers (BufOnly)
+" <leader>n MarkClear
+" <leader>m MarkSet
 " <leader>M Remove ^M
 nnoremap <leader>M mmHmt:%s/<C-V><CR>//ge<CR>'tzt'm
 " <leader>, Switch between current and last buffer

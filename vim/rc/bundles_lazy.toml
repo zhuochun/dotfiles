@@ -1,0 +1,367 @@
+[[plugins]]
+repo = 'AndrewRadev/linediff.vim'
+on_cmd = ['Linediff', 'LinediffReset']
+
+[[plugins]]
+repo = 'AndrewRadev/splitjoin.vim'
+on_cmd = ['SplitjoinJoin', 'SplitjoinSplit']
+on_map = ['gS', 'gJ']
+
+[[plugins]]
+repo = 'AndrewRadev/writable_search.vim'
+depends = ['ack.vim']
+on_cmd = ['WritableSearch']
+hook_add = '''
+    nnoremap <leader>C :WritableSearch
+'''
+hook_source = '''
+    " set to use ack by default
+    let g:writable_search_backends = ["ack.vim", "git-grep", "egrep"]
+    " display more context around the match
+    let g:writable_search_context_lines = 5
+    " use statement as syntax
+    let g:writable_search_highlight = 'Statement'
+'''
+
+[[plugins]]
+repo = 'bkad/CamelCaseMotion'
+on_map = ['<Plug>CamelCaseMotion']
+hook_add = '''
+    map W <Plug>CamelCaseMotion_w
+    map B <Plug>CamelCaseMotion_b
+    map E <Plug>CamelCaseMotion_e
+'''
+
+[[plugins]]
+repo = 'deris/vim-rengbang'
+on_cmd = ['RengBang', 'RengBangUsePrev', 'RengBangConfirm']
+on_map = ['<Plug>(operator-rengbang']
+hook_source = '''
+    " regex pattern for insertint sequencial numbering
+    let g:rengbang_default_pattern = '\(\d\+\)'
+    " start number for sequencial numbering.
+    let g:rengbang_default_start = 1
+    " use first number for sequencial numbering
+    let g:rengbang_default_usefirst = 1
+'''
+
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+on_map = ['<Plug>(easymotion-']
+hook_add = '''
+    " alias to normal editor commands
+    map <C-f>  <Plug>(easymotion-sn)
+    map <D-f>  <Plug>(easymotion-sn)
+    " single char easymotion
+    nmap s     <Plug>(easymotion-s)
+    vmap s     <Plug>(easymotion-s)
+    " multiple chars easymotion
+    nmap S     <Plug>(easymotion-s2)
+    vmap S     <Plug>(easymotion-s2)
+    " visual mode to hit exact target in line
+    vmap f     <Plug>(easymotion-fl)
+    vmap F     <Plug>(easymotion-Fl)
+    vmap t     <Plug>(easymotion-tl)
+    vmap T     <Plug>(easymotion-Tl)
+    " linewise easymotion
+    nmap <leader>k <Plug>(easymotion-sol-k)
+    vmap <leader>k <Plug>(easymotion-sol-k)
+    nmap <leader>j <Plug>(easymotion-sol-j)
+    vmap <leader>j <Plug>(easymotion-sol-j)
+'''
+hook_source = '''
+    " disable default mappings
+    let g:EasyMotion_do_mapping = 0
+    " not case censitive
+    let g:EasyMotion_smartcase = 1
+    " jump to first match when type <Enter>
+    let g:EasyMotion_enter_jump_first = 1
+    " disable verbose messages
+    let g:EasyMotion_verbose = 0
+'''
+
+[[plugins]]
+repo = 'FooSoft/vim-argwrap'
+on_cmd = ['ArgWrap']
+hook_source = '''
+    " closing brace is preceded with a comma when wrapping lines
+    let g:argwrap_tail_comma = 1
+'''
+
+[[plugins]]
+repo = 'haya14busa/vim-asterisk'
+on_map = ['<Plug>(asterisk-']
+hook_add = '''
+    map *  <Plug>(asterisk-z*)
+    map #  <Plug>(asterisk-z#)
+    map g* <Plug>(asterisk-gz*)
+    map g# <Plug>(asterisk-gz#)
+'''
+hook_source = '''
+    " keep cursor position when next/prev
+    let g:asterisk#keeppos = 1
+'''
+
+[[plugins]]
+repo = 'haya14busa/incsearch.vim'
+on_map = ['<Plug>(incsearch-']
+hook_add = '''
+    map /  <Plug>(incsearch-forward)
+    map ?  <Plug>(incsearch-backward)
+'''
+hook_source = '''
+    " enable very magic option
+    let g:incsearch#magic = '\v'
+    " enables Emacs-like keymappings (readline)
+    let g:incsearch#emacs_like_keymap = 1
+'''
+
+[[plugins]]
+repo = 'haya14busa/incsearch-fuzzy.vim'
+depends = ['incsearch.vim']
+on_map = ['<Plug>(incsearch-fuzzy-']
+hook_add = '''
+    map z/ <Plug>(incsearch-fuzzy-/)
+    map z? <Plug>(incsearch-fuzzy-?)
+'''
+
+[[plugins]]
+repo = 'IngoHeimbach/semantic-highlight.vim'
+on_cmd = ['SemanticHighlight']
+on_ft = ['ruby', 'python', 'coffee', 'elixir', 'go']
+hook_source = '''
+    " A optimally distinct colors http://tools.medialab.sciences-po.fr/iwanthue/
+    let g:semanticGUIColors = ['#A7C575', '#BDBDE4', '#E0ED85', '#E9C5E3', '#CAF19B', '#E9A9BB',
+                              \'#9BDE9D', '#F4A091', '#89EEE4', '#E1A46A', '#97DBE2', '#E2B964',
+                              \'#C4DBEC', '#D7CC71', '#B2C4CC', '#F1A87F', '#8EE9CA', '#E7C183',
+                              \'#7CC9BC', '#E9B7A2', '#87DCB0', '#CEB7B5', '#CDF8C9', '#CAB996',
+                              \'#97C19A', '#F5E2A8', '#B3D2BF', '#C6C989', '#E6E3CC', '#C2DDAA',
+                              \'#B4BC9F', '#E6E5B2']
+    " Cache color values across files
+    let g:semanticUseCache = 1
+    " Cache color values across sessions
+    let g:semanticPersistCache = 1
+    " Activate automatically for certain filetypes
+    let g:semanticEnableFileTypes = {
+                \   'javascript' : 'js',
+                \   'coffee'     : 'coffee',
+                \   'ruby'       : 'ruby',
+                \   'elixir'     : 'elixir',
+                \   'go'         : 'go',
+                \ }
+    " Add backlists item in Golang
+    let g:semanticBlacklistOverride = {
+                \ 'go': [
+                \   'break',    'default',     'func',   'interface', 'select',
+                \   'case',     'defer',       'go',     'map',       'struct',
+                \   'chan',     'else',        'goto',   'package',   'switch',
+                \   'const',    'fallthrough', 'if',     'range',     'type',
+                \   'continue', 'for',         'import', 'return',    'var',
+                \ ]}
+'''
+
+[[plugins]]
+repo = 'inkarkat/vim-mark'
+merged = 0
+on_cmd = ['Mark', 'MarkLoad', 'MarkClear']
+on_map = ['<Plug>Mark']
+hook_add = '''
+    nmap <silent> <leader>m <Plug>MarkSet
+    nmap <silent> <leader>n <Plug>MarkClear
+
+    " Remove the default overriding of * and #, use: >
+    nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
+    nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+'''
+hook_source = '''
+    let g:mwDefaultHighlightingPalette = 'maximum'
+    let g:mw_no_mappings = 1
+'''
+
+[[plugins]]
+repo = 'janko-m/vim-test'
+depends = ['vim-dispatch']
+on_cmd = ['TestLast', 'TestNearest', 'TestFile', 'TestSuite']
+hook_source = '''
+    let g:test#strategy = 'dispatch'
+'''
+
+[[plugins]]
+repo = 'junegunn/vim-easy-align'
+on_map = ['<Plug>(EasyAlign)']
+hook_add = '''
+    " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+    xmap <CR>      <Plug>(EasyAlign)
+    " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+    nmap <leader>a <Plug>(EasyAlign)
+'''
+hook_source = '''
+    let g:easy_align_delimiters = {
+          \ '>': { 'pattern': '>>\|=>\|>' },
+          \ '\': { 'pattern': '\\' },
+          \ '/': { 'pattern': '//\+\|/\*\|\*/', 'delimiter_align': 'l', 'ignore_groups': ['!Comment'] },
+          \ }
+'''
+
+[[plugins]]
+repo = 'junegunn/gv.vim'
+depends = ['unite.vim']
+on_cmd = ['GV', 'GV!', 'GV?']
+
+[[plugins]]
+repo = 'majutsushi/tagbar'
+on_cmd = ['TagbarToggle']
+hook_add = '''
+    nnoremap <silent> <F10> :TagbarToggle<CR>
+'''
+hook_source = '''
+    " sort according to order in file
+    let g:tagbar_sort = 0
+    " default is 40
+    let g:tagbar_width = 42
+    " omit vacant lines
+    let g:tagbar_compact = 1
+    " auto focus on Tagbar when opened
+    let g:tagbar_autofocus = 1
+    " default iconchars are too wide (Mac)
+    let g:tagbar_iconchars = ['▸', '▾']
+    " expand tag folds
+    let g:tagbar_autoshowtag = 1
+    " tagbar types coffeescript
+    let g:tagbar_type_coffee = {
+          \ 'ctagstype' : 'coffee',
+          \ 'kinds' : [
+          \   'c:classes',
+          \   'm:methods',
+          \   'f:functions',
+          \   'v:variables',
+          \   'f:fields',
+          \ ]}
+    " tagbar types markdown
+    let g:tagbar_type_markdown = {
+          \ 'ctagstype' : 'markdown',
+          \ 'kinds' : [
+          \   'h:Heading_L1',
+          \   'i:Heading_L2',
+          \   'j:Heading_L3',
+          \   'k:Heading_L4'
+          \ ]}
+'''
+
+[[plugins]]
+repo = 'mhinz/vim-sayonara'
+on_cmd = ['Sayonara']
+hook_add = '''
+    " Close buffer and leave Window intact
+    nnoremap <leader>d :Sayonara!<CR>
+    " Close buffer
+    nnoremap <leader>D :Sayonara<CR>
+'''
+
+[[plugins]]
+repo = 'mileszs/ack.vim'
+on_cmd = ['Ack']
+
+[[plugins]]
+repo = 'osyo-manga/vim-anzu'
+depends = ['unite.vim']
+on_map = ['<Plug>(anzu-']
+hook_add = '''
+    nmap n n<Plug>(anzu-update-search-status-with-echo)
+    nmap N N<Plug>(anzu-update-search-status-with-echo)
+'''
+
+[[plugins]]
+repo = 'sbdchd/neoformat'
+on_cmd = ['Neoformat', 'Neoformat!']
+hook_add = '''
+    nnoremap <silent> <F8> :Neoformat<CR>
+    nnoremap <silent> <leader>gf :Neoformat<CR>
+'''
+
+[[plugins]]
+repo = 'schickling/vim-bufonly'
+on_cmd = ['BufOnly']
+hook_add = '''
+    nnoremap <silent> <leader>B :BufOnly<CR>
+'''
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+on_event = 'CompleteDone'
+hook_source = '''
+    let g:echodoc#type = 'virtual'
+
+    call echodoc#enable()
+'''
+
+[[plugins]]
+repo = 'ujihisa/unite-colorscheme'
+depends = ['unite.vim']
+
+[[plugins]]
+repo = 'ujihisa/unite-font'
+depends = ['unite.vim']
+
+[[plugins]]
+repo = 'rhysd/conflict-marker.vim'
+on_map = ['[x', ']x', '<Plug>(conflict-marker']
+
+[[plugins]]
+repo = 'tommcdo/vim-exchange'
+on_map = ['cx', 'cxx', 'X', '<Plug>(Exchange']
+
+[[plugins]]
+repo = 'tpope/vim-abolish'
+on_cmd = ['Abolish']
+on_map = ['crm', 'crc', 'crs', 'cru']
+
+[[plugins]]
+repo = 'tpope/vim-commentary'
+on_map = ['gc', 'gcc', 'gcu']
+
+[[plugins]]
+repo = 'tpope/vim-dispatch'
+on_cmd = ['Dispatch']
+
+[[plugins]]
+repo = 'tpope/vim-endwise'
+on_event = 'InsertCharPre'
+
+[[plugins]]
+repo = 'tpope/vim-projectionist'
+
+[[plugins]]
+repo = 'tpope/vim-unimpaired'
+on_map = ['[', ']']
+
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+on_cmd = ['OpenBrowser', 'OpenBrowserSearch', 'OpenBrowserSmartSearch']
+on_map = ['<Plug>(openbrowser-']
+hook_add = '''
+    nmap gx <Plug>(openbrowser-smart-search)
+    vmap gx <Plug>(openbrowser-smart-search)
+'''
+hook_source = '''
+    " disable netrw's gx mapping.
+    let g:netrw_nogx = 1
+'''
+
+[[plugins]]
+repo = 'rhysd/unite-go-import.vim'
+depends = ['unite.vim']
+on_ft = ['go']
+
+[[plugins]]
+repo = 'kannokanno/previm'
+depends = ['open-browser.vim']
+on_cmd = ['PrevimOpen']
+hook_add = '''
+'''
+hook_source = '''
+'''
+
