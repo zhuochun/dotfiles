@@ -1,0 +1,11 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'morhetz/gruvbox'
+
+[[plugins]]
+repo = 'rakr/vim-one'
+
+[[plugins]]
+repo = 'rakr/vim-two-firewatch'

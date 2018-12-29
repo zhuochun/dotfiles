@@ -1,0 +1,26 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MacVIM Configurations
+" Author: Wang Zhuochun
+" URL: https://github.com/zhuochun/dotfiles
+" Last Edit: 29/Dec/2018 05:48 PM
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+if &compatible
+  set nocompatible
+endif
+
+let g:dotvim_root = '~/.vim'
+
+function! s:source_rc(path)
+  execute 'source' fnameescape(expand(g:dotvim_root . '/rc/' . a:path))
+endfunction
+
+call s:source_rc('options.vim')
+call s:source_rc('dein.vim')
+call s:source_rc('mappings.vim')
+call s:source_rc('commands.vim')
+call s:source_rc('autocmds.vim')
+call s:source_rc('filetypes.vim')
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim:ft=vim:fdm=marker:sw=2:ts=2
