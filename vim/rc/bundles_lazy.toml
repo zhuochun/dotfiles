@@ -307,6 +307,11 @@ repo = 'ujihisa/unite-font'
 depends = ['unite.vim']
 
 [[plugins]]
+repo = 'rhysd/unite-go-import.vim'
+depends = ['unite.vim']
+on_ft = ['go']
+
+[[plugins]]
 repo = 'rhysd/conflict-marker.vim'
 on_map = ['[x', ']x', '<Plug>(conflict-marker']
 
@@ -347,21 +352,10 @@ hook_add = '''
     vmap gx <Plug>(openbrowser-smart-search)
 '''
 hook_source = '''
-    " disable netrw's gx mapping.
     let g:netrw_nogx = 1
 '''
-
-[[plugins]]
-repo = 'rhysd/unite-go-import.vim'
-depends = ['unite.vim']
-on_ft = ['go']
 
 [[plugins]]
 repo = 'kannokanno/previm'
 depends = ['open-browser.vim']
 on_cmd = ['PrevimOpen']
-hook_add = '''
-'''
-hook_source = '''
-'''
-
