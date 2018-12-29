@@ -148,8 +148,12 @@ hook_source = '''
     let g:go_highlight_space_tab_error = 0
     " No highlights trailing white space
     let g:go_highlight_trailing_whitespace_error = 0
-    " Highlights go:generate directives
+    " Highlight current variables
+    let g:go_auto_sameids = 1
+    " Highlight go:generate directives
     let g:go_highlight_generate_tags = 1
+    " Show the type info of current variables
+    let g:go_auto_type_info = 1
     " Echoes information about various Go commands
     let g:go_echo_command_info = 1
 '''
@@ -525,23 +529,49 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'Shougo/neocomplete.vim'
+repo = 'Shougo/deoplete.nvim'
 depends = ['context_filetype.vim']
+if = 'has("nvim")'
 on_event = 'InsertEnter'
-hook_source = 'source ~/dotfiles/vim/rc/bundles/neocomplete.vim'
+hook_source = '''
+    source ~/dotfiles/vim/rc/bundles/deoplete.vim
+
+    call deoplete#enable()
+'''
 
 [[plugins]]
 repo = 'Shougo/neco-syntax'
-on_source = ['neocomplete.vim']
+on_source = ['deoplete.nvim']
+
+[[plugins]]
+repo = 'Shougo/neoinclude.vim'
+on_source = ['deoplete.nvim']
 
 [[plugins]]
 repo = 'ujihisa/neco-look'
-on_source = ['neocomplete.vim']
+on_source = ['deoplete.nvim']
+
+[[plugins]]
+repo = 'zchee/deoplete-go'
+build = 'make'
+depends = ['deoplete.nvim']
+on_ft = 'go'
+hook_source = '''
+    " Faster lookup on gocode binary
+    let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+    " Class Sorting and Ignore
+    let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+    " Complete external packages (slower)
+    let g:deoplete#sources#go#source_importer = 1
+    " Complete unimported standard library packages
+    let g:deoplete#sources#go#unimported_packages = 1
+'''
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 depends = ['vim-snippets', 'context_filetype.vim']
-on_source = ['neocomplete.vim']
+on_event = 'InsertCharPre'
+on_ft = 'snippet'
 hook_add = 'source ~/dotfiles/vim/rc/bundles/neosnippet.vim'
 
 [[plugins]]
