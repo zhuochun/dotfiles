@@ -95,6 +95,8 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # System
 alias plz="sudo"
 alias rmd="trash"
+# Vim
+alias vim="nvim"
 # Copy to clipboard
 alias ccp="pbcopy"
 # Local IP address
