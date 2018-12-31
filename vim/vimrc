@@ -9,7 +9,7 @@ if &compatible
   set nocompatible
 endif
 
-let g:dotvim_root = '~/.vim'
+let g:dotvim_root = expand('~/.vim')
 let g:dotvim_bundles = g:dotvim_root . '/bundles'
 
 function! s:source_rc(path)

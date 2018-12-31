@@ -13,11 +13,6 @@ CASE_SENSITIVE="false"
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
 
-# Disable marking untracked files under VCS as dirty.
-# This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
 # Zsh Plugins
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
