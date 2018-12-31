@@ -7,9 +7,10 @@ A set of files across Mac and Windows.
 
 <!-- TOC depthFrom:2 -->
 
-- [Mac Setup (2018)](#mac-setup-2018)
+- [Mac Setup](#mac-setup)
   - [System Preferences](#system-preferences)
   - [Applications](#applications)
+  - [Others](#others)
   - [Keyboard Enhancements](#keyboard-enhancements)
 - [Vim](#vim)
   - [Vim Setup in Mac](#vim-setup-in-mac)
@@ -21,34 +22,60 @@ A set of files across Mac and Windows.
 <!-- /TOC -->
 </details>
 
-## Mac Setup (2018)
+## Mac Setup
 
 ### System Preferences
 
 - Dock -> Position `Left`, Enable `Automatically hide and show`.
 - Keyboard -> Keyboard -> Fastest Key Repeat, Shortest Delay, Enable `Standard function keys`.
-- Keyboard -> Shortcuts -> Screen Shots -> Disable picture of screen, Remap picture of selected area to `<M-S>` (File) and `<S-M-S>` (Clipboard).
+- Keyboard -> Shortcuts -> Screen Shots -> Disable picture of screen, Remap picture of selected area to `<M-s>` (File) and `<M-S>` (Clipboard).
+- Keyboard -> Input Sources -> Add `Pinyin - Simplified`.
 - Trackpad -> Enable `Tap to click`.
 - Accessibility -> Mouse & Trackpad -> Trackpad Options -> Enable dragging `Three finger dragging`.
 
 ### Applications
 
+``` bash
+git clone git@github.com:zhuochun/dotfiles.git ~/dotfiles
+```
+
 Install [Homebrew](https://brew.sh/):
 
-```
+``` bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew bundle install --file=~/dotfiles/scripts/Brewfile
 ```
 
-Setup Zsh ([Guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)). Then install [Oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh):
+Setup Zsh ([guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)) and [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh):
 
-```
+``` bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-➜  ~ ln -s ~/dotfiles/zshrc ~/.zshrc
-➜  ~ ln -s ~/dotfiles/zshenv ~/.zshenv
+ln -s ~/dotfiles/zshrc ~/.zshrc
+ln -s ~/dotfiles/zshenv ~/.zshenv
+
+touch ~/.localrc
+touch ~/.localenv
+```
+
+Setup Tmux and [Tmux-Plugins](https://github.com/tmux-plugins/tpm):
+
+``` bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+tmux new -s dev
+
+ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
+ln -s ~/dotfiles/tmux-osx.conf ~/.tmux-osx.conf
+ln -s ~/dotfiles/tmux-theme.conf ~/.tmux-theme.conf
+
+# Reload Tmux environment to source TPM
+# After source, Press prefix + I to install the plugins
+tmux source ~/.tmux.conf
 ```
 
 ### Others
@@ -68,33 +95,31 @@ Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard) and [
 
 ## Vim
 
-Both Mac/Windows use the same key mappings. Excepts the `<D-*>` mappings on Mac are `<M-*>` mappings on Windows to comfort muscle memories.
+Both my Mac/Windows use similar key mappings. For muscle memories, `<D-*>` mappings on Mac are `<M-*>` mappings on Windows.
 
-- **Mac OS:** Use `vimrc` with MacVim: `brew install macvim neovim`
+- **Mac OS:** Use `vimrc` with `brew install neovim macvim`.
 - **Windows:** Use `windows/_vimrc` (Not actively updated).
 
-### Vim Setup in Mac
-
-I use [Shougo/neobundle.vim](https://github.com/Shougo/neobundle.vim) to manage plugins.
+Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins management:
 
 ``` bash
-# clone the repository
-git clone https://github.com/zhuochun/dotfiles.git ~/dotfiles
-
-# link vimrc
-ln -s ~/dotfiles/vim ~/.vim
-ln -s ~/dotfiles/vimrc ~/.vimrc
-ln -s ~/dotfiles/gvimrc ~/.gvimrc
-
-# install neobundle
-# https://github.com/Shougo/neobundle.vim#quick-start
-curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
-
-# install plugins
-vim +NeoBundleInstall +qall
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
+# Sse `~/.vim/bundles` as installation directory
+sh ./installer.sh ~/.vim/bundles
 ```
 
-To update plugins, run `:NeoBundleUpdate` in Vim.
+Setup `vimrc` configs:
+
+``` bash
+ln -s ~/dotfiles/vim/rc ~/.vim/rc
+# vim
+ln -s ~/dotfiles/vim/vimrc ~/.vimrc
+ln -s ~/dotfiles/vim/gvimrc ~/.gvimrc
+# neovim
+ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
+```
+
+Open vim and install plugins: `:call dein#install()`.
 
 ## AutoHotkey in Windows
 
