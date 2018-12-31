@@ -13,7 +13,6 @@ A set of files across Mac and Windows.
   - [Others](#others)
   - [Keyboard Enhancements](#keyboard-enhancements)
 - [Vim](#vim)
-  - [Vim Setup in Mac](#vim-setup-in-mac)
 - [AutoHotkey in Windows](#autohotkey-in-windows)
 - [Scripts](#scripts)
 - [Tools](#tools)
@@ -32,6 +31,15 @@ A set of files across Mac and Windows.
 - Keyboard -> Input Sources -> Add `Pinyin - Simplified`.
 - Trackpad -> Enable `Tap to click`.
 - Accessibility -> Mouse & Trackpad -> Trackpad Options -> Enable dragging `Three finger dragging`.
+
+Other preferences:
+
+``` bash
+# Disable "press and hold" option
+defaults write -g ApplePressAndHoldEnabled -bool false
+# Display all file extensions in Finder
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+```
 
 ### Applications
 
@@ -100,8 +108,8 @@ Both my Mac/Windows use similar key mappings. For muscle memories, `<D-*>` mappi
 - **Mac OS:** Use `vimrc` with `brew install neovim macvim`.
 - **Windows:** Use `windows/_vimrc` (Not actively updated).
 
-Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins management:
-
+Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins:
+a
 ``` bash
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
 # Sse `~/.vim/bundles` as installation directory
