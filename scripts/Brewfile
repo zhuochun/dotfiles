@@ -2,39 +2,74 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
+# Shell extension to jump to frequently used directories
 brew "autojump"
+# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
+brew "clang-format"
+# Modern replacement for 'ls'
 brew "exa"
+# Collection of GNU find, xargs, and locate
 brew "findutils"
+# Distributed revision control system
 brew "git"
+# Incremental merge for git
 brew "git-imerge"
+# Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Interpreted, interactive, object-oriented programming language
 brew "python"
+# User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Powerful, lightweight programming language
 brew "lua"
+# Package manager for the Lua programming language
 brew "luarocks"
+# GUI for vim, made for macOS
 brew "macvim"
+# Scalable distributed version control system
 brew "mercurial"
+# Open source relational database management system
 brew "mysql"
+# Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# 7-Zip (high compression file archiver) implementation
 brew "p7zip"
+# Protocol buffers (Google's data interchange format)
+brew "protobuf"
+# Install various Ruby versions and implementations
 brew "ruby-build"
+# Ruby version manager
 brew "rbenv"
+# Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
+# Persistent key-value database, with built-in net interface
 brew "redis"
+# Fuzzy text selector for files and anything else you need to select
 brew "selecta"
+# Code-search similar to ack
 brew "the_silver_searcher"
+# Terminal multiplexer
 brew "tmux"
+# CLI tool that moves files or folder to the trash
 brew "trash"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
+# UNIX shell (command interpreter)
 brew "zsh"
+# Additional completion definitions for zsh
 brew "zsh-completions"
 cask "alfred"
+cask "anybar"
 cask "atext"
 cask "atom"
 cask "caffeine"
 cask "clipy"
+cask "dbeaver-community"
+cask "java"
 cask "karabiner-elements"
+cask "postman"
 cask "sequel-pro"
 cask "spectacle"
 cask "tunnelblick"
