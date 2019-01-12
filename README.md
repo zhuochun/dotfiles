@@ -10,13 +10,15 @@ A set of files across Mac and Windows.
 - [Mac Setup](#mac-setup)
   - [System Preferences](#system-preferences)
   - [Applications](#applications)
-  - [Others](#others)
   - [Keyboard Enhancements](#keyboard-enhancements)
 - [Vim](#vim)
-- [AutoHotkey in Windows](#autohotkey-in-windows)
-- [Scripts](#scripts)
-- [Tools](#tools)
+- [Windows Setup](#windows-setup)
+  - [AutoHotkey](#autohotkey)
+- [Others](#others)
+  - [Custom Scripts](#custom-scripts)
+  - [Fonts](#fonts)
   - [Rime](#rime)
+  - [Atom](#atom)
 
 <!-- /TOC -->
 </details>
@@ -27,6 +29,7 @@ A set of files across Mac and Windows.
 
 - Dock -> Position `Left`, Enable `Automatically hide and show`.
 - Keyboard -> Keyboard -> Fastest Key Repeat, Shortest Delay, Enable `Standard function keys`.
+- Keyboard -> Keyboard -> Change `Caps Lock` to `Command` key.
 - Keyboard -> Shortcuts -> Screen Shots -> Disable picture of screen, Remap picture of selected area to `<M-s>` (File) and `<M-S>` (Clipboard).
 - Keyboard -> Input Sources -> Add `Pinyin - Simplified`.
 - Trackpad -> Enable `Tap to click`.
@@ -86,18 +89,19 @@ ln -s ~/dotfiles/tmux-theme.conf ~/.tmux-theme.conf
 tmux source ~/.tmux.conf
 ```
 
-### Others
-
-- Install Fonts: https://github.com/powerline/fonts
-- Install Atom Plugins: `apm install markdown-writer`
-
 ### Keyboard Enhancements
 
-Install [Karabiner](https://pqrs.org/osx/karabiner/index.html). Import following [rules](https://pqrs.org/osx/karabiner/complex_modifications/):
+Setup [Karabiner](https://pqrs.org/osx/karabiner/index.html):
 
-- Change return to control if pressed with other keys, to return if pressed alone
-- Better Shifting: Parentheses on shift keys
-- Finder: Use Return as Open, Use Backspace as Go to Previous Folder, Use F2 as Rename, Use Fn+Delete as Move to Trash
+```
+cp ~/dotfiles/mac/karabiner.json ~/.config/karabiner/karabiner.json
+```
+
+To customise [rules](https://pqrs.org/osx/karabiner/complex_modifications/):
+
+```
+ln -s ~/dotfiles/mac/karabiner-rules ~/.config/karabiner/assets/complex_modifications
+```
 
 Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard) and [Ergodox-EZ/zhuochun](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c).
 
@@ -105,14 +109,14 @@ Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard) and [
 
 Both my Mac/Windows use similar key mappings. For muscle memories, `<D-*>` mappings on Mac are `<M-*>` mappings on Windows.
 
-- **Mac OS:** Use `vimrc` with `brew install neovim macvim`.
+- **Mac OS:** Use `vimrc` with `brew install neovim`.
 - **Windows:** Use `windows/_vimrc` (Not actively updated).
 
 Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins:
-a
+
 ``` bash
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-# Sse `~/.vim/bundles` as installation directory
+# Set `~/.vim/bundles` as installation directory
 sh ./installer.sh ~/.vim/bundles
 ```
 
@@ -129,21 +133,27 @@ ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
 
 Open vim and install plugins: `:call dein#install()`.
 
-## AutoHotkey in Windows
+## Windows Setup
+
+### AutoHotkey
 
 I use [AutoHotkey](http://ahkscript.org/) in Windows to enhance productivity.
 
 Refer to `windows/AutoHotkey.ahk`.
 
-## Scripts
+## Others
 
-I created some random/useful scripts under [/bin](https://github.com/zhuochun/dotfiles/tree/master/bin), e.g. rename PDFs.
+### Custom Scripts
+
+Some useful/interesting scripts are under [/bin](https://github.com/zhuochun/dotfiles/tree/master/bin), e.g. rename PDFs.
 
 ``` bash
 echo 'export PATH="$HOME/dotfiles/bin:$PATH"' >> ~/.zshrc
 ```
 
-## Tools
+### Fonts
+
+Install [Powerline Fonts](https://github.com/powerline/fonts).
 
 ### Rime
 
@@ -154,3 +164,7 @@ echo 'export PATH="$HOME/dotfiles/bin:$PATH"' >> ~/.zshrc
 ``` bash
 ln -s ~/dotfiles/rime/squirrel.custom.yaml ~/Library/Rime/squirrel.custom.yaml
 ```
+
+### Atom
+
+- Install Atom Plugins: `apm install markdown-writer`
