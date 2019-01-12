@@ -20,9 +20,9 @@ autocmd! FileType sql setlocal formatprg=pg_format\ -f\ 2
 " }}}
 
 " JSON {{{
-" npm install jsonmatter -g
-" https://github.com/hotoo/jsonmatter
-autocmd! FileType json setlocal shiftwidth=2 tabstop=2 foldmethod=syntax formatprg=jsonmatter\ -i\ 2
+" brew install jq
+" https://stedolan.github.io/jq/
+autocmd! FileType json setlocal shiftwidth=2 tabstop=2 foldmethod=syntax formatprg=jq\ --indent\ 2
 " }}}
 
 " Ruby Mappings {{{
@@ -230,8 +230,6 @@ function! s:GoDef() abort
 
   " Unite menus for Golang
   nnoremap <buffer> <silent> <leader>gm :<C-u>Unite -buffer-name=menus menu:golang -start-insert<CR>
-  " Unite go/import
-  nnoremap <buffer> <silent> <leader>oI :<C-u>Unite go/import -start-insert<CR>
   " Unite go/decls
   nnoremap <buffer> <silent> <leader>og :<C-u>Unite decls -start-insert<CR>
 

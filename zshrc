@@ -13,11 +13,6 @@ CASE_SENSITIVE="false"
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
 
-# Disable marking untracked files under VCS as dirty.
-# This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
 # Zsh Plugins
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -75,7 +70,7 @@ alias t="tail -f"
 alias ra="rake"
 alias br="bin/rake"
 # Vim Alias
-alias ee="vim"
+alias ee="nvim"
 alias vi="nvim"
 # Tmux
 alias tm="tmux"
@@ -95,6 +90,8 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # System
 alias plz="sudo"
 alias rmd="trash"
+# Vim
+alias vim="nvim"
 # Copy to clipboard
 alias ccp="pbcopy"
 # Local IP address
@@ -105,17 +102,12 @@ alias h10="print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10"
 # Other Alias
 # ==============================
 # Edit zshrc and vimrc
-alias zshrc="gvim ~/.zshrc"
-alias vimrc="gvim ~/.vimrc"
-# Open vim Magit
-alias magit="nvim -c MagitOnly"
+alias zshrc="nvim ~/.zshrc"
+alias vimrc="nvim ~/.vimrc"
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
-# https://github.com/y0ssar1an/q
-alias qq="$GOPATH/src/github.com/y0ssar1an/q/q.sh"
-alias rmqq="rm $TMPDIR/q"
 
 # Function Helpers
 # ==============================
@@ -129,6 +121,33 @@ function ywd {
 # small enough for one screen.
 function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+# https://github.com/y0ssar1an/q
+function qq() {
+    clear
+
+    logpath="$TMPDIR/q"
+    if [[ -z "$TMPDIR" ]]; then
+        logpath="/tmp/q"
+    fi
+
+    if [[ ! -f "$logpath" ]]; then
+        echo 'Q LOG' > "$logpath"
+    fi
+
+    tail -100f -- "$logpath"
+}
+
+function rmqq() {
+    logpath="$TMPDIR/q"
+    if [[ -z "$TMPDIR" ]]; then
+        logpath="/tmp/q"
+    fi
+    if [[ -f "$logpath" ]]; then
+        rm "$logpath"
+    fi
+    qq
 }
 
 # Fzf https://github.com/junegunn/fzf
