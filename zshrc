@@ -108,9 +108,6 @@ alias vimrc="nvim ~/.vimrc"
 alias whois="whois -h whois-servers.net"
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
-# https://github.com/y0ssar1an/q
-alias qq="$GOPATH/src/github.com/y0ssar1an/q/q.sh"
-alias rmqq="rm $TMPDIR/q"
 
 # Function Helpers
 # ==============================
@@ -124,6 +121,33 @@ function ywd {
 # small enough for one screen.
 function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+# https://github.com/y0ssar1an/q
+function qq() {
+    clear
+
+    logpath="$TMPDIR/q"
+    if [[ -z "$TMPDIR" ]]; then
+        logpath="/tmp/q"
+    fi
+
+    if [[ ! -f "$logpath" ]]; then
+        echo 'Q LOG' > "$logpath"
+    fi
+
+    tail -100f -- "$logpath"
+}
+
+function rmqq() {
+    logpath="$TMPDIR/q"
+    if [[ -z "$TMPDIR" ]]; then
+        logpath="/tmp/q"
+    fi
+    if [[ -f "$logpath" ]]; then
+        rm "$logpath"
+    fi
+    qq
 }
 
 # Fzf https://github.com/junegunn/fzf

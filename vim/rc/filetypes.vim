@@ -20,9 +20,9 @@ autocmd! FileType sql setlocal formatprg=pg_format\ -f\ 2
 " }}}
 
 " JSON {{{
-" npm install jsonmatter -g
-" https://github.com/hotoo/jsonmatter
-autocmd! FileType json setlocal shiftwidth=2 tabstop=2 foldmethod=syntax formatprg=jsonmatter\ -i\ 2
+" brew install jq
+" https://stedolan.github.io/jq/
+autocmd! FileType json setlocal shiftwidth=2 tabstop=2 foldmethod=syntax formatprg=jq\ --indent\ 2
 " }}}
 
 " Ruby Mappings {{{
