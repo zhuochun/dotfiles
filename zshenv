@@ -8,7 +8,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # Editor
-export EDITOR=vim
+export EDITOR=nvim
 
 # Don’t clear the screen after quitting a manual page.
 export MANPAGER='less -X';

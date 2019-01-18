@@ -6,21 +6,20 @@ export ZSH=$HOME/.oh-my-zsh
 # suvash blinks fino josh re5et random
 ZSH_THEME="refined"
 
-# Do not use case-sensitive completion.
-CASE_SENSITIVE="false"
-
-# Use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-HYPHEN_INSENSITIVE="true"
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Zsh Plugins
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(atom autojump bundler coffee colored-man
-    gem git git-extras gitignore golang jsontools k mix node npm
-    rbenv redis-cli rsync ruby themes tmux vagrant
-    zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(autojump git git-extras gitignore golang k tmux
+         zsh-completions zsh-autosuggestions)
+
+# zsh-completions https://github.com/zsh-users/zsh-completions
+autoload -U compinit && compinit
 
 # Load oh-my-zsh
 # ==============================
@@ -149,9 +148,6 @@ function rmqq() {
     fi
     qq
 }
-
-# Fzf https://github.com/junegunn/fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Local configs
 [ -f ~/.localrc ] && source ~/.localrc
