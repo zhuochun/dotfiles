@@ -9,13 +9,29 @@ build = 'make'
 repo = 'bogado/file-line'
 
 [[plugins]]
+repo = 'jiangmiao/auto-pairs'
+hook_add = '''
+    " Disable default <BS> mapping because it maps <C-h>, which is used elsewhere
+    " The original <BS> behavior is mapped with AutoPairsDelete() down below
+    let g:AutoPairsMapBS = 0
+    " Disable jumping multiline close
+    let g:AutoPairsMultilineClose = 0
+'''
+
+[[plugins]]
+repo = 'kana/vim-operator-user'
+
+[[plugins]]
+repo = 'kana/vim-textobj-user'
+
+[[plugins]]
+repo = 'kana/vim-textobj-lastpat'
+
+[[plugins]]
+repo = 'Julian/vim-textobj-variable-segment'
+
+[[plugins]]
 repo = 'Konfekt/FastFold'
-
-[[plugins]]
-repo = 'vim-scripts/matchit.zip'
-
-[[plugins]]
-repo = 'zhuochun/vim-snippets'
 
 [[plugins]]
 repo = 'tpope/vim-eunuch'
@@ -36,20 +52,11 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
 repo = 'tpope/vim-vinegar'
 depends = ['nerdtree']
-
-[[plugins]]
-repo = 'kana/vim-operator-user'
-
-[[plugins]]
-repo = 'kana/vim-textobj-user'
-
-[[plugins]]
-repo = 'kana/vim-textobj-lastpat'
-
-[[plugins]]
-repo = 'Julian/vim-textobj-variable-segment'
 
 [[plugins]]
 repo = 'othree/html5.vim'
@@ -100,9 +107,6 @@ hook_add = '''
 repo = 'tpope/vim-git'
 
 [[plugins]]
-repo = 'tpope/vim-fugitive'
-
-[[plugins]]
 repo = 'morhetz/gruvbox'
 
 [[plugins]]
@@ -114,3 +118,9 @@ repo = 'rakr/vim-two-firewatch'
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
 depends = ['vim-airline']
+
+[[plugins]]
+repo = 'vim-scripts/matchit.zip'
+
+[[plugins]]
+repo = 'zhuochun/vim-snippets'

@@ -268,17 +268,6 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'jiangmiao/auto-pairs'
-on_event = 'VimEnter'
-hook_source = '''
-    " Disable default <BS> mapping because it maps <C-h>, which is used elsewhere
-    " The original <BS> behavior is mapped with AutoPairsDelete() down below
-    let g:AutoPairsMapBS = 0
-    " Disable jumping multiline close
-    let g:AutoPairsMultilineClose = 0
-'''
-
-[[plugins]]
 repo = 'junegunn/vim-easy-align'
 on_map = ['<Plug>(EasyAlign)']
 hook_add = '''
