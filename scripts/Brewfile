@@ -10,6 +10,10 @@ brew "clang-format"
 brew "exa"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
+# User-friendly command-line shell for UNIX-like operating systems
+brew "fish"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # Distributed revision control system
 brew "git"
 # Incremental merge for git
@@ -31,11 +35,15 @@ brew "macvim"
 # Scalable distributed version control system
 brew "mercurial"
 # Open source relational database management system
-brew "mysql"
+brew "mysql@5.7", restart_service: true
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Platform built on V8 to build network applications
+brew "node"
 # 7-Zip (high compression file archiver) implementation
 brew "p7zip"
+# Object-relational database system
+brew "postgresql", restart_service: true
 # Protocol buffers (Google's data interchange format)
 brew "protobuf"
 # Install various Ruby versions and implementations
@@ -45,7 +53,7 @@ brew "rbenv"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Persistent key-value database, with built-in net interface
-brew "redis"
+brew "redis", restart_service: true
 # Fuzzy text selector for files and anything else you need to select
 brew "selecta"
 # Code-search similar to ack
