@@ -224,12 +224,12 @@ nnoremap <silent> <leader>tf :TestNearest<CR>
 nnoremap <silent> <leader>tt :TestFile<CR>
 " <leader>T  Run current file
 nnoremap <silent> <leader>T  :TestFile<CR>
-" <leader>y yankround-prev
-" <leader>Y yankround-next
+" <leader>y
 " <leader>u
 " <leader>i
 " <leader>o* Filetype specific operations
-" <leader>p
+" <leader>p yankround-prev
+" <leader>P yankround-next
 " <leader>a
 " <leader>s* Spell checkings
 " <leader>sc Unite spell suggest
