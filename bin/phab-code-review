@@ -99,18 +99,22 @@ def time_ago(unix_t)
   elapsed = Time.now - Time.at(unix_t)
 
   case
-  when elapsed >= 172_800
-    '%d days' % [elapsed / 86_400]
-  when elapsed >= 86_400
-    '%d day' % [elapsed / 86_400]
-  when elapsed >= 7200
+  when elapsed >= 864_000 # 10 days
+    '%d days _Abandoned Diff?_ :knife:' % [elapsed / 86_400]
+  when elapsed >= 172_800 # 2 days
+    '%d days :panic:' % [elapsed / 86_400]
+  when elapsed >= 86_400 # 1 day
+    '%d day :why:' % [elapsed / 86_400]
+  when elapsed >= 18_000 # 5 hours
+    '%d hrs :warning:' % [elapsed / 3600]
+  when elapsed >= 7200 # 2 hours
     '%d hrs' % [elapsed / 3600]
   when elapsed >= 3600
     '%d hr' % [elapsed / 3600]
   when elapsed >= 120
-    '%d mins' % [elapsed / 60]
+    '%d mins :new:' % [elapsed / 60]
   else
-    '%d min' % [elapsed / 60]
+    '%d min :new:' % [elapsed / 60]
   end
 end
 
@@ -163,12 +167,13 @@ def list_reviewers(cfg, author, commit, paths)
       committers[name] = m
     end
   end
-  # handle exclude users
-  Array(cfg.exclude_users).each { |u| committers.delete(u) }
   # handle alias
   Array(cfg.alias_users).each do |u|
-    committers[u['alias']] = committers.delete(u['name']) if committers.key?(u['name'])
+    replaced_by = Array(u['alias']).sample
+    committers[replaced_by] = committers.delete(u['name']) if committers.key?(u['name'])
   end
+  # handle exclude users
+  Array(cfg.exclude_users).each { |u| committers.delete(u) }
   # handle duplicated self
   committers.keys.each do |k|
     name = k.tr('- ', '.').downcase
@@ -206,9 +211,9 @@ def scan_diffs(cfg)
                      reviewers: reviewers)
     end.compact
 
-    msgs = revs.map do |rev|
-      # pp rev.revision, rev.author, rev.reviewers
+    revs = revs.sort_by { |rev| rev.revision.fields['dateModified'] }
 
+    msgs = revs.map do |rev|
       msg  = "*#{rev.author_name}* "
       # remove annoying texts in diff title
       title = rev.revision.fields['title'].gsub(/[\\\n<>"'\\\/]/, '')
@@ -232,14 +237,12 @@ def scan_diffs(cfg)
       ].sample
 
       slack(cfg.slack_hook, group['channel'], msg)
-    else
-      until msgs.empty?
-        msg = ''
-        msg += "\n" + msgs.shift.to_s while !msgs.empty? && (msg.length + msgs.first.to_s.length < 3000)
+      next
+    end
 
-        slack(cfg.slack_hook, group['channel'], msg)
-        sleep(1) # breath
-      end
+    msgs.each do |msg|
+      slack(cfg.slack_hook, group['channel'], msg)
+      sleep(1) # breath
     end
   end
 end
