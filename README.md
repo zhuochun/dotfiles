@@ -58,7 +58,18 @@ Install [Homebrew](https://brew.sh/):
 brew bundle install --file=~/dotfiles/scripts/Brewfile
 ```
 
-Setup Zsh ([guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)) and [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh):
+Download [gruvbox](https://github.com/morhetz/gruvbox) colorscheme for terminal.
+
+Setup Zsh ([guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)):
+
+``` bash
+# Check zsh PATH and whether it is in authorized shells list (/etc/shells)
+which zsh
+# Make zsh the default
+chsh -s $(which zsh)
+```
+
+Setup [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh):
 
 ``` bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
