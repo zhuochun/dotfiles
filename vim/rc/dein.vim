@@ -7,7 +7,7 @@ let g:dein#types#git#clone_depth = 5
 
 " Dein init {{{
 let s:dotvim_dein = g:dotvim_bundles . '/repos/github.com/Shougo/dein.vim'
-execute 'set runtimepath^=' . s:dotvim_dein
+execute 'set runtimepath+=' . s:dotvim_dein
 
 if !dein#load_state(g:dotvim_bundles)
   filetype plugin indent on
@@ -48,6 +48,15 @@ filetype plugin indent on
 if !has('vim_starting') && dein#check_install()
   call dein#install()
 endif
+
+" Dein related commands {{{
+" Update plugins
+command! DeinUpdate call dein#update()
+" Clear state
+command! DeinClearState call dein#clear_state()
+" Reset runtimepath
+command! DeinClearRuntime call dein#recache_runtimepath()
+" }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim:ft=vim:fdm=marker:sw=2:ts=2
