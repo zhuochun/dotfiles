@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+# frozen_string_literal: true
+
+require 'date'
+require 'json'
+require 'http'
+
+# OhMyJIRA slack reminder on JIRA Issues
+#
+# Sample config:
+#
+#     [{
+#       "api": "https://jira.com/rest/api/2",
+#       "web": "https://jira.com",
+#       "channel": "#slack-channel",
+#       "slack_hook": "https://hooks.slack.com/...",
+#       "auth": "Basic xxx",
+#       "project": "PROJ",
+#       "jql": "..."
+#     }]
+#
+
+# Load config
+def load_config(path)
+  JSON.parse(File.read(path))
+end
+
+# Slack
+def slack(cfg, channel, msg)
+  payload = {
+    channel: channel,
+    username: 'OhMyJIRA',
+    icon_emoji: [':jira:', ':ticket:', ':accept:'].sample,
+    text: msg
+  }
+
+  HTTP.post(cfg['slack_hook'], json: payload)
+end
+
+def time_ago(t)
+  elapsed = Time.now - t
+
+  case
+  when elapsed >= 864_000 # 10 days
+    '%d days _Abandoned Diff?_ :knife:' % [elapsed / 86_400]
+  when elapsed >= 172_800 # 2 days
+    '%d days :panic:' % [elapsed / 86_400]
+  when elapsed >= 86_400 # 1 day
+    '%d day :whyyyy:' % [elapsed / 86_400]
+  when elapsed >= 18_000 # 5 hours
+    '%d hrs :warning:' % [elapsed / 3600]
+  when elapsed >= 7200 # 2 hours
+    '%d hrs' % [elapsed / 3600]
+  when elapsed >= 3600
+    '%d hr' % [elapsed / 3600]
+  when elapsed >= 120
+    '%d mins :new:' % [elapsed / 60]
+  else
+    '%d min :new:' % [elapsed / 60]
+  end
+end
+
+# Search Issues
+def search_issues(cfg)
+  url = "#{cfg['api']}/search"
+
+  body = {
+    jql: cfg['jql'],
+    fields: [
+      'reporter',
+      'assignee',
+      'issuetype',
+      'status',
+      'components',
+      'updated',
+      'summary',
+      'description',
+      'priority',
+    ]
+  }
+
+  resp = HTTP.auth(cfg['auth']).post(url, json: body)
+  return [] if resp.code != 200
+
+  Array(resp.parse['issues'])
+end
+
+abort "Usage: #{$PROGRAM_NAME} config.json" if ARGV.length != 1
+
+CONFIG_PATH = ARGV[0]
+cfg = load_config(CONFIG_PATH)
+
+cfg.each do |project_cfg|
+  issues = search_issues(project_cfg)
+
+  issues.each do |issue|
+    link = "<#{project_cfg['web']}/browse/#{issue['key']}|#{issue['key']}>"
+    fields = issue['fields']
+
+    msg = "#{link} #{fields['summary']}\n"
+    msg += "  Taken cared by #{fields['assignee']['name']} "
+    msg += "*#{fields['status']['name']}* "
+    msg += "(#{time_ago(Time.parse(fields['updated']))}) "
+
+    slack(project_cfg, project_cfg['channel'], msg)
+  end
+end
