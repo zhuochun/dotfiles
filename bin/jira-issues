@@ -42,26 +42,23 @@ def time_ago(t)
   elapsed = Time.now - t
 
   case
-  when elapsed >= 864_000 # 10 days
-    '%d days _Abandoned Diff?_ :knife:' % [elapsed / 86_400]
   when elapsed >= 172_800 # 2 days
-    '%d days :panic:' % [elapsed / 86_400]
+    '%d days' % [elapsed / 86_400]
   when elapsed >= 86_400 # 1 day
-    '%d day :whyyyy:' % [elapsed / 86_400]
-  when elapsed >= 18_000 # 5 hours
-    '%d hrs :warning:' % [elapsed / 3600]
+    '%d day' % [elapsed / 86_400]
   when elapsed >= 7200 # 2 hours
     '%d hrs' % [elapsed / 3600]
   when elapsed >= 3600
     '%d hr' % [elapsed / 3600]
-  when elapsed >= 120
-    '%d mins :new:' % [elapsed / 60]
+  when elapsed >= 120 # 2 mins
+    '%d mins' % [elapsed / 60]
   else
-    '%d min :new:' % [elapsed / 60]
+    '%d min' % [elapsed / 60]
   end
 end
 
 # Search Issues
+# https://docs.atlassian.com/software/jira/docs/api/REST/8.0.2/#api/2/search-searchUsingSearchRequest
 def search_issues(cfg)
   url = "#{cfg['api']}/search"
 
@@ -95,11 +92,13 @@ cfg.each do |project_cfg|
   issues = search_issues(project_cfg)
 
   issues.each do |issue|
-    link = "<#{project_cfg['web']}/browse/#{issue['key']}|#{issue['key']}>"
+    link = "#{project_cfg['web']}/browse/#{issue['key']}"
     fields = issue['fields']
 
-    msg = "#{link} #{fields['summary']}\n"
-    msg += "  Taken cared by #{fields['assignee']['name']} "
+    msg = "*#{issue['key']}* <#{link}|#{fields['summary']}>\n  "
+
+    assignee = fields['assignee']
+    msg += "Taken care by _#{assignee['name']}_ " if assignee
     msg += "*#{fields['status']['name']}* "
     msg += "(#{time_ago(Time.parse(fields['updated']))}) "
 
