@@ -1,0 +1,146 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+# frozen_string_literal: true
+
+require 'date'
+require 'json'
+require 'http'
+
+# OhMyJIRA slack reminder on JIRA Project Releases
+#
+# Sample config:
+#
+#     {
+#       "api": "https://jira.com/rest/api/2",
+#       "web": "https://jira.com",
+#       "channel": "#slack-channel",
+#       "slack_hook": "https://hooks.slack.com/...",
+#       "auth": "Basic xxx",
+#       "project": "PROJ"
+#     }
+#
+
+# Load config
+def load_config(path)
+  JSON.parse(File.read(path))
+end
+
+# Slack
+def slack(cfg, channel, msg)
+  payload = {
+    channel: channel,
+    username: 'OhMyJIRA',
+    icon_emoji: [':jira:', ':ticket:', ':accept:'].sample,
+    text: msg
+  }
+
+  HTTP.post(cfg['slack_hook'], json: payload)
+end
+
+# Versions
+#
+#     [{
+#         "id": "1",
+#         "name": "iOS",
+#         "archived": false,
+#         "released": false,
+#         "startDate": "2019-04-09",
+#         "releaseDate": "2019-04-15",
+#         "overdue": false,
+#         "userStartDate": "09/Apr/19",
+#         "userReleaseDate": "15/Apr/19",
+#         "projectId": 1
+#     }]
+#
+def load_versions(cfg)
+  url = "#{cfg['api']}/project/#{cfg['project']}/version?orderBy=-startDate"
+
+  resp = HTTP.auth(cfg['auth']).get(url)
+  return [] if resp.code != 200
+
+  Array(resp.parse['values'])
+end
+
+# Load version
+#
+#     {
+#         "issuesFixedCount": 3,
+#         "issuesAffectedCount": 0,
+#         "issueCountWithCustomFieldsShowingVersion": 0
+#     }
+#
+def load_version(cfg, id)
+  url = "#{cfg['api']}/version/#{id}/relatedIssueCounts"
+
+  resp = HTTP.auth(cfg['auth']).get(url)
+  return {} if resp.code != 200
+
+  resp.parse
+end
+
+# Filter versions. Prefix=ADR, iOS, State=:now,:next
+def filter_version(versions, prefix, state)
+  versions.reverse.find do |v|
+    next false unless v["name"].start_with?(prefix)
+
+    begin
+      now = Time.new
+
+      startDate = Time.parse(v["startDate"])
+      releaseDate = Time.parse(v["releaseDate"])
+
+      if state == :now
+        next startDate < now && releaseDate > now
+      else
+        next startDate > now && releaseDate > now
+      end
+    rescue StandardError
+    end
+  end
+end
+
+abort "Usage: #{$PROGRAM_NAME} config.json" if ARGV.length != 1
+
+CONFIG_PATH = ARGV[0]
+cfg = load_config(CONFIG_PATH)
+
+versions = load_versions(cfg)
+
+# Current versions
+releaseURL = "#{cfg['web']}/projects/INCT/versions/"
+
+# Current regression build
+['ADR', 'iOS'].each do |platform|
+  version = filter_version(versions, platform, :now)
+
+  msg = "_#{platform} (Current Regression Version):_ "
+  if version.nil?
+    msg += "No Release\n"
+  else
+    msg += "<#{releaseURL}#{version['id']}|#{version['name']}>\n"
+    msg += "  Sign-off Date: #{version['userStartDate']}\n"
+    msg += "  Release Date: #{version['userReleaseDate']}\n"
+
+    changes = load_version(cfg, version['id'])
+    msg += "  Changes: #{changes['issuesFixedCount']}"
+  end
+  slack(cfg, cfg['channel'], msg)
+end
+
+# Upcoming builds
+['ADR', 'iOS'].each do |platform|
+  version = filter_version(versions, platform, :next)
+
+  msg = "*#{platform} (Next version):* "
+  if version.nil?
+    msg += "No Release\n"
+  else
+    msg += "<#{releaseURL}#{version['id']}|#{version['name']}>\n"
+    msg += "  Sign-off Date: #{version['userStartDate']}\n"
+    msg += "  Release Date: #{version['userReleaseDate']}\n"
+
+    changes = load_version(cfg, version['id'])
+    msg += "  Changes: #{changes['issuesFixedCount']}"
+  end
+  slack(cfg, cfg['channel'], msg)
+end

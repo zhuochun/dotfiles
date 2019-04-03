@@ -12,6 +12,7 @@ gem install rubocop
 gem install reek
 
 # Dependencies dotfile/scripts
+gem install http
 gem install listen
 gem install colorize
 gem install mysql2
