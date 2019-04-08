@@ -10,7 +10,7 @@ require 'http'
 #
 # Sample config:
 #
-#     [{
+#     {
 #       "api": "https://jira.com/rest/api/2",
 #       "web": "https://jira.com",
 #       "channel": "#slack-channel",
@@ -18,7 +18,7 @@ require 'http'
 #       "auth": "Basic xxx",
 #       "project": "PROJ",
 #       "jql": "..."
-#     }]
+#     }
 #
 
 # Load config
@@ -88,20 +88,18 @@ abort "Usage: #{$PROGRAM_NAME} config.json" if ARGV.length != 1
 CONFIG_PATH = ARGV[0]
 cfg = load_config(CONFIG_PATH)
 
-cfg.each do |project_cfg|
-  issues = search_issues(project_cfg)
+issues = search_issues(cfg)
 
-  issues.each do |issue|
-    link = "#{project_cfg['web']}/browse/#{issue['key']}"
-    fields = issue['fields']
+issues.each do |issue|
+  link = "#{cfg['web']}/browse/#{issue['key']}"
+  fields = issue['fields']
 
-    msg = "*#{issue['key']}* <#{link}|#{fields['summary']}>\n  "
+  msg = "*#{issue['key']}* <#{link}|#{fields['summary']}>\n  "
 
-    assignee = fields['assignee']
-    msg += "Taken care by _#{assignee['name']}_ " if assignee
-    msg += "*#{fields['status']['name']}* "
-    msg += "(#{time_ago(Time.parse(fields['updated']))}) "
+  assignee = fields['assignee']
+  msg += "Taken care by _#{assignee['name']}_ " if assignee
+  msg += "*#{fields['status']['name']}* "
+  msg += "(#{time_ago(Time.parse(fields['updated']))}) "
 
-    slack(project_cfg, project_cfg['channel'], msg)
-  end
+  slack(cfg, cfg['channel'], msg)
 end
