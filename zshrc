@@ -15,7 +15,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # ==============================
 # Plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(autojump git git-extras gitignore golang k tmux
+plugins=(autojump git git-extras gitignore golang tmux
          zsh-completions zsh-autosuggestions)
 
 # zsh-completions https://github.com/zsh-users/zsh-completions
