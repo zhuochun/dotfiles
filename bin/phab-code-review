@@ -219,11 +219,15 @@ def scan_diffs(cfg)
       title = rev.revision.fields['title'].gsub(/[\\\n<>"'\\\/]/, '')
       msg += "<#{cfg.diff_url}#{rev.revision.id}|#{title}> "
 
-      reviewer = rev.reviewers[0].to_s
-      # fallback to random pick another diff author
-      reviewer = (authors - [rev.author_name]).sample if reviewer.to_s.empty?
-      # skip if we still don’t have reviewer
-      msg += "\n    Ping *#{reviewer}* " unless reviewer.nil?
+      # potential reviewers from previous reviewers in diff
+      reviewers = Array(rev.reviewers.map { |r| r.to_s })
+      # potential reviewers from other diff authors
+      reviewers += Array(authors - [rev.author_name])
+      # ping first 2 reviewers if we have any
+      unless reviewers.empty?
+        ping_reviewers = reviewers[0, 2].map { |r| "*#{r}*" }.join(', ')
+        msg += "\n    Ping #{ping_reviewers} "
+      end
 
       msg += "(_#{time_ago(rev.revision.fields['dateModified'])}_)"
       msg
