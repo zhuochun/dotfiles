@@ -100,7 +100,7 @@ def time_ago(unix_t)
 
   case
   when elapsed >= 864_000 # 10 days
-    '%d days _Abandoned Diff?_ :knife:' % [elapsed / 86_400]
+    '%d days :knife: Abandoned?' % [elapsed / 86_400]
   when elapsed >= 172_800 # 2 days
     '%d days :panic:' % [elapsed / 86_400]
   when elapsed >= 86_400 # 1 day
