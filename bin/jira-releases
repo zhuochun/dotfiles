@@ -107,13 +107,13 @@ cfg = load_config(CONFIG_PATH)
 versions = load_versions(cfg)
 
 # Current versions
-releaseURL = "#{cfg['web']}/projects/INCT/versions/"
+releaseURL = "#{cfg['web']}/projects/#{cfg['project']}/versions/"
 
 # Current regression build
 ['ADR', 'iOS'].each do |platform|
   version = filter_version(versions, platform, :now)
 
-  msg = "_#{platform} (Current Regression Version):_ "
+  msg = "*#{platform} (Current Regression Version):* "
   if version.nil?
     msg += "No Release\n"
   else
@@ -131,7 +131,7 @@ end
 ['ADR', 'iOS'].each do |platform|
   version = filter_version(versions, platform, :next)
 
-  msg = "*#{platform} (Next version):* "
+  msg = "_#{platform} (Next version):_ "
   if version.nil?
     msg += "No Release\n"
   else

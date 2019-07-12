@@ -16,7 +16,6 @@ require 'http'
 #       "channel": "#slack-channel",
 #       "slack_hook": "https://hooks.slack.com/...",
 #       "auth": "Basic xxx",
-#       "project": "PROJ",
 #       "jql": "..."
 #     }
 #
@@ -30,7 +29,7 @@ end
 def slack(cfg, channel, msg)
   payload = {
     channel: channel,
-    username: 'OhMyJIRA',
+    username: cfg['slack_name'] || 'OhMyJIRA',
     icon_emoji: [':jira:', ':ticket:', ':accept:'].sample,
     text: msg
   }
@@ -97,7 +96,7 @@ issues.each do |issue|
   msg = "*#{issue['key']}* <#{link}|#{fields['summary']}>\n  "
 
   assignee = fields['assignee']
-  msg += "Taken care by _#{assignee['name']}_ " if assignee
+  msg += "Assigned to _#{assignee['name']}_ " if assignee
   msg += "*#{fields['status']['name']}* "
   msg += "(#{time_ago(Time.parse(fields['updated']))}) "
 

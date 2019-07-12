@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-require_relative '../scripts/git-utils'
+require_relative '../scripts/utils-git'
 
 # Check who are the reviewers
 #

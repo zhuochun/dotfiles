@@ -7,7 +7,8 @@ require 'date'
 require 'json'
 require 'ostruct'
 
-require_relative '../scripts/git-utils'
+require_relative '../scripts/utils-git'
+require_relative '../scripts/utils-bot'
 
 # OhMyCodeReview reminder on Phabricator
 #
@@ -60,15 +61,8 @@ def git_blame(repo, file)
 end
 
 def slack(hook, channel, msg)
-  payload = {
-    channel: channel,
-    username: 'OhMyCodeReview',
-    icon_emoji: [':face_with_monocle:', ':face_with_cowboy_hat:', ':merman:', ':wave:'].sample,
-    text: msg
-  }
-
-  resp = `echo '#{JSON.generate(payload)}' | http POST #{hook} content-type:application/json`
-  pp "slack err: #{JSON.generate(payload)}" if resp != 'ok'
+  emojis = [':face_with_monocle:', ':face_with_cowboy_hat:', ':merman:', ':wave:']
+  Slack.new(hook, 'OhMyCodeReview', emojis).send(channel, msg)
 end
 
 def conduit(api, payload)
@@ -254,19 +248,6 @@ end
 abort "Usage: #{$PROGRAM_NAME} config.json" if ARGV.length != 1
 
 CONFIG_PATH = ARGV[0]
+
 cfg = load_config(CONFIG_PATH)
-
-loop do
-  now = Time.new
-  tw = cfg.time_window
-  if !tw || (tw['days'].include?(now.wday) && Range.new(*tw['hours']).cover?(now.hour))
-    begin
-      cfg = load_config(CONFIG_PATH)
-      scan_diffs(cfg)
-    rescue StandardError => e
-      pp e
-    end
-  end
-
-  sleep(3600) # 60 mins
-end
+scan_diffs(cfg)
