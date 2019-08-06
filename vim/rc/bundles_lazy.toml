@@ -130,8 +130,6 @@ hook_source = '''
     let g:go_jump_to_error = 1
     " Reuse buffer when GoDef
     let g:go_def_reuse_buffer = 1
-    " Disable show :GoInfo for word under cursor automatically
-    let g:go_auto_type_info = 0
     " No auto template when create new file
     let g:go_template_autocreate = 0
     " Use camelcase for tags, :GoAddTags
@@ -148,14 +146,8 @@ hook_source = '''
     let g:go_highlight_space_tab_error = 0
     " No highlights trailing white space
     let g:go_highlight_trailing_whitespace_error = 0
-    " Highlight current variables
-    let g:go_auto_sameids = 1
     " Highlight go:generate directives
     let g:go_highlight_generate_tags = 1
-    " Show the type info of current variables
-    let g:go_auto_type_info = 1
-    " Echoes information about various Go commands
-    let g:go_echo_command_info = 1
 '''
 
 [[plugins]]
