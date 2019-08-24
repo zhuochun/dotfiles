@@ -115,7 +115,7 @@ To customise [rules](https://pqrs.org/osx/karabiner/complex_modifications/):
 ln -s ~/dotfiles/mac/karabiner-rules ~/.config/karabiner/assets/complex_modifications
 ```
 
-Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard) and [Ergodox-EZ/zhuochun](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c).
+Refer to [zhuochun/mac-keyboard](https://github.com/zhuochun/mac-keyboard) and Ergodox-EZ layout ([Mac](https://github.com/zhuochun/qmk_firmware/blob/zhuochun-keymaps-3/keyboards/ergodox_ez/keymaps/zhuochun/keymap.c)/[Win](https://configure.ergodox-ez.com/ergodox-ez/layouts/Qz39g/latest/0))
 
 ## Vim
 
