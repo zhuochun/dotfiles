@@ -1,3 +1,12 @@
 # Vim bundle installation path
 vim/bundle/
 vim/bundles/
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Icon must end with two \r
+Icon
+# Thumbnails
+._*
