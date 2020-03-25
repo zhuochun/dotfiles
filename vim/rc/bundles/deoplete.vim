@@ -30,3 +30,6 @@ endfunction
 inoremap <expr><C-g> deoplete#undo_completion()
 " <C-l>: redraw candidates
 inoremap <expr><C-l> deoplete#refresh()
+
+" Use vim-go for omni-completion
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })

@@ -116,6 +116,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'fatih/vim-go'
+depends = ['deoplete.nvim']
 on_ft = ['go']
 on_cmd = ['<Plug>(go-']
 hook_source = '''
@@ -509,22 +510,6 @@ on_source = ['deoplete.nvim']
 [[plugins]]
 repo = 'ujihisa/neco-look'
 on_source = ['deoplete.nvim']
-
-[[plugins]]
-repo = 'zchee/deoplete-go'
-build = 'make'
-depends = ['deoplete.nvim']
-on_ft = 'go'
-hook_source = '''
-    " Faster lookup on gocode binary
-    let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-    " Class Sorting and Ignore
-    let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-    " Complete external packages (slower)
-    let g:deoplete#sources#go#source_importer = 1
-    " Complete unimported standard library packages
-    let g:deoplete#sources#go#unimported_packages = 1
-'''
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'

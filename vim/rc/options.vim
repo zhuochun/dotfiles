@@ -137,7 +137,9 @@ set concealcursor=i
 set complete-=i              " Disable complete scanning included files
 set complete-=t              " Disable complete scanning included tags
 
-set completeopt-=preview    " no preview window
+set completeopt-=preview
+set completeopt+=noinsert
+set completeopt+=noselect
 " }}}
 
 " Encoding {{{

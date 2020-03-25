@@ -19,7 +19,6 @@ go get -u github.com/jstemmer/gotags
 go get -u github.com/kisielk/errcheck
 go get -u github.com/klauspost/asmfmt/cmd/asmfmt
 go get -u github.com/koron/iferr
-go get -u github.com/mdempsky/gocode
 go get -u github.com/newhook/go-symbols
 go get -u github.com/ramya-rao-a/go-outline
 go get -u github.com/rogpeppe/godef
