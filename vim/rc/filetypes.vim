@@ -209,10 +209,9 @@ function! s:PythonDef() abort
   iab <buffer> false      False
   iab <buffer> none       None
   iab <buffer> null       None
+  iab <buffer> &&         and
+  iab <buffer> \|\|       or
 endfunction
-
-" Other configs
-autocmd! FileType python BracelessEnable +indent
 " }}}
 
 " Go Mappings {{{
