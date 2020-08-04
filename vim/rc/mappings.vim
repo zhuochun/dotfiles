@@ -264,7 +264,9 @@ nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
 nnoremap <leader>v V`]
 " <leader>b
 " <leader>B Close other buffers (BufOnly)
-" <leader>n
+" <leader>n Open quickfix with some function (filetype specific)
+" <leader>N Close quickfix
+nnoremap <leader>N :cclose<CR>
 " <leader>m
 " <leader>M Remove ^M
 nnoremap <leader>M mmHmt:%s/<C-V><CR>//ge<CR>'tzt'm
