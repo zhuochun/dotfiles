@@ -56,6 +56,16 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = ['python']
+hook_source = '''
+    let g:jedi#completions_enabled = 0
+    " change goto same as jump tag
+    let g:jedi#goto_command = "<C-]>"
+    " <leader>n show usages of a name
+'''
+
+[[plugins]]
 repo = 'sjl/vitality.vim'
 on_if = '!has("gui_running")'
 
@@ -218,6 +228,7 @@ hook_source = '''
                 \   'coffee'     : 'coffee',
                 \   'ruby'       : 'ruby',
                 \   'elixir'     : 'elixir',
+                \   'python'     : 'python',
                 \   'go'         : 'go',
                 \ }
     " Add backlists item in Golang
@@ -505,6 +516,10 @@ on_source = ['deoplete.nvim']
 
 [[plugins]]
 repo = 'Shougo/neoinclude.vim'
+on_source = ['deoplete.nvim']
+
+[[plugins]]
+repo = 'deoplete-plugins/deoplete-jedi'
 on_source = ['deoplete.nvim']
 
 [[plugins]]

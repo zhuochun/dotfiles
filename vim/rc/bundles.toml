@@ -83,6 +83,9 @@ repo = 'othree/csscomplete.vim'
 repo = 'cespare/vim-toml'
 
 [[plugins]]
+repo = 'rix0rrr/vim-gcl'
+
+[[plugins]]
 repo = 'uarun/vim-protobuf'
 
 [[plugins]]

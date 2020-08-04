@@ -187,6 +187,8 @@ nnoremap <SPACE> i<SPACE><ESC>
 nnoremap <S-SPACE> a<SPACE><ESC>
 " <CR>      Enter <CR> at current position
 nnoremap <CR> i<CR><ESC>
+" <CR>      Undo the mapping above in quickfix
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 " }}}
 
 " <leader>* {{{
@@ -262,8 +264,8 @@ nnoremap <leader>L GoZ<ESC>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
 nnoremap <leader>v V`]
 " <leader>b
 " <leader>B Close other buffers (BufOnly)
-" <leader>n MarkClear
-" <leader>m MarkSet
+" <leader>n
+" <leader>m
 " <leader>M Remove ^M
 nnoremap <leader>M mmHmt:%s/<C-V><CR>//ge<CR>'tzt'm
 " <leader>, Switch between current and last buffer

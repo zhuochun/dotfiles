@@ -199,8 +199,6 @@ endfunction
 " Python Mappings {{{
 autocmd! FileType python :call s:PythonDef()
 function! s:PythonDef() abort
-  " Set omnifunc
-  setlocal omnifunc=jedi#completions
   " Set foldmethod
   setlocal foldmethod=indent
 
@@ -209,6 +207,7 @@ function! s:PythonDef() abort
   iab <buffer> false      False
   iab <buffer> none       None
   iab <buffer> null       None
+  iab <buffer> lamda      lambda
   iab <buffer> &&         and
   iab <buffer> \|\|       or
 endfunction

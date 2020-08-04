@@ -16,6 +16,7 @@ function! s:source_rc(path)
   execute 'source' fnameescape(expand(g:dotvim_root . '/rc/' . a:path))
 endfunction
 
+call s:source_rc('python.vim')
 call s:source_rc('dein.vim')
 call s:source_rc('options.vim')
 call s:source_rc('mappings.vim')
