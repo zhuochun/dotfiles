@@ -2,10 +2,23 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "vektra/tap"
+# Engine for large-scale data processing
+brew "apache-spark"
 # Shell extension to jump to frequently used directories
 brew "autojump"
+# Library for command-line editing
+brew "readline"
+# Command-line interface for SQLite
+brew "sqlite"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Official Amazon AWS command-line interface
+brew "awscli"
 # Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
 brew "clang-format"
+# Reimplementation of ctags(1)
+brew "ctags"
 # Modern replacement for 'ls'
 brew "exa"
 # Collection of GNU find, xargs, and locate
@@ -18,10 +31,10 @@ brew "fzf"
 brew "git"
 # Incremental merge for git
 brew "git-imerge"
-# Open source programming language to build simple/reliable/efficient software
-brew "go"
-# Interpreted, interactive, object-oriented programming language
-brew "python"
+# Go programming environment (1.13)
+brew "go@1.13", link: true
+# Graph visualization software from AT&T and Bell Labs
+brew "graphviz"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Lightweight and flexible command-line JSON processor
@@ -32,6 +45,10 @@ brew "lua"
 brew "luarocks"
 # GUI for vim, made for macOS
 brew "macvim"
+# Development kit for the Java programming language
+brew "openjdk"
+# Java-based project management
+brew "maven"
 # Scalable distributed version control system
 brew "mercurial"
 # Open source relational database management system
@@ -46,6 +63,8 @@ brew "p7zip"
 brew "postgresql", restart_service: true
 # Protocol buffers (Google's data interchange format)
 brew "protobuf"
+# Protocol buffers (Google's data interchange format)
+brew "protobuf@3.6"
 # Install various Ruby versions and implementations
 brew "ruby-build"
 # Ruby version manager
@@ -54,6 +73,10 @@ brew "rbenv"
 brew "reattach-to-user-namespace"
 # Persistent key-value database, with built-in net interface
 brew "redis", restart_service: true
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# JVM-based programming language
+brew "scala"
 # Fuzzy text selector for files and anything else you need to select
 brew "selecta"
 # Code-search similar to ack
@@ -68,6 +91,8 @@ brew "tree"
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
+# A mock code autogenerator for Go
+brew "vektra/tap/mockery"
 cask "alfred"
 cask "anybar"
 cask "atext"
@@ -81,5 +106,6 @@ cask "karabiner-elements"
 cask "postman"
 cask "scroll-reverser"
 cask "sequel-pro"
+cask "skim"
 cask "spectacle"
 cask "tunnelblick"
