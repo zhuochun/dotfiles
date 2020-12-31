@@ -3,7 +3,7 @@
 
 # Rename file name to use hyphen as delimit
 #
-# Usage: hyphen-rename filename.pdf
+# Usage: rename-hyphen filename.pdf
 #
 
 def slug(str)
@@ -15,7 +15,7 @@ def slug(str)
 end
 
 if ARGV.length != 1
-  STDERR << "Usage: #{$PROGRAM_NAME} filename.pdf\n"
+  STDERR << "Usage: #{$PROGRAM_NAME} filename\n"
   exit 1
 end
 
