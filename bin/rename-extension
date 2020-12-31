@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Rename file extension from a to b
+#
+# Usage: rename-extension [-R] markdown md
+#
+
+DRY_RUN = ARGV.length != 3 || ARGV.shift.to_s.upcase != '-R'
+
+if ARGV.length != 2
+  STDERR << "Usage: #{$PROGRAM_NAME} from-extname to-extname\n"
+  exit 1
+end
+
+from_ext = ARGV[0].downcase
+to_ext = ARGV[1].downcase
+
+glob = File.join(Dir.pwd, "**/*.#{from_ext}")
+files = Dir.glob(glob)
+
+files.each do |file|
+  path, name = File.split(file)
+
+  extname = File.extname(name)
+  basename = File.basename(name, extname)
+  if basename.empty?
+    STDERR << "Unknown file: #{file} [name: #{name}]"
+    next
+  end
+
+  new_filename = "#{basename}.#{to_ext}"
+  new_file = File.join(path, new_filename)
+
+  if file == new_file
+    next # same filename
+  elsif File.exist?(new_file) # not same name but file existed?
+    if file.casecmp(new_file) == 0 # case insensitive file check?
+      tmp_file = File.join(path, "tmp-#{new_filename}")
+      STDERR << "Temp file existed: #{tmp_file}\n" if File.exist?(tmp_file)
+
+      if DRY_RUN
+        STDOUT << "Rename [case] #{new_file}\n"
+      else
+        File.rename(file, tmp_file)
+        File.rename(tmp_file, new_file)
+      end
+    else
+      STDERR << "File existed: #{new_file}\n"
+    end
+  else
+      if DRY_RUN
+        STDOUT << "Rename #{new_file}\n"
+      else
+        File.rename(file, new_file)
+      end
+  end
+end
