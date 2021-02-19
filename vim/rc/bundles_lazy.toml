@@ -134,9 +134,6 @@ hook_source = '''
     let g:go_fmt_command = 'goimports'
     " Disable fmt command errors
     let g:go_fmt_fail_silently = 1
-    " Run GoMetaLinter on save
-    let g:go_metalinter_autosave = 0
-    let g:go_metalinter_autosave_enabled = ['vet', 'errcheck', 'golint', 'ineffassign']
     " Disable auto jump to first error
     let g:go_jump_to_error = 1
     " Reuse buffer when GoDef
@@ -628,15 +625,6 @@ hook_source = '''
     let g:ale_lint_on_enter = 0
     " Increase lint delay on text changed
     let g:ale_lint_delay = 900
-
-    " Use GoMetaLinter in ALE
-    let g:ale_linters = {'go': ['gometalinter']}
-    " Config GoMetaLinter to run specific linters
-    let g:ale_go_gometalinter_options =
-        \ '--disable-all ' .
-        \ '--enable=golint --enable=vet --enable=vetshadow ' .
-        \ '--enable=errcheck --enable=ineffassign ' .
-        \ '--deadline=5s'
 '''
 
 [[plugins]]
