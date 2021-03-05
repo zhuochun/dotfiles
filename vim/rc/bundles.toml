@@ -86,6 +86,9 @@ repo = 'cespare/vim-toml'
 repo = 'rix0rrr/vim-gcl'
 
 [[plugins]]
+repo = 'google/vim-jsonnet'
+
+[[plugins]]
 repo = 'uarun/vim-protobuf'
 
 [[plugins]]
