@@ -52,7 +52,7 @@ alias -g GRP="| sort | uniq -c | sort -r"
 # ==============================
 alias a="ag"
 alias b="brew"
-alias e="mvim"
+alias e="nvim"
 alias g="git"
 alias h="history"
 alias l="exa -lF --group-directories-first"
