@@ -31,4 +31,18 @@ Tab::Send {Tab}
 #IfWinActive
 ;; }}}
 
+;; Text Expansion with <;> {{{
+::;tm::
+SendInput %A_Hour%:%A_Min%
+return
+
+::;now::
+SendInput %A_Hour%:%A_Min%
+return
+
+::;dt::
+SendInput %A_YYYY%-%A_MM%-%A_DD%
+return
+;; }}}
+
 ;; vim:fdm=marker
