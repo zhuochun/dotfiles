@@ -29,7 +29,7 @@ A set of files across Mac and Windows.
 
 - Trackpad -> Enable `Tap to click`.
 - Accessibility -> Pointer Control -> Trackpad Options -> Enable dragging `Three finger dragging`.
-- Dock -> Position `Left`, Enable `Automatically hide and show` and `Minimise windows into application icon`.
+- Dock -> Position `Left`, Enable `Automatically hide and show` and `Minimise windows into application icon`, Disable `Show recent applications in Dock`.
 - Keyboard -> Keyboard
   - Fastest Key Repeat, Shortest Delay, Enable `Standard function keys`.
   - Modifier Keys... -> Change `Caps Lock` to `Command` key.
@@ -49,6 +49,8 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 ### Applications
 
+Install [GitHub Desktop](https://desktop.github.com/) and clone this repo.
+
 ``` bash
 git clone git@github.com:zhuochun/dotfiles.git ~/dotfiles
 ```
@@ -57,11 +59,13 @@ Install [Homebrew](https://brew.sh/):
 
 ``` bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-brew bundle install --file=~/dotfiles/scripts/Brewfile
 ```
 
-Download [gruvbox](https://github.com/morhetz/gruvbox) colorscheme for terminal.
+Review and install brew formulas:
+
+``` bash
+brew bundle install --file=~/dotfiles/scripts/Brewfile
+```
 
 Setup Zsh ([guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)):
 
@@ -93,20 +97,23 @@ Setup Tmux and [Tmux-Plugins](https://github.com/tmux-plugins/tpm):
 ``` bash
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-tmux new -s dev
-
 ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
-ln -s ~/dotfiles/tmux-osx.conf ~/.tmux-osx.conf
 ln -s ~/dotfiles/tmux-theme.conf ~/.tmux-theme.conf
 
-# Reload Tmux environment to source TPM
-# After source, Press prefix + I to install the plugins
+# Start a session
+tmux new -s dev
+
+# Reload Tmux environment to source TPM (Optional)
 tmux source ~/.tmux.conf
+
+# Press prefix (C-b) + I to install the plugins
 ```
 
 ### Keyboard Enhancements
 
-Setup [Karabiner](https://pqrs.org/osx/karabiner/index.html):
+Open [Karabiner](https://pqrs.org/osx/karabiner/index.html) and grant permissions.
+
+Setup the rules and restart Karabiner.
 
 ```
 cp ~/dotfiles/mac/karabiner.json ~/.config/karabiner/karabiner.json
@@ -133,17 +140,22 @@ Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins:
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
 # Set `~/.vim/bundles` as installation directory
 sh ./installer.sh ~/.vim/bundles
+# Cleanup
+rm installer.sh
 ```
 
 Setup `vimrc` configs:
 
 ``` bash
 ln -s ~/dotfiles/vim/rc ~/.vim/rc
+
+# neovim
+mkdir .config/nvim                                
+ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
+
 # vim
 ln -s ~/dotfiles/vim/vimrc ~/.vimrc
 ln -s ~/dotfiles/vim/gvimrc ~/.gvimrc
-# neovim
-ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
 ```
 
 Open vim and install plugins: `:call dein#install()`.
@@ -169,6 +181,10 @@ echo 'export PATH="$HOME/dotfiles/bin:$PATH"' >> ~/.zshrc
 ### Fonts
 
 Install [Powerline Fonts](https://github.com/powerline/fonts).
+
+### Themes
+
+Install [gruvbox](https://github.com/morhetz/gruvbox-contrib) colorscheme for terminal.
 
 ### Rime
 
