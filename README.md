@@ -27,13 +27,16 @@ A set of files across Mac and Windows.
 
 ### System Preferences
 
-- Dock -> Position `Left`, Enable `Automatically hide and show`.
-- Keyboard -> Keyboard -> Fastest Key Repeat, Shortest Delay, Enable `Standard function keys`.
-- Keyboard -> Keyboard -> Change `Caps Lock` to `Command` key.
-- Keyboard -> Shortcuts -> Screen Shots -> Disable picture of screen, Remap picture of selected area to `<M-s>` (File) and `<M-S>` (Clipboard).
-- Keyboard -> Input Sources -> Add `Pinyin - Simplified`.
 - Trackpad -> Enable `Tap to click`.
-- Accessibility -> Mouse & Trackpad -> Trackpad Options -> Enable dragging `Three finger dragging`.
+- Accessibility -> Pointer Control -> Trackpad Options -> Enable dragging `Three finger dragging`.
+- Dock -> Position `Left`, Enable `Automatically hide and show` and `Minimise windows into application icon`.
+- Keyboard -> Keyboard
+  - Fastest Key Repeat, Shortest Delay, Enable `Standard function keys`.
+  - Modifier Keys... -> Change `Caps Lock` to `Command` key.
+- Keyboard -> Shortcuts -> Screen Shots
+  - Disable "picture of screen" shortcuts.
+  - Remap picture of selected area to `<M-s>` (File) and `<M-S>` (Clipboard).
+- Keyboard -> Input Sources -> Add `Pinyin - Simplified`.
 
 Other preferences:
 
