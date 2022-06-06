@@ -1,32 +1,13 @@
-tap "aaratn/terraenv"
-tap "elastic/tap"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
-tap "vektra/tap"
-# Engine for large-scale data processing
-brew "apache-spark"
-# Library for command-line editing
-brew "readline"
-# Command-line interface for SQLite
-brew "sqlite"
 # Shell extension to jump to frequently used directories
 brew "autojump"
-# Official Amazon AWS command-line interface
-brew "awscli"
-# Vector graphics library with cross-device output support
-brew "cairo"
-# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
-brew "clang-format"
-# Reimplementation of ctags(1)
-brew "ctags"
 # Modern replacement for 'ls'
 brew "exa"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
-# User-friendly command-line shell for UNIX-like operating systems
-brew "fish"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # Distributed revision control system
@@ -35,112 +16,41 @@ brew "git"
 brew "git-imerge"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
-# Go programming environment (1.13)
-brew "go@1.13"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Framework for layout and rendering of i18n text
-brew "pango"
 # Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
-# User-friendly cURL replacement (command-line HTTP client)
-brew "httpie"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Network authentication protocol
-brew "krb5"
-# Powerful, lightweight programming language
-brew "lua"
-# Package manager for the Lua programming language
-brew "luarocks"
-# Powerful, clean, object-oriented scripting language
-brew "ruby"
-# GUI for vim, made for macOS
-brew "macvim"
-# Development kit for the Java programming language
-brew "openjdk"
-# Java-based project management
-brew "maven"
-# Scalable distributed version control system
-brew "mercurial"
-# Open source relational database management system
-brew "mysql@5.7", restart_service: true
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
-# Platform built on V8 to build network applications
-brew "node"
-# 7-Zip (high compression file archiver) implementation
-brew "p7zip"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
-# Object-relational database system
-brew "postgresql", restart_service: true
-# Protocol buffers (Google's data interchange format)
-brew "protobuf"
-# Tool Command Language
-brew "tcl-tk"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.8"
 # Install various Ruby versions and implementations
 brew "ruby-build"
 # Ruby version manager
 brew "rbenv"
-# Reattach process (e.g., tmux) to background
-brew "reattach-to-user-namespace"
-# Persistent key-value database, with built-in net interface
-brew "redis", restart_service: true
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
-# JVM-based programming language
-brew "scala"
 # Fuzzy text selector for files and anything else you need to select
 brew "selecta"
-# Improve Terraform's plan output
-brew "terraform_landscape"
 # Code-search similar to ack
 brew "the_silver_searcher"
 # Terminal multiplexer
 brew "tmux"
 # CLI tool that moves files or folder to the trash
 brew "trash"
-# Display directories as trees (with optional color/HTML output)
-brew "tree"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Installs Terraenv from github
-brew "aaratn/terraenv/terraenv"
-# CLI tool for Chimera Data Platform (Grab)
-brew "trust/chimera/chimeracli"
-# A mock code autogenerator for Go
-brew "vektra/tap/mockery"
-# Application launcher and productivity software
-cask "alfred"
-# Menu bar status indicator
-cask "anybar"
 # Tool to replace abbreviations while typing
 cask "atext"
-# Text editor
-cask "atom"
 # Utility that prevents the system from going to sleep
 cask "caffeine"
 # Clipboard extension app
 cask "clipy"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-cask "java"
 # Keyboard customizer
 cask "karabiner-elements"
-# Collaboration platform for API development
-cask "postman"
-# Tool to reverse the direction of scrolling
-cask "scroll-reverser"
-# MySQL/MariaDB database management platform
-cask "sequel-pro"
-# PDF reader and note-taking application
-cask "skim"
-# Move and resize windows with ease
-cask "spectacle"
-# Free and open-source OpenVPN client
-cask "tunnelblick"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
