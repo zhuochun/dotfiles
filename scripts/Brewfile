@@ -1,7 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
-tap "homebrew/services"
 # Shell extension to jump to frequently used directories
 brew "autojump"
 # Modern replacement for 'ls'
@@ -42,12 +41,14 @@ brew "trash"
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Tool to replace abbreviations while typing
-cask "atext"
 # Utility that prevents the system from going to sleep
 cask "caffeine"
 # Clipboard extension app
 cask "clipy"
+# Cross-platform Text Expander written in Rust
+cask "espanso"
+# Utility to hide menu bar items
+cask "hiddenbar"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Keyboard customizer

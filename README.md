@@ -150,7 +150,7 @@ Setup `vimrc` configs:
 ln -s ~/dotfiles/vim/rc ~/.vim/rc
 
 # neovim
-mkdir .config/nvim                                
+mkdir .config/nvim
 ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
 
 # vim
@@ -185,6 +185,14 @@ Install [Powerline Fonts](https://github.com/powerline/fonts).
 ### Themes
 
 Install [gruvbox](https://github.com/morhetz/gruvbox-contrib) colorscheme for terminal.
+
+### Text Expander
+
+Install [Espanso](https://espanso.org/).
+
+``` bash
+ln -s ~/dotfiles/espanso/match.yml $HOME/Library/Application\ Support/espanso/match/base.yml
+```
 
 ### Rime
 

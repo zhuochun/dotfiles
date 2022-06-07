@@ -1,0 +1,33 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+#
+# NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
+matches:
+  - trigger: ";dt"
+    replace: "{{insert_date}}"
+    vars:
+      - name: insert_date
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ";tm"
+    replace: "{{insert_time}}"
+    vars:
+      - name: insert_time
+        type: date
+        params:
+          format: "%H:%M"
+
+  - trigger: ";dev"
+    replace: "tmux new -s dev"
+
+  - trigger: ";tdev"
+    replace: "tmux attach-session -t dev"
