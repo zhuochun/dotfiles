@@ -49,7 +49,7 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 ### Applications
 
-Install [GitHub Desktop](https://desktop.github.com/) and clone this repo.
+Install [GitHub Desktop](https://desktop.github.com/) and clone this repo ([SSH Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)).
 
 ``` bash
 git clone git@github.com:zhuochun/dotfiles.git ~/dotfiles
