@@ -10,13 +10,40 @@
 #
 # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
 matches:
-  - trigger: ";dt"
+  - triggers: [";d0", ";dt"] # today
     replace: "{{insert_date}}"
     vars:
       - name: insert_date
         type: date
         params:
           format: "%Y-%m-%d"
+
+  - trigger: ";d1" # tomorrow
+    replace: "{{insert_date}}"
+    vars:
+      - name: insert_date
+        type: date
+        params:
+          format: "%Y-%m-%d"
+          offset: 86400
+
+  - trigger: ";d2" # the day after tomorrow
+    replace: "{{insert_date}}"
+    vars:
+      - name: insert_date
+        type: date
+        params:
+          format: "%Y-%m-%d"
+          offset: 172800
+
+  - trigger: ";dy" # yesterday
+    replace: "{{insert_date}}"
+    vars:
+      - name: insert_date
+        type: date
+        params:
+          format: "%Y-%m-%d"
+          offset: -86400
 
   - trigger: ";tm"
     replace: "{{insert_time}}"
