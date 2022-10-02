@@ -45,4 +45,8 @@ SendInput %A_YYYY%-%A_MM%-%A_DD%
 return
 ;; }}}
 
+;; 中文直角引号 Alt+Shift
+!+[::send,{U+300C}            ;// alt + shift + [  转换为「
+!+]::send,{U+300D}            ;// alt + shift + ]  转换为 」
+
 ;; vim:fdm=marker
