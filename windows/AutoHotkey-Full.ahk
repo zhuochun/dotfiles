@@ -197,4 +197,46 @@ return
 #IfWinActive
 ;; }}}
 
+;; OpenAI Complete (Experimental) {{{
+^+i::
+{
+    ; Prompt the user for a message
+    InputBox, message, Enter a prompt with the content in clipboard, Message:
+
+    ; Save clipboard text to a temporary file
+    FileDelete, clipboard.txt
+    FileAppend, %Clipboard%, clipboard.txt
+
+    ; Execute a PowerShell command using the message and selected text as input
+    RunWait, powershell.exe -ExecutionPolicy Bypass -Command "& {ruby 'D:\GitHub\dotfiles\bin\ai-chat' '%message%' clipboard.txt > output.txt}", , Hide
+
+    ; Read the output of the command from the temporary file
+    FileRead, output, output.txt
+    ; Copy the output to the clipboard
+    Clipboard := output
+
+    ; Info completion
+    MsgBox, The script has finished. Press OK to close the message box and continue.
+}
+return
+
+^+o::
+{
+    ; Prompt the user for a message
+    InputBox, message, Enter a prompt, Message:
+
+    ; Execute a PowerShell command using the message and selected text as input
+    RunWait, powershell.exe -ExecutionPolicy Bypass -Command "& {ruby 'D:\GitHub\dotfiles\bin\ai-chat' '%message%' > output.txt}", , Hide
+
+    ; Read the output of the command from the temporary file
+    FileRead, output, output.txt
+    ; Copy the output to the clipboard
+    Clipboard := output
+
+    ; Info completion
+    MsgBox, The script has finished. Press OK to close the message box and continue.
+}
+return
+;;}}}
+
 ;; vim:fdm=marker
