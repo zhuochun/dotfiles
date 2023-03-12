@@ -12,22 +12,18 @@ require "json"
 
 OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
 if OPENAI_KEY.empty?
-  STDOUT << "Remember to set env DOT_OPENAI_KEY"
+  STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
   exit 9
 end
 
 prompt = (ARGV[0] || "").strip
 if prompt.empty?
-  STDOUT << "No prompt message"
+  STDOUT << "No prompt message\n"
   exit 1
 end
 
 context_filepath = (ARGV[1] || "").strip
-if context_filepath.empty?
-  context_file = ARGF.read
-else
-  context_file = File.read(context_filepath)
-end
+context_file = File.read(context_filepath) unless context_filepath.empty?
 # add context after prompt
 prompt += "\n" + context_file unless context_file.nil? || context_file.empty?
 
@@ -60,9 +56,7 @@ response = http.request(request)
 if response.code == "200"
   result = JSON.parse(response.body)
   STDOUT << result["choices"][0]["message"]["content"]
-
-  STDOUT << result << "\n\n" # troubleshot
 else
-  STDOUT << "Error: #{response.code} - #{response.message}"
+  STDOUT << "Error: #{response.code} - #{response.message}\n"
   exit 2
 end
