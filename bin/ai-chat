@@ -3,8 +3,8 @@
 
 # Pass the command to ChatGPT and return the response
 #
-# Usage: ai-chatgpt prompt [context-file.txt]
-# Usage: ai-chatgpt "-" chat-file.txt -a
+# Usage: ai-chatgpt "prompt msg" [context-file.txt]
+# Usage: ai-chatgpt " " chat-file.txt -a
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
@@ -17,12 +17,14 @@ if OPENAI_KEY.empty?
   exit 9
 end
 
-# read direct prompt from cmd
+CHAT_SEPARATOR = "###### " # Heading 6
+
+# get the direct prompt message from cmd
 prompt = (ARGV[0] || "").strip
 # get the context or chat file path
 context_filepath = (ARGV[1] || "").strip
 # detect whether to use append/chat mode, -a
-# in append mode, reads the file as messages, and write back the reply
+# in append mode, reads context file is treated as chat file, and responses is written back
 append_mode = (ARGV[2] || "") == "-a"
 
 messages = []
@@ -32,6 +34,8 @@ if append_mode
   if context_filepath.empty?
     STDOUT << "No chat file path\n"
     exit 1
+  elsif !File.exist?(context_filepath)
+    File.new(context_filepath, "w")
   end
 
   role = "user" # user, assistant
@@ -39,7 +43,7 @@ if append_mode
     content = []
 
     file.each_line do |line|
-      if line.start_with?("### ")
+      if line.start_with?(CHAT_SEPARATOR)
         messages << { "role": role, "content": content.join("\n") }
 
         content = [] # reset
@@ -49,7 +53,7 @@ if append_mode
       end
     end
 
-    messages << { "role": role, "content": content.join("\n") } unless content.empty?
+    messages << { "role": role, "content": content.join("\n").strip } unless content.empty?
   end
 
   if messages.empty? || role != "user" # must have a message and end with a user message
@@ -102,9 +106,10 @@ if response.code == "200"
 
   if append_mode
     File.open(context_filepath, "a") do |file|
-      file.puts "\n\n### assistant\n"
-      file.puts resp_content
-      file.puts "\n### user\n"
+      file.puts("\n#{prompt}\n")
+      file.puts("\n#{CHAT_SEPARATOR} assistant\n")
+      file.puts("\n#{resp_content}\n")
+      file.puts("\n#{CHAT_SEPARATOR} user\n")
     end
   end
 
