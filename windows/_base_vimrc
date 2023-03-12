@@ -1,0 +1,407 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" WinVIM Configurations
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM Settings {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" , is much easier than \
+let g:mapleader = ","
+let mapleader = ","
+" ; is easier than :
+noremap ; :
+
+" Syntax highlighting on
+syntax on
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key Mappings and Settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Function keys {{{
+    " F1  Help
+    " F2  Insert date and time
+    inoremap <F2> <C-R>=strftime("%d/%b/%Y %I:%M %p")<CR>
+    " F3  Toggle Tagbar
+    " F4  Open Alternative File (c, cpp, rails)
+    " F5  Open Alternative File Split (c, cpp, rails)
+    " F6  Paste mode
+    set pastetoggle=<F6>
+    " F7  Manual syntastic check
+    " F8  System
+    " F9
+    " F10 Toggle NERDTree
+    " F11
+    " F12 Toggle Menu and Toolbar {{{
+" }}}
+
+" use <Tab> and <S-Tab> to indent
+" in Normal, Visual, Select Mode
+nnoremap <tab> v>
+nnoremap <s-tab> v<
+xnoremap <tab> >gv
+xnoremap <s-tab> <gv
+
+" Move a line of text using <up><down>
+" http://vim.wikia.com/wiki/Moving_lines_up_or_down
+nnoremap <up> :m .-2<CR>==
+nnoremap <down> :m .+1<CR>==
+vnoremap <up> :m '<-2<CR>gv=gv
+vnoremap <down> :m '>+1<CR>gv=gv
+
+" Execute countable 'n.'.
+" EXAMPLE: 3@n
+let @n='n.'
+
+" normal char key mappings {{{
+    " Q: to repeat last recorded macro
+    nnoremap Q @@
+    " Y: Quick yanking to the end of the line
+    nnoremap Y y$
+    " H: Go to beginning of line.
+    "    Repeated invocation goes to previous line
+    nnoremap <expr> H getpos('.')[2] == 1 ? 'k' : '0'
+    " L: Go to end of line.
+    "    Repeated invocation goes to next line
+    nnoremap <expr> L <SID>end_of_line()
+    function! s:end_of_line()
+      let l = len(getline('.'))
+      if (l == 0 || l == getpos('.')[2])
+        return 'jg_'
+      else
+        return 'g_'
+    endfunction
+    " Change folder mappings
+    " zo: Open all folds under the cursor recursively
+    nnoremap zo zO
+    " zO: Open all folds
+    nnoremap zO zR
+    " zC: Close all folds
+    nnoremap zC zM
+    " Reselect visual block after indent/outdent
+    vnoremap < <gv
+    vnoremap > >gv
+    " Make space work in normal mode
+    nnoremap <space> i<space><ESC>
+    " Make enter work in normal mode
+    nnoremap <CR> i<CR><ESC>
+" }}}
+
+" normal char key mappings {{{
+    " <`> Move to mark (linewise)
+    " <~> Up/Downcase
+    " <0-9> 0-9
+    " <!>
+    " <@> Register
+    " <#> Search word under cursor backwards
+    " <$> To the end of the line
+    " <%> Move between open/close tags
+    " <^> To the first non-blank character of the line.
+    " <&> Synonym for `:s` (repeat last substitute)
+    " <*> Search word under cursor forwards
+    " <(> Sentences backward
+    " <)> Sentences forward
+    " <_> Horizonal split
+    " <->
+    " <==> Format current line
+    " <+> Switch
+    " <S-Delete> Insert Mode Delete word
+    " <q*> Record Macro
+    " <w> Word forwards
+    " <W> Word forwards (CamelCase)
+    " <e> Forwards to the end of word
+    " <E> Forwards to the end of word
+    " <r> Replace char
+    " <R> Continous replace
+    " <t> find to left (exclusive)
+    " <T> find to left (inclusive)
+    " <y> Yank into register
+    " <u> Undo
+    " <i> Insert
+    " <o> Open new line below
+    " <O> Open new line above
+    " <p> Paste Yank, keep cursor position when pasting
+    nnoremap p p`[
+    nnoremap P P`[
+    " <{> Paragraphs backward
+    " <}> Paragraphs forward
+    " <\> Easymotion
+    " <|> Vertical split
+    " <a> Append insert
+    " <s> Substitue, dont update default register
+    vnoremap s "_s
+    " <d> Delete
+    " <f> find to right (exclusive)
+    " <F> find to right (inclusive)
+    " <g> Go
+    " <h> Left
+    " <j> Down
+    " <J> Join Sentences
+    " <k> Up
+    " <l> Right
+    " <;> Repeat last find f,t,F,T
+    " <:> Comamnd Input
+    " <''> Move to previous context mark, alias to <m'>
+    " <'*> Move to {a-zA-Z} mark
+    " <CR> Open new line at cursor
+    " <z*> Folds
+    " <x> Delete char cursor
+    " <c> Change, dont update default register
+    nnoremap c "_c
+    " <v> Visual
+    " <b> Words Backwards
+    " <B> Words Backwards (CamelCase)
+    " <n> Next search
+    " <N> Previous search
+    " <m*> Set mark {a-zA-Z}
+    " <,> Repeat last find f,t,F,T in opposite direction
+    " <.> Repeat last command
+" }}}
+
+
+" <leader>* key mappings {{{
+    " <leader>1
+    " <leader>2
+    " <leader>3
+    " <leader>4
+    " <leader>5
+    " <leader>6
+    " <leader>7
+    " <leader>8
+    " <leader>9
+    " <leader>0
+    " <leader>-
+    " <leader>= align with =
+    " <leader>q quick quit without save
+    nnoremap <leader>q :q!<CR>
+    " <leader>w
+    " <leader>e
+    " <leader>r
+    " <leader>t
+    " <leader>y
+    " <leader>u
+    " <leader>i
+    " <leader>o
+    " <leader>p
+    " <leader>a
+    " <leader>s spell checkings
+    " <leader>S clear trailing whitespace
+    nnoremap <leader>S :%s/\s\+$//ge<cr>:nohl<cr>
+    " <leader>d close buffer with leave window intact
+    nnoremap <leader>d :BD<CR>
+    " <leader>D close buffer
+    nnoremap <leader>D :bd<CR>
+    " <leader>f easier code formatting
+    nnoremap <leader>f gg=G''
+    " <leader>F easier code formatting
+    nnoremap <leader>F gg=G''
+    " <leader>g
+    " <leader>h
+    " <leader>j
+    " <leader>k
+    " <leader>l
+    " <leader>L reduce a sequence of blank lines into a single line
+    nnoremap <leader>L GoZ<Esc>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd
+    " <leader>z
+    " <leader>x
+    " <leader>c
+    " <leader>v select the just pasted text
+    nnoremap <leader>v V`]
+    " <leader>b
+    " <leader>n
+    " <leader>m
+    " <leader>M remove the ^M - when the encodings gets messed up
+    nnoremap <leader>M mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+    nnoremap \m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+    " <leader><space> close search highlight
+    nnoremap <silent> <leader><space> :noh<cr>
+" }}}
+
+" Tabs and Windows mappings {{{
+    " Tab Mappings
+    nnoremap <M-1> 1gt
+    nnoremap <M-2> 2gt
+    nnoremap <M-3> 3gt
+    nnoremap <M-4> 4gt
+    nnoremap <M-5> 5gt
+    nnoremap <M-6> 6gt
+    nnoremap <M-7> 7gt
+    nnoremap <M-8> 8gt
+    nnoremap <M-9> 9gt
+    nnoremap <M-(> :tabprevious<cr>
+    nnoremap <M-)> :tabnext<cr>
+    nnoremap <M-t> :tab split<CR>
+    nnoremap <M-T> :tabnew<CR>
+    nnoremap <M-w> :tabclose<CR>
+
+    " Smart way to move btw. windows
+    nmap <C-j> <C-W>j
+    nmap <C-k> <C-W>k
+    nmap <C-h> <C-W>h
+    nmap <C-l> <C-W>l
+
+    " Use arrows to change the splited windows
+    nmap <right> <C-W>L
+    nmap <left> <C-W>H
+    nmap <C-up> <C-W>K
+    nmap <C-down> <C-W>J
+    nmap <M-up> <C-W>K
+    nmap <M-down> <C-W>J
+
+    " _ : Quick horizontal splits
+    nnoremap _ :sp<cr>
+    " | : Quick vertical splits
+    nnoremap <bar> :vsp<cr>
+
+    " Always splits to the right and below
+    set splitright
+    set splitbelow
+" }}}
+
+" <Ctrl-*> key mappings {{{
+    " <C-1>
+    " <C-2>
+    " <C-3>
+    " <C-4>
+    " <C-5>
+    " <C-6>
+    " <C-7>
+    " <C-8>
+    " <C-9>
+    " <C-0>
+    " <C-->
+    " <C-=>
+    " <C-q> Multiple select
+    " <C-w>
+    " <C-e>
+    " <C-r>
+    " <C-t>
+    " <C-y> Emmet Expand
+    " <C-u>
+    " <C-i>
+    " <C-o>
+    " <C-p>
+    " <C-a>
+    " <C-s>
+    " <C-d>
+    " <C-f>
+    " <C-g>
+    " <C-h> (n) move to left window
+    " <C-j> (n) move to down window
+    " <C-k> (n) move to up window
+    " <C-l> (n) move right window
+    " <C-;>
+    " <C-'>
+    " <C-CR> Like in Visual Studio
+    inoremap <C-CR> <ESC>o
+    " <S-CR> Like in Visual Studio
+    inoremap <S-CR> <ESC>O
+    " <C-z>
+    " <C-x>
+    " <C-c>
+    " <C-v>
+    " <C-b>
+    " <C-n>
+    " <C-m>
+    " <C-,>
+    " <C-.>
+" }}}
+
+" I/C mode Emacs key mappings {{{
+    " <C-j>: Move cursor down
+    inoremap <expr> <C-j> pumvisible() ? "\<C-e>\<Down>" : "\<Down>"
+    " <C-k>: Move cursor up
+    inoremap <expr> <C-k> pumvisible() ? "\<C-e>\<Up>" : "\<Up>"
+    " <C-h>: Move word left
+    inoremap <C-h> <S-Left>
+    " <C-l>: Move word right
+    inoremap <C-l> <S-Right>
+    " <C-b>: Move move cursor left
+    inoremap <C-b> <Left>
+    " <C-f>: Move move cursor right
+    inoremap <C-f> <Right>
+    " <C-a>: Move to head
+    inoremap <C-a> <C-O>^
+    " <C-e>: Move to eND
+    inoremap <C-e> <End>
+    " <C-d>: Delete to end of line
+    inoremap <C-d> <C-O>D
+    " <C-BS>: Delete to word backward
+    inoremap <C-BS> <C-W>
+    " <M-BS>: Delete word under cursor
+    inoremap <M-BS> <S-Right><C-W>
+
+    " <C-a>: command mode home
+    cnoremap <C-a> <Home>
+    " <C-e>: command mode end
+    cnoremap <C-e> <End>
+    " <C-b>: command mode cursor left
+    cnoremap <C-b> <Left>
+    " <C-f>: command mode cursor right
+    cnoremap <C-f> <Right>
+    " <C-n>: next history
+    cnoremap <C-n> <Down>
+    " <C-p>: previous history
+    cnoremap <C-p> <Up>
+    " <C-k>: delete to end
+    cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+    " <C-y>: paste
+    cnoremap <C-y> <C-r>*
+" }}}
+
+" <M-*> key mappings {{{
+    " <M-q>
+    " <M-w>
+    " <M-e>
+    " <M-r>
+    " <M-t> New tab
+    " <M-y> (Normal) Yank History
+    " <M-y> (Insert) Emmet expand, alias to <C-y>,
+    " <M-u> Unite files
+    " <M-i> Unite buffers
+    " <M-o> Unite MRU
+    " <M-p> Yankstack old
+    " <M-P> Yankstack new
+    " <M-[>
+    " <M-]>
+    " <M-a>
+    " <M-s> Unite Search
+    " <M-d> Snippet autocomplete
+    " <M-f>
+    " <M-g>
+    " <M-h>
+    " <M-j> Move selected line down
+    " <M-k> Move selected line up
+    " <M-l>
+    " <M-;>
+    " <M-'>
+    " <M-z>
+    " <M-x>
+    " <M-c>
+    " <M-v>
+    " <M-b>
+    " <M-n>
+    " <M-m>
+    " <M-m> vim-multiple-cursors: skip
+    " <M-,> vim-multiple-cursors: next
+    " <M-.> vim-multiple-cursors: prev
+    " <M-/> NERDComment
+" }}}
+
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Additional Settings {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Remap 0 to first non-blank character
+nnoremap 0 ^
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" vim:ft=vim:fdm=marker:
