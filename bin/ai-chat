@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Pass the command to ChatGPT and return the response
+#
+# Usage: ai-chatgpt prompt [context]
+#
+# Requires ChatGPT API Key in DOT_OPENAI_KEY
+
+require 'net/http'
+require 'json'
+
+OPENAI_KEY = ENV['DOT_OPENAI_KEY']
+if OPENAI_KEY.empty?
+  STDERR << "Remember to set env DOT_OPENAI_KEY"
+  exit 1
+end
+
+prompt = (ARGV[0] || '').strip
+if prompt.empty?
+  STDERR << "No prompt message"
+  exit 1
+end
+
+prompt_context = (ARGV[1] || '').strip
+
+url = URI("https://api.openai.com/v1/chat/completions")
+headers = {
+  "Content-Type" => "application/json",
+  "Authorization" => "Bearer #{OPENAI_KEY}"
+}
+
+data = {
+  "model" => "gpt-3.5-turbo",
+  "messages" => [
+    {"role": "user", "content": prompt}
+  ],
+}
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url, headers)
+request.body = data.to_json
+
+response = http.request(request)
+
+if response.code == "200"
+  result = JSON.parse(response.body)
+
+  STDOUT << result
+
+  STDOUT << "\n\n\n"
+
+  STDOUT << result["choices"][0]["message"]['content']
+else
+  STDERR << "Error: #{response.code} - #{response.message}"
+  exit 2
+end
