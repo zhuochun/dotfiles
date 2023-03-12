@@ -3,38 +3,56 @@
 
 # Pass the command to ChatGPT and return the response
 #
-# Usage: ai-chatgpt prompt [context]
+# Usage: ai-code output.rb ["prompt msg"]
 #
-# Requires ChatGPT API Key in DOT_OPENAI_KEY
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
 require 'net/http'
 require 'json'
 
-OPENAI_KEY = ENV['DOT_OPENAI_KEY']
+OPENAI_KEY = ENV['DOT_OPENAI_KEY'] || ""
 if OPENAI_KEY.empty?
-  STDERR << "Remember to set env DOT_OPENAI_KEY"
+  STDERR << "Remember to set env DOT_OPENAI_KEY\n"
+  exit 9
+end
+
+filepath = (ARGV[0] || "").strip
+if filepath.empty?
+  STDERR << "No output file path\n"
   exit 1
 end
 
-prompt = (ARGV[0] || '').strip
-if prompt.empty?
-  STDERR << "No prompt message"
+prompt = (ARGV[1] || '').strip # optional, if not exists, assume file has the prompts
+if prompt.empty? && !File.exist?(filepath)
+  STDERR << "No prompt message\n"
   exit 1
 end
 
-prompt_context = (ARGV[1] || '').strip # NOT HANDLED
+prompt = """
+Guidelines:
+- Respond in clean code, be concise and human readable.
+- Write simple and essential comments only if needed.
+- No text expanation required.
 
-url = URI("https://api.openai.com/v1/completions")
+Filename: #{File.basename(filepath)}
+
+""" + prompt
+
+# decide attach the code if the file already exists
+if File.exist?(filepath)
+  code = File.read(filepath)
+  prompt += "\n#{code}" unless code.empty?
+end
+
+url = URI("https://api.openai.com/v1/chat/completions")
 headers = {
   "Content-Type" => "application/json",
   "Authorization" => "Bearer #{OPENAI_KEY}"
 }
 
 data = {
-  "model" => "code-davinci-002",
-  'prompt' => prompt,
-  'max_tokens' => 256,
-  'temperature' => 1,
+  "model" => "gpt-3.5-turbo",
+  "messages" => [{ "role": "user", "content": prompt }]
 }
 
 http = Net::HTTP.new(url.host, url.port)
@@ -48,12 +66,15 @@ response = http.request(request)
 if response.code == "200"
   result = JSON.parse(response.body)
 
-  STDOUT << result
+  resp_content = result["choices"][0]["message"]["content"]
+  resp_content.gsub!(/\n\`\`\`[a-z]*/, "\n")
 
-  STDOUT << "\n\n\n"
+  File.open(filepath, "w") do |file|
+    file.puts(resp_content)
+  end
 
-  STDOUT << result["choices"][0]['text']
+  STDOUT << "Done: #{result["usage"]}\n"
 else
-  STDERR << "Error: #{response.code} - #{response.message}"
+  STDOUT << "Error: #{response.code} - #{response.message}\n"
   exit 2
 end
