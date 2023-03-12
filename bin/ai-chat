@@ -3,9 +3,10 @@
 
 # Pass the command to ChatGPT and return the response
 #
-# Usage: ai-chatgpt prompt [context-file.txt] [-a]
+# Usage: ai-chatgpt prompt [context-file.txt]
+# Usage: ai-chatgpt "-" chat-file.txt -a
 #
-# Requires ChatGPT API Key in DOT_OPENAI_KEY
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
 require "net/http"
 require "json"
@@ -16,21 +17,65 @@ if OPENAI_KEY.empty?
   exit 9
 end
 
+# read direct prompt from cmd
 prompt = (ARGV[0] || "").strip
-if prompt.empty?
-  STDOUT << "No prompt message\n"
-  exit 1
-end
-
+# get the context or chat file path
 context_filepath = (ARGV[1] || "").strip
-context_file = File.read(context_filepath) unless context_filepath.empty?
-# add context after prompt
-prompt += "\n" + context_file unless context_file.nil? || context_file.empty?
+# detect whether to use append/chat mode, -a
+# in append mode, reads the file as messages, and write back the reply
+append_mode = (ARGV[2] || "") == "-a"
 
-STDOUT << "PROMPT (Full): #{prompt}\n"
+messages = []
 
-# -a means append prompt response back to file (Not Supported)
-append_context = (ARGV[2] || "") == "-a"
+# in append mode, read file and use --- as separator
+if append_mode
+  if context_filepath.empty?
+    STDOUT << "No chat file path\n"
+    exit 1
+  end
+
+  role = "user" # user, assistant
+  File.open(context_filepath, "r") do |file|
+    content = []
+
+    file.each_line do |line|
+      if line.start_with?("### ")
+        messages << { "role": role, "content": content.join("\n") }
+
+        content = [] # reset
+        role = (role == "user" ? "assistant" : "user")
+      else
+        content << line unless line.empty?
+      end
+    end
+
+    messages << { "role": role, "content": content.join("\n") } unless content.empty?
+  end
+
+  if messages.empty? || role != "user" # must have a message and end with a user message
+    if prompt.empty?
+      STDOUT << "No prompt message\n"
+      exit 1
+    end
+
+    messages << { "role": "user", "content": prompt } # fallback to use cmd prompt
+  end
+
+  STDOUT << "Chat: #{context_filepath}. Messages: #{messages.length}\n"
+else
+  if prompt.empty?
+    STDOUT << "No prompt message\n"
+    exit 1
+  end
+
+  STDOUT << "Prompt: #{prompt}. Context: #{context_filepath}\n"
+
+  context_file = File.read(context_filepath) unless context_filepath.empty?
+  # add context after prompt
+  prompt += "\n" + context_file unless context_file.nil? || context_file.empty?
+
+  messages << { "role": "user", "content": prompt }
+end
 
 url = URI("https://api.openai.com/v1/chat/completions")
 headers = {
@@ -40,9 +85,7 @@ headers = {
 
 data = {
   "model" => "gpt-3.5-turbo",
-  "messages" => [
-    {"role": "user", "content": prompt}
-  ],
+  "messages" => messages
 }
 
 http = Net::HTTP.new(url.host, url.port)
@@ -55,7 +98,17 @@ response = http.request(request)
 
 if response.code == "200"
   result = JSON.parse(response.body)
-  STDOUT << result["choices"][0]["message"]["content"]
+  resp_content = result["choices"][0]["message"]["content"]
+
+  if append_mode
+    File.open(context_filepath, "a") do |file|
+      file.puts "\n\n### assistant\n"
+      file.puts resp_content
+      file.puts "\n### user\n"
+    end
+  end
+
+  STDOUT << resp_content << "\n"
 else
   STDOUT << "Error: #{response.code} - #{response.message}\n"
   exit 2
