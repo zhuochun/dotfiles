@@ -3,7 +3,10 @@
 " Refer to help provider-python
 " Refer to https://github.com/deoplete-plugins/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 "
-" Create a separate virtualenv: python3 -m venv ~/vim-py
+" Create a separate virtualenv:
+"
+"   > python3 -m venv ~/vim-py
+"   > ~/vim-py/bin/pip install neovim
 "
 
 " Disable Python 2 support:
