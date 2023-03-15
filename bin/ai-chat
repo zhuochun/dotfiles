@@ -3,8 +3,10 @@
 
 # Pass the command to ChatGPT and return the response
 #
-# Usage: ai-chatgpt "prompt msg" [context-file.txt]
-# Usage: ai-chatgpt " " chat-file.txt -a
+# Usage: ai-chat prompt-msg
+#
+# Usage: ai-chat prompt-file.txt -a
+# Usage: ai-chat prompt-file.txt -i
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
@@ -17,33 +19,48 @@ if OPENAI_KEY.empty?
   exit 9
 end
 
-CHAT_SEPARATOR = "###### " # Heading 6
+MODE_1 = "-1" # default mode, quick one line prompt
+MODE_A = "-a" # append mode, back-and-forth chat messages
+MODE_I = "-i" # insert mode, revision with prompts at the beginning
 
-# get the direct prompt message from cmd
-prompt = (ARGV[0] || "").strip
-# get the context or chat file path
-context_filepath = (ARGV[1] || "").strip
-# detect whether to use append/chat mode, -a
-# in append mode, reads context file is treated as chat file, and responses is written back
-append_mode = (ARGV[2] || "") == "-a"
+MODE_A_SEPARATOR = "###### "
+MODE_I_SEPARATOR = "===\n"
+
+if ARGV.length == 1 # one line prompt
+  prompt = ARGV[0].strip
+  chat_mode = MODE_1
+elsif ARGV.length == 2 && [MODE_A, MODE_I].include?(ARGV[1]) # file prompt on mode
+  prompt_path = ARGV[0].strip
+  chat_mode = ARGV[1]
+else
+  STDOUT << "Invalid arguments received\n"
+  exit 1
+end
 
 messages = []
 
-# in append mode, read file and use --- as separator
-if append_mode
-  if context_filepath.empty?
+if chat_mode == MODE_1
+  if prompt.empty?
+    STDOUT << "No prompt message\n"
+    exit 1
+  end
+
+  messages << { "role": "user", "content": prompt }
+
+  STDOUT << "Prompt: #{prompt}\n"
+
+elsif chat_mode == MODE_A
+  if prompt_path.empty? || !File.exist?(prompt_path)
     STDOUT << "No chat file path\n"
     exit 1
-  elsif !File.exist?(context_filepath)
-    File.new(context_filepath, "w")
   end
 
   role = "user" # user, assistant
-  File.open(context_filepath, "r") do |file|
+  File.open(prompt_path, "r") do |file|
     content = []
 
     file.each_line do |line|
-      if line.start_with?(CHAT_SEPARATOR)
+      if line.start_with?(MODE_A_SEPARATOR)
         messages << { "role": role, "content": content.join("\n") }
 
         content = [] # reset
@@ -53,32 +70,39 @@ if append_mode
       end
     end
 
-    messages << { "role": role, "content": content.join("\n").strip } unless content.empty?
+    messages << { "role": role, "content": content.join("\n") } unless content.empty?
   end
 
   if messages.empty? || role != "user" # must have a message and end with a user message
-    if prompt.empty?
-      STDOUT << "No prompt message\n"
-      exit 1
-    end
-
-    messages << { "role": "user", "content": prompt } # fallback to use cmd prompt
+    STDOUT << "No prompt message at the end\n"
+    exit 1
   end
 
-  STDOUT << "Chat: #{context_filepath}. Messages: #{messages.length}\n"
-else
-  if prompt.empty?
+  STDOUT << "Chat: #{prompt_path}. Messages: #{messages.length}\n"
+
+elsif chat_mode == MODE_I
+  if prompt_path.empty? || !File.exist?(prompt_path)
+    STDOUT << "No revise file path\n"
+    exit 1
+  end
+
+  content = File.read(prompt_path)
+
+  if content.empty?
     STDOUT << "No prompt message\n"
     exit 1
   end
 
-  STDOUT << "Prompt: #{prompt}. Context: #{context_filepath}\n"
+  if content.include?(MODE_I_SEPARATOR)
+    description = content.split(MODE_I_SEPARATOR)[0] + MODE_I_SEPARATOR
 
-  context_file = File.read(context_filepath) unless context_filepath.empty?
-  # add context after prompt
-  prompt += "\n" + context_file unless context_file.nil? || context_file.empty?
+    content.gsub!(MODE_I_SEPARATOR, "") # remove separator
+  end
 
-  messages << { "role": "user", "content": prompt }
+  messages << { "role": "user", "content": content }
+
+  STDOUT << "Revise: #{prompt_path}. Messages: #{messages.length}\n"
+
 end
 
 url = URI("https://api.openai.com/v1/chat/completions")
@@ -104,16 +128,22 @@ if response.code == "200"
   result = JSON.parse(response.body)
   resp_content = result["choices"][0]["message"]["content"]
 
-  if append_mode
-    File.open(context_filepath, "a") do |file|
-      file.puts("\n#{prompt}\n")
-      file.puts("\n#{CHAT_SEPARATOR} assistant\n")
+  if chat_mode == MODE_A
+    File.open(prompt_path, "a") do |file|
+      file.puts("\n#{MODE_A_SEPARATOR} assistant")
       file.puts("\n#{resp_content}\n")
-      file.puts("\n#{CHAT_SEPARATOR} user\n")
+      file.puts("\n#{MODE_A_SEPARATOR} user\n")
     end
+  elsif chat_mode == MODE_I
+    File.open(prompt_path, "w") do |file|
+      file.puts(description) unless description.empty?
+      file.puts("\n#{resp_content}\n")
+    end
+  else
+    STDOUT << resp_content << "\n\n"
   end
 
-  STDOUT << resp_content << "\n"
+  STDOUT << "Done: #{result["usage"]}\n"
 else
   STDOUT << "Error: #{response.code} - #{response.message}\n"
   exit 2

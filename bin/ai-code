@@ -38,9 +38,20 @@ Filename: #{File.basename(filepath)}
 
 """ + prompt
 
+DESC_SEPARATOR = "===\n"
+# to cache description in file before separator
+description = ""
+
 # decide attach the code if the file already exists
 if File.exist?(filepath)
   code = File.read(filepath)
+
+  if code.include?(DESC_SEPARATOR)
+    description = code.split(DESC_SEPARATOR)[0] + DESC_SEPARATOR
+
+    code.gsub!(DESC_SEPARATOR, "") # remove separator
+  end
+
   prompt += "\n#{code}" unless code.empty?
 end
 
@@ -70,6 +81,7 @@ if response.code == "200"
   resp_content.gsub!(/\n\`\`\`[a-z]*/, "\n")
 
   File.open(filepath, "w") do |file|
+    file.puts(description) unless description.empty?
     file.puts(resp_content)
   end
 
