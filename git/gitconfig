@@ -76,6 +76,8 @@
 	trustctime = false
 	# end-of-line conversion
 	# autocrlf = true
+	# speed up git status by using a file system monitor to watch for changes
+	fsmonitor = true
 [push]
 	default = simple
 	# make `git push` push relevant annotated tags when pushing branches out.
@@ -96,3 +98,6 @@
 [merge]
 	tool = opendiff
 	conflictStyle = diff3
+
+[feature]
+	manyFiles = true

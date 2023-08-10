@@ -10,3 +10,6 @@ vim/bundles/
 Icon
 # Thumbnails
 ._*
+
+# Brew
+scripts/Brewfile.lock.json
