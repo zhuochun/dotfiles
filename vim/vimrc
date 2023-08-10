@@ -9,8 +9,8 @@ if &compatible
   set nocompatible
 endif
 
-let g:dotvim_root = expand('~/.vim')
-let g:dotvim_bundles = g:dotvim_root . '/bundles'
+let g:dotvim_root = expand('~/.config/nvim')
+let g:dotvim_bundles = expand('~/.cache/dein')
 
 function! s:source_rc(path)
   execute 'source' fnameescape(expand(g:dotvim_root . '/rc/' . a:path))

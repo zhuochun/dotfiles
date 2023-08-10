@@ -115,13 +115,13 @@ Open [Karabiner](https://pqrs.org/osx/karabiner/index.html) and grant permission
 
 Setup the rules and restart Karabiner.
 
-```
+``` bash
 cp ~/dotfiles/mac/karabiner.json ~/.config/karabiner/karabiner.json
 ```
 
 To customise [rules](https://pqrs.org/osx/karabiner/complex_modifications/):
 
-```
+``` bash
 ln -s ~/dotfiles/mac/karabiner-rules ~/.config/karabiner/assets/complex_modifications
 ```
 
@@ -134,27 +134,24 @@ Both my Mac/Windows use similar key mappings. For muscle memories, `<D-*>` mappi
 - **Mac OS:** Use `vimrc` with `brew install neovim`.
 - **Windows:** Use `windows/_vimrc` (Not actively updated).
 
-Setup [Shougo/dein.vim](https://github.com/Shougo/dein.vim) for plugins:
+Follow [Shougo/dein.vim](https://github.com/Shougo/dein.vim) or [Shougo/dein-installer.vim](https://github.com/Shougo/dein-installer.vim) to setup the plugin system.
 
 ``` bash
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-# Set `~/.vim/bundles` as installation directory
-sh ./installer.sh ~/.vim/bundles
-# Cleanup
-rm installer.sh
+sh -c "$(wget -O- https://raw.githubusercontent.com/Shougo/dein-installer.vim/master/installer.sh)"
+
+# it creates ~/.cache/dein directory
 ```
 
-Setup `vimrc` configs:
+Setup `vimrc` files:
 
 ``` bash
-ln -s ~/dotfiles/vim/rc ~/.vim/rc
-
 # neovim
-mkdir .config/nvim
 ln -s ~/dotfiles/vim/vimrc ~/.config/nvim/init.vim
+ln -s ~/dotfiles/vim/rc ~/.config/nvim/rc
 
 # vim
 ln -s ~/dotfiles/vim/vimrc ~/.vimrc
+ln -s ~/dotfiles/vim/rc ~/.vim/rc
 ln -s ~/dotfiles/vim/gvimrc ~/.gvimrc
 ```
 

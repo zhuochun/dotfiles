@@ -2,20 +2,27 @@
 " https://github.com/Shougo/dein.vim
 
 " Dein config {{{
-let g:dein#types#git#clone_depth = 5
-" }}}
+" Set Dein base path (required)
+let s:dein_base = g:dotvim_bundles
 
-" Dein init {{{
-let s:dotvim_dein = g:dotvim_bundles . '/repos/github.com/Shougo/dein.vim'
-execute 'set runtimepath+=' . s:dotvim_dein
+" Set Dein source path (required)
+let s:dein_src = g:dotvim_bundles . '/repos/github.com/Shougo/dein.vim'
 
+" Set Dein runtime path (required)
+execute 'set runtimepath+=' . s:dein_src
+
+" Early exit if folder not exists
 if !dein#load_state(g:dotvim_bundles)
   filetype plugin indent on
   finish
 endif
 
-call dein#begin(g:dotvim_bundles)
+" Dein init {{{
+" Call Dein initialization (required)
+call dein#begin(s:dein_base)
+call dein#add(s:dein_src)
 
+" Your plugins go here:
 call dein#load_toml(g:dotvim_root . '/rc/bundles.toml', {'lazy': 0})
 call dein#load_toml(g:dotvim_root . '/rc/bundles_lazy.toml', {'lazy': 1})
 
@@ -42,7 +49,12 @@ let g:loaded_vimballPlugin     = 1
 let g:loaded_zipPlugin         = 1
 " }}}
 
-filetype plugin indent on
+" Attempt to determine the type of a file based on its name and possibly its
+" contents. Use this to allow intelligent auto-indenting for each filetype,
+" and for plugins that are filetype specific.
+if has('filetype')
+  filetype indent plugin on
+endif
 
 " Install not installed plugins on startup
 if !has('vim_starting') && dein#check_install()
