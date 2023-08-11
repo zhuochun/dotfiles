@@ -119,7 +119,7 @@ nnoremap gm M
 nnoremap gl L
 " <gq>      Format text in motion
 " <go>1-9   Switch between tabs
-" <go>a-Z   Unite mappings
+" <go>a-Z   Unite mappings (bundles_lazy)
 " <G>       Go to end of file
 " *<G>      Go to specific line number
 " <h>       Left

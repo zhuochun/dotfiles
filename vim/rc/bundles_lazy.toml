@@ -380,33 +380,58 @@ hook_source = 'source ~/dotfiles/vim/rc/bundles/unite.vim'
 # Press <C-l> to refresh cached files when new files not appearing
 # Press <C-r> to restart Unite and fix Unite glitches
 hook_add = '''
-    " Unite resume the last unite buffer
-    nnoremap <silent> go. :<C-u>UniteResume<CR>
-    " Unite grep in current directory
-    nnoremap <silent> go/ :<C-u>Unite -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-    vnoremap <silent> go/ :<C-u>UniteWithCursorWord -buffer-name=grep grep:. -auto-preview -no-split -no-empty<CR>
-    nnoremap <silent> go? :<C-u>UniteResume grep<CR>
-    " Unite menus
-    nnoremap <silent> goM :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
-    nnoremap <silent> goG :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
-    " Unite plugins
+    " a - ...
+    " b - Buffers
     nnoremap <silent> gob :<C-u>Unite -buffer-name=buffers buffer -start-insert<CR>
+    " c - ...
+    " d - ...
+    " e - MRU files
+    " f - Grep find in current directory
+    nnoremap <silent> gof :<C-u>UniteWithCurrentDir -buffer-name=grep grep<CR>
+    vnoremap <silent> gof :<C-u>UniteWithCursorWord -buffer-name=grep grep<CR>
+    " F - Reopen Grep buffer
+    nnoremap <silent> goF :<C-u>UniteResume grep<CR>
+    " g - Git menus
+    nnoremap <silent> goG :<C-u>Unite -buffer-name=menus menu:git -start-insert<CR>
+    " G - Git conflicts
+    " h - ...
+    " i - Junkfile
+    " j - File outlines
+    " k - List search highlights
+    " l - ...
+    " m - Unite menus
+    nnoremap <silent> gom :<C-u>Unite -buffer-name=menus menu -start-insert<CR>
+    " n - ...
+    " o - Resume the last Unite buffer
+    nnoremap <silent> goo :<C-u>UniteResume<CR>
+    " p - Files
+    nnoremap <silent> gop :<C-u>Unite -buffer-name=files file_rec/neovim -start-insert<CR>
+    " P - File functions (filetype overwrite)
+    " q - Quickfix
+    " r - Registers
     nnoremap <silent> gor :<C-u>Unite -buffer-name=register register<CR>
+    " s - ...
+    " t - Tags
+    " u - ...
+    " v - ...
+    " w - ...
+    " x - ...
+    " y - Yanks
+    " z - ...
 '''
 
 [[plugins]]
 repo = 'Shougo/neomru.vim'
 on_source = ['unite.vim']
 hook_add = '''
-    nnoremap <silent> gof :<C-u>Unite -buffer-name=MRU_file neomru/file -start-insert<CR>
-    nnoremap <silent> god :<C-u>Unite -buffer-name=MRU_dirs neomru/directory -start-insert -default-action=lcd<CR>
+    nnoremap <silent> goe :<C-u>Unite -buffer-name=MRU_file neomru/file<CR>
 '''
 
 [[plugins]]
 repo = 'Shougo/unite-outline'
 on_source = ['unite.vim']
 hook_add = '''
-    nnoremap <silent> goo :<C-u>Unite -buffer-name=outline outline -start-insert<CR>
+    nnoremap <silent> goj :<C-u>Unite -buffer-name=outline outline<CR>
 '''
 
 [[plugins]]
@@ -416,7 +441,7 @@ hook_add = '''
     nnoremap <silent> goi :<C-u>Unite -buffer-name=junkfile junkfile/new junkfile -start-insert<CR>
 '''
 hook_source = '''
-    let g:junkfile#directory = expand('~/Documents/Notes')
+    let g:junkfile#directory=expand('~/Documents/Notes')
 '''
 
 [[plugins]]
@@ -444,15 +469,15 @@ hook_add = '''
 repo = 'moznion/unite-git-conflict.vim'
 on_source = ['unite.vim']
 hook_add = '''
-    nnoremap <silent> gog :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
+    nnoremap <silent> goG :<C-u>Unite -buffer-name=search git-conflict -start-insert<CR>
 '''
 
 [[plugins]]
 repo = 'osyo-manga/unite-quickfix'
 on_source = ['unite.vim']
 hook_add = '''
-    nnoremap <silent> gol :<C-u>Unite -buffer-name=quickfix location_list<CR>
     nnoremap <silent> goq :<C-u>Unite -buffer-name=quickfix quickfix<CR>
+    nnoremap <silent> goQ :<C-u>Unite -buffer-name=quickfix location_list<CR>
 '''
 
 [[plugins]]
@@ -463,21 +488,7 @@ hook_add = '''
     nmap n n<Plug>(anzu-update-search-status-with-echo)
     nmap N N<Plug>(anzu-update-search-status-with-echo)
 
-    nnoremap <silent> go* :<C-u>Unite -buffer-name=search anzu<CR>
-'''
-
-[[plugins]]
-repo = 'ujihisa/unite-colorscheme'
-on_source = ['unite.vim']
-hook_add = '''
-    nnoremap <silent> goc :<C-u>Unite -buffer-name=colorscheme colorscheme -auto-preview<CR>
-'''
-
-[[plugins]]
-repo = 'ujihisa/unite-font'
-on_source = ['unite.vim']
-hook_add = '''
-    nnoremap <silent> goC :<C-u>Unite -buffer-name=colorscheme font -auto-preview<CR>
+    nnoremap <silent> gok :<C-u>Unite -buffer-name=search anzu<CR>
 '''
 
 [[plugins]]
@@ -492,9 +503,6 @@ hook_add = '''
 repo = 'rhysd/unite-go-import.vim'
 on_source = ['unite.vim']
 on_ft = ['go']
-hook_add = '''
-    nnoremap <buffer> <silent> ,oI :<C-u>Unite go/import -start-insert<CR>
-'''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
