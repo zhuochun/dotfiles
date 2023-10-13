@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Process a Zoom transcript
+#
+# Usage: zoom-transcript file.vtt
+#
+# Clean up and merge the discussion dialogs.
+
+if ARGV.length == 1 # the file.vtt
+  transcript_path = ARGV[0].strip
+else
+  STDOUT << "Invalid arguments received\n"
+  exit 1
+end
+
+content = []
+
+File.open(transcript_path, "r") do |file|
+  speaker_now = "unknown"
+  speaker_notes = []
+
+  file.each_line do |line|
+    line = line.strip
+
+    if line.start_with?("WEBVTT") || line.empty?
+      next
+    elsif line =~ /^\d+/ # match transcript number
+      next
+    elsif line =~ /^\d+:\d+:\d+\.\d+ --\>/ # match time stamp
+      next
+    elsif line =~ /^.+: .+/ # match speaker: msg
+      speaker, msg = line.split(": ")
+
+      if speaker == speaker_now
+        speaker_notes << msg
+      else
+        content << speaker_now + ": " + speaker_notes.join(" ") unless speaker_notes.empty?
+        speaker_notes = [] # clear notes
+
+        speaker_now = speaker
+        speaker_notes << msg
+      end
+
+    else
+      speaker_notes << line
+
+    end
+  end
+end
+
+content.each do |c|
+  STDOUT << c << "\r\n"
+end
