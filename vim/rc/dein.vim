@@ -63,11 +63,11 @@ endif
 
 " Dein related commands {{{
 " Update plugins
-command! DeinUpdate call dein#update()
+command! PluginUpdate :call dein#update()
 " Clear state
-command! DeinClearState call dein#clear_state()
+command! PluginClearState :call dein#clear_state()
 " Reset runtimepath
-command! DeinClearRuntime call dein#recache_runtimepath()
+command! PluginClearRuntime :call dein#recache_runtimepath()
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
