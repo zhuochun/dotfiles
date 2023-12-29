@@ -1,0 +1,125 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Chain a few prompts dialogs to form a chain
+#
+# Usage: ai-chain P(p1) >> P(p2) >> nil
+# Usage: ai-chain '3.times { P(p1) >> P(p2) >> P(p1) }'
+#
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
+
+require "net/http"
+require "json"
+
+require_relative '../scripts/utils-ai'
+
+OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
+if OPENAI_KEY.empty?
+  STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
+  exit 9
+end
+
+FILES = {}
+
+def P(filename) # prompt
+  FILES.fetch(filename) do |f|
+    FILES[filename] = Prompt.new(f)
+    FILES[filename]
+  end
+end
+
+def T(filename) # tool
+  FILES.fetch(filename) do |f|
+    FILES[filename] = Prompt.new(f)
+    FILES[filename]
+  end
+end
+
+def PP(filename)
+  prompt = P(filename)
+  prompt.run
+  prompt
+end
+
+class Prompt
+  def initialize(f)
+    @filename = f
+    @messages = open_file(f)
+  end
+
+  def run # run this prompt file
+    if @messages.empty? || @messages.last[:role] == ROLE_ASSISTANT
+      STDOUT << "No USER prompt message at the end: #{self}\n"
+      exit 1
+    end
+
+    STDOUT << "Run Prompt #{self}\n"
+    resp = chat(@messages)
+    @messages << { :role => ROLE_ASSISTANT, :content => resp }
+
+    self.save_file
+    self
+  end
+
+  def ! # run alias
+    self.run
+  end
+
+  def >(other) # pass the latest message to the other
+    other.append(self, @messages.last) unless other.nil?
+    other
+  end
+
+  def >>(other) # run and pass the last message to the other
+    self.run
+    self.>(other)
+  end
+
+  def append(src, msg) # receive one message from another
+    STDOUT << "Receive context #{src} -> #{self}\n"
+
+    if @messages.empty? || @messages.last[:role] != ROLE_USER
+      @messages << { :role => ROLE_USER, :content => msg[:content] }
+    else
+      @messages.last[:content] << msg[:content]
+    end
+  end
+
+  def save_file
+    File.open(@filename, "w") do |file|
+      @messages.each_with_index do |msg, idx|
+        file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}") if idx > 0
+        file.puts("\n#{msg[:content]}")
+      end
+    end
+  end
+
+  def to_s
+    "P(#{@filename})"
+  end
+end
+
+cmd = ARGV.join(' ')
+
+prompt_files = {} # to keep a map of files
+# P() or PP()
+cmd = cmd.gsub(/(PP?)\(([a-z0-9\-_]+)\)/) do
+  filename = "#{$2}.txt"
+  prompt_files[filename] = true
+
+  "#{$1}('#{filename}')"
+end
+# Alias: _ => P() - => PP()
+cmd = cmd.gsub(/([_\-])([a-z0-9\-_]+)/) do
+  filename = "#{$2}.txt"
+  prompt_files[filename] = true
+
+  fn = { '_' => 'P', '-' => 'PP' }[$1]
+  "#{fn}('#{filename}')"
+end
+prompt_files.each { |k, _| check_path(k) } # validate all files exist
+
+STDOUT << "RUN: #{cmd}\n"
+eval(cmd, binding)
+
+prompt_files.each { |k, _| P(k).save_file } # save all the records
