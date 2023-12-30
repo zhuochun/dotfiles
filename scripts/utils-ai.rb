@@ -40,6 +40,12 @@ def open_file(prompt_path)
     messages << { :role => role, :content => content.join("\n") } unless content.empty?
   end
 
+  if messages.length <= 1
+    messages[0][:role] = ROLE_USER
+  elsif messages[0][:role] == ROLE_SYSTEM && messages[1][:role] == ROLE_ASSISTANT
+    messages[0][:role] = ROLE_USER
+  end
+
   STDOUT << "Loaded: #{prompt_path}. Messages: #{messages.length}\n"
   messages
 end
@@ -89,7 +95,7 @@ def chat(messages, opts = {})
   end
 
   result = JSON.parse(response.body)
-  STDOUT << "Chat usage: #{result["usage"]}, model: #{data[:model]}\n"
+  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
 
   result["choices"][0]["message"]["content"]
 end

@@ -3,8 +3,9 @@
 
 # Chain a few prompts dialogs to form a chain
 #
-# Usage: ai-chain P(p1) >> P(p2) >> nil
+# Usage: ai-chain 'P(p1) >> P(p2) >> nil'
 # Usage: ai-chain '3.times { P(p1) >> P(p2) >> P(p1) }'
+# Usage: ai-chain 'T_CODE + P(test.rb) >> nil'
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
@@ -12,6 +13,7 @@ require "net/http"
 require "json"
 
 require_relative '../scripts/utils-ai'
+require_relative '../scripts/utils-ai-tmpl'
 
 OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
 if OPENAI_KEY.empty?
@@ -28,9 +30,9 @@ def P(filename) # prompt
   end
 end
 
-def T(filename) # tool
+def T(filename) # template with ERB
   FILES.fetch(filename) do |f|
-    FILES[filename] = Prompt.new(f)
+    FILES[filename] = PromptTemplate.new(f)
     FILES[filename]
   end
 end
@@ -42,9 +44,13 @@ def PP(filename)
 end
 
 class Prompt
+  attr_reader :filename
+
   def initialize(f)
     @filename = f
     @messages = open_file(f)
+
+    STDOUT << "Init #{self}\n"
   end
 
   def run # run this prompt file
@@ -61,28 +67,42 @@ class Prompt
     self
   end
 
-  def ! # run alias
-    self.run
-  end
-
-  def >(other) # pass the latest message to the other
+  def +(other) # pass the last message to the other
     other.append(self, @messages.last) unless other.nil?
     other
   end
 
-  def >>(other) # run and pass the last message to the other
+  def -(other) # run and pass the last message to the other
     self.run
-    self.>(other)
+    self.+(other)
+  end
+
+  def >>(other) # alias to -
+    self.-(other)
+  end
+
+  def preload(src, msg) # set system message from another
+    STDOUT << "Set SYSTEM context #{src} -> #{self}\n"
+
+    if @messages.empty? || @messages[0][:role] != ROLE_SYSTEM
+      @messages.unshift({ :role => ROLE_SYSTEM, :content => msg[:content] })
+    else
+      @messages[0][:content] += "\n" + msg[:content]
+    end
+
+    self
   end
 
   def append(src, msg) # receive one message from another
-    STDOUT << "Receive context #{src} -> #{self}\n"
+    STDOUT << "Append USER context #{src} -> #{self}\n"
 
     if @messages.empty? || @messages.last[:role] != ROLE_USER
       @messages << { :role => ROLE_USER, :content => msg[:content] }
     else
       @messages.last[:content] << msg[:content]
     end
+
+    self
   end
 
   def save_file
@@ -90,29 +110,39 @@ class Prompt
   end
 
   def to_s
-    "P(#{@filename})"
+    "Prompt(#{@filename})"
   end
 end
 
 cmd = ARGV.join(' ')
 
+FILE_REGEX = "([a-zA-Z0-9\\-_]+)(\\.[a-zA-Z0-9]+)?"
+
 prompt_files = {} # to keep a map of files
 # P() or PP()
-cmd = cmd.gsub(/(PP?)\(([a-z0-9\-_]+)\)/) do
-  filename = "#{$2}.txt"
+cmd = cmd.gsub(/(PP?)\(#{FILE_REGEX}\)/) do
+  filename = "#{$2}#{$3 || ".txt"}"
   prompt_files[filename] = true
 
   "#{$1}('#{filename}')"
 end
-# Alias: _ => P() - => PP()
-cmd = cmd.gsub(/([_\-])([a-z0-9\-_]+)/) do
-  filename = "#{$2}.txt"
+# T() or TF()
+cmd = cmd.gsub(/(TF?)\(#{FILE_REGEX}\)/) do
+  filename = "#{$2}#{$3 || ".txt"}"
   prompt_files[filename] = true
 
-  fn = { '_' => 'P', '-' => 'PP' }[$1]
-  "#{fn}('#{filename}')"
+  "#{$1}('#{filename}')"
 end
 prompt_files.each { |k, _| check_path(k) } # validate all files exist
+
+# Need to better handle operator precedence. use +/- or explicit () is a workaround
+#
+# E.g.
+#
+# INPUT: P('test.rb') + T('tmpt.md') >> P('test.rb')
+# EXPECTED: ( P('test.rb') + T('test.md') ) >> P('test.rb') # works
+#
+# More complicated cases might not be working
 
 STDOUT << "RUN: #{cmd}\n"
 eval(cmd, binding)
