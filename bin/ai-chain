@@ -86,12 +86,7 @@ class Prompt
   end
 
   def save_file
-    File.open(@filename, "w") do |file|
-      @messages.each_with_index do |msg, idx|
-        file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}") if idx > 0
-        file.puts("\n#{msg[:content]}")
-      end
-    end
+    write_file(@filename, @messages)
   end
 
   def to_s

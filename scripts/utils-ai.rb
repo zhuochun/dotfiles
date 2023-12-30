@@ -44,14 +44,25 @@ def open_file(prompt_path)
   messages
 end
 
-def append_file(prompt_path, role, msg)
-  File.open(prompt_path, "a") do |file|
-    file.puts("\n#{MODE_SEPARATOR} #{role}")
-    file.puts("\n#{msg}")
+def write_file(path, msgs)
+  File.open(path, "w") do |file|
+    msgs.each_with_index do |msg, idx|
+      file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}") if idx > 0
+      file.puts("\n#{msg[:content]}")
+    end
   end
 end
 
-def chat(messages)
+def append_file(prompt_path, msgs)
+  File.open(prompt_path, "a") do |file|
+    msgs.each do |msg|
+      file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}")
+      file.puts("\n#{msg[:content]}")
+    end
+  end
+end
+
+def chat(messages, opts = {})
   url = URI("https://api.openai.com/v1/chat/completions")
   headers = {
     "Content-Type" => "application/json",
@@ -61,10 +72,11 @@ def chat(messages)
   data = {
     "model" => "gpt-3.5-turbo-16k",
     "messages" => messages
-  }
+  }.merge(opts)
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
+  http.read_timeout = 600 # Time in seconds
 
   request = Net::HTTP::Post.new(url, headers)
   request.body = data.to_json
@@ -77,5 +89,7 @@ def chat(messages)
   end
 
   result = JSON.parse(response.body)
+  STDOUT << "Chat usage: #{result["usage"]}, model: #{data[:model]}\n"
+
   result["choices"][0]["message"]["content"]
 end
