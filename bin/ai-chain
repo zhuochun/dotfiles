@@ -9,9 +9,6 @@
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
-require "net/http"
-require "json"
-
 require_relative '../scripts/utils-ai'
 require_relative '../scripts/utils-ai-tmpl'
 

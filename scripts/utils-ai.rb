@@ -1,3 +1,6 @@
+require "net/http"
+require "json"
+
 MODE_SEPARATOR = "###### "
 ROLE_SYSTEM = "system"
 ROLE_USER = "user"
@@ -98,4 +101,55 @@ def chat(messages, opts = {})
   STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
 
   result["choices"][0]["message"]["content"]
+end
+
+def embedding(txts, opts = {})
+  url = URI("https://api.openai.com/v1/embeddings")
+  headers = {
+    "Content-Type" => "application/json",
+    "Authorization" => "Bearer #{OPENAI_KEY}"
+  }
+
+  data = {
+    "model" => "text-embedding-ada-002",
+    "input" => txts
+  }.merge(opts)
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+  http.read_timeout = 600 # Time in seconds
+
+  request = Net::HTTP::Post.new(url, headers)
+  request.body = data.to_json
+
+  response = http.request(request)
+
+  if response.code != "200"
+    STDOUT << "Embedding error: #{response}\n"
+    exit 1
+  end
+
+  result = JSON.parse(response.body)
+  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
+
+  result["data"][0]["embedding"]
+end
+
+def cosine_similarity(array1, array2)
+  dot_product = 0.0
+  norm_a = 0.0
+  norm_b = 0.0
+
+  array1.each_with_index do |value1, index|
+    value2 = array2[index]
+
+    dot_product += value1 * value2
+    norm_a += value1 * value1
+    norm_b += value2 * value2
+  end
+
+  norm_a = Math.sqrt(norm_a)
+  norm_b = Math.sqrt(norm_b)
+
+  cosine_similarity = dot_product / (norm_a * norm_b)
 end
