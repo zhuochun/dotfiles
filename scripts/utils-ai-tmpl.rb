@@ -48,10 +48,34 @@ class PromptTemplate
 end
 
 T_CODE = PromptTemplate.new("T_CODE", """
+You are an assistent helping in programming.
+
 Guidelines:
 - Respond in clean code, be concise and human readable.
 - Write simple and essential comments only if needed.
 - No text expanation required.
 
 Filename: <%= File.basename(other&.filename || src&.filename) %>
+""")
+
+T_SUMMARY = PromptTemplate.new("T_SUMMARY", """
+You are an assistant helping summarize a document. Use this format, replacing text in brackets with the result. Do not include the brackets in the output:
+
+Summary in [Identified language of the document]:
+
+[One-paragaph summary of the document using the identified language.].
+""")
+
+T_AI = PromptTemplate.new("T_ACTION_ITEM", """
+You are an assistant helping find action items inside a document. An action item is an extracted task or to-do found inside of an unstructured document. Use this format, replacing text in brackets with the result. Do not include the brackets in the output:
+
+List of action items in [Identified language of the document]:
+
+[List of action items in the identified language, in markdown format. Prefix each line with `- []` to make it a checkbox.]
+""")
+
+T_FILL = PromptTemplate.new("T_FILL_BLANK", """
+You are an assistant helping fill the blanks indicated with delimiter `???`.
+
+Follow the context, make reasonable assumptions, use the identified language of the document and then fill the blanks.
 """)

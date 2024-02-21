@@ -71,26 +71,33 @@ def append_file(prompt_path, msgs)
   end
 end
 
-def chat(messages, opts = {})
-  url = URI("https://api.openai.com/v1/chat/completions")
-  headers = {
-    "Content-Type" => "application/json",
-    "Authorization" => "Bearer #{OPENAI_KEY}"
-  }
-
-  data = {
-    "model" => "gpt-3.5-turbo-16k",
-    "messages" => messages
-  }.merge(opts)
+def post_openai(uri, reqData)
+  url = URI(uri)
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
   http.read_timeout = 600 # Time in seconds
 
-  request = Net::HTTP::Post.new(url, headers)
-  request.body = data.to_json
+  headers = {
+    "Content-Type" => "application/json",
+    "Authorization" => "Bearer #{OPENAI_KEY}"
+  }
 
-  response = http.request(request)
+  request = Net::HTTP::Post.new(url, headers)
+  request.body = reqData.to_json
+
+  return http.request(request)
+end
+
+def chat(messages, opts = {})
+  data = {
+    "model" => "gpt-3.5-turbo-16k",
+    "messages" => messages
+  }.merge(opts)
+
+  uri = "https://api.openai.com/v1/chat/completions"
+
+  response = post_openai(uri, data)
 
   if response.code != "200"
     STDOUT << "Chat error: #{response}\n"
@@ -104,25 +111,14 @@ def chat(messages, opts = {})
 end
 
 def embedding(txts, opts = {})
-  url = URI("https://api.openai.com/v1/embeddings")
-  headers = {
-    "Content-Type" => "application/json",
-    "Authorization" => "Bearer #{OPENAI_KEY}"
-  }
-
   data = {
     "model" => "text-embedding-ada-002",
     "input" => txts
   }.merge(opts)
 
-  http = Net::HTTP.new(url.host, url.port)
-  http.use_ssl = true
-  http.read_timeout = 600 # Time in seconds
+  uri = "https://api.openai.com/v1/embeddings"
 
-  request = Net::HTTP::Post.new(url, headers)
-  request.body = data.to_json
-
-  response = http.request(request)
+  response = post_openai(request)
 
   if response.code != "200"
     STDOUT << "Embedding error: #{response}\n"
@@ -133,6 +129,23 @@ def embedding(txts, opts = {})
   STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
 
   result["data"][0]["embedding"]
+end
+
+def speech(msg, opts = {})
+  data = {
+    "model" => "tts-1",
+    "voice" => "echo",
+    "input" => msg
+  }.merge(opts)
+
+  uri = "https://api.openai.com/v1/audio/speech"
+
+  if response.code != "200"
+    STDOUT << "Speech error: #{response}\n"
+    exit 1
+  end
+
+  response.body # stream of response body
 end
 
 def cosine_similarity(array1, array2)
