@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Query and answer questions based on an index file
+#
+# Usage: ai-rag-query index-file "qn"
+# Usage: ai-rag-query index-file "qn" -qn -ollama
+#
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
+
+require_relative "../scripts/utils-ai"
+
+opt_ollama = ARGV.delete('-ollama')
+opt_qn = ARGV.delete('-qn') # default is to list top 10 similar ones
+
+if opt_qn
+    OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
+    if OPENAI_KEY.empty?
+        STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
+        exit 9
+    end
+end
+
+if ARGV.length != 2
+    STDOUT << "Invalid arguments received\n"
+    exit 1
+end
+
+STDOUT << "Querying index\n"
+
+qn_embedding = embedding_ollama(ARGV[1])
+ans = []
+
+File.foreach(ARGV[0]) do |line|
+    item = JSON.parse(line)
+
+    score = cosine_similarity(qn_embedding, item["embedding"])
+    next if score < 0.5 # base criteria
+
+    item["score"] = score
+    ans << item
+end
+
+if ans.length == 0
+    STDOUT << "Nothing found\n"
+    exit 1
+end
+
+def file_content(file)
+    content = ""
+
+    File.foreach(file) do |line|
+        if line.start_with?(/- .+:/) || line.start_with?('  - [[') # yaml like
+            next
+        elsif line.start_with?('<') # html like
+            next
+        else
+            content << line unless line.strip.empty?
+        end
+    end
+
+    content
+end
+
+ans = ans.sort_by { |a| -a["score"] }
+
+ans.take(5).each_with_index do |a, idx|
+    STDOUT << "=== File (#{idx}): #{a["path"]}, Score: #{a["score"]}\n"
+    STDOUT << file_content(a["path"])
+end
+
+if opt_qn
+    messages = [
+        {
+            role: ROLE_SYSTEM,
+            content: "You are a helpful assistent, answer the question based on the materials provided. Use a material when it is useful to the question. If all material is not useful, reply 'Cannot Help'."
+        }
+    ]
+
+    user_msg = "materials:\n"
+
+    ans.take(3).each_with_index do |a, idx|
+        user_msg << "<MATERIAL #{idx}>#{file_content(a['path'])}</MATERIAL #{idx}>\n"
+    end
+
+    user_msg << "question: #{ARGV[1]}\n"
+
+    messages << { role: ROLE_USER, content: user_msg }
+
+    reply = chat(messages)
+    STDOUT << "REPLY: #{reply}"
+end

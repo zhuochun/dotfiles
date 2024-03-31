@@ -2,6 +2,7 @@ require "net/http"
 require "json"
 
 MODE_SEPARATOR = "###### "
+
 ROLE_SYSTEM = "system"
 ROLE_USER = "user"
 ROLE_ASSISTANT = "assistant"
@@ -71,17 +72,15 @@ def append_file(prompt_path, msgs)
   end
 end
 
-def post_openai(uri, reqData)
+def post_openai(uri, auth, reqData)
   url = URI(uri)
 
   http = Net::HTTP.new(url.host, url.port)
-  http.use_ssl = true
+  http.use_ssl = true unless auth.nil?
   http.read_timeout = 600 # Time in seconds
 
-  headers = {
-    "Content-Type" => "application/json",
-    "Authorization" => "Bearer #{OPENAI_KEY}"
-  }
+  headers = { "Content-Type" => "application/json" }
+  headers["Authorization"] = "Bearer #{auth}" unless auth.nil?
 
   request = Net::HTTP::Post.new(url, headers)
   request.body = reqData.to_json
@@ -96,8 +95,7 @@ def chat(messages, opts = {})
   }.merge(opts)
 
   uri = "https://api.openai.com/v1/chat/completions"
-
-  response = post_openai(uri, data)
+  response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
     STDOUT << "Chat error: #{response}\n"
@@ -112,13 +110,12 @@ end
 
 def embedding(txts, opts = {})
   data = {
-    "model" => "text-embedding-ada-002",
+    "model" => "text-embedding-3-small",
     "input" => txts
   }.merge(opts)
 
   uri = "https://api.openai.com/v1/embeddings"
-
-  response = post_openai(request)
+  response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
     STDOUT << "Embedding error: #{response}\n"
@@ -126,26 +123,25 @@ def embedding(txts, opts = {})
   end
 
   result = JSON.parse(response.body)
-  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
-
   result["data"][0]["embedding"]
 end
 
-def speech(msg, opts = {})
+def embedding_ollama(txts, opts = {})
   data = {
-    "model" => "tts-1",
-    "voice" => "echo",
-    "input" => msg
+    "model" => "nomic-embed-text",
+    "prompt" => txts
   }.merge(opts)
 
-  uri = "https://api.openai.com/v1/audio/speech"
+  uri = "http://localhost:11434/api/embeddings"
+  response = post_openai(uri, nil, data)
 
   if response.code != "200"
-    STDOUT << "Speech error: #{response}\n"
+    STDOUT << "Embedding error: #{response}\n"
     exit 1
   end
 
-  response.body # stream of response body
+  result = JSON.parse(response.body)
+  result["embedding"]
 end
 
 def cosine_similarity(array1, array2)

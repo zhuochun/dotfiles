@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Index all markdown files in a directory
+#
+# Usage: ai-rag-index dir-path index-file
+# Usage: ai-rag-index dir-path index-file -ollama
+#
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
+
+require_relative "../scripts/utils-ai"
+
+opt_ollama = ARGV.delete('-ollama')
+
+if ARGV.length != 2
+    STDOUT << "Invalid arguments received\n"
+    exit 1
+end
+
+dir = ARGV[0] || Dir.pwd
+dir = ARGV[0].gsub(/^\./, Dir.pwd) # Replace relative dir to absolute directory
+
+files = Dir[File.join(dir, '**/*.{md,markdown}')]
+STDOUT << "Scan directory: #{dir}, Found: #{files.length}\n"
+
+def file_content(file)
+    content = ""
+
+    File.foreach(file) do |line|
+        if line.start_with?(/- .+:/) || line.start_with?('  - [[') # yaml like
+            next
+        elsif line.start_with?('<') # html like
+            next
+        else
+            content << line unless line.strip.empty?
+        end
+    end
+
+    content
+end
+
+STDOUT << "Building index @#{Time.now}\n["
+File.open(ARGV[1], 'w') do |index|
+    files.each_with_index do |file, idx|
+        content = file_content(file)
+        embedding = embedding_ollama(content)
+
+        line = {
+            path: file,
+            embedding: embedding
+        }.to_json
+
+        index.puts(line)
+        STDOUT << if idx+1 % 10 == 0 then idx else "." end
+    end
+end
+STDOUT << "]\nDone @#{Time.now}\n"
