@@ -17,10 +17,10 @@ if ARGV.length != 2
     exit 1
 end
 
-dir = ARGV[0] || Dir.pwd
 dir = ARGV[0].gsub(/^\./, Dir.pwd) # Replace relative dir to absolute directory
+dir = File.join(*dir.split(File::ALT_SEPARATOR || File::SEPARATOR), '**', '*.{md,markdown}')
 
-files = Dir[File.join(dir, '**/*.{md,markdown}')]
+files = Dir[dir]
 STDOUT << "Scan directory: #{dir}, Found: #{files.length}\n"
 
 def file_content(file)
@@ -51,7 +51,7 @@ File.open(ARGV[1], 'w') do |index|
         }.to_json
 
         index.puts(line)
-        STDOUT << if idx+1 % 10 == 0 then idx else "." end
+        STDOUT << if (idx+1) % 10 == 0 then idx else "." end
     end
 end
 STDOUT << "]\nDone @#{Time.now}\n"

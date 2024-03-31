@@ -64,7 +64,7 @@ end
 
 ans = ans.sort_by { |a| -a["score"] }
 
-ans.take(5).each_with_index do |a, idx|
+ans.take(20).each_with_index do |a, idx|
     STDOUT << "=== File (#{idx}): #{a["path"]}, Score: #{a["score"]}\n"
     STDOUT << file_content(a["path"])
 end
@@ -73,7 +73,7 @@ if opt_qn
     messages = [
         {
             role: ROLE_SYSTEM,
-            content: "You are a helpful assistent, answer the question based on the materials provided. Use a material when it is useful to the question. If all material is not useful, reply 'Cannot Help'."
+            content: "You are a helpful assistent, answer the question based on the materials provided. Use a material when it is useful to the question. If all materials are not useful, reply 'Not enough materials' then answer the question based on your own knowledge."
         }
     ]
 
