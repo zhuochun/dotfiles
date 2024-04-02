@@ -54,7 +54,7 @@ File.foreach(ARGV[1]) do |line|
     item = JSON.parse(line)
 
     DB[item["hash"]] = item
-end
+end if File.exist?(ARGV[1])
 STDOUT << "Found index: #{DB.length}\n"
 
 STDOUT << "Building index @#{Time.now}\n["

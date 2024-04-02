@@ -17,6 +17,8 @@ OPT_SERVER = ARGV.delete('-server') # run as a server instead of cmd, open http:
 OPT_GPT = ARGV.delete('-gpt') # use openai's embedding
 OPT_QN = ARGV.delete('-qn') # question mode, if not specified, return the top 10 similar refs instead
 
+OPT_SCORE_THRESHOLD = if OPT_GPT then 0.3 else 0.5 end # minimum threshold to consider as similar
+
 if OPT_GPT || OPT_QN
     OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
     if OPENAI_KEY.empty?
@@ -61,7 +63,7 @@ def retrieve(q, topN)
         item = JSON.parse(line)
 
         score = cosine_similarity(qe, item["embedding"])
-        next unless OPT_GPT || score >= 0.5 # min threshold for ollama
+        next if score < OPT_SCORE_THRESHOLD
 
         item["score"] = score
         ans << item
