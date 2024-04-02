@@ -10,6 +10,8 @@
 
 require_relative "../scripts/utils-ai"
 
+require 'digest'
+
 OPT_GPT = ARGV.delete('-gpt') # use open-ai's embedding instead
 if OPT_GPT
     OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
@@ -46,19 +48,41 @@ def file_content(file)
     content
 end
 
+STDOUT << "Scanning index @#{Time.now}\n"
+DB = {} # hash: item
+File.foreach(ARGV[1]) do |line|
+    item = JSON.parse(line)
+
+    DB[item["hash"]] = item
+end
+STDOUT << "Found index: #{DB.length}\n"
+
 STDOUT << "Building index @#{Time.now}\n["
-File.open(ARGV[1], 'w') do |index|
+skipped = 0
+File.open(ARGV[1], 'w') do |index_db|
     files.each_with_index do |file, idx|
         content = file_content(file)
+        hash = Digest::SHA256.hexdigest(content)
+
+        if DB[hash] # found in old DB
+            index_db.puts(DB[hash].to_json)
+
+            skipped += 1
+            next
+        end
+
         embedding = if OPT_GPT then embedding(content) else embedding_ollama(content) end
+        line = { path: file, hash: hash, embedding: embedding }
+        index_db.puts(line.to_json)
 
-        line = {
-            path: file,
-            embedding: embedding
-        }.to_json
+        if idx % 50 == 0
+            index_db.flush # a little careful
 
-        index.puts(line)
-        STDOUT << if (idx+1) % 10 == 0 then idx else "." end
+            STDOUT << idx
+        else
+            STDOUT << "."
+        end
     end
 end
 STDOUT << "]\nDone @#{Time.now}\n"
+STDOUT << "Skipped: #{skipped}\n"
