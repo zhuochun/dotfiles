@@ -4,13 +4,20 @@
 # Index all markdown files in a directory
 #
 # Usage: ai-rag-index dir-path index-file
-# Usage: ai-rag-index dir-path index-file -ollama
+# Usage: ai-rag-index dir-path index-file -gpt
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 
 require_relative "../scripts/utils-ai"
 
-opt_ollama = ARGV.delete('-ollama')
+OPT_GPT = ARGV.delete('-gpt') # use open-ai's embedding instead
+if OPT_GPT
+    OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
+    if OPENAI_KEY.empty?
+        STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
+        exit 9
+    end
+end
 
 if ARGV.length != 2
     STDOUT << "Invalid arguments received\n"
@@ -43,7 +50,7 @@ STDOUT << "Building index @#{Time.now}\n["
 File.open(ARGV[1], 'w') do |index|
     files.each_with_index do |file, idx|
         content = file_content(file)
-        embedding = embedding_ollama(content)
+        embedding = if OPT_GPT then embedding(content) else embedding_ollama(content) end
 
         line = {
             path: file,
