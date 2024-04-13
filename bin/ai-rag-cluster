@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Query and answer questions based on an index file
+#
+# Usage: ai-rag-cluster index-file
+#
+# Requires OpenAI API Key stored in DOT_OPENAI_KEY
+
+require_relative "../scripts/utils-ai"
+
+OPT_THRESHOLD = 0.50 # minimum threshold to merge as a cluster
+
+STDOUT << "Building clusters #{Time.now}\n"
+
+clusters = []
+File.foreach(ARGV[0]) do |line|
+    item = JSON.parse(line)
+
+    placed = false
+    clusters.each do |cluster|
+        scores = cluster.map do |member|
+            cosine_similarity(item["embedding"], member["embedding"])
+        end
+
+        avg_score = scores.sum / scores.size
+
+        if avg_score > OPT_THRESHOLD
+            cluster << item
+            placed = true
+            STDOUT << "."
+            break
+        end
+    end
+
+    unless placed
+        clusters << [item]
+        STDOUT << "x"
+    end
+end
+
+clusters = clusters.sort_by { |c| -c.length }
+
+STDOUT << "\nFound clusters #{clusters.length} @#{Time.now}\n"
+
+def file_content(file)
+    content = ""
+
+    File.foreach(file) do |line|
+        if line.start_with?(/- .+:/) || line.start_with?('  - [[') # yaml like
+            next
+        elsif line.start_with?('<') # html like
+            next
+        else
+            content << line unless line.strip.empty?
+        end
+    end
+
+    content
+end
+
+require 'sinatra' # gem install sinatra
+
+set :lock, true
+
+get '/clusters' do
+    content_type :json
+
+    resp = clusters.map.with_index { |c, idx| { id: idx, items: c.length } }
+    resp.to_json
+end
+
+get '/clusters/:id' do
+  content_type :json
+
+  c = clusters[params['id'].to_i]
+
+  resp = c.map do |item|
+    { content: file_content(item["path"]) }
+  end
+  resp.to_json
+end
