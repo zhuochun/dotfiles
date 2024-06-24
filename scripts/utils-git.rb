@@ -56,3 +56,15 @@ def parse_phab_commit(commit_msg)
 
   commit
 end
+
+def commit_git(path, msg)
+  git_repo = `git -C #{path} rev-parse --show-toplevel`.chop
+
+  STDOUT << "COMMIT #{git_repo}\n"
+  commit_changes = `git -C "#{git_repo}" add .`
+  STDOUT << commit_changes << "\n"
+
+  msg = msg.gsub('"', "'")
+  commit = `git -C "#{git_repo}" commit -m "#{msg}"`
+  STDOUT << commit << "\n"
+end

@@ -19,6 +19,7 @@ end
 
 opt_file_mode = true # default assume prompt file path
 opt_insert_mode = ARGV.delete('-i')
+opt_git_commit = ARGV.delete('-git')
 opt_model_gpt4 = ARGV.delete('-gpt4')
 
 if ARGV.length == 0
@@ -58,4 +59,9 @@ if opt_insert_mode # write only the resp
   write_file(args, [msgs.last])
 else
   append_file(args, [msgs.last, { :role => ROLE_USER, :content => "" }])
+end
+
+if opt_git_commit # make a timestamp commit
+  require_relative "../scripts/utils-git"
+  commit_git(File.dirname(args), "Auto commit #{Time.now}")
 end
