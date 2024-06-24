@@ -6,7 +6,6 @@ MODE_SEPARATOR = "###### "
 ROLE_SYSTEM = "system"
 ROLE_USER = "user"
 ROLE_ASSISTANT = "assistant"
-NEXT_ROLE = ->(role) { role != ROLE_USER ? ROLE_USER : ROLE_ASSISTANT }
 
 OPENAI_API = ENV["DOT_OPENAI_API"] || "openai" # azure or openai
 AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
@@ -20,6 +19,14 @@ def check_path(prompt_path)
   end
 end
 
+def to_next_role(role)
+  role != ROLE_USER ? ROLE_USER : ROLE_ASSISTANT
+end
+
+def create_message(role, content)
+  { :role => role, :content => Array(content).join("\n") }
+end
+
 def open_file(prompt_path)
   role = ROLE_SYSTEM # starts with system setup
   messages = []
@@ -31,7 +38,7 @@ def open_file(prompt_path)
       line.strip!
 
       if line.start_with?(MODE_SEPARATOR)
-        messages << { :role => role, :content => content.join("\n") }
+        messages << create_message(role, content)
 
         next_role = line.split(MODE_SEPARATOR)[1].strip
         # small auto fix when multiple prompt
@@ -39,14 +46,14 @@ def open_file(prompt_path)
           # we don't start a new one, automatically continue the msg
         else
           content = [] # reset
-          role = NEXT_ROLE.call(role)
+          role = to_next_role(role)
         end
       else
         content << line unless line.empty?
       end
     end
 
-    messages << { :role => role, :content => content.join("\n") } unless content.empty?
+    messages << create_message(role, content) unless content.empty?
   end
 
   if messages.length <= 1
@@ -99,12 +106,7 @@ def post_openai(uri, auth, reqData)
   return http.request(request)
 end
 
-def chat(messages, opts = {})
-  data = {
-    "model" => "gpt-3.5-turbo-16k",
-    "messages" => messages
-  }.merge(opts)
-
+def chat(data) # https://platform.openai.com/docs/api-reference/chat/create
   uri = OPENAI_URL + "/chat/completions"
   response = post_openai(uri, OPENAI_KEY, data)
 
@@ -114,8 +116,16 @@ def chat(messages, opts = {})
   end
 
   result = JSON.parse(response.body)
-  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
+end
 
+def chat_resp(messages, opts = {})
+  data = {
+    "model" => "gpt-3.5-turbo-16k",
+    "messages" => messages
+  }.merge(opts)
+
+  result = chat(data)
+  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
   result["choices"][0]["message"]["content"]
 end
 

@@ -47,7 +47,7 @@ end
 STDOUT << "Run prompt #{Time.now}\n"
 opts = {}
 opts["model"] = "gpt-4o" if opt_model_gpt4
-resp = chat(msgs, opts)
+resp = chat_resp(msgs, opts)
 msgs << { :role => ROLE_ASSISTANT, :content => resp }
 
 if !opt_file_mode # output in terminal
