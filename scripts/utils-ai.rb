@@ -8,6 +8,11 @@ ROLE_USER = "user"
 ROLE_ASSISTANT = "assistant"
 NEXT_ROLE = ->(role) { role != ROLE_USER ? ROLE_USER : ROLE_ASSISTANT }
 
+OPENAI_API = ENV["DOT_OPENAI_API"] || "openai" # azure or openai
+AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
+OPENAI_URL = ENV["DOT_OPENAI_URL"] || "https://api.openai.com/v1"
+OLLAMA_URL = ENV["DOT_OLLAMA_URL"] || "http://localhost:11434/api"
+
 def check_path(prompt_path)
   if prompt_path.empty? || !File.exist?(prompt_path)
     STDOUT << "File path not found #{prompt_path}\n"
@@ -74,13 +79,19 @@ end
 
 def post_openai(uri, auth, reqData)
   url = URI(uri)
+  url.query = "api-version=#{AZURE_VERSION}" if OPENAI_API == "azure"
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true unless auth.nil?
   http.read_timeout = 600 # Time in seconds
 
   headers = { "Content-Type" => "application/json" }
-  headers["Authorization"] = "Bearer #{auth}" unless auth.nil?
+
+  if OPENAI_API == "openai"
+    headers["Authorization"] = "Bearer #{auth}" unless auth.nil?
+  else
+    headers["api-key"] = auth unless auth.nil?
+  end
 
   request = Net::HTTP::Post.new(url, headers)
   request.body = reqData.to_json
@@ -94,11 +105,11 @@ def chat(messages, opts = {})
     "messages" => messages
   }.merge(opts)
 
-  uri = "https://api.openai.com/v1/chat/completions"
+  uri = OPENAI_URL + "/chat/completions"
   response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
-    STDOUT << "Chat error: #{response}\n"
+    STDOUT << "Chat error: #{response.body}\n"
     exit 1
   end
 
@@ -114,11 +125,11 @@ def embedding(txts, opts = {})
     "input" => txts
   }.merge(opts)
 
-  uri = "https://api.openai.com/v1/embeddings"
+  uri = OPENAI_URL + "/embeddings"
   response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
-    STDOUT << "Embedding error: #{response}\n"
+    STDOUT << "Embedding error: #{response.body}\n"
     exit 1
   end
 
@@ -132,11 +143,11 @@ def embedding_ollama(txts, opts = {})
     "prompt" => txts
   }.merge(opts)
 
-  uri = "http://localhost:11434/api/embeddings"
+  uri = OLLAMA_URL + "/embeddings"
   response = post_openai(uri, nil, data)
 
   if response.code != "200"
-    STDOUT << "Embedding error: #{response}\n"
+    STDOUT << "Embedding error: #{response.body}\n"
     exit 1
   end
 
