@@ -46,7 +46,7 @@ end
 
 STDOUT << "Run prompt #{Time.now}\n"
 opts = {}
-opts["model"] = "gpt-4" if opt_model_gpt4
+opts["model"] = "gpt-4o" if opt_model_gpt4
 resp = chat(msgs, opts)
 msgs << { :role => ROLE_ASSISTANT, :content => resp }
 
