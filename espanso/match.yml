@@ -58,3 +58,7 @@ matches:
 
   - trigger: ";tdev"
     replace: "tmux attach-session -t dev"
+
+  - trigger: ";;;"
+    replace: "delimited by triple backticks"
+
