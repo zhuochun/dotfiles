@@ -189,6 +189,7 @@ Install [Espanso](https://espanso.org/).
 
 ``` bash
 ln -s ~/dotfiles/espanso/match.yml $HOME/Library/Application\ Support/espanso/match/base.yml
+ln -s ~/dotfiles/espanso/form.yml $HOME/Library/Application\ Support/espanso/match/form.yml
 ```
 
 ### Rime

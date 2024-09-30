@@ -66,7 +66,7 @@ Summary in [Identified language of the document]:
 [One-paragaph summary of the document using the identified language.].
 """)
 
-T_AI = PromptTemplate.new("T_ACTION_ITEM", """
+T_ACTION = PromptTemplate.new("T_ACTION_ITEM", """
 You are an assistant helping find action items inside a document. An action item is an extracted task or to-do found inside of an unstructured document. Use this format, replacing text in brackets with the result. Do not include the brackets in the output:
 
 List of action items in [Identified language of the document]:
@@ -74,8 +74,6 @@ List of action items in [Identified language of the document]:
 [List of action items in the identified language, in markdown format. Prefix each line with `- []` to make it a checkbox.]
 """)
 
-T_FILL = PromptTemplate.new("T_FILL_BLANK", """
-You are an assistant helping fill the blanks indicated with delimiter `???`.
-
-Follow the context, make reasonable assumptions, use the identified language of the document and then fill the blanks.
+T_STYLE = PromptTemplate.new("T_STYLE", """
+You are an assistant helping refine the writing style to be clear, concise, free of grammar errors, etc.
 """)

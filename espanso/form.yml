@@ -1,0 +1,51 @@
+# espanso match file that require form
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# form https://espanso.org/docs/matches/forms/
+
+matches:
+  - triggers: [";cc", ";c0"] # ai-chat
+    replace: "{{prompt_output}}"
+    vars:
+      - name: prompt_input
+        type: form
+        params:
+          layout: |
+            Enter Prompt:
+            [[text]]
+          fields:
+            text:
+              multiline: true
+      - name: prompt_output
+        type: shell
+        params:
+          cmd: "ai-chat '{{prompt_input.text}}'"
+  - triggers: [";c1"] # ai-chain
+    replace: "{{prompt_output}}"
+    vars:
+      - name: prompt_input
+        type: form
+        params:
+          layout: |
+            File: [[filename]]
+            Template: [[choices]]
+            Enter Message:
+            [[text]]
+          fields:
+            filename:
+              default: espanso.txt
+            choices:
+              type: choice
+              default: T_STYLE
+              values:
+                - T_STYLE
+                - T_ACTION
+                - T_SUMMARY
+                - T_CODE
+            text:
+              multiline: true
+      - name: prompt_output
+        type: shell
+        params:
+          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chain '{{prompt_input.choices}} + P({{prompt_input.filename}}) >> nil' && open {{prompt_input.filename}}"
