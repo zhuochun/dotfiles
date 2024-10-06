@@ -2,10 +2,12 @@
 
 # For a complete introduction, visit the official docs at: https://espanso.org/docs/
 
+[Espanso]: An error occurred during rendering, please examine the logs for more information.
+
 # form https://espanso.org/docs/matches/forms/
 
 matches:
-  - triggers: [";cc", ";c0"] # ai-chat
+  - triggers: [";cc"] # ai-chat
     replace: "{{prompt_output}}"
     vars:
       - name: prompt_input
@@ -21,6 +23,25 @@ matches:
         type: shell
         params:
           cmd: "ai-chat '{{prompt_input.text}}'"
+  - triggers: [";c0"] # ai-chat
+    replace: "{{prompt_output}}"
+    vars:
+      - name: prompt_input
+        type: form
+        params:
+          layout: |
+            File: [[filename]]
+            Enter Prompt:
+            [[text]]
+          fields:
+            filename:
+              default: espanso-chat.txt
+            text:
+              multiline: true
+      - name: prompt_output
+        type: shell
+        params:
+          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} && open {{prompt_input.filename}}"
   - triggers: [";c1"] # ai-chain
     replace: "{{prompt_output}}"
     vars:
