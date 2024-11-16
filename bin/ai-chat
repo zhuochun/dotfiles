@@ -8,7 +8,13 @@
 # Usage: ai-chat prompt-file.txt -i -gpt4
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
+#
+# Overwrite keys in Windows Powershell
+#
+# $env:DOT_OPENAI_KEY=xxx
+# $env:DOT_OPENAI_URL=xxx
 
+require 'optparse'
 require_relative "../scripts/utils-ai"
 
 OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
@@ -17,51 +23,70 @@ if OPENAI_KEY.empty?
   exit 9
 end
 
-opt_file_mode = true # default assume prompt file path
-opt_insert_mode = ARGV.delete('-i')
-opt_git_commit = ARGV.delete('-git')
-opt_model_gpt4 = ARGV.delete('-gpt4')
+options = {} # arg options
 
-if ARGV.length == 0
+OptionParser.new do |opts|
+  opts.banner = "Usage: ai-chat [prompt-msg | prompt-file.txt] [options]"
+
+  opts.on("-i", "Run in insert mode, replace the original file") do
+    options[:insert_mode] = true
+  end
+
+  opts.on("-git", "Run git commit after file edits") do
+    options[:git_enabled] = true
+  end
+
+  # Add an option for specifying a model
+  opts.on("--model=MODEL", "Specify the model (e.g., gpt4)") do |model|
+    options[:model] = model
+  end
+end.parse!
+
+STDOUT << "Use options: #{options}\n"
+
+# get the prompt (it should be the first argument, either a file or a message)
+prompt = ARGV[0]
+
+if prompt.nil?
   STDOUT << "Invalid arguments received\n"
   exit 1
 end
 
-msgs = [] # prompt messages
+msgs = []
 
-# check direct prompt or a prompt file end with .xxx extension
-args = ARGV.join(' ')
-if args.match?(/\.[a-zA-Z0-9]+$/)
-  check_path(args)
-  msgs = open_file(args)
+if File.exist?(prompt) # if the prompt is a file, read it
+  options[:file_mode] = true
+  msgs = open_file(prompt)
 else
-  opt_file_mode = false
-  msgs << { :role => ROLE_USER, :content => args }
+  options[:file_mode] = false
+  msgs << { :role => ROLE_USER, :content => prompt }
 end
 
 if msgs.empty? || msgs.last[:role] == ROLE_ASSISTANT
-  STDOUT << "No USER prompt message at the end: #{args}\n"
+  STDOUT << "No USER prompt message: #{prompt}\n"
   exit 1
 end
 
 STDOUT << "Run prompt #{Time.now}\n"
-opts = {}
-opts["model"] = "gpt-4o" if opt_model_gpt4
-resp = chat_resp(msgs, opts)
+
+model_opts = {}
+model_opts["model"] = options[:model] unless options[:model].nil?
+
+resp = chat_resp(msgs, model_opts)
 msgs << { :role => ROLE_ASSISTANT, :content => resp }
 
-if !opt_file_mode # output in terminal
+unless options[:file_mode] # output in terminal
   STDOUT << msgs.last[:content] << "\n"
   exit
 end
 
-if opt_insert_mode # write only the resp
-  write_file(args, [msgs.last])
+if options[:insert_mode] # write only the resp
+  write_file(prompt, [msgs.last])
 else
-  append_file(args, [msgs.last, { :role => ROLE_USER, :content => "" }])
+  append_file(prompt, [msgs.last, { :role => ROLE_USER, :content => "" }])
 end
 
-if opt_git_commit # make a timestamp commit
+if options[:git_enabled] # make a timestamp commit
   require_relative "../scripts/utils-git"
-  commit_git(File.dirname(args), "Auto commit #{Time.now}")
+  commit_git(File.dirname(prompt), "Auto commit #{Time.now}")
 end
