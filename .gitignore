@@ -13,3 +13,6 @@ Icon
 
 # Brew
 scripts/Brewfile.lock.json
+
+# Temp path
+temp/
