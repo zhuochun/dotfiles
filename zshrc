@@ -77,8 +77,7 @@ alias tm="tmux"
 alias gm="git-imerge"
 alias gv="nvim -c MagitOnly"
 # System
-alias ll="exa -alF --group-directories-first"
-alias la="exa -alF --git --group-directories-first"
+alias ll="ls -alF"
 alias cl="clear"
 alias rm="trash"
 # Network IP address
