@@ -12,11 +12,7 @@
 require_relative '../scripts/utils-ai'
 require_relative '../scripts/utils-ai-tmpl'
 
-OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
-if OPENAI_KEY.empty?
-  STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
-  exit 9
-end
+check_ai_env()
 
 FILES = {}
 

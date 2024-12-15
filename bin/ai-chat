@@ -15,13 +15,9 @@
 # $env:DOT_OPENAI_URL=xxx
 
 require 'optparse'
-require_relative "../scripts/utils-ai"
 
-OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
-if OPENAI_KEY.empty?
-  STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
-  exit 9
-end
+require_relative "../scripts/utils-ai"
+check_ai_env()
 
 options = {} # arg options
 

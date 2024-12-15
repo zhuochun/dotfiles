@@ -8,9 +8,17 @@ ROLE_USER = "user"
 ROLE_ASSISTANT = "assistant"
 
 OPENAI_API = ENV["DOT_OPENAI_API"] || "openai" # azure or openai
-AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
+OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
 OPENAI_URL = ENV["DOT_OPENAI_URL"] || "https://api.openai.com/v1"
 OLLAMA_URL = ENV["DOT_OLLAMA_URL"] || "http://localhost:11434/api"
+AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
+
+def check_ai_env
+  if OPENAI_KEY.empty?
+    STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
+    exit 9
+  end
+end
 
 def check_path(prompt_path)
   if prompt_path.empty? || !File.exist?(prompt_path)
