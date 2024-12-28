@@ -3,9 +3,9 @@
 
 # Pass the command to ChatGPT and return the response
 #
-# Usage: ai-chat prompt-msg
-# Usage: ai-chat prompt-file.txt
-# Usage: ai-chat prompt-file.txt -i -gpt4
+# Usage: ai-chat "Explain concept"
+# Usage: ai-chat file.txt -i
+# Usage: ai-chat file.txt --model=gpt-4o
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 #
@@ -22,7 +22,7 @@ check_ai_env()
 options = {} # arg options
 
 OptionParser.new do |opts|
-  opts.banner = "Usage: ai-chat [prompt-msg | prompt-file.txt] [options]"
+  opts.banner = "Usage: ai-chat [msg | file.txt] [options]"
 
   opts.on("-i", "Run in insert mode, replace the original file") do
     options[:insert_mode] = true
@@ -32,7 +32,10 @@ OptionParser.new do |opts|
     options[:git_enabled] = true
   end
 
-  # Add an option for specifying a model
+  opts.on("--prompt=PROMPT", "Specify a prompt file as system message") do |prompt|
+    options[:system_prompt] = prompt
+  end
+
   opts.on("--model=MODEL", "Specify the model (e.g., gpt4)") do |model|
     options[:model] = model
   end
@@ -61,6 +64,16 @@ end
 if msgs.empty? || msgs.last[:role] == ROLE_ASSISTANT
   STDOUT << "No USER prompt message: #{prompt}\n"
   exit 1
+end
+
+unless options[:system_prompt].nil? # handle system prompt files
+  sys_prompt = File.read(options[:system_prompt])
+
+  if msgs[0][:role] == ROLE_SYSTEM # merge with existing system prompt
+    msgs[0][:content] += "\n" + sys_prompt
+  else
+    msgs.unshift({ :role => ROLE_SYSTEM, :content => sys_prompt })
+  end
 end
 
 STDOUT << "Run prompt #{Time.now}\n"
