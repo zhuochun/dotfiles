@@ -70,7 +70,6 @@ def open_file(prompt_path)
     messages[0][:role] = ROLE_USER
   end
 
-  STDOUT << "Loaded: #{prompt_path}. Messages: #{messages.length}\n"
   messages
 end
 
@@ -119,7 +118,7 @@ def chat(data) # https://platform.openai.com/docs/api-reference/chat/create
   response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
-    STDOUT << "Chat error: #{response.body}\n"
+    STDERR << "Chat error: #{response.body}\n"
     exit 1
   end
 
@@ -133,7 +132,6 @@ def chat_resp(messages, opts = {})
   }.merge(opts)
 
   result = chat(data)
-  STDOUT << "Chat usage: #{result["usage"]}, model: #{data["model"]}\n"
   result["choices"][0]["message"]["content"]
 end
 
@@ -147,7 +145,7 @@ def embedding(txts, opts = {})
   response = post_openai(uri, OPENAI_KEY, data)
 
   if response.code != "200"
-    STDOUT << "Embedding error: #{response.body}\n"
+    STDERR << "Embedding error: #{response.body}\n"
     exit 1
   end
 
@@ -165,7 +163,7 @@ def embedding_ollama(txts, opts = {})
   response = post_openai(uri, nil, data)
 
   if response.code != "200"
-    STDOUT << "Embedding error: #{response.body}\n"
+    STDERR << "Embedding error: #{response.body}\n"
     exit 1
   end
 

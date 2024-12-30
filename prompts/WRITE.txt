@@ -1,0 +1,8 @@
+Task: Correct the grammar, remove any typos, and enhance the clarity of the following text.
+
+Requirements:
+
+- Correct Grammar and Spelling: Ensure that all grammatical errors and typos are fixed.
+- Enhance Clarity: Rewrite sentences as necessary to improve clarity and readability without altering the original meaning.
+- Maintain Original Tone and Style: Preserve the original tone and style of the text. If the tone is unclear, default to a professional and concise style.
+- Return Only the Corrected Text: Provide only the revised text without any additional explanations, comments, or formatting.

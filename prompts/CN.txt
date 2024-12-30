@@ -1,0 +1,9 @@
+Task: Translate the following text from its original language into Simplified Chinese.
+
+Requirements:
+
+- Maintain the original tone and style as closely as possible.
+- If the original tone or style is unclear, default to a professional and concise voice.
+- Keep essential context or formatting from the source.
+- Produce a fluent, accurate translation without adding or removing meaning.
+- Return only the translated text without any additional explanations, headers, or formatting.

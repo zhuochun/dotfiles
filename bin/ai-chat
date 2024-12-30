@@ -41,13 +41,13 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-STDOUT << "Use options: #{options}\n"
+# STDOUT << "Use options: #{options}\n"
 
 # get the prompt (it should be the first argument, either a file or a message)
 prompt = ARGV[0]
 
 if prompt.nil?
-  STDOUT << "Invalid arguments received\n"
+  STDERR << "Invalid arguments received\n"
   exit 1
 end
 
@@ -62,21 +62,38 @@ else
 end
 
 if msgs.empty? || msgs.last[:role] == ROLE_ASSISTANT
-  STDOUT << "No USER prompt message: #{prompt}\n"
+  STDERR << "No USER prompt message: #{prompt}\n"
   exit 1
 end
 
-unless options[:system_prompt].nil? # handle system prompt files
-  sys_prompt = File.read(options[:system_prompt])
+# Handle system prompt (the --prompt option) with file lookups:
+#  1) If `options[:system_prompt]` is a valid path, use it.
+unless options[:system_prompt].nil?
+  sys_prompt_path = options[:system_prompt]
 
-  if msgs[0][:role] == ROLE_SYSTEM # merge with existing system prompt
-    msgs[0][:content] += "\n" + sys_prompt
+  # If the prompt file does not exist, then do fallback to env or default to ~/dotfiles/prompts/{name}.txt
+  unless File.exist?(sys_prompt_path)
+    fallback_base = ENV["DOT_AICHAT_PATH"] || File.expand_path("~/dotfiles/prompts")
+    # e.g. if user typed --prompt=foo, that might map to ".../foo.txt"
+    sys_prompt_path = File.join(fallback_base, "#{sys_prompt_path}.txt")
+  end
+
+  unless File.exist?(sys_prompt_path)
+    STDERR << "System prompt file not found: #{options[:system_prompt]}\n"
+    STDERR << "Also not found in fallback: #{sys_prompt_path}\n"
+    exit 1
+  end
+
+  sys_prompt_content = File.read(sys_prompt_path)
+
+  if msgs[0][:role] == ROLE_SYSTEM # Merge if we already have a system role
+    msgs[0][:content] += "\n" + sys_prompt_content
   else
-    msgs.unshift({ :role => ROLE_SYSTEM, :content => sys_prompt })
+    msgs.unshift({ :role => ROLE_SYSTEM, :content => sys_prompt_content })
   end
 end
 
-STDOUT << "Run prompt #{Time.now}\n"
+# STDOUT << "Run prompt #{Time.now}\n"
 
 model_opts = {}
 model_opts["model"] = options[:model] unless options[:model].nil?
