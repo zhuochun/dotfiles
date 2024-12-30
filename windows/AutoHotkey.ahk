@@ -1,5 +1,5 @@
-;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
-;; AutoHotkey Configurations (ErgoDox)
+﻿;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+;; AutoHotkey Configurations (AutoHotkey v1)
 ;; Author: Wang Zhuochun
 ;; """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -46,29 +46,8 @@ return
 ;; }}}
 
 ;; 中文直角引号 Alt+Shift {{{
-!+[::send,{U+300C}            ;// alt + shift + [  转换为「
-!+]::send,{U+300D}            ;// alt + shift + ]  转换为 」
+!+[::send,{U+300C}            ;// Alt+Shift+[ 转换为「
+!+]::send,{U+300D}            ;// Alt+Shift+] 转换为 」
 ;; }}}
-
-;; OpenAI Complete (Experimental) {{{
-^+i::
-{
-    ; Prompt the user for a message
-    InputBox, message, Enter Prompt, Write the Message:
-
-    ; Execute a PowerShell command using the message and selected text as input
-    RunWait, powershell.exe -ExecutionPolicy Bypass -Command "& {ruby 'D:\GitHub\dotfiles\bin\ai-chat' '%message%' > output.txt}", , Hide
-
-    ; Read the output of the command from the temporary file
-    FileRead, output, output.txt
-    ; Copy the output to the clipboard
-    Clipboard := output
-
-    ; Info completion
-    MsgBox, , Chat, %output%,
-}
-return
-;;}}}
-
 
 ;; vim:fdm=marker
