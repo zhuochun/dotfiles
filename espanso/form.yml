@@ -5,14 +5,14 @@
 # form https://espanso.org/docs/matches/forms/
 
 matches:
-  - triggers: [";cc"] # ai-chat
+  - triggers: [";ii", ";chat"] # ai-chat
     replace: "{{prompt_output}}"
     vars:
       - name: prompt_input
         type: form
         params:
           layout: |
-            Enter Prompt:
+            Text:
             [[text]]
           fields:
             text:
@@ -21,50 +21,30 @@ matches:
         type: shell
         params:
           cmd: "ai-chat '{{prompt_input.text}}'"
-  - triggers: [";c0"] # ai-chat
+  - triggers: [";ai"] # ai-chat with default
     replace: "{{prompt_output}}"
     vars:
       - name: prompt_input
         type: form
         params:
           layout: |
-            File: [[filename]]
-            Enter Prompt:
+            Text:
             [[text]]
-          fields:
-            filename:
-              default: espanso-chat.txt
-            text:
-              multiline: true
-      - name: prompt_output
-        type: shell
-        params:
-          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} && open {{prompt_input.filename}}"
-  - triggers: [";c1"] # ai-chain
-    replace: "{{prompt_output}}"
-    vars:
-      - name: prompt_input
-        type: form
-        params:
-          layout: |
-            File: [[filename]]
             Template: [[choices]]
-            Enter Message:
-            [[text]]
+            File: [[filename]]
           fields:
             filename:
               default: espanso.txt
             choices:
               type: choice
-              default: T_STYLE
+              default: EDIT
               values:
-                - T_STYLE
-                - T_ACTION
-                - T_SUMMARY
-                - T_CODE
+                - EN
+                - EDIT
+                - CODE
             text:
               multiline: true
       - name: prompt_output
         type: shell
         params:
-          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chain '{{prompt_input.choices}} + P({{prompt_input.filename}}) >> nil' && open {{prompt_input.filename}}"
+          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} --prompt={{prompt_input.choices}} -i && cat {{prompt_input.filename}}"
