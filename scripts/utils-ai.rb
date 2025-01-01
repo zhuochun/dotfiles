@@ -82,7 +82,7 @@ def write_file(path, msgs)
         file.puts("")
       end
 
-      file.puts(msg[:content])
+      file.print(msg[:content])
     end
   end
 end
@@ -93,7 +93,8 @@ def append_file(prompt_path, msgs)
       file.puts("")
       file.puts("#{MODE_SEPARATOR} #{msg[:role]}")
       file.puts("")
-      file.puts(msg[:content])
+
+      file.print(msg[:content])
     end
   end
 end
