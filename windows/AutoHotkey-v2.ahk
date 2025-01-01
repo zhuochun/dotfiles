@@ -52,23 +52,23 @@ Tab::Send("{Tab}")
     return
 }
 
+::;en::
+{
+    ProcessText("EN")
+    return
+}
+
+::;cn::
+{
+    ProcessText("CN")
+    return
+}
+
 ; -- Use ai-chat cmd
-#!i:: ProcessText("EN")     ; Win+Alt+I to Translate into English
-#!o:: ProcessText("WRITE")  ; Win+Alt+O to Correct English
+#!i:: ProcessText("EDIT")  ; Win+Alt+i to Correct English
 
 ProcessText(promptOption) {
-    ; Backup clipboard
-    originalClip := ClipboardAll()
-    A_Clipboard := ""
-
-    ; Get active input text
-    Send "^a"
-    Send "^c"
-    if !ClipWait(2) {
-        MsgBox "Failed to get text from input field"
-        return
-    }
-
+    ; Read clipboard
     inputText := A_Clipboard
 
     ; Create temp file with UTF-8 encoding
@@ -86,7 +86,7 @@ ProcessText(promptOption) {
 
     ; ; Execute Ruby script
     try {
-        rubyCmd := 'ruby D:\GitHub\dotfiles\bin\ai-chat "' tempFile '" -i --prompt=' promptOption
+        rubyCmd := 'ruby D:\GitHub\dotfiles\bin\ai-chat "' tempFile '" -i --model=ollama:qwen2.5:3b --prompt=' promptOption
         result := RunWait(rubyCmd, , "Hide", &exitCode)
         if exitCode = 1 {
             MsgBox "Ruby script failed with exit code: " exitCode

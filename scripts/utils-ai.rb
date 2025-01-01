@@ -76,8 +76,13 @@ end
 def write_file(path, msgs)
   File.open(path, "w") do |file|
     msgs.each_with_index do |msg, idx|
-      file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}") if idx > 0
-      file.puts("\n#{msg[:content]}")
+      if idx > 0
+        file.puts("")
+        file.puts("#{MODE_SEPARATOR} #{msg[:role]}")
+        file.puts("")
+      end
+
+      file.puts(msg[:content])
     end
   end
 end
@@ -85,44 +90,57 @@ end
 def append_file(prompt_path, msgs)
   File.open(prompt_path, "a") do |file|
     msgs.each do |msg|
-      file.puts("\n#{MODE_SEPARATOR} #{msg[:role]}")
-      file.puts("\n#{msg[:content]}")
+      file.puts("")
+      file.puts("#{MODE_SEPARATOR} #{msg[:role]}")
+      file.puts("")
+      file.puts(msg[:content])
     end
   end
 end
 
 def post_openai(uri, auth, reqData)
   url = URI(uri)
-  url.query = "api-version=#{AZURE_VERSION}" if OPENAI_API == "azure"
 
   http = Net::HTTP.new(url.host, url.port)
-  http.use_ssl = true unless auth.nil?
+  http.use_ssl = true unless auth.empty?
   http.read_timeout = 600 # Time in seconds
 
-  headers = { "Content-Type" => "application/json" }
-
-  if OPENAI_API == "openai"
-    headers["Authorization"] = "Bearer #{auth}" unless auth.nil?
-  else
-    headers["api-key"] = auth unless auth.nil?
-  end
+  headers = {
+    "Content-Type" => "application/json"
+  }.merge(auth)
 
   request = Net::HTTP::Post.new(url, headers)
   request.body = reqData.to_json
 
-  return http.request(request)
+  http.request(request)
 end
 
-def chat(data) # https://platform.openai.com/docs/api-reference/chat/create
-  uri = OPENAI_URL + "/chat/completions"
-  response = post_openai(uri, OPENAI_KEY, data)
+def chat(provider, data)
+  uri = ""
+  auth = {}
+
+  if provider == "ollama" # https://github.com/ollama/ollama/blob/main/docs/api.md
+    uri = OLLAMA_URL + "/chat"
+    # disable stream
+    data = data.merge({"stream": false})
+
+  elsif provider == "azure"
+    uri = OPENAI_URL + uri + "/chat/completions?api-version=#{AZURE_VERSION}"
+    auth["api-key"] = OPENAI_KEY
+
+  else # assume openai compatible, https://platform.openai.com/docs/api-reference/chat/create
+    uri = OPENAI_URL + "/chat/completions"
+    auth["Authorization"] = "Bearer #{OPENAI_KEY}"
+  end
+
+  response = post_openai(uri, auth, data)
 
   if response.code != "200"
     STDERR << "Chat error: #{response.body}\n"
     exit 1
   end
 
-  result = JSON.parse(response.body)
+  JSON.parse(response.body)
 end
 
 def chat_resp(messages, opts = {})
@@ -131,61 +149,18 @@ def chat_resp(messages, opts = {})
     "messages" => messages
   }.merge(opts)
 
-  result = chat(data)
-  result["choices"][0]["message"]["content"]
-end
-
-def embedding(txts, opts = {})
-  data = {
-    "model" => "text-embedding-3-small",
-    "input" => txts
-  }.merge(opts)
-
-  uri = OPENAI_URL + "/embeddings"
-  response = post_openai(uri, OPENAI_KEY, data)
-
-  if response.code != "200"
-    STDERR << "Embedding error: #{response.body}\n"
-    exit 1
+  provider, model = data["model"].split(":", 2)
+  if model.nil? # support gpt-4o or ollama:qwen2.5:3b
+    provider = OPENAI_API
+  else
+    data["model"] = model
   end
 
-  result = JSON.parse(response.body)
-  result["data"][0]["embedding"]
-end
+  result = chat(provider, data)
 
-def embedding_ollama(txts, opts = {})
-  data = {
-    "model" => "nomic-embed-text",
-    "prompt" => txts
-  }.merge(opts)
-
-  uri = OLLAMA_URL + "/embeddings"
-  response = post_openai(uri, nil, data)
-
-  if response.code != "200"
-    STDERR << "Embedding error: #{response.body}\n"
-    exit 1
+  if provider == "ollama"
+    result["message"]["content"]
+  else # openai compatible
+    result["choices"][0]["message"]["content"]
   end
-
-  result = JSON.parse(response.body)
-  result["embedding"]
-end
-
-def cosine_similarity(array1, array2)
-  dot_product = 0.0
-  norm_a = 0.0
-  norm_b = 0.0
-
-  array1.each_with_index do |value1, index|
-    value2 = array2[index]
-
-    dot_product += value1 * value2
-    norm_a += value1 * value1
-    norm_b += value2 * value2
-  end
-
-  norm_a = Math.sqrt(norm_a)
-  norm_b = Math.sqrt(norm_b)
-
-  cosine_similarity = dot_product / (norm_a * norm_b)
 end

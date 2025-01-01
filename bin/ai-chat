@@ -15,9 +15,7 @@
 # $env:DOT_OPENAI_URL=xxx
 
 require 'optparse'
-
 require_relative "../scripts/utils-ai"
-check_ai_env()
 
 options = {} # arg options
 
