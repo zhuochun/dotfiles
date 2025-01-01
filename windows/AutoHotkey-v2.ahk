@@ -52,6 +52,7 @@ Tab::Send("{Tab}")
     return
 }
 
+; -- Use ai-chat cmd with Expansion
 ::;en::
 {
     ProcessText("EN")
@@ -64,8 +65,11 @@ Tab::Send("{Tab}")
     return
 }
 
-; -- Use ai-chat cmd
-#!i:: ProcessText("EDIT")  ; Win+Alt+i to Correct English
+::;ai::
+{
+    ProcessText("")
+    return
+}
 
 ProcessText(promptOption) {
     ; Read clipboard
@@ -86,7 +90,12 @@ ProcessText(promptOption) {
 
     ; ; Execute Ruby script
     try {
-        rubyCmd := 'ruby D:\GitHub\dotfiles\bin\ai-chat "' tempFile '" -i --model=ollama:qwen2.5:3b --prompt=' promptOption
+        if (promptOption != "") {
+            rubyCmd := 'ruby D:\GitHub\dotfiles\bin\ai-chat "' tempFile '" -i --model=ollama:qwen2.5:3b --prompt="' promptOption '"'
+        } else {
+            rubyCmd := 'ruby D:\GitHub\dotfiles\bin\ai-chat "' tempFile '" -i --model=ollama:qwen2.5:3b'
+        }
+
         result := RunWait(rubyCmd, , "Hide", &exitCode)
         if exitCode = 1 {
             MsgBox "Ruby script failed with exit code: " exitCode
