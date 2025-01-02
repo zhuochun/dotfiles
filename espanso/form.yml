@@ -5,7 +5,7 @@
 # form https://espanso.org/docs/matches/forms/
 
 matches:
-  - triggers: [";ii", ";chat"] # ai-chat
+  - triggers: [";ai", ";chat"] # ai-chat
     replace: "{{prompt_output}}"
     vars:
       - name: prompt_input
@@ -21,7 +21,34 @@ matches:
         type: shell
         params:
           cmd: "ai-chat '{{prompt_input.text}}'"
-  - triggers: [";ai"] # ai-chat with default
+  - triggers: [";en"] # ai-chat with default en
+    replace: "{{prompt_output}}"
+    vars:
+      - name: prompt_input
+        type: form
+        params:
+          layout: |
+            Text:
+            [[text]]
+            Template: [[choices]]
+            File: [[filename]]
+          fields:
+            filename:
+              default: espanso.txt
+            choices:
+              type: choice
+              default: EN
+              values:
+                - EN
+                - EDIT
+                - CODE
+            text:
+              multiline: true
+      - name: prompt_output
+        type: shell
+        params:
+          cmd: 'cd ~/temps && echo "{{prompt_input.text}}" > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} --prompt={{prompt_input.choices}} -i && cat {{prompt_input.filename}}'
+  - triggers: [";ed"] # ai-chat with default ed
     replace: "{{prompt_output}}"
     vars:
       - name: prompt_input
@@ -47,4 +74,4 @@ matches:
       - name: prompt_output
         type: shell
         params:
-          cmd: "cd ~/temps && echo '{{prompt_input.text}}' > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} --prompt={{prompt_input.choices}} -i && cat {{prompt_input.filename}}"
+          cmd: 'cd ~/temps && echo "{{prompt_input.text}}" > {{prompt_input.filename}} && ai-chat {{prompt_input.filename}} --prompt={{prompt_input.choices}} -i && cat {{prompt_input.filename}}'
