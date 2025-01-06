@@ -10,8 +10,11 @@ ROLE_ASSISTANT = "assistant"
 OPENAI_API = ENV["DOT_OPENAI_API"] || "openai" # azure or openai
 OPENAI_KEY = ENV["DOT_OPENAI_KEY"] || ""
 OPENAI_URL = ENV["DOT_OPENAI_URL"] || "https://api.openai.com/v1"
-OLLAMA_URL = ENV["DOT_OLLAMA_URL"] || "http://localhost:11434/api"
+
+OPENAI_MODEL  = ENV["DOT_OPENAI_MODEL"] || "gpt-4o-mini"
 AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
+
+OLLAMA_URL = ENV["DOT_OLLAMA_URL"] || "http://localhost:11434/api"
 
 def check_ai_env
   if OPENAI_KEY.empty?
@@ -146,7 +149,7 @@ end
 
 def chat_resp(messages, opts = {})
   data = {
-    "model" => "gpt-4o-mini",
+    "model" => OPENAI_MODEL,
     "messages" => messages
   }.merge(opts)
 
