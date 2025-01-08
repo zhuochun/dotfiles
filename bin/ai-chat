@@ -19,7 +19,7 @@ require_relative "../scripts/utils-ai"
 
 options = {} # arg options
 
-OptionParser.new do |opts|
+parser = OptionParser.new do |opts|
   opts.banner = "Usage: ai-chat [msg | file.txt] [options]"
 
   opts.on("-i", "Run in insert mode, replace the original file") do
@@ -30,14 +30,20 @@ OptionParser.new do |opts|
     options[:git_enabled] = true
   end
 
-  opts.on("--prompt=PROMPT", "Specify a prompt file as system message") do |prompt|
+  opts.on("-p PROMPT", "--prompt=PROMPT", "Specify a prompt file as system message") do |prompt|
     options[:system_prompt] = prompt
   end
 
-  opts.on("--model=MODEL", "Specify the model (e.g., gpt4)") do |model|
+  opts.on("-m MODEL", "--model=MODEL", "Specify the model (e.g., gpt4)") do |model|
     options[:model] = model
   end
-end.parse!
+
+  opts.on("-t TEMP", "--temperature=TEMP", Float, "Specify temperature (0.0-2.0)") do |temp|
+    options[:temperature] = temp
+  end
+end
+
+parser.parse!
 
 # STDOUT << "Use options: #{options}\n"
 
@@ -46,6 +52,7 @@ prompt = ARGV[0]
 
 if prompt.nil?
   STDERR << "Invalid arguments received\n"
+  STDERR << parser.help
   exit 1
 end
 
@@ -95,6 +102,7 @@ end
 
 model_opts = {}
 model_opts["model"] = options[:model] unless options[:model].nil?
+model_opts["temperature"] = options[:temperature] unless options[:temperature].nil?
 
 resp = chat_resp(msgs, model_opts)
 msgs << { :role => ROLE_ASSISTANT, :content => resp }
