@@ -65,6 +65,12 @@ Tab::Send("{Tab}")
     return
 }
 
+::;ed::
+{
+    ProcessText("EDIT")
+    return
+}
+
 ::;ai::
 {
     ProcessText("")

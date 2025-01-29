@@ -102,6 +102,15 @@ def append_file(prompt_path, msgs)
   end
 end
 
+def count_tokens(text)
+  # Extract words (letters, numbers, punctuations as separate tokens)
+  english_tokens = text.scan(/\w+|[[:punct:]]/)
+  # Extract Chinese characters separately
+  chinese_tokens = text.scan(/\p{Han}/)
+  # Count total tokens
+  return english_tokens.size + chinese_tokens.size
+end
+
 def post_openai(uri, auth, reqData)
   url = URI(uri)
 
@@ -126,7 +135,9 @@ def chat(provider, data)
   if provider == "ollama" # https://github.com/ollama/ollama/blob/main/docs/api.md
     uri = OLLAMA_URL + "/chat"
     # disable stream
-    data = data.merge({"stream": false})
+    data = data.merge({"stream" => false, "options" => {"num_ctx" => 4096}})
+    # move temperature inside
+    data["options"]["temperature"] = data.delete("temperature") if data["temperature"]
 
   elsif provider == "azure"
     uri = OPENAI_URL + uri + "/chat/completions?api-version=#{AZURE_VERSION}"
