@@ -151,11 +151,20 @@ def chat(provider, data)
   response = post_openai(uri, auth, data)
 
   if response.code != "200"
-    STDERR << "Chat error: #{response.body}\n"
+    STDERR << "Chat resp: [#{response.code}] #{response.body}\n"
+    STDERR << "Chat input: [#{uri}] #{data}\n"
     exit 1
   end
 
-  JSON.parse(response.body)
+  begin
+    JSON.parse(response.body)
+  rescue JSON::ParserError => e
+    STDERR << "Resp parsing error: #{e.message}"
+    STDERR << "Chat resp: [#{response.code}] #{response.body}\n"
+    STDERR << "Chat input: [#{uri}] #{data}\n"
+
+    {}
+  end
 end
 
 def chat_resp(messages, opts = {})
@@ -173,9 +182,16 @@ def chat_resp(messages, opts = {})
 
   result = chat(provider, data)
 
-  if provider == "ollama"
-    result["message"]["content"]
-  else # openai compatible
-    result["choices"][0]["message"]["content"]
+  begin
+    if provider == "ollama"
+      result.dig("message", "content")
+    else # openai compatible
+      result.dig("choices", 0, "message", "content")
+    end
+  rescue StandardError => e
+    STDERR << "Resp format error: #{e.message}"
+    STDERR << "Chat result: #{result}\n"
+
+    ""
   end
 end
