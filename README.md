@@ -60,8 +60,13 @@ Install [Homebrew](https://brew.sh/):
 ``` bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
+Run the setup script to install formulas and create all config symlinks:
 
-Review and install brew formulas:
+``` bash
+~/dotfiles/scripts/dot-setup.sh
+```
+
+If you prefer the manual steps, review and install brew formulas:
 
 ``` bash
 brew bundle install --file=~/dotfiles/scripts/Brewfile
