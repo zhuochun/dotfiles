@@ -6,11 +6,12 @@
 # Usage: ai-chat "Explain concept"
 # Usage: ai-chat file.txt -i
 # Usage: ai-chat file.txt --model=gpt-4o
-# Supports config file `aichat_config.json` with aliases for model/temperature.
+#
+# Supports config file `aichat.json` with aliases for model/temperature.
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 #
-# Overwrite keys in Windows Powershell
+# To set keys in Windows Powershell
 #
 # $env:DOT_OPENAI_KEY=xxx
 # $env:DOT_OPENAI_URL=xxx
@@ -21,7 +22,7 @@ require_relative "../scripts/utils-ai"
 require_relative "../scripts/utils-os"
 
 def apply_alias_config(dir, options)
-  config_path = File.join(dir, 'aichat_config.json')
+  config_path = File.join(dir, 'aichat.json')
   return unless File.exist?(config_path)
 
   begin
@@ -68,7 +69,7 @@ parser = OptionParser.new do |opts|
     options[:temperature] = temp
   end
 
-  opts.on("-a NAME", "--alias=NAME", "Load settings from aichat_config.json") do |name|
+  opts.on("-a NAME", "--alias=NAME", "Load settings from aichat.json") do |name|
     options[:alias] = name
   end
 end
