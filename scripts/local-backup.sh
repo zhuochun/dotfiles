@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Create a localrc
-mkdir localrc
+BACKUP_DIR="localrc"
+SSH_DIR="$BACKUP_DIR/ssh"
 
-# Backup SSH
-mkdir localrc/ssh
-cp ~/.ssh/* localrc/ssh
-rm localrc/ssh/authorized*
+# Create directories
+mkdir -p "$SSH_DIR"
 
-# Backup local
-cp ~/.localrc localrc/localrc
-cp ~/.localenv localrc/localenv
+# Backup SSH, excluding authorized keys
+rsync -av --exclude 'authorized*' "$HOME/.ssh/" "$SSH_DIR/"
+
+# Backup local configs
+rsync -av "$HOME/.localrc" "$BACKUP_DIR/localrc"
+rsync -av "$HOME/.localenv" "$BACKUP_DIR/localenv"
 
 # Backup gitconfig
-cp ~/.gitconfig localrc/gitconfig
+rsync -av "$HOME/.gitconfig" "$BACKUP_DIR/gitconfig"
