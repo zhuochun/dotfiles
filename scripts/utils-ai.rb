@@ -16,13 +16,6 @@ AZURE_VERSION = ENV["DOT_AZURE_VERSION"] || "" # https://learn.microsoft.com/en-
 
 OLLAMA_URL = ENV["DOT_OLLAMA_URL"] || "http://localhost:11434/api"
 
-def check_ai_env
-  if OPENAI_KEY.empty?
-    STDOUT << "Remember to set env DOT_OPENAI_KEY\n"
-    exit 9
-  end
-end
-
 def check_path(prompt_path)
   if prompt_path.empty? || !File.exist?(prompt_path)
     STDOUT << "File path not found #{prompt_path}\n"

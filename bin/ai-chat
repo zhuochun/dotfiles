@@ -16,6 +16,7 @@
 
 require 'optparse'
 require_relative "../scripts/utils-ai"
+require_relative "../scripts/utils-os"
 
 options = {} # arg options
 
@@ -109,6 +110,8 @@ msgs << { :role => ROLE_ASSISTANT, :content => resp }
 
 unless options[:file_mode] # output in terminal
   STDOUT << msgs.last[:content] << "\n"
+
+  os_notify("Run ai-chat inline", "Script ai-chat completed")
   exit
 end
 
@@ -122,3 +125,5 @@ if options[:git_enabled] # make a timestamp commit
   require_relative "../scripts/utils-git"
   commit_git(File.dirname(prompt), "Auto commit #{Time.now}")
 end
+
+os_notify("Run ai-chat file", "Script ai-chat completed")
