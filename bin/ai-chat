@@ -6,6 +6,7 @@
 # Usage: ai-chat "Explain concept"
 # Usage: ai-chat file.txt -i
 # Usage: ai-chat file.txt --model=gpt-4o
+# Supports config file `aichat_config.json` with aliases for model/temperature.
 #
 # Requires OpenAI API Key stored in DOT_OPENAI_KEY
 #
@@ -15,8 +16,32 @@
 # $env:DOT_OPENAI_URL=xxx
 
 require 'optparse'
+require 'json'
 require_relative "../scripts/utils-ai"
 require_relative "../scripts/utils-os"
+
+def apply_alias_config(dir, options)
+  config_path = File.join(dir, 'aichat_config.json')
+  return unless File.exist?(config_path)
+
+  begin
+    cfg = JSON.parse(File.read(config_path))
+  rescue StandardError => e
+    STDERR << "Invalid config #{config_path}: #{e.message}\n"
+    return
+  end
+
+  alias_name = options[:alias] || 'default'
+  alias_cfg = cfg[alias_name] || cfg['default']
+  return if alias_cfg.nil?
+
+  if alias_cfg['env'].is_a?(Hash)
+    alias_cfg['env'].each { |k, v| ENV[k] = v.to_s }
+  end
+
+  options[:model] = alias_cfg['model'] if options[:model].nil? && alias_cfg.key?('model')
+  options[:temperature] = alias_cfg['temperature'] if options[:temperature].nil? && alias_cfg.key?('temperature')
+end
 
 options = {} # arg options
 
@@ -42,6 +67,10 @@ parser = OptionParser.new do |opts|
   opts.on("-t TEMP", "--temperature=TEMP", Float, "Specify temperature (0.0-2.0)") do |temp|
     options[:temperature] = temp
   end
+
+  opts.on("-a NAME", "--alias=NAME", "Load settings from aichat_config.json") do |name|
+    options[:alias] = name
+  end
 end
 
 parser.parse!
@@ -62,10 +91,14 @@ msgs = []
 if File.exist?(prompt) # if the prompt is a file, read it
   options[:file_mode] = true
   msgs = open_file(prompt)
+  dir = File.dirname(prompt)
 else
   options[:file_mode] = false
   msgs << { :role => ROLE_USER, :content => prompt }
+  dir = Dir.pwd
 end
+
+apply_alias_config(dir, options)
 
 if msgs.empty? || msgs.last[:role] == ROLE_ASSISTANT
   STDERR << "No USER prompt message: #{prompt}\n"
