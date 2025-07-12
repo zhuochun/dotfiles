@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Transcript to Clipboard
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  Adds a button to copy the transcript to the clipboard.
-// @author       You
+// @version      1.4
+// @description  Adds a button to copy the transcript, auto-opening the panel, grouping into paragraphs, and isolating lines starting with “>>”.
+// @author       ChatGPT
 // @match        https://www.youtube.com/*
 // @grant        GM_setClipboard
 // ==/UserScript==
@@ -11,108 +11,123 @@
 (function() {
     'use strict';
 
-    // A helper function to wait for an element to appear in the DOM.
     function waitForElement(selector, timeout = 10000) {
         return new Promise((resolve, reject) => {
             const start = Date.now();
-
             (function check() {
-                const element = document.querySelector(selector);
-                if (element) {
-                    resolve(element);
-                } else if (Date.now() - start >= timeout) {
-                    reject(new Error(`Element ${selector} not found within ${timeout}ms`));
-                } else {
-                    requestAnimationFrame(check);
-                }
+                const elem = document.querySelector(selector);
+                if (elem) return resolve(elem);
+                if (Date.now() - start >= timeout) return reject(new Error(`Element ${selector} not found in ${timeout}ms`));
+                requestAnimationFrame(check);
             })();
         });
     }
 
-    // Create the clipboard button
+    function openTranscriptPanel() {
+        // Expand “more” menu
+        const expandBtn = document.querySelector('tp-yt-paper-button#expand.button.style-scope.ytd-text-inline-expander');
+        if (expandBtn) expandBtn.click();
+        // Click “Show transcript” button
+        const btnSelector = '#items button[aria-label="Show transcript"]';
+        return waitForElement(btnSelector, 5000)
+            .then(() => document.querySelector(btnSelector).click())
+            .then(() => waitForElement(
+                'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]',
+                50000
+            ));
+    }
+
     function createClipboardButton() {
         const btn = document.createElement('button');
-        btn.style.display = 'inline-flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-        btn.style.marginLeft = '8px';
-        btn.style.padding = '4px';
-        btn.style.border = 'none';
-        btn.style.borderRadius = '2px';
-        btn.style.cursor = 'pointer';
-        btn.style.background = 'transparent';
-        btn.style.color = 'var(--yt-spec-text-primary)';
+        Object.assign(btn.style, {
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            marginLeft: '8px', padding: '4px', border: 'none', borderRadius: '2px',
+            cursor: 'pointer', background: 'transparent', color: 'var(--yt-spec-text-primary)'
+        });
         btn.title = 'Copy transcript';
-
-        // Adding a clipboard icon (using an emoji for simplicity)
         btn.textContent = '📋';
 
         btn.addEventListener('click', async () => {
             try {
-                const transcriptPanel = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
-                if (!transcriptPanel) {
-                    alert("Transcript panel not found!");
-                    return;
-                }
+                await openTranscriptPanel();
+                const panel = document.querySelector(
+                    'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]'
+                );
+                if (!panel) return alert('Transcript panel not available');
 
-                // Extract title
-                const titleElement = document.querySelector('h1.ytd-watch-metadata');
-                const title = titleElement ? titleElement.textContent.trim() : 'Untitled';
+                const title = document.querySelector('h1.ytd-watch-metadata')?.textContent.trim() || 'Untitled';
+                const raw = panel.querySelector('#segments-container')?.textContent || '';
+                const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
 
-                // Extract text from the transcript panel
-                let text = transcriptPanel.querySelector('#segments-container')?.textContent || '';
-
-                // Split by newline, trim lines, remove empty lines
-                const lines = text
-                    .split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line !== '');
-
-                // Combine lines based on timestamps
-                const timestampRegex = /^\d{1,2}:\d{2}(?::\d{2})?$/;
-                const combinedLines = [];
-                let currentEntry = '';
-
+                const tsRegex = /^\d{1,2}:\d{2}(?::\d{2})?$/;
+                const entries = [];
+                let current = null;
                 for (const line of lines) {
-                    if (timestampRegex.test(line)) {
-                        if (currentEntry) {
-                            combinedLines.push(currentEntry.trim());
-                        }
-                        currentEntry = line; // Start a new entry with the timestamp
-                    } else {
-                        currentEntry += ` ${line}`; // Append line to the current entry
+                    if (tsRegex.test(line)) {
+                        if (current) entries.push(current);
+                        current = { ts: line, content: '' };
+                    } else if (current) {
+                        let text = line.replace(new RegExp(`\\b${current.ts}\\b`, 'g'), '').trim();
+                        current.content = current.content ? `${current.content} ${text}` : text;
                     }
                 }
+                if (current) entries.push(current);
 
-                if (currentEntry) {
-                    combinedLines.push(currentEntry.trim());
+                const paras = [];
+                let bufTs = '', bufText = '';
+                const MAX = 300;
+                const arrowPrefix = /^>>\s/;
+
+                for (const { ts, content } of entries) {
+                    if (arrowPrefix.test(content)) {
+                        // flush buffer
+                        if (bufText) paras.push(`${bufTs} ${bufText.trim()}`);
+                        // isolated arrow line
+                        paras.push(`${ts} ${content}`);
+                        bufTs = '';
+                        bufText = '';
+                        continue;
+                    }
+                    if (!bufText) {
+                        bufTs = ts;
+                        bufText = content;
+                        continue;
+                    }
+                    const trial = `${bufText} ${content}`;
+                    if (trial.length <= MAX) {
+                        bufText = trial;
+                    } else {
+                        const idx = Math.max(bufText.lastIndexOf('.'), bufText.lastIndexOf('。'));
+                        if (idx > -1 && idx < bufText.length - 1) {
+                            paras.push(`${bufTs} ${bufText.slice(0, idx+1).trim()}`);
+                            const leftover = bufText.slice(idx+1).trim();
+                            bufTs = ts;
+                            bufText = leftover ? `${leftover} ${content}` : content;
+                        } else {
+                            paras.push(`${bufTs} ${bufText.trim()}`);
+                            bufTs = ts;
+                            bufText = content;
+                        }
+                    }
                 }
+                if (bufText) paras.push(`${bufTs} ${bufText.trim()}`);
 
-                const finalText = `Title: ${title}\nTranscript:\n${combinedLines.join('\n')}`;
-
-                GM_setClipboard(finalText);
-
-                // Provide some feedback to the user
+                const output = `Title: ${title}\n\n${paras.join('\n\n')}`;
+                GM_setClipboard(output);
                 btn.textContent = '✅';
-                setTimeout(() => { btn.textContent = '📋'; }, 2000);
-            } catch (err) {
-                console.error("Failed to copy text: ", err);
+                setTimeout(() => btn.textContent = '📋', 2000);
+            } catch (e) {
+                console.error('Error copying transcript:', e);
             }
         });
-
         return btn;
     }
 
-    // Wait for the owner container and add the clipboard button
-    waitForElement('#owner').then(ownerContainer => {
-        // Ensure we only add one button if the script re-runs
-        if (!ownerContainer.querySelector('.clipboard-button')) {
-            const clipboardButton = createClipboardButton();
-            clipboardButton.classList.add('clipboard-button');
-            ownerContainer.appendChild(clipboardButton);
+    waitForElement('#owner').then(owner => {
+        if (!owner.querySelector('.clipboard-button')) {
+            const btn = createClipboardButton();
+            btn.classList.add('clipboard-button');
+            owner.appendChild(btn);
         }
-    }).catch((error) => {
-        console.warn(error);
-    });
-
+    }).catch(console.warn);
 })();
