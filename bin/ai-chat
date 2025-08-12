@@ -18,8 +18,6 @@
 
 require 'optparse'
 require 'json'
-require_relative "../scripts/utils-ai"
-require_relative "../scripts/utils-os"
 
 def apply_alias_config(dir, options)
   config_path = File.join(dir, 'aichat.json')
@@ -87,19 +85,27 @@ if prompt.nil?
   exit 1
 end
 
-msgs = []
-
-if File.exist?(prompt) # if the prompt is a file, read it
+# determine directory and whether prompt is a file before loading utils
+if File.exist?(prompt)
   options[:file_mode] = true
-  msgs = open_file(prompt)
   dir = File.dirname(prompt)
 else
   options[:file_mode] = false
-  msgs << { :role => ROLE_USER, :content => prompt }
   dir = Dir.pwd
 end
 
 apply_alias_config(dir, options)
+
+# load utilities after environment overrides so they read updated ENV
+require_relative "../scripts/utils-ai"
+require_relative "../scripts/utils-os"
+
+msgs = []
+if options[:file_mode]
+  msgs = open_file(prompt)
+else
+  msgs << { :role => ROLE_USER, :content => prompt }
+end
 
 if msgs.empty? || msgs.last[:role] == ROLE_ASSISTANT
   STDERR << "No USER prompt message: #{prompt}\n"
