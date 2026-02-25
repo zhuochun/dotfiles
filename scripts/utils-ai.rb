@@ -1,5 +1,8 @@
 require "net/http"
 require "json"
+require "open3"
+require "timeout"
+require "fileutils"
 
 MODE_SEPARATOR = "###### "
 
@@ -187,4 +190,193 @@ def chat_resp(messages, opts = {})
 
     ""
   end
+end
+
+
+def json_response(payload)
+  JSON.generate(payload)
+rescue StandardError => e
+  JSON.generate({ "ok" => false, "error" => "json_encode_error: #{e.message}" })
+end
+
+def resolve_path(path)
+  File.expand_path(path, Dir.pwd)
+end
+
+def tool_read_file(args)
+  path = args["path"]
+  return json_response({ "ok" => false, "error" => "missing path" }) if path.nil? || path.empty?
+
+  full_path = resolve_path(path)
+  return json_response({ "ok" => false, "error" => "file not found: #{full_path}" }) unless File.file?(full_path)
+
+  content = File.read(full_path)
+  json_response({ "ok" => true, "path" => full_path, "content" => content })
+rescue StandardError => e
+  json_response({ "ok" => false, "error" => e.message })
+end
+
+def tool_write_file(args)
+  path = args["path"]
+  content = args["content"].to_s
+  return json_response({ "ok" => false, "error" => "missing path" }) if path.nil? || path.empty?
+
+  full_path = resolve_path(path)
+  FileUtils.mkdir_p(File.dirname(full_path))
+  File.write(full_path, content)
+
+  json_response({ "ok" => true, "path" => full_path, "bytes" => content.bytesize })
+rescue StandardError => e
+  json_response({ "ok" => false, "error" => e.message })
+end
+
+def tool_bash(args)
+  command = args["command"]
+  timeout_s = (args["timeout_s"] || 30).to_i
+  return json_response({ "ok" => false, "error" => "missing command" }) if command.nil? || command.empty?
+
+  stdout = ""
+  stderr = ""
+  status = nil
+
+  begin
+    Timeout.timeout(timeout_s) do
+      stdout, stderr, status = Open3.capture3("bash", "-lc", command)
+    end
+  rescue Timeout::Error
+    return json_response({ "ok" => false, "error" => "command timeout after #{timeout_s}s" })
+  end
+
+  json_response({
+    "ok" => status.success?,
+    "exit_code" => status.exitstatus,
+    "stdout" => stdout,
+    "stderr" => stderr
+  })
+rescue StandardError => e
+  json_response({ "ok" => false, "error" => e.message })
+end
+
+def chat_message(messages, opts = {}, tools = nil)
+  data = {
+    "model" => OPENAI_MODEL,
+    "messages" => messages
+  }.merge(opts)
+  data["tools"] = tools unless tools.nil?
+
+  provider, model = data["model"].split(":", 2)
+  if model.nil?
+    provider = OPENAI_API
+  else
+    data["model"] = model
+  end
+
+  result = chat(provider, data)
+
+  if provider == "ollama"
+    msg = result["message"] || {}
+    {
+      "role" => msg["role"] || "assistant",
+      "content" => msg["content"].to_s,
+      "tool_calls" => msg["tool_calls"] || []
+    }
+  else
+    result.dig("choices", 0, "message") || {}
+  end
+end
+
+def run_agent(msgs, model_opts)
+  tools = [
+    {
+      "type" => "function",
+      "function" => {
+        "name" => "bash",
+        "description" => "Run a bash command in the current working directory",
+        "parameters" => {
+          "type" => "object",
+          "properties" => {
+            "command" => { "type" => "string" },
+            "timeout_s" => { "type" => "integer", "minimum" => 1, "maximum" => 120 }
+          },
+          "required" => ["command"]
+        }
+      }
+    },
+    {
+      "type" => "function",
+      "function" => {
+        "name" => "read_file",
+        "description" => "Read a text file from disk",
+        "parameters" => {
+          "type" => "object",
+          "properties" => {
+            "path" => { "type" => "string" }
+          },
+          "required" => ["path"]
+        }
+      }
+    },
+    {
+      "type" => "function",
+      "function" => {
+        "name" => "write_file",
+        "description" => "Write text content to a file, replacing existing content",
+        "parameters" => {
+          "type" => "object",
+          "properties" => {
+            "path" => { "type" => "string" },
+            "content" => { "type" => "string" }
+          },
+          "required" => ["path", "content"]
+        }
+      }
+    }
+  ]
+
+  max_turns = 8
+  turn = 0
+  assistant_content = ""
+
+  while turn < max_turns
+    turn += 1
+    msg = chat_message(msgs, model_opts, tools)
+    tool_calls = msg["tool_calls"] || []
+
+    assistant_msg = {
+      :role => ROLE_ASSISTANT,
+      :content => msg["content"].to_s
+    }
+    assistant_msg[:tool_calls] = tool_calls unless tool_calls.empty?
+    msgs << assistant_msg
+
+    if tool_calls.empty?
+      assistant_content = msg["content"].to_s
+      break
+    end
+
+    tool_calls.each do |tc|
+      fn = tc.dig("function", "name").to_s
+      args_str = tc.dig("function", "arguments").to_s
+      args = JSON.parse(args_str.empty? ? "{}" : args_str) rescue {}
+
+      result = case fn
+               when "bash"
+                 tool_bash(args)
+               when "read_file"
+                 tool_read_file(args)
+               when "write_file"
+                 tool_write_file(args)
+               else
+                 json_response({ "ok" => false, "error" => "unknown tool: #{fn}" })
+               end
+
+      msgs << {
+        :role => "tool",
+        :tool_call_id => tc["id"],
+        :content => result
+      }
+    end
+  end
+
+  assistant_content
 end
