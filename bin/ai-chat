@@ -70,6 +70,10 @@ parser = OptionParser.new do |opts|
   opts.on("-a NAME", "--alias=NAME", "Load settings from aichat.json") do |name|
     options[:alias] = name
   end
+
+  opts.on("--agent", "Enable simple agent flow with bash/read_file/write_file tools") do
+    options[:agent_mode] = true
+  end
 end
 
 parser.parse!
@@ -145,7 +149,11 @@ model_opts = {}
 model_opts["model"] = options[:model] unless options[:model].nil?
 model_opts["temperature"] = options[:temperature] unless options[:temperature].nil?
 
-resp = chat_resp(msgs, model_opts)
+resp = if options[:agent_mode]
+         run_agent(msgs, model_opts)
+       else
+         chat_resp(msgs, model_opts)
+       end
 msgs << { :role => ROLE_ASSISTANT, :content => resp }
 
 unless options[:file_mode] # output in terminal
