@@ -1,0 +1,5 @@
+# action\tsource\ttarget
+sync_dir	{{REPO}}/espanso/	{{HOME}}/Library/Application Support/espanso/
+sync_glob	{{REPO}}/rime/*.yaml	{{HOME}}/Library/Rime/
+copy	{{REPO}}/mac/RectangleConfig.json	{{HOME}}/Library/Application Support/com.knollsoft.Rectangle/RectangleConfig.json
+sync_glob	{{REPO}}/mac/karabiner-rules/*.json	{{HOME}}/.config/karabiner/assets/complex_modifications/

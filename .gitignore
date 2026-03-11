@@ -16,3 +16,6 @@ scripts/Brewfile.lock.json
 
 # Temp path
 temp/
+
+# dot command run state
+.state/
