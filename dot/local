@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=dot/lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
+usage() {
+  cat <<USAGE
+Usage:
+  dot/local backup [--dry-run] [--verbose]
+  dot/local restore --from <backup_dir> [--dry-run] [--apply] [--overwrite|--skip-existing] [--verbose]
+USAGE
+}
+
+BACKUP_FROM=""
+CONFLICT_POLICY="overwrite"
+APPLY=0
+
+parse_flags() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run)
+        DRY_RUN=1
+        ;;
+      --apply)
+        APPLY=1
+        ;;
+      --from)
+        shift
+        BACKUP_FROM="${1:-}"
+        [[ -n "$BACKUP_FROM" ]] || die "--from requires a path"
+        ;;
+      --overwrite)
+        CONFLICT_POLICY="overwrite"
+        ;;
+      --skip-existing)
+        CONFLICT_POLICY="skip-existing"
+        ;;
+      --verbose)
+        VERBOSE=1
+        ;;
+      *)
+        die "Unknown option: $1"
+        ;;
+    esac
+    shift
+  done
+}
+
+backup_local() {
+  local day_dir="$HOME/localrc/backup-$(date +%Y-%m-%d)"
+  local backup_dir="$day_dir"
+  if [[ -d "$backup_dir" ]]; then
+    backup_dir="$HOME/localrc/backup-$(date +%Y-%m-%d-%H%M%S)"
+  fi
+
+  ensure_dir "$backup_dir"
+  ensure_dir "$backup_dir/ssh"
+
+  for src in "$HOME/.localrc" "$HOME/.localenv" "$HOME/.gitconfig"; do
+    if [[ -f "$src" ]]; then
+      local name="${src##*/}"
+      name="${name#.}"
+      copy_path "$src" "$backup_dir/$name"
+    else
+      warn "Missing source, skipping: $src"
+    fi
+  done
+
+  if [[ -d "$HOME/.ssh" ]]; then
+    run_cmd rsync -a --exclude 'authorized*' "$HOME/.ssh/" "$backup_dir/ssh/"
+  else
+    warn "Missing source, skipping: $HOME/.ssh"
+  fi
+
+  info "Local backup created: $backup_dir"
+}
+
+restore_item() {
+  local src="$1"
+  local dst="$2"
+
+  [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skipping: $src"; return 0; }
+
+  if [[ -e "$dst" || -L "$dst" ]]; then
+    if [[ "$CONFLICT_POLICY" == "skip-existing" ]]; then
+      warn "Skipping existing destination: $dst"
+      return 0
+    fi
+  fi
+
+  copy_path "$src" "$dst"
+}
+
+restore_local() {
+  [[ -n "$BACKUP_FROM" ]] || die "restore requires --from <backup_dir>"
+  [[ -d "$BACKUP_FROM" ]] || die "backup source not found: $BACKUP_FROM"
+
+  if [[ "$APPLY" != "1" ]]; then
+    DRY_RUN=1
+    info "Restore defaults to dry-run. Use --apply to perform writes."
+  fi
+
+  local snapshot_root="$HOME/.dotfiles-restore-backups/$(date +%Y%m%d-%H%M%S)"
+  snapshot_path_if_exists "$HOME/.localrc" "$snapshot_root"
+  snapshot_path_if_exists "$HOME/.localenv" "$snapshot_root"
+  snapshot_path_if_exists "$HOME/.gitconfig" "$snapshot_root"
+  snapshot_path_if_exists "$HOME/.ssh" "$snapshot_root"
+
+  restore_item "$BACKUP_FROM/localrc" "$HOME/.localrc"
+  restore_item "$BACKUP_FROM/localenv" "$HOME/.localenv"
+  restore_item "$BACKUP_FROM/gitconfig" "$HOME/.gitconfig"
+
+  if [[ -d "$BACKUP_FROM/ssh" ]]; then
+    ensure_dir "$HOME/.ssh"
+    if [[ "$CONFLICT_POLICY" == "skip-existing" ]]; then
+      run_cmd rsync -a --ignore-existing "$BACKUP_FROM/ssh/" "$HOME/.ssh/"
+    else
+      run_cmd rsync -a "$BACKUP_FROM/ssh/" "$HOME/.ssh/"
+    fi
+  else
+    warn "Missing source, skipping: $BACKUP_FROM/ssh"
+  fi
+
+  info "Rollback snapshot directory: $snapshot_root"
+}
+
+main() {
+  [[ $# -ge 1 ]] || { usage; exit 1; }
+
+  local cmd="$1"
+  shift
+  parse_flags "$@"
+
+  local repo_root
+  repo_root="$(require_repo_root)"
+
+  command_exists rsync || die "Required command not found: rsync"
+
+  case "$cmd" in
+    backup)
+      backup_local
+      write_run_log "$repo_root" "dot local backup" "ok" "target=$HOME/localrc"
+      ;;
+    restore)
+      restore_local
+      write_run_log "$repo_root" "dot local restore" "ok" "from=$BACKUP_FROM,apply=$APPLY"
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

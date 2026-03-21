@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=dot/lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+# shellcheck source=dot/lib/symlink.sh
+source "$SCRIPT_DIR/lib/symlink.sh"
+
+usage() {
+  cat <<USAGE
+Usage:
+  dot/dot setup [--dry-run] [--overwrite|--skip-existing|--interactive] [--verbose]
+  dot/dot backup [--dry-run] [--verbose]
+  dot/dot restore [--dry-run] [--apply] [--verbose]
+USAGE
+}
+
+parse_common_flags() {
+  CONFLICT_POLICY="overwrite"
+  APPLY=0
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run)
+        DRY_RUN=1
+        ;;
+      --apply)
+        APPLY=1
+        ;;
+      --overwrite)
+        CONFLICT_POLICY="overwrite"
+        ;;
+      --skip-existing)
+        CONFLICT_POLICY="skip-existing"
+        ;;
+      --interactive)
+        CONFLICT_POLICY="interactive"
+        ;;
+      --verbose)
+        VERBOSE=1
+        ;;
+      *)
+        die "Unknown option: $1"
+        ;;
+    esac
+    shift
+  done
+}
+
+run_manifest() {
+  local manifest="$1"
+  local mode="$2"
+  local repo_root="$3"
+
+  [[ -f "$manifest" ]] || die "Missing manifest: $manifest"
+
+  local snapshot_root=""
+  if [[ "$mode" == "restore" ]]; then
+    if [[ "$APPLY" != "1" ]]; then
+      DRY_RUN=1
+      info "Restore defaults to dry-run. Use --apply to perform writes."
+    fi
+    snapshot_root="$HOME/.dotfiles-restore-backups/$(date +%Y%m%d-%H%M%S)"
+  fi
+
+  local line action src_raw dst_raw src dst
+  while IFS=$'\t' read -r action src_raw dst_raw; do
+    [[ -n "$action" ]] || continue
+    [[ "$action" =~ ^# ]] && continue
+
+    src="$(resolve_vars "$src_raw" "$repo_root")"
+    dst="$(resolve_vars "$dst_raw" "$repo_root")"
+
+    case "$action" in
+      symlink)
+        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; continue; }
+        ensure_symlink "$src" "$dst" "$CONFLICT_POLICY"
+        ;;
+      copy)
+        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; continue; }
+        if [[ "$mode" == "restore" ]]; then
+          snapshot_path_if_exists "$dst" "$snapshot_root"
+        fi
+        copy_path "$src" "$dst"
+        ;;
+      sync_dir)
+        [[ -d "$src" ]] || { warn "Missing source dir, skip: $src"; continue; }
+        if [[ "$mode" == "restore" ]]; then
+          snapshot_path_if_exists "$dst" "$snapshot_root"
+        fi
+        ensure_dir "$dst"
+        run_cmd rsync -a "$src" "$dst"
+        ;;
+      sync_glob)
+        shopt -s nullglob
+        local matches=( $src )
+        shopt -u nullglob
+        if [[ ${#matches[@]} -eq 0 ]]; then
+          warn "No sources matched, skip: $src"
+          continue
+        fi
+        ensure_dir "$dst"
+        if [[ "$mode" == "restore" ]]; then
+          snapshot_path_if_exists "$dst" "$snapshot_root"
+        fi
+        run_cmd rsync -a "${matches[@]}" "$dst"
+        ;;
+      *)
+        die "Unknown action in manifest: $action"
+        ;;
+    esac
+  done < "$manifest"
+
+  if [[ "$mode" == "restore" ]]; then
+    info "Rollback snapshot directory: $snapshot_root"
+  fi
+}
+
+main() {
+  [[ $# -ge 1 ]] || { usage; exit 1; }
+
+  local command="$1"
+  shift
+  parse_common_flags "$@"
+
+  local repo_root
+  repo_root="$(require_repo_root)"
+
+  command_exists rsync || die "Required command not found: rsync"
+  command_exists git || die "Required command not found: git"
+
+  case "$command" in
+    setup)
+      is_macos || die "dot setup currently supports macOS only"
+      [[ "$DRY_RUN" == "1" ]] || command_exists brew || die "Required command not found: brew"
+      run_manifest "$repo_root/dot/manifests/setup.macos.tsv" "setup" "$repo_root"
+      if [[ "$DRY_RUN" != "1" ]]; then
+        run_cmd touch "$HOME/.localrc" "$HOME/.localenv"
+      fi
+      write_run_log "$repo_root" "dot setup" "ok" "manifest=setup.macos.tsv"
+      ;;
+    backup)
+      is_macos || die "dot backup currently supports macOS only"
+      if command_exists brew; then
+        run_cmd brew bundle dump --force --file="$repo_root/scripts/Brewfile" --describe
+      else
+        warn "brew not found; skipping Brewfile backup"
+      fi
+      run_manifest "$repo_root/dot/manifests/backup.macos.tsv" "backup" "$repo_root"
+      write_run_log "$repo_root" "dot backup" "ok" "manifest=backup.macos.tsv"
+      ;;
+    restore)
+      is_macos || die "dot restore currently supports macOS only"
+      run_manifest "$repo_root/dot/manifests/restore.macos.tsv" "restore" "$repo_root"
+      write_run_log "$repo_root" "dot restore" "ok" "manifest=restore.macos.tsv,apply=$APPLY"
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

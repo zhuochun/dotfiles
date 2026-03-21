@@ -63,13 +63,28 @@ Install [Homebrew](https://brew.sh/):
 Run the setup script to install formulas and create all config symlinks:
 
 ``` bash
-~/dotfiles/scripts/dot-setup.sh
+~/dotfiles/dot/dot setup
+```
+
+
+Run backup/restore commands with dry-run safety:
+
+``` bash
+# tracked dotfiles
+~/dotfiles/dot/dot backup
+~/dotfiles/dot/dot restore --dry-run
+~/dotfiles/dot/dot restore --apply
+
+# private machine/company configs
+~/dotfiles/dot/local backup
+~/dotfiles/dot/local restore --from ~/localrc/backup-YYYY-MM-DD --dry-run
+~/dotfiles/dot/local restore --from ~/localrc/backup-YYYY-MM-DD --apply
 ```
 
 If you prefer the manual steps, review and install brew formulas:
 
 ``` bash
-brew bundle install --file=~/dotfiles/scripts/Brewfile
+brew bundle check --file=~/dotfiles/scripts/Brewfile || brew bundle install --file=~/dotfiles/scripts/Brewfile
 ```
 
 Setup Zsh ([guide](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)):

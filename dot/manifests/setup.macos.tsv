@@ -1,0 +1,15 @@
+# action\tsource\ttarget
+symlink	{{REPO}}/zshrc	{{HOME}}/.zshrc
+symlink	{{REPO}}/zshenv	{{HOME}}/.zshenv
+symlink	{{REPO}}/tmux.conf	{{HOME}}/.tmux.conf
+symlink	{{REPO}}/tmux-theme.conf	{{HOME}}/.tmux-theme.conf
+symlink	{{REPO}}/vim/vimrc	{{HOME}}/.config/nvim/init.vim
+symlink	{{REPO}}/vim/rc	{{HOME}}/.config/nvim/rc
+symlink	{{REPO}}/vim/vimrc	{{HOME}}/.vimrc
+symlink	{{REPO}}/vim/rc	{{HOME}}/.vim/rc
+symlink	{{REPO}}/vim/gvimrc	{{HOME}}/.gvimrc
+symlink	{{REPO}}/espanso/match.yml	{{HOME}}/Library/Application Support/espanso/match/base.yml
+symlink	{{REPO}}/espanso/form.yml	{{HOME}}/Library/Application Support/espanso/match/form.yml
+symlink	{{REPO}}/rime/squirrel.custom.yaml	{{HOME}}/Library/Rime/squirrel.custom.yaml
+symlink	{{REPO}}/mac/karabiner-rules	{{HOME}}/.config/karabiner/assets/complex_modifications
+copy	{{REPO}}/mac/karabiner.json	{{HOME}}/.config/karabiner/karabiner.json
