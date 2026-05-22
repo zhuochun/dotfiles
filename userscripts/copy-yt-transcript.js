@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Transcript to Clipboard
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6
 // @description  Adds a button to copy the transcript, auto-opening the panel, grouping into paragraphs, and supporting old/new YouTube transcript DOMs.
 // @author       ChatGPT
 // @match        https://www.youtube.com/*
@@ -41,42 +41,41 @@
         );
         if (knownPanel) return knownPanel;
 
-        return Array.from(document.querySelectorAll('ytd-engagement-panel-section-list-renderer'))
-            .find(panel => panel.querySelector('#segments-container, transcript-segment-view-model'));
+        const transcriptNode = document.querySelector(
+            '#segments-container, ytd-transcript-segment-renderer, transcript-segment-view-model'
+        );
+        return transcriptNode?.closest('ytd-engagement-panel-section-list-renderer') || null;
     }
 
     function waitForTranscriptPanel(timeout = 50000) {
         return waitForCondition(findTranscriptPanel, timeout, 'Transcript panel');
     }
 
-    function openTranscriptPanel() {
-        const existingPanel = findTranscriptPanel();
-        if (existingPanel) return Promise.resolve(existingPanel);
-
-        // Expand “more” menu
-        const expandBtn = document.querySelector('tp-yt-paper-button#expand.button.style-scope.ytd-text-inline-expander');
-        if (expandBtn) expandBtn.click();
-        // Click “Show transcript” button
-        const btnSelector = '#items button[aria-label="Show transcript"], button[aria-label="Show transcript"]';
-        return waitForElement(btnSelector, 5000)
-            .then(btn => btn.click())
-            .then(() => waitForTranscriptPanel(50000));
-    }
-
-    function parseStructuredTranscript(panel) {
-        const segments = Array.from(panel.querySelectorAll('transcript-segment-view-model'));
+    function parseStructuredTranscript(root) {
+        const segments = Array.from(root.querySelectorAll('transcript-segment-view-model'));
         if (!segments.length) return [];
 
         return segments.map(segment => {
             const ts = segment.querySelector('.ytwTranscriptSegmentViewModelTimestamp')?.textContent.trim() || '';
-            const textNode = segment.querySelector('[role="text"].ytAttributedStringHost, .ytAttributedStringHost[role="text"], .ytAttributedStringHost');
+            const textNode = segment.querySelector('[role="text"].ytAttributedStringHost, .ytAttributedStringHost[role="text"], span[role="text"], .ytAttributedStringHost');
             const content = textNode?.textContent.trim() || '';
             return { ts, content };
         }).filter(({ ts, content }) => ts && content);
     }
 
-    function parseLegacyTranscript(panel) {
-        const raw = panel.querySelector('#segments-container')?.textContent || '';
+    function parseLegacyTranscriptFromNodes(root) {
+        const segments = Array.from(root.querySelectorAll('ytd-transcript-segment-renderer'));
+        if (!segments.length) return [];
+
+        return segments.map(segment => {
+            const ts = segment.querySelector('.segment-timestamp, #timestamp')?.textContent.trim() || '';
+            const content = segment.querySelector('.segment-text, #segment-text')?.textContent.trim() || '';
+            return { ts, content };
+        }).filter(({ ts, content }) => ts && content);
+    }
+
+    function parseLegacyTranscriptFromText(root) {
+        const raw = root.querySelector('#segments-container')?.textContent || '';
         const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
 
         const tsRegex = /^\d{1,2}:\d{2}(?::\d{2})?$/;
@@ -95,10 +94,46 @@
         return entries;
     }
 
-    function getTranscriptEntries(panel) {
-        return parseStructuredTranscript(panel).length
-            ? parseStructuredTranscript(panel)
-            : parseLegacyTranscript(panel);
+    function parseLegacyTranscript(root) {
+        const entriesFromNodes = parseLegacyTranscriptFromNodes(root);
+        return entriesFromNodes.length ? entriesFromNodes : parseLegacyTranscriptFromText(root);
+    }
+
+    function getTranscriptEntries(root = document) {
+        const structuredEntries = parseStructuredTranscript(root);
+        return structuredEntries.length ? structuredEntries : parseLegacyTranscript(root);
+    }
+
+    function waitForTranscriptEntries(panel, timeout = 10000) {
+        return waitForCondition(() => {
+            const panelEntries = panel ? getTranscriptEntries(panel) : [];
+            if (panelEntries.length) return panelEntries;
+
+            const documentEntries = getTranscriptEntries(document);
+            return documentEntries.length ? documentEntries : null;
+        }, timeout, 'Transcript segments');
+    }
+
+    function openTranscriptPanel() {
+        const existingPanel = findTranscriptPanel();
+        if (existingPanel && getTranscriptEntries(existingPanel).length) return Promise.resolve(existingPanel);
+
+        // Expand “more” menu
+        const expandBtn = document.querySelector('tp-yt-paper-button#expand.button.style-scope.ytd-text-inline-expander');
+        if (expandBtn) expandBtn.click();
+        // Click “Show transcript” button
+        const btnSelector = '#items button[aria-label="Show transcript"], button[aria-label="Show transcript"]';
+        const btn = document.querySelector(btnSelector);
+        if (btn) {
+            btn.click();
+            return waitForTranscriptPanel(50000);
+        }
+
+        if (existingPanel) return Promise.resolve(existingPanel);
+
+        return waitForElement(btnSelector, 5000)
+            .then(showTranscriptBtn => showTranscriptBtn.click())
+            .then(() => waitForTranscriptPanel(50000));
     }
 
     function createClipboardButton() {
@@ -117,8 +152,7 @@
                 if (!panel) return alert('Transcript panel not available');
 
                 const title = document.querySelector('h1.ytd-watch-metadata')?.textContent.trim() || 'Untitled';
-                const entries = getTranscriptEntries(panel);
-                if (!entries.length) return alert('Transcript segments not available');
+                const entries = await waitForTranscriptEntries(panel);
 
                 const paras = [];
                 let bufTs = '', bufText = '';
