@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         YouTube Transcript to Clipboard
 // @namespace    http://tampermonkey.net/
-// @version      1.4
-// @description  Adds a button to copy the transcript, auto-opening the panel, grouping into paragraphs, and isolating lines starting with “>>”.
+// @version      1.5
+// @description  Adds a button to copy the transcript, auto-opening the panel, grouping into paragraphs, and supporting old/new YouTube transcript DOMs.
 // @author       ChatGPT
 // @match        https://www.youtube.com/*
 // @grant        GM_setClipboard
@@ -23,18 +23,82 @@
         });
     }
 
+    function waitForCondition(condition, timeout = 10000, label = 'condition') {
+        return new Promise((resolve, reject) => {
+            const start = Date.now();
+            (function check() {
+                const result = condition();
+                if (result) return resolve(result);
+                if (Date.now() - start >= timeout) return reject(new Error(`${label} not found in ${timeout}ms`));
+                requestAnimationFrame(check);
+            })();
+        });
+    }
+
+    function findTranscriptPanel() {
+        const knownPanel = document.querySelector(
+            'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]'
+        );
+        if (knownPanel) return knownPanel;
+
+        return Array.from(document.querySelectorAll('ytd-engagement-panel-section-list-renderer'))
+            .find(panel => panel.querySelector('#segments-container, transcript-segment-view-model'));
+    }
+
+    function waitForTranscriptPanel(timeout = 50000) {
+        return waitForCondition(findTranscriptPanel, timeout, 'Transcript panel');
+    }
+
     function openTranscriptPanel() {
+        const existingPanel = findTranscriptPanel();
+        if (existingPanel) return Promise.resolve(existingPanel);
+
         // Expand “more” menu
         const expandBtn = document.querySelector('tp-yt-paper-button#expand.button.style-scope.ytd-text-inline-expander');
         if (expandBtn) expandBtn.click();
         // Click “Show transcript” button
-        const btnSelector = '#items button[aria-label="Show transcript"]';
+        const btnSelector = '#items button[aria-label="Show transcript"], button[aria-label="Show transcript"]';
         return waitForElement(btnSelector, 5000)
-            .then(() => document.querySelector(btnSelector).click())
-            .then(() => waitForElement(
-                'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]',
-                50000
-            ));
+            .then(btn => btn.click())
+            .then(() => waitForTranscriptPanel(50000));
+    }
+
+    function parseStructuredTranscript(panel) {
+        const segments = Array.from(panel.querySelectorAll('transcript-segment-view-model'));
+        if (!segments.length) return [];
+
+        return segments.map(segment => {
+            const ts = segment.querySelector('.ytwTranscriptSegmentViewModelTimestamp')?.textContent.trim() || '';
+            const textNode = segment.querySelector('[role="text"].ytAttributedStringHost, .ytAttributedStringHost[role="text"], .ytAttributedStringHost');
+            const content = textNode?.textContent.trim() || '';
+            return { ts, content };
+        }).filter(({ ts, content }) => ts && content);
+    }
+
+    function parseLegacyTranscript(panel) {
+        const raw = panel.querySelector('#segments-container')?.textContent || '';
+        const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+
+        const tsRegex = /^\d{1,2}:\d{2}(?::\d{2})?$/;
+        const entries = [];
+        let current = null;
+        for (const line of lines) {
+            if (tsRegex.test(line)) {
+                if (current) entries.push(current);
+                current = { ts: line, content: '' };
+            } else if (current) {
+                let text = line.replace(new RegExp(`\\b${current.ts}\\b`, 'g'), '').trim();
+                current.content = current.content ? `${current.content} ${text}` : text;
+            }
+        }
+        if (current) entries.push(current);
+        return entries;
+    }
+
+    function getTranscriptEntries(panel) {
+        return parseStructuredTranscript(panel).length
+            ? parseStructuredTranscript(panel)
+            : parseLegacyTranscript(panel);
     }
 
     function createClipboardButton() {
@@ -49,29 +113,12 @@
 
         btn.addEventListener('click', async () => {
             try {
-                await openTranscriptPanel();
-                const panel = document.querySelector(
-                    'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]'
-                );
+                const panel = await openTranscriptPanel();
                 if (!panel) return alert('Transcript panel not available');
 
                 const title = document.querySelector('h1.ytd-watch-metadata')?.textContent.trim() || 'Untitled';
-                const raw = panel.querySelector('#segments-container')?.textContent || '';
-                const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-
-                const tsRegex = /^\d{1,2}:\d{2}(?::\d{2})?$/;
-                const entries = [];
-                let current = null;
-                for (const line of lines) {
-                    if (tsRegex.test(line)) {
-                        if (current) entries.push(current);
-                        current = { ts: line, content: '' };
-                    } else if (current) {
-                        let text = line.replace(new RegExp(`\\b${current.ts}\\b`, 'g'), '').trim();
-                        current.content = current.content ? `${current.content} ${text}` : text;
-                    }
-                }
-                if (current) entries.push(current);
+                const entries = getTranscriptEntries(panel);
+                if (!entries.length) return alert('Transcript segments not available');
 
                 const paras = [];
                 let bufTs = '', bufText = '';
