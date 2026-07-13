@@ -32,6 +32,14 @@ ensure_dir() {
   mkdir -p "$dir"
 }
 
+ensure_private_file() {
+  local path="$1"
+  if [[ ! -e "$path" && ! -L "$path" ]]; then
+    run_cmd touch "$path" || return
+  fi
+  run_cmd chmod 600 "$path"
+}
+
 run_cmd() {
   if [[ "$VERBOSE" == "1" || "$DRY_RUN" == "1" ]]; then
     info "run: $*"
@@ -50,19 +58,6 @@ require_repo_root() {
     die "Could not locate repository root from $script_dir"
   fi
   printf '%s\n' "$repo_root"
-}
-
-backup_existing() {
-  local target="$1"
-  local backup_root="$2"
-  [[ -e "$target" || -L "$target" ]] || return 0
-
-  ensure_dir "$backup_root"
-  local ts backup_path
-  ts="$(date +%Y%m%d-%H%M%S)"
-  backup_path="$backup_root/${target##*/}.$ts"
-  info "Backing up existing $target -> $backup_path"
-  run_cmd mv "$target" "$backup_path"
 }
 
 write_run_log() {

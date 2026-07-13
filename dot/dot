@@ -19,7 +19,7 @@ USAGE
 }
 
 parse_common_flags() {
-  CONFLICT_POLICY="overwrite"
+  CONFLICT_POLICY="skip-existing"
   APPLY=0
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -54,7 +54,10 @@ run_manifest() {
   local mode="$2"
   local repo_root="$3"
 
-  [[ -f "$manifest" ]] || die "Missing manifest: $manifest"
+  if [[ ! -f "$manifest" ]]; then
+    error "Missing manifest: $manifest"
+    return 1
+  fi
 
   local snapshot_root=""
   if [[ "$mode" == "restore" ]]; then
@@ -65,7 +68,8 @@ run_manifest() {
     snapshot_root="$HOME/.dotfiles-restore-backups/$(date +%Y%m%d-%H%M%S)"
   fi
 
-  local line action src_raw dst_raw src dst
+  MANIFEST_SKIPPED=0
+  local action src_raw dst_raw src dst
   while IFS=$'\t' read -r action src_raw dst_raw; do
     [[ -n "$action" ]] || continue
     [[ "$action" =~ ^# ]] && continue
@@ -75,23 +79,26 @@ run_manifest() {
 
     case "$action" in
       symlink)
-        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; continue; }
-        ensure_symlink "$src" "$dst" "$CONFLICT_POLICY"
+        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; ((MANIFEST_SKIPPED += 1)); continue; }
+        ensure_symlink "$src" "$dst" "$CONFLICT_POLICY" || return
         ;;
       copy)
-        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; continue; }
+        [[ -e "$src" || -L "$src" ]] || { warn "Missing source, skip: $src"; ((MANIFEST_SKIPPED += 1)); continue; }
+        if [[ "$mode" == "setup" ]] && ! should_replace_target "$dst" "$CONFLICT_POLICY"; then
+          continue
+        fi
         if [[ "$mode" == "restore" ]]; then
           snapshot_path_if_exists "$dst" "$snapshot_root"
         fi
-        copy_path "$src" "$dst"
+        copy_path "$src" "$dst" || return
         ;;
       sync_dir)
-        [[ -d "$src" ]] || { warn "Missing source dir, skip: $src"; continue; }
+        [[ -d "$src" ]] || { warn "Missing source dir, skip: $src"; ((MANIFEST_SKIPPED += 1)); continue; }
         if [[ "$mode" == "restore" ]]; then
           snapshot_path_if_exists "$dst" "$snapshot_root"
         fi
-        ensure_dir "$dst"
-        run_cmd rsync -a "$src" "$dst"
+        ensure_dir "$dst" || return
+        run_cmd rsync -a "$src" "$dst" || return
         ;;
       sync_glob)
         shopt -s nullglob
@@ -99,16 +106,18 @@ run_manifest() {
         shopt -u nullglob
         if [[ ${#matches[@]} -eq 0 ]]; then
           warn "No sources matched, skip: $src"
+          ((MANIFEST_SKIPPED += 1))
           continue
         fi
-        ensure_dir "$dst"
+        ensure_dir "$dst" || return
         if [[ "$mode" == "restore" ]]; then
           snapshot_path_if_exists "$dst" "$snapshot_root"
         fi
-        run_cmd rsync -a "${matches[@]}" "$dst"
+        run_cmd rsync -a "${matches[@]}" "$dst" || return
         ;;
       *)
-        die "Unknown action in manifest: $action"
+        error "Unknown action in manifest: $action"
+        return 1
         ;;
     esac
   done < "$manifest"
@@ -116,6 +125,26 @@ run_manifest() {
   if [[ "$mode" == "restore" ]]; then
     info "Rollback snapshot directory: $snapshot_root"
   fi
+}
+
+manifest_status() {
+  if [[ "$MANIFEST_SKIPPED" -gt 0 ]]; then
+    printf 'partial\n'
+  else
+    printf 'ok\n'
+  fi
+}
+
+backup_dotfiles() {
+  local repo_root="$1"
+
+  if ! command_exists brew; then
+    error "Required command not found: brew"
+    return 1
+  fi
+
+  run_cmd brew bundle dump --force --file="$repo_root/scripts/Brewfile" --describe || return
+  run_manifest "$repo_root/dot/manifests/backup.macos.tsv" "backup" "$repo_root"
 }
 
 main() {
@@ -128,33 +157,37 @@ main() {
   local repo_root
   repo_root="$(require_repo_root)"
 
-  command_exists rsync || die "Required command not found: rsync"
-  command_exists git || die "Required command not found: git"
-
   case "$command" in
     setup)
       is_macos || die "dot setup currently supports macOS only"
-      [[ "$DRY_RUN" == "1" ]] || command_exists brew || die "Required command not found: brew"
       run_manifest "$repo_root/dot/manifests/setup.macos.tsv" "setup" "$repo_root"
-      if [[ "$DRY_RUN" != "1" ]]; then
-        run_cmd touch "$HOME/.localrc" "$HOME/.localenv"
-      fi
-      write_run_log "$repo_root" "dot setup" "ok" "manifest=setup.macos.tsv"
+      ensure_private_file "$HOME/.localrc"
+      ensure_private_file "$HOME/.localenv"
+      local setup_status
+      setup_status="$(manifest_status)"
+      write_run_log "$repo_root" "dot setup" "$setup_status" "manifest=setup.macos.tsv,skipped=$MANIFEST_SKIPPED"
       ;;
     backup)
       is_macos || die "dot backup currently supports macOS only"
-      if command_exists brew; then
-        run_cmd brew bundle dump --force --file="$repo_root/scripts/Brewfile" --describe
+      if backup_dotfiles "$repo_root"; then
+        local backup_status
+        backup_status="$(manifest_status)"
+        if [[ "$MANIFEST_SKIPPED" -gt 0 ]]; then
+          warn "Backup completed with $MANIFEST_SKIPPED skipped source(s)."
+        fi
+        write_run_log "$repo_root" "dot backup" "$backup_status" "manifest=backup.macos.tsv,skipped=$MANIFEST_SKIPPED"
       else
-        warn "brew not found; skipping Brewfile backup"
+        local backup_exit=$?
+        write_run_log "$repo_root" "dot backup" "failed" "manifest=backup.macos.tsv,exit=$backup_exit" || true
+        return "$backup_exit"
       fi
-      run_manifest "$repo_root/dot/manifests/backup.macos.tsv" "backup" "$repo_root"
-      write_run_log "$repo_root" "dot backup" "ok" "manifest=backup.macos.tsv"
       ;;
     restore)
       is_macos || die "dot restore currently supports macOS only"
       run_manifest "$repo_root/dot/manifests/restore.macos.tsv" "restore" "$repo_root"
-      write_run_log "$repo_root" "dot restore" "ok" "manifest=restore.macos.tsv,apply=$APPLY"
+      local restore_status
+      restore_status="$(manifest_status)"
+      write_run_log "$repo_root" "dot restore" "$restore_status" "manifest=restore.macos.tsv,apply=$APPLY,skipped=$MANIFEST_SKIPPED"
       ;;
     *)
       usage

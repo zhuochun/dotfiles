@@ -1,6 +1,3 @@
 # action\tsource\ttarget
 copy	{{HOME}}/.config/karabiner/karabiner.json	{{REPO}}/mac/karabiner.json
-sync_glob	{{HOME}}/.config/karabiner/assets/complex_modifications/*.json	{{REPO}}/mac/karabiner-rules/
-sync_dir	{{HOME}}/Library/Application Support/espanso/	{{REPO}}/espanso/
-sync_glob	{{HOME}}/Library/Rime/*.yaml	{{REPO}}/rime/
-sync_glob	{{HOME}}/Library/Application Support/com.knollsoft.Rectangle/*.json	{{REPO}}/mac/
+copy	{{HOME}}/Library/Application Support/com.knollsoft.Rectangle/RectangleConfig.json	{{REPO}}/mac/RectangleConfig.json

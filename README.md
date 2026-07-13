@@ -44,7 +44,7 @@ Use this section as the source of truth when completing setup on behalf of a use
 
 - **Prefer cloning to `~/dotfiles`.** The `dot/` CLI resolves the repository from its own location, but the tracked `zshenv` currently adds the literal path `~/dotfiles/bin` to `PATH`. If you clone elsewhere, replace command paths and update that `zshenv` entry before setup.
 - **Do not run destructive restores without an explicit `--apply`.** `dot/dot restore` and `dot/local restore` intentionally default to dry-run mode unless `--apply` is supplied.
-- **Treat setup copies separately from symlinks.** The setup conflict flags apply to symlink entries. The tracked Karabiner config is copied with overwrite behavior, so inspect the dry-run and preserve an existing `~/.config/karabiner/karabiner.json` before applying setup.
+- **Setup preserves existing config by default.** Conflict policies apply to both symlinks and copied files. Use explicit `--overwrite` only after reviewing the matching dry-run.
 - **Do not put private secrets in this repository.** Machine/company/private files belong in `~/.localrc`, `~/.localenv`, `~/.gitconfig`, and `~/.ssh`, and can be backed up with `dot/local backup`.
 - **Prefer the manifest-driven CLI.** The maintained entrypoints are `dot/dot` and `dot/local`; the deprecated wrappers in `scripts/` are not the primary setup flow.
 - **macOS support is first-class.** `dot/dot setup`, `dot/dot backup`, and `dot/dot restore` currently enforce macOS via `uname -s == Darwin`.
@@ -70,7 +70,7 @@ Use this section as the source of truth when completing setup on behalf of a use
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
-4. Install the Homebrew bundle. `dot/dot setup` requires Homebrew, but it does **not** install the bundle for you:
+4. Install the Homebrew bundle separately; `dot/dot setup` configures files but does **not** install packages for you:
 
    ```bash
    brew bundle check --file=~/dotfiles/scripts/Brewfile || brew bundle install --file=~/dotfiles/scripts/Brewfile
@@ -82,7 +82,7 @@ Use this section as the source of truth when completing setup on behalf of a use
    ~/dotfiles/dot/dot setup --dry-run --skip-existing --verbose
    ```
 
-6. Apply tracked dotfile setup. The default symlink conflict policy is `--overwrite`; use `--skip-existing` for a safer first pass on an existing machine. This flag does not protect copied entries, including the Karabiner config called out above:
+6. Apply tracked dotfile setup. It defaults to `--skip-existing` for both symlink and copy entries; use explicit `--overwrite` only when you intend to replace existing config:
 
    ```bash
    ~/dotfiles/dot/dot setup --skip-existing --verbose
@@ -146,6 +146,7 @@ brew bundle check --file=~/dotfiles/scripts/Brewfile
 ~/dotfiles/dot/dot setup --dry-run --skip-existing --verbose
 for file in ~/dotfiles/zshrc ~/dotfiles/zshenv; do zsh -n "$file"; done
 for file in ~/dotfiles/dot/dot ~/dotfiles/dot/local ~/dotfiles/dot/lib/common.sh ~/dotfiles/dot/lib/symlink.sh; do bash -n "$file"; done
+bash ~/dotfiles/dot/tests/dot_test.sh
 nvim --headless +q
 ```
 
@@ -168,8 +169,9 @@ Expected results:
 ~/dotfiles/dot/dot restore [--dry-run] [--apply] [--verbose]
 ```
 
-- `setup` reads `dot/manifests/setup.macos.tsv` and creates symlinks/copies into `$HOME`. Conflict policies apply to symlinks; copy entries overwrite their destination.
-- `backup` updates `scripts/Brewfile` with `brew bundle dump` when Homebrew is available, then copies/syncs configured app files from `$HOME` into the repo using `dot/manifests/backup.macos.tsv`.
+- `setup` reads `dot/manifests/setup.macos.tsv` and creates symlinks/copies into `$HOME`; both action types default to `--skip-existing`.
+- `backup` requires Homebrew, updates `scripts/Brewfile`, and captures only copy-managed app config from `dot/manifests/backup.macos.tsv`. Setup-managed symlinks already point into the repository and are not backed up.
+- Backup run logs use `partial` when optional app sources are missing and `failed` when an operation exits unsuccessfully.
 - `restore` copies/syncs tracked app files from the repo back into `$HOME` using `dot/manifests/restore.macos.tsv`; it is dry-run by default and requires `--apply` to write.
 - Restore creates rollback snapshots under `~/.dotfiles-restore-backups/<timestamp>/` before overwriting existing paths.
 

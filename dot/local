@@ -138,8 +138,6 @@ main() {
   local repo_root
   repo_root="$(require_repo_root)"
 
-  command_exists rsync || die "Required command not found: rsync"
-
   case "$cmd" in
     backup)
       backup_local
