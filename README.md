@@ -60,7 +60,7 @@ Use this section as the source of truth when completing setup on behalf of a use
 2. Clone this repository:
 
    ```bash
-   git clone git@github.com:zhuochun/dotfiles.git ~/dotfiles
+   git clone https://github.com/zhuochun/dotfiles.git ~/dotfiles
    cd ~/dotfiles
    ```
 
@@ -100,8 +100,10 @@ Use this section as the source of truth when completing setup on behalf of a use
 
    ```bash
    test -d ~/.oh-my-zsh || RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-   test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-   test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions || git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
+   ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+   for plugin in zsh-autosuggestions zsh-completions; do
+     test -d "$ZSH_CUSTOM/plugins/$plugin" || git clone "https://github.com/zsh-users/$plugin" "$ZSH_CUSTOM/plugins/$plugin"
+   done
    ```
 
 9. Install Tmux Plugin Manager if it is missing:
@@ -172,7 +174,7 @@ Expected results:
 - `setup` reads `dot/manifests/setup.macos.tsv` and creates symlinks/copies into `$HOME`; both action types default to `--skip-existing`.
 - `backup` requires Homebrew, updates `scripts/Brewfile`, and captures only copy-managed app config from `dot/manifests/backup.macos.tsv`. Setup-managed symlinks already point into the repository and are not backed up.
 - Backup run logs use `partial` when optional app sources are missing and `failed` when an operation exits unsuccessfully.
-- `restore` copies/syncs tracked app files from the repo back into `$HOME` using `dot/manifests/restore.macos.tsv`; it is dry-run by default and requires `--apply` to write.
+- `restore` preflights `rsync`, then copies/syncs tracked app files from the repo back into `$HOME` using `dot/manifests/restore.macos.tsv`; it is dry-run by default and requires `--apply` to write.
 - Restore creates rollback snapshots under `~/.dotfiles-restore-backups/<timestamp>/` before overwriting existing paths.
 
 ### `dot/local`
@@ -187,6 +189,7 @@ Expected results:
 - `backup` writes timestamped backups under `~/localrc/backup-YYYY-MM-DD/` or `~/localrc/backup-YYYY-MM-DD-HHMMSS/` if the daily directory already exists.
 - Backup content includes `.localrc`, `.localenv`, `.gitconfig`, and `~/.ssh/` excluding `authorized*` files when present.
 - `restore` is dry-run by default and requires `--apply` to write.
+- Both commands preflight `rsync` before creating or restoring backup content.
 - Local restores also create rollback snapshots under `~/.dotfiles-restore-backups/<timestamp>/`.
 
 ## Mac Setup

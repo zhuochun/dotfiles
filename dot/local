@@ -51,27 +51,29 @@ parse_flags() {
 }
 
 backup_local() {
+  require_command rsync || return
+
   local day_dir="$HOME/localrc/backup-$(date +%Y-%m-%d)"
   local backup_dir="$day_dir"
   if [[ -d "$backup_dir" ]]; then
     backup_dir="$HOME/localrc/backup-$(date +%Y-%m-%d-%H%M%S)"
   fi
 
-  ensure_dir "$backup_dir"
-  ensure_dir "$backup_dir/ssh"
+  ensure_dir "$backup_dir" || return
+  ensure_dir "$backup_dir/ssh" || return
 
   for src in "$HOME/.localrc" "$HOME/.localenv" "$HOME/.gitconfig"; do
     if [[ -f "$src" ]]; then
       local name="${src##*/}"
       name="${name#.}"
-      copy_path "$src" "$backup_dir/$name"
+      copy_path "$src" "$backup_dir/$name" || return
     else
       warn "Missing source, skipping: $src"
     fi
   done
 
   if [[ -d "$HOME/.ssh" ]]; then
-    run_cmd rsync -a --exclude 'authorized*' "$HOME/.ssh/" "$backup_dir/ssh/"
+    run_cmd rsync -a --exclude 'authorized*' "$HOME/.ssh/" "$backup_dir/ssh/" || return
   else
     warn "Missing source, skipping: $HOME/.ssh"
   fi
@@ -96,30 +98,26 @@ restore_item() {
 }
 
 restore_local() {
-  [[ -n "$BACKUP_FROM" ]] || die "restore requires --from <backup_dir>"
-  [[ -d "$BACKUP_FROM" ]] || die "backup source not found: $BACKUP_FROM"
-
-  if [[ "$APPLY" != "1" ]]; then
-    DRY_RUN=1
-    info "Restore defaults to dry-run. Use --apply to perform writes."
-  fi
+  require_command rsync || return
+  [[ -n "$BACKUP_FROM" ]] || { error "restore requires --from <backup_dir>"; return 1; }
+  [[ -d "$BACKUP_FROM" ]] || { error "backup source not found: $BACKUP_FROM"; return 1; }
 
   local snapshot_root="$HOME/.dotfiles-restore-backups/$(date +%Y%m%d-%H%M%S)"
-  snapshot_path_if_exists "$HOME/.localrc" "$snapshot_root"
-  snapshot_path_if_exists "$HOME/.localenv" "$snapshot_root"
-  snapshot_path_if_exists "$HOME/.gitconfig" "$snapshot_root"
-  snapshot_path_if_exists "$HOME/.ssh" "$snapshot_root"
+  snapshot_path_if_exists "$HOME/.localrc" "$snapshot_root" || return
+  snapshot_path_if_exists "$HOME/.localenv" "$snapshot_root" || return
+  snapshot_path_if_exists "$HOME/.gitconfig" "$snapshot_root" || return
+  snapshot_path_if_exists "$HOME/.ssh" "$snapshot_root" || return
 
-  restore_item "$BACKUP_FROM/localrc" "$HOME/.localrc"
-  restore_item "$BACKUP_FROM/localenv" "$HOME/.localenv"
-  restore_item "$BACKUP_FROM/gitconfig" "$HOME/.gitconfig"
+  restore_item "$BACKUP_FROM/localrc" "$HOME/.localrc" || return
+  restore_item "$BACKUP_FROM/localenv" "$HOME/.localenv" || return
+  restore_item "$BACKUP_FROM/gitconfig" "$HOME/.gitconfig" || return
 
   if [[ -d "$BACKUP_FROM/ssh" ]]; then
-    ensure_dir "$HOME/.ssh"
+    ensure_dir "$HOME/.ssh" || return
     if [[ "$CONFLICT_POLICY" == "skip-existing" ]]; then
-      run_cmd rsync -a --ignore-existing "$BACKUP_FROM/ssh/" "$HOME/.ssh/"
+      run_cmd rsync -a --ignore-existing "$BACKUP_FROM/ssh/" "$HOME/.ssh/" || return
     else
-      run_cmd rsync -a "$BACKUP_FROM/ssh/" "$HOME/.ssh/"
+      run_cmd rsync -a "$BACKUP_FROM/ssh/" "$HOME/.ssh/" || return
     fi
   else
     warn "Missing source, skipping: $BACKUP_FROM/ssh"
@@ -140,12 +138,11 @@ main() {
 
   case "$cmd" in
     backup)
-      backup_local
-      write_run_log "$repo_root" "dot local backup" "ok" "target=$HOME/localrc"
+      run_audited_command "$repo_root" "dot local backup" "target=$HOME/localrc" write_ok_run_log backup_local || return
       ;;
     restore)
-      restore_local
-      write_run_log "$repo_root" "dot local restore" "ok" "from=$BACKUP_FROM,apply=$APPLY"
+      configure_restore_mode
+      run_audited_command "$repo_root" "dot local restore" "from=$BACKUP_FROM,apply=$APPLY" write_ok_run_log restore_local || return
       ;;
     *)
       usage

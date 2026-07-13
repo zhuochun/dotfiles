@@ -54,7 +54,7 @@ ensure_symlink() {
     run_cmd rm -rf "$target_path" || return
   fi
 
-  ensure_dir "$(dirname "$target_path")"
+  ensure_dir "$(dirname "$target_path")" || return
   run_cmd ln -s "$source_path" "$target_path" || return
   info "Linked $target_path -> $source_path"
 }

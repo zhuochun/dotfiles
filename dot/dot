@@ -58,13 +58,13 @@ run_manifest() {
     error "Missing manifest: $manifest"
     return 1
   fi
+  if [[ ! -r "$manifest" ]]; then
+    error "Unreadable manifest: $manifest"
+    return 1
+  fi
 
   local snapshot_root=""
   if [[ "$mode" == "restore" ]]; then
-    if [[ "$APPLY" != "1" ]]; then
-      DRY_RUN=1
-      info "Restore defaults to dry-run. Use --apply to perform writes."
-    fi
     snapshot_root="$HOME/.dotfiles-restore-backups/$(date +%Y%m%d-%H%M%S)"
   fi
 
@@ -88,14 +88,14 @@ run_manifest() {
           continue
         fi
         if [[ "$mode" == "restore" ]]; then
-          snapshot_path_if_exists "$dst" "$snapshot_root"
+          snapshot_path_if_exists "$dst" "$snapshot_root" || return
         fi
         copy_path "$src" "$dst" || return
         ;;
       sync_dir)
         [[ -d "$src" ]] || { warn "Missing source dir, skip: $src"; ((MANIFEST_SKIPPED += 1)); continue; }
         if [[ "$mode" == "restore" ]]; then
-          snapshot_path_if_exists "$dst" "$snapshot_root"
+          snapshot_path_if_exists "$dst" "$snapshot_root" || return
         fi
         ensure_dir "$dst" || return
         run_cmd rsync -a "$src" "$dst" || return
@@ -109,10 +109,10 @@ run_manifest() {
           ((MANIFEST_SKIPPED += 1))
           continue
         fi
-        ensure_dir "$dst" || return
         if [[ "$mode" == "restore" ]]; then
-          snapshot_path_if_exists "$dst" "$snapshot_root"
+          snapshot_path_if_exists "$dst" "$snapshot_root" || return
         fi
+        ensure_dir "$dst" || return
         run_cmd rsync -a "${matches[@]}" "$dst" || return
         ;;
       *)
@@ -138,13 +138,42 @@ manifest_status() {
 backup_dotfiles() {
   local repo_root="$1"
 
-  if ! command_exists brew; then
-    error "Required command not found: brew"
-    return 1
-  fi
+  require_macos || return
+  require_command brew || return
 
   run_cmd brew bundle dump --force --file="$repo_root/scripts/Brewfile" --describe || return
   run_manifest "$repo_root/dot/manifests/backup.macos.tsv" "backup" "$repo_root"
+}
+
+setup_dotfiles() {
+  local repo_root="$1"
+
+  require_macos || return
+  run_manifest "$repo_root/dot/manifests/setup.macos.tsv" "setup" "$repo_root" || return
+  ensure_private_file "$HOME/.localrc" || return
+  ensure_private_file "$HOME/.localenv"
+}
+
+restore_dotfiles() {
+  local repo_root="$1"
+
+  require_macos || return
+  require_command rsync || return
+
+  run_manifest "$repo_root/dot/manifests/restore.macos.tsv" "restore" "$repo_root"
+}
+
+write_manifest_run_log() {
+  local repo_root="$1"
+  local command_name="$2"
+  local details="$3"
+
+  local status
+  status="$(manifest_status)"
+  if [[ "$MANIFEST_SKIPPED" -gt 0 ]]; then
+    warn "$command_name completed with $MANIFEST_SKIPPED skipped source(s)."
+  fi
+  write_run_log "$repo_root" "$command_name" "$status" "$details,skipped=$MANIFEST_SKIPPED"
 }
 
 main() {
@@ -159,35 +188,14 @@ main() {
 
   case "$command" in
     setup)
-      is_macos || die "dot setup currently supports macOS only"
-      run_manifest "$repo_root/dot/manifests/setup.macos.tsv" "setup" "$repo_root"
-      ensure_private_file "$HOME/.localrc"
-      ensure_private_file "$HOME/.localenv"
-      local setup_status
-      setup_status="$(manifest_status)"
-      write_run_log "$repo_root" "dot setup" "$setup_status" "manifest=setup.macos.tsv,skipped=$MANIFEST_SKIPPED"
+      run_audited_command "$repo_root" "dot setup" "manifest=setup.macos.tsv" write_manifest_run_log setup_dotfiles "$repo_root" || return
       ;;
     backup)
-      is_macos || die "dot backup currently supports macOS only"
-      if backup_dotfiles "$repo_root"; then
-        local backup_status
-        backup_status="$(manifest_status)"
-        if [[ "$MANIFEST_SKIPPED" -gt 0 ]]; then
-          warn "Backup completed with $MANIFEST_SKIPPED skipped source(s)."
-        fi
-        write_run_log "$repo_root" "dot backup" "$backup_status" "manifest=backup.macos.tsv,skipped=$MANIFEST_SKIPPED"
-      else
-        local backup_exit=$?
-        write_run_log "$repo_root" "dot backup" "failed" "manifest=backup.macos.tsv,exit=$backup_exit" || true
-        return "$backup_exit"
-      fi
+      run_audited_command "$repo_root" "dot backup" "manifest=backup.macos.tsv" write_manifest_run_log backup_dotfiles "$repo_root" || return
       ;;
     restore)
-      is_macos || die "dot restore currently supports macOS only"
-      run_manifest "$repo_root/dot/manifests/restore.macos.tsv" "restore" "$repo_root"
-      local restore_status
-      restore_status="$(manifest_status)"
-      write_run_log "$repo_root" "dot restore" "$restore_status" "manifest=restore.macos.tsv,apply=$APPLY,skipped=$MANIFEST_SKIPPED"
+      configure_restore_mode
+      run_audited_command "$repo_root" "dot restore" "manifest=restore.macos.tsv,apply=$APPLY" write_manifest_run_log restore_dotfiles "$repo_root" || return
       ;;
     *)
       usage

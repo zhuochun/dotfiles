@@ -64,6 +64,23 @@ run_dot() {
   HOME="$TEST_HOME" PATH="$TEST_BIN:/usr/bin:/bin" bash "$REPO/dot/dot" "$@"
 }
 
+run_without_rsync() {
+  local script="$1"
+  shift
+
+  local bash_bin
+  bash_bin="$(command -v bash)"
+  local isolated_bin="$CASE_ROOT/no-rsync-bin"
+  mkdir -p "$isolated_bin"
+  for command in cat date dirname mkdir; do
+    ln -s "$(command -v "$command")" "$isolated_bin/$command"
+  done
+  ln -s "$bash_bin" "$isolated_bin/bash"
+  ln -s "$TEST_BIN/uname" "$isolated_bin/uname"
+
+  HOME="$TEST_HOME" PATH="$isolated_bin" "$bash_bin" "$script" "$@"
+}
+
 snapshot_home() {
   local shasum_bin
   if shasum_bin="$(command -v shasum)"; then
@@ -174,6 +191,145 @@ test_setup_is_idempotent() {
     'running setup twice changed the installed home configuration'
 }
 
+test_setup_records_hard_failures() {
+  new_fixture setup-failure
+  rm "$REPO/dot/manifests/setup.macos.tsv"
+
+  if run_dot setup >/dev/null 2>&1; then
+    fail 'setup returned success after a manifest failure'
+  fi
+
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'setup failure left a missing or stale success run log'
+}
+
+test_setup_records_unreadable_manifest_failures() {
+  new_fixture setup-unreadable-manifest
+  chmod 000 "$REPO/dot/manifests/setup.macos.tsv"
+
+  if [[ -r "$REPO/dot/manifests/setup.macos.tsv" ]]; then
+    chmod 600 "$REPO/dot/manifests/setup.macos.tsv"
+    return 0
+  fi
+
+  if run_dot setup >/dev/null 2>&1; then
+    chmod 600 "$REPO/dot/manifests/setup.macos.tsv"
+    fail 'setup returned success with an unreadable manifest'
+  fi
+  chmod 600 "$REPO/dot/manifests/setup.macos.tsv"
+
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'unreadable manifest left a missing or stale success run log'
+}
+
+test_setup_records_unsupported_platform_failures() {
+  new_fixture setup-unsupported-platform
+  cat >"$TEST_BIN/uname" <<'SH'
+#!/usr/bin/env bash
+printf 'Linux\n'
+SH
+
+  if run_dot setup >/dev/null 2>&1; then
+    fail 'setup ran on an unsupported platform'
+  fi
+
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'unsupported-platform failure left a missing or stale success run log'
+}
+
+test_restore_preflights_rsync_before_writes() {
+  new_fixture restore-rsync-preflight
+
+  if run_without_rsync "$REPO/dot/dot" restore --apply >/dev/null 2>&1; then
+    fail 'restore ran without its required rsync dependency'
+  fi
+
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'restore preflight failure left a missing or stale success run log'
+  assert_not_exists "$TEST_HOME/Library/Application Support/espanso" \
+    'restore created a destination before checking rsync'
+}
+
+test_restore_default_dry_run_does_not_write_failure_log() {
+  new_fixture restore-default-dry-run
+
+  if run_without_rsync "$REPO/dot/dot" restore >/dev/null 2>&1; then
+    fail 'restore ran without its required rsync dependency'
+  fi
+
+  assert_not_exists "$REPO/.state" \
+    'default restore dry-run wrote a failure log'
+  assert_not_exists "$TEST_HOME/Library/Application Support/espanso" \
+    'default restore dry-run created a destination'
+}
+
+test_restore_stops_when_snapshot_fails() {
+  new_fixture restore-snapshot-failure
+  local rectangle_dir="$TEST_HOME/Library/Application Support/com.knollsoft.Rectangle"
+  local rectangle_config="$rectangle_dir/RectangleConfig.json"
+  mkdir -p "$rectangle_dir"
+  printf 'user rectangle\n' >"$rectangle_config"
+
+  cat >"$TEST_BIN/rsync" <<'SH'
+#!/usr/bin/env bash
+exit 0
+SH
+  cat >"$TEST_BIN/cp" <<'SH'
+#!/usr/bin/env bash
+for arg in "$@"; do
+  case "$arg" in
+    *'.dotfiles-restore-backups'*) exit 23 ;;
+  esac
+done
+exec /bin/cp "$@"
+SH
+  chmod +x "$TEST_BIN/rsync" "$TEST_BIN/cp"
+
+  if run_dot restore --apply >/dev/null 2>&1; then
+    fail 'restore returned success after a snapshot failure'
+  fi
+
+  assert_equals 'user rectangle' "$(<"$rectangle_config")" \
+    'restore overwrote config after its rollback snapshot failed'
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'snapshot failure did not produce a failed run log'
+}
+
+test_local_backup_preflights_rsync_before_writes() {
+  new_fixture local-backup-rsync-preflight
+  mkdir -p "$TEST_HOME/.ssh"
+  printf 'private\n' >"$TEST_HOME/.localrc"
+  printf 'environment\n' >"$TEST_HOME/.localenv"
+  printf 'git config\n' >"$TEST_HOME/.gitconfig"
+
+  if run_without_rsync "$REPO/dot/local" backup >/dev/null 2>&1; then
+    fail 'local backup ran without its required rsync dependency'
+  fi
+
+  assert_not_exists "$TEST_HOME/localrc" \
+    'local backup created a partial destination before checking rsync'
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'local backup preflight failure left a missing or stale success run log'
+}
+
+test_local_restore_preflights_rsync_before_writes() {
+  new_fixture local-restore-rsync-preflight
+  local backup_dir="$CASE_ROOT/backup"
+  mkdir -p "$backup_dir/ssh"
+  printf 'private\n' >"$backup_dir/localrc"
+
+  if run_without_rsync "$REPO/dot/local" restore --from "$backup_dir" --apply >/dev/null 2>&1; then
+    fail 'local restore ran without its required rsync dependency'
+  fi
+
+  assert_not_exists "$TEST_HOME/.localrc" \
+    'local restore wrote config before checking rsync'
+  assert_not_exists "$TEST_HOME/.dotfiles-restore-backups" \
+    'local restore created a rollback directory before checking rsync'
+  assert_file_contains '  "status": "failed",' "$REPO/.state/last-run.json" \
+    'local restore preflight failure left a missing or stale success run log'
+}
+
 test_backup_only_captures_copied_resources() {
   new_fixture backup-copies-only
   install_backup_fakes
@@ -252,6 +408,14 @@ test_setup_preserves_existing_config_by_default
 test_setup_secures_private_config_files
 test_setup_does_not_require_unrelated_tools
 test_setup_is_idempotent
+test_setup_records_hard_failures
+test_setup_records_unreadable_manifest_failures
+test_setup_records_unsupported_platform_failures
+test_restore_preflights_rsync_before_writes
+test_restore_default_dry_run_does_not_write_failure_log
+test_restore_stops_when_snapshot_fails
+test_local_backup_preflights_rsync_before_writes
+test_local_restore_preflights_rsync_before_writes
 test_backup_only_captures_copied_resources
 test_backup_records_skipped_sources_as_partial
 test_backup_records_hard_failures
