@@ -2,7 +2,7 @@
 
 A set of macOS and Windows dotfiles, keyboard customizations, editor settings, and backup/restore helpers.
 
-> **Current setup status:** the maintained setup flow is the manifest-driven `dot/` CLI. The older `scripts/*.sh` files are legacy helpers; do not use them as the primary setup path unless you are intentionally debugging old behavior.
+> **Current setup status:** the maintained setup flow is the manifest-driven `dot/` CLI. The deprecated `scripts/dot-restore.sh`, `scripts/local-backup.sh`, and `scripts/local-restore.sh` wrappers only point to their replacements; use the other scripts only for their specific, documented purposes.
 
 <details>
   <summary><strong>Table of Contents</strong> (click to expand)</summary>
@@ -42,10 +42,11 @@ Use this section as the source of truth when completing setup on behalf of a use
 
 ### Repository Rules for Agents
 
-- **Do not assume `~/dotfiles` exists.** Clone this repository there before running setup commands, or replace `~/dotfiles` in commands with the actual checkout path.
+- **Prefer cloning to `~/dotfiles`.** The `dot/` CLI resolves the repository from its own location, but the tracked `zshenv` currently adds the literal path `~/dotfiles/bin` to `PATH`. If you clone elsewhere, replace command paths and update that `zshenv` entry before setup.
 - **Do not run destructive restores without an explicit `--apply`.** `dot/dot restore` and `dot/local restore` intentionally default to dry-run mode unless `--apply` is supplied.
+- **Treat setup copies separately from symlinks.** The setup conflict flags apply to symlink entries. The tracked Karabiner config is copied with overwrite behavior, so inspect the dry-run and preserve an existing `~/.config/karabiner/karabiner.json` before applying setup.
 - **Do not put private secrets in this repository.** Machine/company/private files belong in `~/.localrc`, `~/.localenv`, `~/.gitconfig`, and `~/.ssh`, and can be backed up with `dot/local backup`.
-- **Prefer the manifest-driven CLI.** The maintained entrypoints are `dot/dot` and `dot/local`; the old scripts in `scripts/` are not the primary setup flow.
+- **Prefer the manifest-driven CLI.** The maintained entrypoints are `dot/dot` and `dot/local`; the deprecated wrappers in `scripts/` are not the primary setup flow.
 - **macOS support is first-class.** `dot/dot setup`, `dot/dot backup`, and `dot/dot restore` currently enforce macOS via `uname -s == Darwin`.
 
 ### Fresh macOS Setup Checklist
@@ -78,10 +79,10 @@ Use this section as the source of truth when completing setup on behalf of a use
 5. Preview dotfile setup actions:
 
    ```bash
-   ~/dotfiles/dot/dot setup --dry-run --verbose
+   ~/dotfiles/dot/dot setup --dry-run --skip-existing --verbose
    ```
 
-6. Apply tracked dotfile setup. The default conflict policy is `--overwrite`; use `--skip-existing` for a safer first pass on an existing machine:
+6. Apply tracked dotfile setup. The default symlink conflict policy is `--overwrite`; use `--skip-existing` for a safer first pass on an existing machine. This flag does not protect copied entries, including the Karabiner config called out above:
 
    ```bash
    ~/dotfiles/dot/dot setup --skip-existing --verbose
@@ -98,7 +99,7 @@ Use this section as the source of truth when completing setup on behalf of a use
 8. Install oh-my-zsh and custom plugins if they are missing:
 
    ```bash
-   test -d ~/.oh-my-zsh || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+   test -d ~/.oh-my-zsh || RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
    test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
    test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions || git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
    ```
@@ -112,7 +113,10 @@ Use this section as the source of truth when completing setup on behalf of a use
 10. Install Vim/Neovim plugins:
 
     ```bash
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Shougo/dein-installer.vim/master/installer.sh)"
+    if [ ! -d ~/.cache/dein/repos/github.com/Shougo/dein.vim ]; then
+      mkdir -p ~/.cache/dein/repos/github.com/Shougo
+      git clone https://github.com/Shougo/dein.vim.git ~/.cache/dein/repos/github.com/Shougo/dein.vim
+    fi
     nvim +'call dein#install()' +qall
     ```
 
@@ -139,9 +143,9 @@ Run these checks after setup:
 
 ```bash
 brew bundle check --file=~/dotfiles/scripts/Brewfile
-~/dotfiles/dot/dot setup --dry-run --verbose
-zsh -n ~/dotfiles/zshrc ~/dotfiles/zshenv
-bash -n ~/dotfiles/dot/dot ~/dotfiles/dot/local ~/dotfiles/dot/lib/common.sh ~/dotfiles/dot/lib/symlink.sh
+~/dotfiles/dot/dot setup --dry-run --skip-existing --verbose
+for file in ~/dotfiles/zshrc ~/dotfiles/zshenv; do zsh -n "$file"; done
+for file in ~/dotfiles/dot/dot ~/dotfiles/dot/local ~/dotfiles/dot/lib/common.sh ~/dotfiles/dot/lib/symlink.sh; do bash -n "$file"; done
 nvim --headless +q
 ```
 
@@ -164,7 +168,7 @@ Expected results:
 ~/dotfiles/dot/dot restore [--dry-run] [--apply] [--verbose]
 ```
 
-- `setup` reads `dot/manifests/setup.macos.tsv` and creates symlinks/copies into `$HOME`.
+- `setup` reads `dot/manifests/setup.macos.tsv` and creates symlinks/copies into `$HOME`. Conflict policies apply to symlinks; copy entries overwrite their destination.
 - `backup` updates `scripts/Brewfile` with `brew bundle dump` when Homebrew is available, then copies/syncs configured app files from `$HOME` into the repo using `dot/manifests/backup.macos.tsv`.
 - `restore` copies/syncs tracked app files from the repo back into `$HOME` using `dot/manifests/restore.macos.tsv`; it is dry-run by default and requires `--apply` to write.
 - Restore creates rollback snapshots under `~/.dotfiles-restore-backups/<timestamp>/` before overwriting existing paths.
@@ -211,64 +215,19 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 Install [GitHub Desktop](https://desktop.github.com/) if you prefer a GUI Git client. Otherwise, use the CLI clone flow from [Fresh macOS Setup Checklist](#fresh-macos-setup-checklist).
 
-Install Homebrew formulas and casks from the tracked bundle:
-
-```bash
-brew bundle check --file=~/dotfiles/scripts/Brewfile || brew bundle install --file=~/dotfiles/scripts/Brewfile
-```
-
-Apply tracked dotfile setup:
-
-```bash
-~/dotfiles/dot/dot setup --skip-existing --verbose
-```
-
-Back up and restore tracked app config with dry-run safety:
-
-```bash
-~/dotfiles/dot/dot backup --verbose
-~/dotfiles/dot/dot restore --dry-run --verbose
-~/dotfiles/dot/dot restore --apply --verbose
-```
-
-Back up and restore private machine/company config:
-
-```bash
-~/dotfiles/dot/local backup --verbose
-~/dotfiles/dot/local restore --from ~/localrc/backup-YYYY-MM-DD --dry-run --verbose
-~/dotfiles/dot/local restore --from ~/localrc/backup-YYYY-MM-DD --apply --verbose
-```
+Follow the [Fresh macOS Setup Checklist](#fresh-macos-setup-checklist) for the canonical Homebrew, setup, backup, and restore sequence. See [Command Reference](#command-reference) for command safety and conflict behavior.
 
 ### Shell
 
-Set up Zsh ([guide](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)):
-
-```bash
-which zsh
-grep -Fx "$(which zsh)" /etc/shells || echo "$(which zsh)" | sudo tee -a /etc/shells
-chsh -s "$(which zsh)"
-```
-
-Set up [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh):
-
-```bash
-test -d ~/.oh-my-zsh || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-test -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions || git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
-
-touch ~/.localrc ~/.localenv
-```
+Follow steps 7-8 of the [Fresh macOS Setup Checklist](#fresh-macos-setup-checklist) to set the default shell and install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) without replacing the repo-managed `~/.zshrc` symlink.
 
 `zshrc` currently enables `autojump`, `git`, `gitignore`, `golang`, `tmux`, `zsh-completions`, and `zsh-autosuggestions`.
 
 ### Tmux
 
-Set up Tmux and [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm):
+Install [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm) in step 9 of the [Fresh macOS Setup Checklist](#fresh-macos-setup-checklist), then:
 
 ```bash
-test -d ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
 # Start a session
 tmux new -s dev
 
@@ -298,11 +257,7 @@ Both Mac and Windows use similar key mappings. For muscle memory, `<D-*>` mappin
 - **macOS:** Use `vim/vimrc` with `brew install neovim` or the tracked Homebrew bundle.
 - **Windows:** Use `windows/_vimrc` (not actively updated).
 
-Set up [Shougo/dein.vim](https://github.com/Shougo/dein.vim):
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/Shougo/dein-installer.vim/master/installer.sh)"
-```
+Install [Shougo/dein.vim](https://github.com/Shougo/dein.vim) in step 10 of the [Fresh macOS Setup Checklist](#fresh-macos-setup-checklist). That direct clone intentionally avoids replacing the repo-managed Vim/Neovim config.
 
 `dot/dot setup` creates the Vim/Neovim symlinks. Manual equivalents are:
 
