@@ -19,8 +19,30 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+require_command() {
+  local command="$1"
+  if ! command_exists "$command"; then
+    error "Required command not found: $command"
+    return 1
+  fi
+}
+
 is_macos() {
   [[ "$(uname -s)" == "Darwin" ]]
+}
+
+require_macos() {
+  if ! is_macos; then
+    error "This command currently supports macOS only"
+    return 1
+  fi
+}
+
+configure_restore_mode() {
+  if [[ "$APPLY" != "1" ]]; then
+    DRY_RUN=1
+    info "Restore defaults to dry-run. Use --apply to perform writes."
+  fi
 }
 
 ensure_dir() {
@@ -30,6 +52,14 @@ ensure_dir() {
     return 0
   fi
   mkdir -p "$dir"
+}
+
+ensure_private_file() {
+  local path="$1"
+  if [[ ! -e "$path" && ! -L "$path" ]]; then
+    run_cmd touch "$path" || return
+  fi
+  run_cmd chmod 600 "$path"
 }
 
 run_cmd() {
@@ -52,19 +82,6 @@ require_repo_root() {
   printf '%s\n' "$repo_root"
 }
 
-backup_existing() {
-  local target="$1"
-  local backup_root="$2"
-  [[ -e "$target" || -L "$target" ]] || return 0
-
-  ensure_dir "$backup_root"
-  local ts backup_path
-  ts="$(date +%Y%m%d-%H%M%S)"
-  backup_path="$backup_root/${target##*/}.$ts"
-  info "Backing up existing $target -> $backup_path"
-  run_cmd mv "$target" "$backup_path"
-}
-
 write_run_log() {
   local repo_root="$1"
   local command_name="$2"
@@ -72,7 +89,7 @@ write_run_log() {
   local details="$4"
 
   local state_dir="$repo_root/.state"
-  ensure_dir "$state_dir"
+  ensure_dir "$state_dir" || return
   local log_file="$state_dir/last-run.json"
 
   if [[ "$DRY_RUN" == "1" ]]; then
@@ -90,10 +107,34 @@ write_run_log() {
 JSON
 }
 
+write_ok_run_log() {
+  local repo_root="$1"
+  local command_name="$2"
+  local details="$3"
+
+  write_run_log "$repo_root" "$command_name" "ok" "$details"
+}
+
+run_audited_command() {
+  local repo_root="$1"
+  local command_name="$2"
+  local details="$3"
+  local success_handler="$4"
+  shift 4
+
+  if "$@"; then
+    "$success_handler" "$repo_root" "$command_name" "$details" || return
+  else
+    local operation_exit=$?
+    write_run_log "$repo_root" "$command_name" "failed" "$details,exit=$operation_exit" || true
+    return "$operation_exit"
+  fi
+}
+
 copy_path() {
   local src="$1"
   local dest="$2"
-  ensure_dir "$(dirname "$dest")"
+  ensure_dir "$(dirname "$dest")" || return
   if [[ -d "$src" ]]; then
     run_cmd rsync -a "$src/" "$dest/"
   else
@@ -109,7 +150,7 @@ snapshot_path_if_exists() {
   local rel
   rel="${target#/}"
   local dest="$snapshot_root/$rel"
-  ensure_dir "$(dirname "$dest")"
+  ensure_dir "$(dirname "$dest")" || return
   if [[ -d "$target" && ! -L "$target" ]]; then
     run_cmd rsync -a "$target/" "$dest/"
   else
